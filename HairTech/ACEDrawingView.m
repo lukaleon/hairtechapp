@@ -227,9 +227,7 @@ UIColor* tempColor;
              
         
         
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeLine:)];
-    [self addGestureRecognizer:tapRecognizer];
-        
+     
         
         drawingLayer = [CALayer layer];
         [self.layer addSublayer:drawingLayer];
@@ -636,7 +634,7 @@ UIGraphicsEndImageContext();
             
             return ACE_AUTORELEASE([ACEDrawingPenTool new]);
             
-           self.currentTool.lineWidthNew = self.lineWidth;
+          // self.currentTool.lineWidthNew = self.lineWidth;
 
         }
 
@@ -842,7 +840,7 @@ UIGraphicsEndImageContext();
     pan=NO;
     [self.delegate setButtonVisibleTextPressed];
 }
-
+/*
 - (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
     
     
@@ -886,6 +884,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
  
     }
 }
+*/
+
 
 -(void)addTextViewToMiddle
 {
@@ -978,6 +978,9 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
     CGPoint firstTouche = [touch locationInView:self];
     touchToCalculateDistance = [touch locationInView:self];
     
+
+    
+    
     ///----------------------------------xxxxxxxx cxv xdmvbdsmnbbdsmndsbvmdnvbs
  
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1068,8 +1071,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         
         
    	if(self.editMode == NO &&self.drawTool != ACEDrawingToolTypeText){
-        
-        if(self.drawTool == ACEDrawingToolTypeEraser){
+     
+      if(self.drawTool == ACEDrawingToolTypeEraser){
         self.TouchTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                            target:self
                                                          selector:@selector(showLoupe:)
@@ -1102,7 +1105,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 
         
            CGPoint touchedPoint = [[touches anyObject]locationInView:self];
-           CGPoint discoveryPoint;
+          
+        CGPoint discoveryPoint;
            CGFloat tolerance = 7;
            // Had to Create these two arrays because there's no such thing as [NSDictionary objectAtIndex:]
            NSArray *pointsArray;
@@ -1391,7 +1395,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
          // NSLog(@"Current distance %f",dist);
           
 
-          /****************************************************/
           CGFloat f = [self pointPairToBearingDegrees:self.firstTouch secondPoint:self.lastTouch];
           
         //  NSLog(@"DEGREE IS %f",f);
@@ -1464,7 +1467,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           
           
           
-           /****************************************************/
           
           if((self.lastTouch.x - self.firstTouch.x <= 6)&&(self.lastTouch.x - self.firstTouch.x >= -6)&&dist>15){
              
@@ -1603,8 +1605,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
        }
      
 
-     /*  Worked with latest phones and IOS
-       ((void(*)(id, SEL, CGPoint))objc_msgSend)(self, changer,currentLocation);*/
+   
        
        [self setNeedsDisplay];
     
@@ -1618,32 +1619,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
     - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
    
-
-    
-    /* BLUE DOT AFTER TOUCHES ENDED */
-    /*
-    self.lastDot =[[UIImageView alloc] initWithFrame:CGRectMake(self.lastTouch.x-5,self.lastTouch.y-5,10,10)];
-      self.lastDot.image=[UIImage imageNamed:@"lastPoint.png"];
-      [self addSubview:self.lastDot];
-    //self.lastDot.userInteractionEnabled = YES;
-
-    self.lastDot.layer.shadowColor = [UIColor blueColor].CGColor;
-    self.lastDot.layer.shadowRadius = 4.0f;
-    self.lastDot.layer.shadowOpacity = 1.0f;
-    self.lastDot.layer.shadowOffset = CGSizeZero;
-
-    [UIView animateWithDuration:0.7f delay:0 options:UIViewAnimationOptionAutoreverse | UIViewAnimationCurveEaseInOut | UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction  animations:^{
-        [UIView setAnimationRepeatCount:100];
-        self.lastDot.transform = CGAffineTransformMakeScale(1.2f, 1.2f);
-
-    } completion:^(BOOL finished) {
-
-        self.lastDot.layer.shadowRadius = 0.0f;
-        self.lastDot.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-    }];
-
-    */
-    
 
     [self.eraserPointer removeFromSuperview];
     [self.touchTimer invalidate];
@@ -1719,7 +1694,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
     
             }
             
-            /*  if Arrow tool used - store last point */
             if (self.drawTool == ACEDrawingToolTypeArrow){
                 
                 arrowEndPoint = self.lastTouch;
@@ -1748,6 +1722,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
             [self undoLatestStep];
         }*/
     
+
         //BezierView *bv = (BezierView*)self;
         bv.d = pd;
         bv.a = pa;
@@ -1806,10 +1781,7 @@ if(self.editMode == NO){
 
 
 
-- (void)removeLine:(UITapGestureRecognizer*)sender {
-    
 
-}
 
 
 -(void)setEditMode
