@@ -2121,7 +2121,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5.2.4;
+				CURRENT_PROJECT_VERSION = 6.1.0;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2132,7 +2132,7 @@
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 5.2.4;
+				MARKETING_VERSION = 6.1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				"OTHER_LDFLAGS[arch=*]" = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
@@ -2155,7 +2155,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5.2.4;
+				CURRENT_PROJECT_VERSION = 6.1.0;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2166,7 +2166,7 @@
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 5.2.4;
+				MARKETING_VERSION = 6.1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
 				PRODUCT_NAME = hairtech;

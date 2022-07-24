@@ -200,6 +200,33 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         
     {
     }
+    
+    
+ 
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        
+    if ( ![userDefaults valueForKey:@"version"] )
+    {
+        [self saveColorsToDefaults];
+        [self saveFloatToUserDefaults:2.0 forKey:@"lineWidth"];
+        [self saveFloatToUserDefaults:0.0 forKey:@"eraserPressed"];
+        
+        // Adding version number to NSUserDefaults for first version:
+        [userDefaults setFloat:[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] forKey:@"version"];
+    }
+
+    if ([[NSUserDefaults standardUserDefaults] floatForKey:@"version"] == [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] )
+    {
+        // Same Version so dont run the function
+    }
+    else
+    {
+        // Call Your Function;
+
+        // Update version number to NSUserDefaults for other versions:
+        [userDefaults setFloat:[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] forKey:@"version"];
+    }
+    
 
   }
 

@@ -1939,7 +1939,6 @@ if(self.editMode == NO){
         id<ACEDrawingTool>tool = [self.pathArray lastObject];
         [self.bufferArray addObject:tool];
         [self.pathArray removeLastObject];
-
         
         [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
         [arrayOfPoints removeLastObject];
