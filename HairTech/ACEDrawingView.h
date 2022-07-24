@@ -62,6 +62,9 @@ typedef enum {
     
     NSUInteger touchMove;
     
+    
+    CGPoint firstOrReplacedPoint;
+    
 }
 @property (nonatomic, strong) UIBezierPath *tapTarget;
 

@@ -41,6 +41,9 @@
 @property (nonatomic, strong) NSMutableArray *pathArray;
 @property (nonatomic, strong) NSMutableArray *bufferArray;
 
+@property (nonatomic, strong) NSMutableArray *bufferOfPoints;
+
+
 @property (nonatomic, strong) id<ACEDrawingTool> currentTool;
 
 //@property (nonatomic,strong,readwrite) UIImage *image;
@@ -303,6 +306,7 @@ UIColor* tempColor;
     self.pointsCoord = [NSMutableArray array];
     self.pathArray = [NSMutableArray array];
     self.bufferArray = [NSMutableArray array];
+    self.bufferOfPoints = [NSMutableArray array];
 
       [self LoadColorsAtStart];
     self.lineColor = tempColor;
@@ -802,6 +806,9 @@ UIGraphicsEndImageContext();
     
     // clear the redo queue
     [self.bufferArray removeAllObjects];
+    [self.bufferOfPoints removeAllObjects];
+
+    
     
     // call the delegate
    if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
@@ -1191,7 +1198,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         
 
         
-        if (self.drawTool == ACEDrawingToolTypeArrow){
+      /*  if (self.drawTool == ACEDrawingToolTypeArrow){
          
             
             if((self.firstTouch.x - arrowEndPoint.x <= 5)&&(self.firstTouch.x - arrowEndPoint.x >= -5)){
@@ -1231,7 +1238,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
             
             
         }
-        
+        */
         // call the delegate
         if ([self.delegate respondsToSelector:@selector(drawingView:willBeginDrawUsingTool:)]) {
            [self.delegate drawingView:self willBeginDrawUsingTool:self.currentTool];
@@ -1386,24 +1393,35 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
      // if(self.drawTool != ACEDrawingToolTypeEraser && self.drawTool != ACEDrawingToolTypeCurve&& self.drawTool != ACEDrawingToolTypePen && self.drawTool !=ACEDrawingToolTypeDashCurve){
    if(self.drawTool != ACEDrawingToolTypeEraser && self.drawTool != ACEDrawingToolTypePen && self.editMode!=YES){
          
+       
+       if(replacedPoint == YES){
+           
+           firstOrReplacedPoint = pointToReplaceInArray;
+           
+       }
+       else{
+           
+           firstOrReplacedPoint = self.firstTouch;
+       }
+       
           self.lastTouch = currentLocation;
        
-          double dist = hypot((self.firstTouch.x-self.lastTouch.x), (self.firstTouch.y-self.lastTouch.y));
+          double dist = hypot((firstOrReplacedPoint.x-self.lastTouch.x), (firstOrReplacedPoint.y-self.lastTouch.y));
           
-          distGlobal =hypot((self.firstTouch.x-self.lastTouch.x), (self.firstTouch.y-self.lastTouch.y));
+          distGlobal =hypot((firstOrReplacedPoint.x-self.lastTouch.x), (firstOrReplacedPoint.y-self.lastTouch.y));
           
          // NSLog(@"Current distance %f",dist);
           
 
-          CGFloat f = [self pointPairToBearingDegrees:self.firstTouch secondPoint:self.lastTouch];
+          CGFloat f = [self pointPairToBearingDegrees:firstOrReplacedPoint secondPoint:self.lastTouch];
           
         //  NSLog(@"DEGREE IS %f",f);
           /////////////////////////// 45  degree ////////////
           if ((f<=48)&&(f>=42)&&dist>15){
             
               double angle =   0.785398163;
-              double endX = cos(angle) * dist + self.firstTouch.x;
-              double endY = sin(angle) * dist + self.firstTouch.y;
+              double endX = cos(angle) * dist + firstOrReplacedPoint.x;
+              double endY = sin(angle) * dist + firstOrReplacedPoint.y;
               
               self.lastTouch = CGPointMake(endX, endY);
               
@@ -1421,8 +1439,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           if ((f<=138)&&(f>=132)&&dist>15){
               
               double angle =   2.35619449;
-              double endX = cos(angle) * dist + self.firstTouch.x;
-              double endY = sin(angle) * dist + self.firstTouch.y;
+              double endX = cos(angle) * dist + firstOrReplacedPoint.x;
+              double endY = sin(angle) * dist + firstOrReplacedPoint.y;
               
               self.lastTouch = CGPointMake(endX, endY);
               
@@ -1436,8 +1454,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           if ((f<=228)&&(f>=222)&&dist>15){
               
               double angle =   3.92699082;
-              double endX = cos(angle) * dist + self.firstTouch.x;
-              double endY = sin(angle) * dist + self.firstTouch.y;
+              double endX = cos(angle) * dist +firstOrReplacedPoint.x;
+              double endY = sin(angle) * dist + firstOrReplacedPoint.y;
               
               self.lastTouch = CGPointMake(endX, endY);
               
@@ -1453,8 +1471,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           if ((f<=318)&&(f>=312)&&dist>15){
               
               double angle =   5.49778714;
-              double endX = cos(angle) * dist + self.firstTouch.x;
-              double endY = sin(angle) * dist + self.firstTouch.y;
+              double endX = cos(angle) * dist + firstOrReplacedPoint.x;
+              double endY = sin(angle) * dist + firstOrReplacedPoint.y;
               
               self.lastTouch = CGPointMake(endX, endY);
               
@@ -1468,9 +1486,9 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           
           
           
-          if((self.lastTouch.x - self.firstTouch.x <= 6)&&(self.lastTouch.x - self.firstTouch.x >= -6)&&dist>15){
+          if((self.lastTouch.x - firstOrReplacedPoint.x <= 6)&&(self.lastTouch.x - firstOrReplacedPoint.x >= -6)&&dist>15){
              
-              self.lastTouch = CGPointMake(self.firstTouch.x, self.lastTouch.y);
+              self.lastTouch = CGPointMake(firstOrReplacedPoint.x, self.lastTouch.y);
               
               
               if(!performedX){
@@ -1481,9 +1499,9 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
           }else{ performedX = false;}
           
           
-          if((self.lastTouch.y - self.firstTouch.y <= 6)&&(self.lastTouch.y - self.firstTouch.y >= -6)&&dist>15){
+          if((self.lastTouch.y - firstOrReplacedPoint.y <= 6)&&(self.lastTouch.y - firstOrReplacedPoint.y >= -6)&&dist>15){
               
-              self.lastTouch = CGPointMake(self.lastTouch.x, self.firstTouch.y);
+              self.lastTouch = CGPointMake(self.lastTouch.x, firstOrReplacedPoint.y);
               if(!performedY){
                   [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
                   performedY = true;
@@ -1680,25 +1698,38 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
            self.currentTool.lineWidthNew = self.lineWidth;
 
             
-            double dist = hypot((self.firstTouch.x-self.lastTouch.x), (self.firstTouch.y-self.lastTouch.y));
             
-           if((self.lastTouch.x - self.firstTouch.x <= 6)&&(self.lastTouch.x - self.firstTouch.x >= -6)&&dist>15){
-               
+            if(replacedPoint == YES){
                 
-                self.lastTouch = CGPointMake(self.firstTouch.x, self.lastTouch.y);
+                firstOrReplacedPoint = pointToReplaceInArray;
                 
             }
-            if((self.lastTouch.y - self.firstTouch.y <= 6)&&(self.lastTouch.y - self.firstTouch.y >= -6)&&dist>15){
+            else{
                 
-                  self.lastTouch = CGPointMake(self.lastTouch.x, self.firstTouch.y);
+                firstOrReplacedPoint = self.firstTouch;
+            }
+            
+            
+            
+            double dist = hypot((firstOrReplacedPoint.x-self.lastTouch.x), (firstOrReplacedPoint.y-self.lastTouch.y));
+            
+           if((self.lastTouch.x - firstOrReplacedPoint.x <= 6)&&(self.lastTouch.x - firstOrReplacedPoint.x >= -6)&&dist>15){
+               
+                
+                self.lastTouch = CGPointMake(firstOrReplacedPoint.x, self.lastTouch.y);
+                
+            }
+            if((self.lastTouch.y - firstOrReplacedPoint.y <= 6)&&(self.lastTouch.y - firstOrReplacedPoint.y >= -6)&&dist>15){
+                
+                  self.lastTouch = CGPointMake(self.lastTouch.x, firstOrReplacedPoint.y);
     
             }
             
-            if (self.drawTool == ACEDrawingToolTypeArrow){
+           /* if (self.drawTool == ACEDrawingToolTypeArrow){
                 
                 arrowEndPoint = self.lastTouch;
             }
-          
+          */
             
              [self.currentTool moveFromPoint:self.firstTouch toPoint:self.lastTouch];
         }
@@ -1711,6 +1742,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         
         // clear the redo queue
         [self.bufferArray removeAllObjects];
+        [self.bufferOfPoints removeAllObjects];
+        
         
         // call the delegate
         if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
@@ -1856,6 +1889,9 @@ if(self.editMode == NO){
     self.currentTool = nil;
     // clear the redo queue
     [self.bufferArray removeAllObjects];
+    [self.bufferOfPoints removeAllObjects];
+
+    
     // call the delegate
     if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
         [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
@@ -1871,6 +1907,8 @@ if(self.editMode == NO){
 - (void)clear
 {
     [self.bufferArray removeAllObjects];
+    [self.bufferOfPoints removeAllObjects];
+
     [self.pathArray removeAllObjects];
     [arrayOfPoints removeAllObjects];
 
@@ -1884,11 +1922,15 @@ if(self.editMode == NO){
 - (NSUInteger)undoSteps
 {
     return self.bufferArray.count;
+    return self.bufferOfPoints.count;
+
 }
 
 - (BOOL)canUndo
 {
     return self.pathArray.count > 0;
+    return arrayOfPoints.count > 0;
+
 }
 
 - (void)undoLatestStep
@@ -1897,28 +1939,48 @@ if(self.editMode == NO){
         id<ACEDrawingTool>tool = [self.pathArray lastObject];
         [self.bufferArray addObject:tool];
         [self.pathArray removeLastObject];
+
+        
+        [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
         [arrayOfPoints removeLastObject];
+        [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
+        [arrayOfPoints removeLastObject];
+
+
         [self updateCacheImage:YES];
         [self setNeedsDisplay];
         
         NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
 
     }
+    
+    
 }
 
 - (BOOL)canRedo
 {
     return self.bufferArray.count > 0;
+    return self.bufferOfPoints.count > 0;
 }
 
 - (void)redoLatestStep
 {
     if ([self canRedo]) {
         id<ACEDrawingTool>tool = [self.bufferArray lastObject];
+        
         [self.pathArray addObject:tool];
         [self.bufferArray removeLastObject];
+
+        
+        [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
+        [self.bufferOfPoints removeLastObject];
+        [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
+        [self.bufferOfPoints removeLastObject];
+
         [self updateCacheImage:YES];
         [self setNeedsDisplay];
+        NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
+
     }
 }
 
