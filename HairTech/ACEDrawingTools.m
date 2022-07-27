@@ -218,7 +218,6 @@ CGPoint scalarMult(CGPoint a, double sc) {
 	CGContextMoveToPoint(ctx, a.x, a.y);
     
     
-
     
 	for (double t = 0; t < 1; t += EPSILON) {
 		CGPoint p = [self bezier:t];
@@ -245,6 +244,8 @@ CGPoint scalarMult(CGPoint a, double sc) {
   
         
         CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
+        CGContextSetAlpha(ctx, 0.3f);
+
         CGContextFillEllipseInRect(ctx, CGRectMake(a.x-5, a.y-5, 10, 10));
         CGContextFillEllipseInRect(ctx, CGRectMake(b.x-5, b.y-5, 10, 10));
         CGContextFillEllipseInRect(ctx, CGRectMake(c.x-5, c.y-5, 10, 10));
@@ -487,13 +488,17 @@ CGPoint scalarMult2(CGPoint a, double sc) {
     
       CGContextRef ctx = UIGraphicsGetCurrentContext();
       CGContextSetStrokeColorWithColor(ctx, [UIColor grayColor].CGColor);
-         
+    CGContextSetAlpha(ctx, 0.3f);
+
+    
+    
          CGContextMoveToPoint(ctx, a.x, a.y);
          CGContextAddLineToPoint(ctx, b.x, b.y);
          CGContextMoveToPoint(ctx, c.x, c.y);
          CGContextAddLineToPoint(ctx, d.x, d.y);
          CGContextStrokePath(ctx);
          CGContextMoveToPoint(ctx, a.x, a.y);
+    
          for (double t = 0; t < 1; t += EPSILON2) {
          CGPoint p = [self bezier:t];
          CGContextAddLineToPoint(ctx, p.x, p.y);
@@ -528,6 +533,8 @@ CGPoint scalarMult2(CGPoint a, double sc) {
    // CGContextRef ctx = UIGraphicsGetCurrentContext();
     
        CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
+       CGContextSetAlpha(ctx, 0.3f);
+    
     
         CGContextFillEllipseInRect(ctx, CGRectMake(a.x-5, a.y-5, 10, 10));
         CGContextFillEllipseInRect(ctx, CGRectMake(b.x-5, b.y-5, 10, 10));

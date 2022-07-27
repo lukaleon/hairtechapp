@@ -1077,8 +1077,9 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
       
         
         
-   	if(self.editMode == NO &&self.drawTool != ACEDrawingToolTypeText){
-     
+   	if(self.editMode == NO&&self.drawTool != ACEDrawingToolTypeText){
+       // if( self.drawTool != ACEDrawingToolTypeText){
+
       if(self.drawTool == ACEDrawingToolTypeEraser){
         self.TouchTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                            target:self
@@ -1246,14 +1247,20 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
     }
     else if (self.editMode == YES && self.drawTool!=ACEDrawingToolTypeText){
      
+        
+        
         UITouch *touch = [touches anyObject];
        CGPoint t = [touch locationInView:self];
+        
+        
+        
+        
         
        self.currentTool = [self toolWithCurrentSettings];
         self.currentTool.lineColor = self.lineColor;
       self.currentTool.lineWidthNew = self.lineWidth;
 
-        
+    
         
         //	CGPoint t = [(UITouch *)[touches anyObject] locationInView:self];
         
@@ -1353,15 +1360,14 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
             
             
 
-            self.Ruler.pointToShowRuler = [[touches anyObject] locationInView:self.window];
+         //   self.Ruler.pointToShowRuler = [[touches anyObject] locationInView:self.window];
             
             
             
             
             
-        }
+       }
         
-      //  self.currentTool = [self toolWithCurrentSettings];
 
         self.currentTool.lineColor = self.lineColor;
         
@@ -1548,7 +1554,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
    else if (self.editMode == YES){
        
       self.currentTool.lineColor = self.lineColor;
-       
      self.currentTool.lineWidthNew = self.lineWidth;
 
         NSLog(@"This is touches moved method" );
@@ -1790,15 +1795,14 @@ if(self.editMode == NO){
     }
     }
     
-   
     
-    if (replacedPoint == YES){
+    if (replacedPoint == YES&&self.editMode == NO){
         
         [arrayOfPoints addObject:  [NSValue valueWithCGPoint:pointToReplaceInArray]];
         [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
         replacedPoint = NO;
     }
-    else
+    else if (replacedPoint == NO&&self.editMode == NO)
     {
     [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.firstTouch]];
     [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
@@ -1819,6 +1823,10 @@ if(self.editMode == NO){
 
 -(void)setEditMode
 {
+    
+    
+    
+
     [self.delegate setButtonVisible];
     //[self.btn setEnabled:YES];
     //[self.btn setHidden:NO];
@@ -1830,7 +1838,6 @@ if(self.editMode == NO){
     self.currentTool.b = pc;
     self.currentTool.c = pd;
     self.currentTool.a = pc;
-    
     
 }
 /*
@@ -1875,12 +1882,20 @@ if(self.editMode == NO){
     pb = self.currentTool.d;
     pc = self.currentTool.c;
     pd = self.currentTool.c;
+         
+         
     
      }
     
 
+    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.currentTool.a]];
+    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.currentTool.d]];
     
+    NSLog(@"POINTS Coordinates %@ %@", NSStringFromCGPoint(self.currentTool.a),NSStringFromCGPoint(self.currentTool.d));
 
+    
+    
+    
     [self.pathArray addObject:self.currentTool];
     
     
