@@ -243,16 +243,22 @@
     [self setupButtons];
     
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+    self.drawingView.viewControllerName = @"top";
+
 
     
     [super viewDidLoad];
+    
+    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
   
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    
+    appDelegate.currentViewName = @"top";
+
     
      if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
       {

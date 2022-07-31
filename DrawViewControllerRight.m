@@ -271,9 +271,13 @@ NSString * tempColorString;
     [self LoadColorsAtStart];
     [self setupButtons];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+    self.drawingView.viewControllerName = @"right";
 
+
+    
     [super viewDidLoad];
-  
+    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+
     
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
@@ -281,7 +285,8 @@ NSString * tempColorString;
    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    
+    appDelegate.currentViewName = @"right";
+
     
         if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
     {

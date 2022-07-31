@@ -338,14 +338,21 @@
     
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     
+    self.drawingView.viewControllerName = @"left";
+    
+    
     [super viewDidLoad];
     
+    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+
     
    
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
+    
+    //appDelegate.currentViewName = @"left";
    
     
     if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
@@ -691,7 +698,11 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
     
+    appDelegate.currentViewName = @"left";
+   
 
     
     
@@ -2166,7 +2177,7 @@ self.previewImageView.layer.sublayers = nil;
 }
 -(IBAction)buttonTouched:(id)sender
 {
-    if(self.drawingView.editMode ==YES && self.drawingView.touchesForEditMode == 0)
+   if(self.drawingView.editMode ==YES && self.drawingView.touchesForEditMode == 0)
         
     {
         
@@ -2186,7 +2197,7 @@ self.previewImageView.layer.sublayers = nil;
         [self.redoBut setEnabled:YES];
         [self.baritem setEnabled:YES];
         [self.popoverBtn setEnabled:YES];
-        // self.lineColor = [UIColor redColor];
+        
         self.drawingView.editMode = NO;
         
         
@@ -2214,7 +2225,6 @@ self.previewImageView.layer.sublayers = nil;
         }];
         [self.baritem setEnabled:YES];
         [self.popoverBtn setEnabled:YES];
-        // self.lineColor = [UIColor redColor];
         self.drawingView.editMode = NO;
         [self.drawingView updateImage];
         self.drawingView.touchesForEditMode = 0;
@@ -2389,5 +2399,6 @@ self.previewImageView.layer.sublayers = nil;
     }
     
 }
+
 
 @end

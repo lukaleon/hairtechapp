@@ -3,6 +3,7 @@
 #import "ColorViewController.h"
 #import "TextView.h"
 #import "UITextView+PinchZoom.h"
+
 #define ACEDrawingViewVersion   1.0.0
 
 typedef enum {
@@ -16,6 +17,10 @@ typedef enum {
     ACEDrawingToolTypeText,
    
 } ACEDrawingToolType;
+
+
+
+
 
 @protocol ACEDrawingViewDelegate, ACEDrawingTool;
 
@@ -51,7 +56,7 @@ typedef enum {
     
     NSArray *arrayOfLastPoints;
     NSMutableArray *arrayOfPoints;
-   
+    
     double distToPoint;
     CGPoint location1;
     CGPoint location2;
@@ -64,8 +69,21 @@ typedef enum {
     
     
     CGPoint firstOrReplacedPoint;
+    NSMutableDictionary *data;
     
+    NSString *viewName;
+    NSString *currentTechniqueName;
+    CAShapeLayer *lineNew;
 }
+
+
+-(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString*)techniqueName;
+
+
+//-(void)savePointsToDefaults;
+
+@property (nonatomic, strong) NSString *viewControllerName;
+
 @property (nonatomic, strong) UIBezierPath *tapTarget;
 
 - (void)reloadDataInRect:(CGRect)rect;

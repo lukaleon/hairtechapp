@@ -56,6 +56,9 @@
 
 @property (nonatomic,retain) NSString *currentView;
 
+@property (nonatomic,retain) NSString *currentViewName;
+
+
 @property (nonatomic,assign) CGPoint theFirstPointForRuler;
 
 

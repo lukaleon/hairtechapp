@@ -2,7 +2,6 @@
 
 #import "ACEDrawingView.h"
 #import "ACEDrawingTools.h"
-#import "DrawViewController.h"
 #import "DrawViewControllerRight.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/objc.h>
@@ -11,6 +10,7 @@
 #import "CHMagnifierView.h"
 #import "Ruler.h"
 #import <CoreGraphics/CoreGraphics.h>
+#import "DrawViewController.h"
 
 
 
@@ -68,6 +68,7 @@
 @synthesize pointForRecognizer;
 @synthesize pan;
 @synthesize touchesForUpdate;
+
 CGFloat red;
 CGFloat green;
 CGFloat blue;
@@ -208,14 +209,6 @@ UIColor* tempColor;
         
         [self configure];
 
-        
-       /* self.TouchTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
-                                                           target:self
-                                                         selector:@selector(ShowTextOfColor)
-                                                         userInfo:nil
-                                                          repeats:NO];
-        */
-        
   
         dot =[[UIImageView alloc] initWithFrame:CGRectMake(20,20,10,10)];
         dot.image=[UIImage imageNamed:@"dot2.png"];
@@ -228,60 +221,32 @@ UIColor* tempColor;
              [self addSubview:dot2];
              dot2.alpha = 0;
              
-        
-        
-     
-        
         drawingLayer = [CALayer layer];
         [self.layer addSublayer:drawingLayer];
         
         self.shapes = [NSMutableArray array];
         arrayOfLastPoints = [[NSArray alloc]init];
-      arrayOfPoints = [[NSMutableArray alloc]init];
-
+        
+        
     }
-    
-    
-    
     return self;
-    
-    
-    
-    
-    
 }
-
-
-
-
-/*
- 
- 
--(void)ShowTextOfColor{
-    CGPoint p;
-
+-(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString *)techniqueName{
     
-    for(int x=1; x<=self.frame.size.width;x++)
+    arrayOfPoints = [[NSMutableArray alloc]init];
+    NSLog(@"NAME OF CURRENT TECHNIQUE %@", techniqueName);
+    currentTechniqueName = techniqueName;
+    viewName = nameOfView;
+    arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
+        
+    for (NSString * cgpointVal in arrayOfPoints)
     {
-        for(int y=1; y<=self.frame.size.height;y++)
-        {
-            p = CGPointMake(x,y);
-            
-             if(![[self hexStringFromColorNEW:[self.delegate colorAtPixel:p]] isEqualToString:@"#000000"]){
-            
-            NSLog(@"HEX STRING = %@", [self hexStringFromColorNEW:[self.delegate colorAtPixel:p]]);
-             }
-        }
+        CGPoint pointObj = CGPointFromString(cgpointVal);
+        [self alocatePointAtView:self.layer pointFromArray:pointObj];
     }
-    
-    
 }
 
 
-
-*/
-
-//Always return the iOS8 way - i.e. height is the real orientation dependent height
 + (CGRect)screenBoundsOrientationDependent {
     UIScreen *screen = [UIScreen mainScreen];
     CGRect screenRect;
@@ -292,13 +257,14 @@ UIColor* tempColor;
     }
     
     return screenRect;
-    NSLog(@"ScreenBoundsOrientationMEthod");
+   /// NSLog(@"ScreenBoundsOrientationMEthod");
 }
 
 
 - (void)configure
 {
-   
+    
+    
     self.pointsLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 80, 500, 40)];
    
   //[self addSubview:self.pointsLabel];
@@ -320,59 +286,12 @@ UIColor* tempColor;
     NSLog(@"CUURENT VIEW IS %@",appDelegate.currentView);
     if([appDelegate.currentView isEqualToString:@"drawView"])
     {
-  //      [self addAnchorPoints];
-        
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox.center.x,self.pixelBox.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox2.center.x,self.pixelBox2.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox3.center.x,self.pixelBox3.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox4.center.x,self.pixelBox4.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox5.center.x,self.pixelBox5.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox6.center.x,self.pixelBox6.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox7.center.x,self.pixelBox7.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox8.center.x,self.pixelBox8.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox9.center.x,self.pixelBox9.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox10.center.x,self.pixelBox10.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox11.center.x,self.pixelBox11.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox12.center.x,self.pixelBox12.center.y)]];
-     [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox13.center.x,self.pixelBox13.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox14.center.x,self.pixelBox14.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox15.center.x,self.pixelBox15.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox16.center.x,self.pixelBox16.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox17.center.x,self.pixelBox17.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox18.center.x,self.pixelBox18.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox19.center.x,self.pixelBox19.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox20.center.x,self.pixelBox20.center.y)]];
-    
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox21.center.x,self.pixelBox21.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox22.center.x,self.pixelBox22.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox23.center.x,self.pixelBox23.center.y)]];
-    [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox24.center.x,self.pixelBox24.center.y)]];
-     [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox25.center.x,self.pixelBox25.center.y)]];
-     [self.pointsCoord addObject:[NSValue valueWithCGPoint:CGPointMake(self.pixelBox26.center.x,self.pixelBox26.center.y)]];
-    
-        
-        
-        
+
     }
 
     
-    
-    
-    
-    
-    
-    
 
-
-   
 }
-/*-(BOOL)longPressHappened:(UILongPressGestureRecognizer *)gestureRecognizer
-{
-    NSLog(@"LONG PRESS HAPPENED");
-    return true;
-    
-}*/
-
 
 -(void)LoadColorsAtStart
 {
@@ -402,72 +321,6 @@ UIColor* tempColor;
 
 
 
-/*
--(void)drawGrid{
-    self.numberOfRows = self.frame.size.height/12;
-    self.numberOfColumns=self.frame.size.width/12;
-    
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetLineWidth(context, 0.25);
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.2].CGColor);
-    
-    // ---------------------------
-    // Drawing column lines
-    // ---------------------------
-    
-    // calculate column width
-    CGFloat columnWidth = self.frame.size.width / (self.numberOfColumns + 1.0);
-    
-    for(int i = 1; i <= self.numberOfColumns; i++)
-    {
-        CGPoint startPoint;
-        CGPoint endPoint;
-        
-        startPoint.x = columnWidth * i;
-        startPoint.y = 0.0f;
-        
-        endPoint.x = startPoint.x;
-        endPoint.y = self.frame.size.height;
-        
-        //CGFloat dashes[] = {1.5,12};
-        
-        
-        CGContextMoveToPoint(context, startPoint.x, startPoint.y);
-        CGContextAddLineToPoint(context, endPoint.x, endPoint.y);
-        
-       // CGContextSetLineDash(context, 1, dashes, 2);
-        
-        CGContextStrokePath(context);
-    }
-    
-    // ---------------------------
-    // Drawing row lines
-    // ---------------------------
-    
-    // calclulate row height
-    CGFloat rowHeight = self.frame.size.height / (self.numberOfRows + 1.0);
-    
-    for(int j = 1; j <= self.numberOfRows; j++)
-    {
-        CGPoint startPoint;
-        CGPoint endPoint;
-        
-        startPoint.x = 0.0f;
-        startPoint.y = rowHeight * j;
-        
-        endPoint.x = self.frame.size.width;
-        endPoint.y = startPoint.y;
-        
-        CGContextMoveToPoint(context, startPoint.x, startPoint.y);
-        CGContextAddLineToPoint(context, endPoint.x, endPoint.y);
-        CGContextStrokePath(context);
-        
-    }
-    
-}
-*/
-
 -(void)drawRuler:(CGPoint)currrent_coord{
     
    
@@ -477,31 +330,6 @@ UIColor* tempColor;
 
 #pragma mark - Drawing
 - (void)drawRect:(CGRect)rect {
-    
-   
-   /*
-    CAShapeLayer *line = [CAShapeLayer layer];
-    UIBezierPath *linePath=[UIBezierPath bezierPath];
-    [linePath moveToPoint: self.firstTouch];
-    [linePath addLineToPoint:self.lastTouch];
-    
-   // [line setPath:[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(self.firstTouch.x-5,self.firstTouch.y-5, 10, 10)] CGPath]];
-    
-    line.path=linePath.CGPath;
-    line.fillColor = nil;
-    line.lineWidth = 4.0;
-    //line.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:8],[NSNumber numberWithInt:8], nil];
-   
-    line.opacity = 1.0;
-    line.strokeColor = [UIColor redColor].CGColor;
-    
-    line.accessibilityPath = linePath;
-    [drawingLayer addSublayer:line];
-   // NSLog(@"SUBLAYER ADDED");
- //   NSLog(@"NUMBER OF SUBLAYERS %lu", drawingLayer.sublayers.count);
-
-    */
-    
     
     
         if(self.editMode == NO){
@@ -687,92 +515,11 @@ UIGraphicsEndImageContext();
     }
 }
 
-
-
-
-
-/*
-
-
-#pragma mark - Touch Methods
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-   
-    // init the bezier path
-    self.currentTool = [self toolWithCurrentSettings];
-    self.currentTool.lineColor = self.lineColor;
-    [self.pathArray addObject:self.currentTool];
-    
-    // add the first touch
-    UITouch *touch = [touches anyObject];
-    [self.currentTool setInitialPoint:[touch locationInView:self]];
-    
-    // call the delegate
-    if ([self.delegate respondsToSelector:@selector(drawingView:willBeginDrawUsingTool:)]) {
-        [self.delegate drawingView:self willBeginDrawUsingTool:self.currentTool];
-    }
-
-
-
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    // save all the touches in the path
-    UITouch *touch = [touches anyObject];
-    
-    // add the current point to the path
-    CGPoint currentLocation = [touch locationInView:self];
-    CGPoint previousLocation = [touch previousLocationInView:self];
-    [self.currentTool moveFromPoint:previousLocation toPoint:currentLocation];
- 
-#if PARTIAL_REDRAW
-    // calculate the dirty rect
-    CGFloat minX = fmin(previousLocation.x, currentLocation.x) - self.lineWidth * 0.5;
-    CGFloat minY = fmin(previousLocation.y, currentLocation.y) - self.lineWidth * 0.5;
-    CGFloat maxX = fmax(previousLocation.x, currentLocation.x) + self.lineWidth * 0.5;
-    CGFloat maxY = fmax(previousLocation.y, currentLocation.y) + self.lineWidth * 0.5;
-    [self setNeedsDisplayInRect:CGRectMake(minX, minY, (maxX - minX), (maxY - minY))];
-#else
-  
-    [self setNeedsDisplay];
-#endif
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    // make sure a point is recorded
-    [self touchesMoved:touches withEvent:event];
-    
-    // update the image
-    [self updateCacheImage:NO];
-    
-    // clear the current tool
-    self.currentTool = nil;
-    
-    // clear the redo queue
-    [self.bufferArray removeAllObjects];
-    
-    // call the delegate
-    if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
-        [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
-        
-        
-        
-        ////////////
-                
-        ////////
-    }
-}
-*/
-
 -(void)updateTextView
 {
 
    if(pan == YES)
     {
-        //[self.currentTool setInitialPoint:pointForRecognizer];
         
         [self.currentTool setInitialPoint:self.textView.frame.origin];
         
@@ -847,7 +594,7 @@ UIGraphicsEndImageContext();
     pan=NO;
     [self.delegate setButtonVisibleTextPressed];
 }
-/*
+
 - (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
     
     
@@ -891,7 +638,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
  
     }
 }
-*/
+
 
 
 -(void)addTextViewToMiddle
@@ -924,7 +671,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 }
 
 
-#pragma mark - custom method
+#pragma mark - Show Loupe methods
 - (void)showLoupe:(NSTimer *)timer
 {
     
@@ -975,21 +722,11 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 
 #pragma mark - Touches methods
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-   
-    
 
-    
-   // CGRect dotRect = [self convertRect:self.lastDot.bounds fromView:self.lastDot];
-   
     UITouch *touch = [touches anyObject];
     CGPoint firstTouche = [touch locationInView:self];
     touchToCalculateDistance = [touch locationInView:self];
     
-
-    
-    
-    ///----------------------------------xxxxxxxx cxv xdmvbdsmnbbdsmndsbvmdnvbs
- 
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.theFirstPointForRuler = firstTouche;
     
@@ -1005,6 +742,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         self.eraserPointer.image=[UIImage imageNamed:@"eraser_pointer.png"];
        
         [self addSubview:self.eraserPointer];
+    
     }
     
     
@@ -1020,9 +758,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 
         
 
-        if (touchForText != 0){
-    
-        
+        if (touchForText != 0)
+        {
             UITouch *touch = [[event allTouches] anyObject];
             if ([self.textView isFirstResponder] && [touch view] != self.textView) {
                 [self.textView resignFirstResponder];
@@ -1031,29 +768,15 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
                 
                
             }
-
-            
-            
-//[self updateTextView];
-            
-            
             touchesForUpdate = touchesForUpdate+1;
             [super touchesBegan:touches withEvent:event];
-            
             if(touchesForUpdate==2)
             {
-                
-                
               [self updateTextView];
-                touchesForUpdate = 0;
-                
+              touchesForUpdate = 0;
             }
-
         }
     }
-   
-
-    
     unsigned long count2 = [[event allTouches] count];
     countGlobal = count2;
  
@@ -1098,11 +821,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
                                                                  repeats:NO];
             
         }
-    
-    
-        
 
-        
         self.currentTool = [self toolWithCurrentSettings];
         self.currentTool.lineColor = self.lineColor;
         self.currentTool.lineWidthNew = self.lineWidth;
@@ -1124,9 +843,12 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
            int index = 0;
            int keyIndex = NSNotFound;
 
-           for (NSValue * cgpointVal in arrayOfPoints){
+           //for (NSValue * cgpointVal in arrayOfPoints){
+        for (NSString * cgpointVal in arrayOfPoints){
+               //CGPoint pointObj2 = CGPointFromString([arrayOfPoints objectAtIndex:index]);
 
-               discoveryPoint = cgpointVal.CGPointValue;
+            discoveryPoint = CGPointFromString(cgpointVal);
+               //discoveryPoint = cgpointVal.CGPointValue;
 
                if (fabs(touchedPoint.x - discoveryPoint.x)<tolerance && fabs(touchedPoint.y - discoveryPoint.y)<tolerance) {
                    //Calculating the distance between points with touchedPoint in their range(Square) and adding them to an array.
@@ -1136,11 +858,16 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
                        if ( keyOfPointWithMinDistance < distance) {
                        keyOfPointWithMinDistance = distance;
                        nearestPointToTouchedPoint = discoveryPoint;
-                       keyIndex = index;
+                      keyIndex = index;
                                               
-                       [self.currentTool setInitialPoint:[cgpointVal CGPointValue]];
+                     //  [self.currentTool setInitialPoint:[cgpointVal CGPointValue]];
+                           
+                           [self.currentTool setInitialPoint:nearestPointToTouchedPoint];
                        replacedPoint = YES;
-                       pointToReplaceInArray = [cgpointVal CGPointValue];
+                      // pointToReplaceInArray = [cgpointVal CGPointValue];
+                           pointToReplaceInArray = nearestPointToTouchedPoint;
+                    [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+                           
                    }
               
                    index++;
@@ -1151,9 +878,9 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
            }
            //Update self.pointsArray using keyIndex
 
-           if (keyIndex != NSNotFound) {
+          if (keyIndex != NSNotFound) {
 
-           }
+        }
 
 
         
@@ -1333,12 +1060,18 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 
     
+    
+    
      UITouch *touch = [touches anyObject];
     pointForLoupe = [touch locationInView:self.window];
     
     
     unsigned long count = [[event allTouches] count];
 
+    NSLog(@"TOUCHES COUNT %lu", count );
+
+    
+    
     
    if (count > 1) {
        // UITouch *touch = [touches anyObject];
@@ -1386,7 +1119,10 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         CGPoint currentLocation = [touch locationInView:self];
         CGPoint previousLocation = [touch previousLocationInView:self];
         
+   
         
+        
+       
         if(self.drawTool == ACEDrawingToolTypeEraser)
         {
             self.eraserPointer.center = CGPointMake(currentLocation.x, currentLocation.y);
@@ -1545,9 +1281,154 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
       
         [self setNeedsDisplay];
        
-
 #endif
+       
+        CGPoint touchedPoint = [[touches anyObject]locationInView:self];
+       
+        CGPoint discoveryPoint;
+        CGFloat tolerance = 5;
+        // Had to Create these two arrays because there's no such thing as [NSDictionary objectAtIndex:]
+        //NSArray *pointsArray;
+
+        CGFloat keyOfPointWithMinDistance = -1;
+        CGPoint nearestPointToTouchedPoint = CGPointZero;
+        int index = 0;
+        int keyIndex = NSNotFound;
+
+       // for (NSValue * cgpointVal in arrayOfPoints){
+
+      //      discoveryPoint = cgpointVal.CGPointValue;
+
         
+        for (NSString * cgpointVal in arrayOfPoints){
+            discoveryPoint = CGPointFromString(cgpointVal);
+
+        
+            if (fabs(touchedPoint.x - discoveryPoint.x)<tolerance && fabs(touchedPoint.y - discoveryPoint.y)<tolerance) {
+                //Calculating the distance between points with touchedPoint in their range(Square) and adding them to an array.
+                CGFloat distance = hypotf(touchedPoint.x - discoveryPoint.x, touchedPoint.y - discoveryPoint.y);
+     
+                if (keyOfPointWithMinDistance == -1 || keyOfPointWithMinDistance < distance) {
+                    //if ( keyOfPointWithMinDistance < distance) {
+                    keyOfPointWithMinDistance = distance;
+                    nearestPointToTouchedPoint = discoveryPoint;
+                    keyIndex = index;
+                                           
+                    //[self.currentTool setInitialPoint:[cgpointVal CGPointValue]];
+                   // replacedPoint = YES;
+                   // pointToReplaceInArray = [cgpointVal CGPointValue];
+                        //self.lastTouch = CGPointMake(self.lastTouch.x, firstOrReplacedPoint.y);
+                    [self.currentTool moveFromPoint:self.firstTouch toPoint:nearestPointToTouchedPoint];
+                    self.lastTouch = nearestPointToTouchedPoint;
+                
+                }
+           
+                index++;
+            
+            }
+           
+         
+        }
+        //Update self.pointsArray using keyIndex
+
+        if (keyIndex != NSNotFound) {
+
+        }
+
+        
+
+      /*
+        CGPoint lineStart;
+         CGPoint lineEnd;
+         CGPoint newLastPoint;
+        
+        for (UITouch *touch in touches) {
+                CGPoint touchLocation = [touch locationInView:self];
+                for (id sublayer in self.layer.sublayers) {
+                    BOOL touchInLayer = NO;
+                    if ([sublayer isKindOfClass:[CAShapeLayer class]]) {
+                        CAShapeLayer *shapeLayer = sublayer;
+                      
+                        
+                        if((CGPathContainsPoint(shapeLayer.path, 0, touchLocation, YES) )&&([shapeLayer.name  isEqual: @"circle"])){
+                    
+                        //if (CGPathContainsPoint(shapeLayer.path, 0, touchLocation, YES)) {
+                            // This touch is in this shape layer
+                            //NSLog(@"This touch is in this shape layer");
+                            
+                            newLastPoint = CGPointMake(touchLocation.x, touchLocation.y);
+
+                            
+                            lineStart.y = newLastPoint.y;
+                            lineStart.x = self.bounds.origin.x;
+                            
+                            lineEnd.x = self.bounds.size.width;
+                            lineEnd.y = newLastPoint.y;
+                            
+                            [self makeLineLayer:self.layer lineFromPointA:lineStart toPointB:lineEnd];
+
+                            touchInLayer = YES;
+                        }
+                        
+                    } else {
+                       CALayer *layer = sublayer;
+                        if (CGRectContainsPoint(layer.frame, touchLocation)) {
+                            // Touch is in this rectangular layer
+                            NSLog(@"This NOT  shape layer");
+
+                            touchInLayer = YES;
+                            [self removeLine:self.layer];
+
+
+                        }
+
+                    }
+                }
+            }
+        */
+        
+        
+        
+     /*   CGPoint lineStart;
+        CGPoint lineEnd;
+        CGPoint newLastPoint;
+        
+        
+        for (NSString * cgpointVal in arrayOfPoints){
+           
+            
+            
+            discoveryPoint = CGPointFromString(cgpointVal);
+            
+            
+            //CGFloat distance = hypotf( self.lastTouch.x-self.lastTouch.x , self.lastTouch.y-discoveryPoint.y);
+
+           // NSLog(@"DISTANCE %f",distance);
+            if (discoveryPoint.y == self.lastTouch.y){
+            
+                    newLastPoint = CGPointMake(self.lastTouch.x, CGPointFromString(cgpointVal).y);
+
+                [self.currentTool moveFromPoint:self.firstTouch toPoint:newLastPoint];
+                
+                
+                lineStart.y = newLastPoint.y;
+                lineStart.x = self.bounds.origin.x;
+                
+                lineEnd.x = self.bounds.size.width;
+                lineEnd.y = newLastPoint.y;
+                
+               [self makeLineLayer:self.layer lineFromPointA:lineStart toPointB:lineEnd];
+                
+            }
+            else if (self.lastTouch.y != CGPointFromString(cgpointVal).y  ) {
+               
+                [self removeLine:self.layer];
+            }
+
+        }
+        
+*/
+       
     }
     
     
@@ -1593,7 +1474,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
        NSString *ver = [[UIDevice currentDevice] systemVersion];
        float ver_float = [ver floatValue];
        
-       
        //float screen_scale = [[UIScreen mainScreen]scale];
        
        float screen_scale = [[UIScreen mainScreen]scale];
@@ -1636,12 +1516,18 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 
     }
     
+        
+ 
+        
+        
 }
     
     
     - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
    
+   
+
 
     [self.eraserPointer removeFromSuperview];
     [self.touchTimer invalidate];
@@ -1649,7 +1535,6 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
     [self.Ruler setHidden:YES];
 
     
-    NSLog(@"Touches Ended UPPPPP");
     
     
     if(touchMove ==0) {
@@ -1715,7 +1600,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
             }
             
             
-            
+         /*
             double dist = hypot((firstOrReplacedPoint.x-self.lastTouch.x), (firstOrReplacedPoint.y-self.lastTouch.y));
             
            if((self.lastTouch.x - firstOrReplacedPoint.x <= 6)&&(self.lastTouch.x - firstOrReplacedPoint.x >= -6)&&dist>15){
@@ -1729,6 +1614,8 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
                   self.lastTouch = CGPointMake(self.lastTouch.x, firstOrReplacedPoint.y);
     
             }
+            */
+            
             
            /* if (self.drawTool == ACEDrawingToolTypeArrow){
                 
@@ -1796,25 +1683,45 @@ if(self.editMode == NO){
     }
     
     
-    if (replacedPoint == YES&&self.editMode == NO){
+    if (replacedPoint == YES&&self.editMode == NO&&self.drawTool != ACEDrawingToolTypeEraser){
         
-        [arrayOfPoints addObject:  [NSValue valueWithCGPoint:pointToReplaceInArray]];
-        [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
+       // [arrayOfPoints addObject:  [NSValue valueWithCGPoint:pointToReplaceInArray]];
+        //[arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
+        
+        [arrayOfPoints addObject: NSStringFromCGPoint(pointToReplaceInArray)];
+        [arrayOfPoints addObject: NSStringFromCGPoint(self.lastTouch)];
         replacedPoint = NO;
+        
+      //  [self alocatePointAtView:self.layer pointFromArray:pointToReplaceInArray];
+      //  [self alocatePointAtView:self.layer pointFromArray:self.lastTouch];
     }
-    else if (replacedPoint == NO&&self.editMode == NO)
+    else if (replacedPoint == NO&&self.editMode == NO&&self.drawTool != ACEDrawingToolTypeEraser)
     {
-    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.firstTouch]];
-    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
+    //[arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.firstTouch]];
+    //[arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.lastTouch]];
+        
+        [arrayOfPoints addObject: NSStringFromCGPoint(self.firstTouch)];
+        [arrayOfPoints addObject: NSStringFromCGPoint(self.lastTouch)];
+
+      //  [self alocatePointAtView:self.layer pointFromArray:self.firstTouch];
+      //  [self alocatePointAtView:self.layer pointFromArray:self.lastTouch];
+
+        
     }
 
     
     NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
 
  
+    [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
+
+ 
+
     
-  
+
+    
 }
+
 
 
 
@@ -1824,13 +1731,11 @@ if(self.editMode == NO){
 -(void)setEditMode
 {
     
-    
-    
+    self.editMode = YES;
 
     [self.delegate setButtonVisible];
     //[self.btn setEnabled:YES];
     //[self.btn setHidden:NO];
-    self.editMode = YES;
     
     ACEDrawingView *bv = (ACEDrawingView *)self;
     
@@ -1887,11 +1792,13 @@ if(self.editMode == NO){
     
      }
     
-
-    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.currentTool.a]];
-    [arrayOfPoints addObject:  [NSValue valueWithCGPoint:self.currentTool.d]];
+    [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.a)];
+    [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.d)];
     
-    NSLog(@"POINTS Coordinates %@ %@", NSStringFromCGPoint(self.currentTool.a),NSStringFromCGPoint(self.currentTool.d));
+   // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.a];
+   // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.d];
+    
+    [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
 
     
     
@@ -1900,8 +1807,6 @@ if(self.editMode == NO){
     
     
     [self updateCacheImage3:NO];
-    // clear the current tool
-    self.currentTool = nil;
     // clear the redo queue
     [self.bufferArray removeAllObjects];
     [self.bufferOfPoints removeAllObjects];
@@ -1911,22 +1816,26 @@ if(self.editMode == NO){
     if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
         [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
         
+        
+        // clear the current tool
+        self.currentTool = nil;
+
+        
     }
    [self setNeedsDisplay];
     touchMove = 0;
        
     
 }
-#pragma mark - Actions
+#pragma mark - Clear Screen
 
 - (void)clear
 {
     [self.bufferArray removeAllObjects];
     [self.bufferOfPoints removeAllObjects];
-
     [self.pathArray removeAllObjects];
     [arrayOfPoints removeAllObjects];
-
+    [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
     [self updateCacheImage:YES];
     [self setNeedsDisplay];
 }
@@ -1959,7 +1868,9 @@ if(self.editMode == NO){
         [arrayOfPoints removeLastObject];
         [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
         [arrayOfPoints removeLastObject];
+        [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
 
+        
 
         [self updateCacheImage:YES];
         [self setNeedsDisplay];
@@ -1990,7 +1901,7 @@ if(self.editMode == NO){
         [self.bufferOfPoints removeLastObject];
         [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
         [self.bufferOfPoints removeLastObject];
-
+        [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
         [self updateCacheImage:YES];
         [self setNeedsDisplay];
         NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
@@ -2074,7 +1985,7 @@ if(self.editMode == NO){
 }
 
 
-#pragma mark - Shape management
+#pragma mark - Sublayers Managment
 
 
 - (void)addShapeWhenDrawing
@@ -2102,5 +2013,91 @@ if(self.editMode == NO){
 }
 
 
+-(void)savePointsToDefaults:(NSString*)name techniqueName:(NSString*)techName
+{
+    name = [name stringByAppendingString:techName];
+    NSLog(@"NAME IN USER DEFAULTS %@", name);
 
+    [[NSUserDefaults standardUserDefaults] setObject:arrayOfPoints forKey:name];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+}
+
+
+-(NSMutableArray*)retrievePointsFromDefaults:(NSString*)name techniqueName:(NSString*)techName
+{
+   
+    name = [name stringByAppendingString:techName];
+    NSLog(@"NAME IN USER DEFAULTS %@", name);
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *array = [userDefaults objectForKey:name];
+    arrayOfPoints = [NSMutableArray arrayWithArray:array];
+    NSLog(@"ARRAY COUNT %lu", arrayOfPoints.count);
+    
+    return arrayOfPoints;
+}
+
+/*-(void)createLineLayer:(CALayer *)layer{
+    
+    lineNew = [CAShapeLayer layer];
+    lineNew.name = @"line";
+    UIBezierPath *linePath=[UIBezierPath bezierPath];
+    [linePath moveToPoint: CGPointMake( 0,0)];
+    [linePath addLineToPoint:CGPointMake( 0,0)];
+    lineNew.path=linePath.CGPath;
+    lineNew.fillColor = nil;
+    lineNew.opacity = 1.0;
+    lineNew.strokeColor = [UIColor redColor].CGColor;
+    [layer addSublayer:lineNew];
+}
+
+-(void)makeLineLayer:(CALayer *)layer lineFromPointA:(CGPoint)pointA toPointB:(CGPoint)pointB
+{
+}
+
+-(void)removeLine:(CALayer *)layer{
+    
+  for(int i=0;i<layer.sublayers.count;i++) {
+        CAShapeLayer *item  = layer.sublayers[i];
+        if([item.name  isEqual: @"line"]) {
+          [item setHidden:YES];
+            [item removeFromSuperlayer];
+
+            //NSLog(@"remove line");
+          //i--;
+        }
+      }
+    
+}
+*/
+
+
+-(void)alocatePointAtView:(CALayer *)layer pointFromArray:(CGPoint)pointFromArray
+{
+    CAShapeLayer *circle = [CAShapeLayer layer];
+    circle.name = @"circle";
+    UIBezierPath *circlePath=[UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(pointFromArray.x-2, pointFromArray.y-2, 4, 4)];
+    circle.path=circlePath.CGPath;
+    circle.fillColor = nil;
+    circle.opacity = 1.0;
+    circle.strokeColor = [UIColor blueColor].CGColor;
+    [layer addSublayer:circle];
+}
+/*
+-(void)removePointsAtView:(CALayer *)layer  {
+    int circleCount =0;
+    for(int i=0;i<=layer.sublayers.count;i++) {
+          CAShapeLayer *item  = layer.sublayers[i];
+          if([item.name  isEqual: @"circle"]) {
+              circleCount+=1;
+            //[item setHidden:YES];
+              [item removeFromSuperlayer];
+          }
+        }
+    NSLog(@"CIRCLES COUNT %d",circleCount);
+}
+
+*/
 @end

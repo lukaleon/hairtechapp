@@ -342,7 +342,7 @@
         <!--Draw View Controller-->
         <scene sceneID="qNE-om-7Xo">
             <objects>
-                <viewController storyboardIdentifier="leftView" id="BWP-GD-b2N" customClass="DrawViewController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="left" storyboardIdentifier="leftView" id="BWP-GD-b2N" customClass="DrawViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NJl-tH-qJ5">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -895,7 +895,7 @@
         <!--Top Head View Controller-->
         <scene sceneID="Cgl-Pw-MjQ">
             <objects>
-                <viewController storyboardIdentifier="topView" id="m5A-xJ-t5X" customClass="TopHeadViewController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="top" storyboardIdentifier="topView" id="m5A-xJ-t5X" customClass="TopHeadViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g7z-RG-fTt">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1242,7 +1242,7 @@
         <!--Draw View Controller Right-->
         <scene sceneID="sWR-IY-oZg">
             <objects>
-                <viewController storyboardIdentifier="rightView" id="7ME-3P-5aP" customClass="DrawViewControllerRight" sceneMemberID="viewController">
+                <viewController restorationIdentifier="right" storyboardIdentifier="rightView" id="7ME-3P-5aP" customClass="DrawViewControllerRight" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T7p-NJ-Vsa">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1596,7 +1596,7 @@
         <!--Front Head View Controller-->
         <scene sceneID="57I-6j-8NR">
             <objects>
-                <viewController storyboardIdentifier="frontView" id="em5-71-e0v" customClass="FrontHeadViewController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="front" storyboardIdentifier="frontView" id="em5-71-e0v" customClass="FrontHeadViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="glT-1B-QsQ">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1952,7 +1952,7 @@
         <!--Back Head View Controller-->
         <scene sceneID="jav-Lx-aho">
             <objects>
-                <viewController storyboardIdentifier="backView" id="PxP-G6-Acb" customClass="BackHeadViewController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="back" storyboardIdentifier="backView" id="PxP-G6-Acb" customClass="BackHeadViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aY0-5X-YAo">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

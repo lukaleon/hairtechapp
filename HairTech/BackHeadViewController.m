@@ -245,14 +245,20 @@
     [self setupButtons];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
 
+    self.drawingView.viewControllerName = @"back";
     
+    [super viewDidLoad];
+
+    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
 
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    
+    appDelegate.currentViewName = @"back";
+
     
     if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
        {

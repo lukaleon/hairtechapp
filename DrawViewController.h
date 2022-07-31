@@ -21,8 +21,6 @@
 
 
 
-
-
 @end
 
 
@@ -219,6 +217,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverBtn;
 
 @property (weak, nonatomic) id<DrawViewControllerDelegate>drawcontrollerdelegate;
+
 @property (weak, nonatomic)NSString *stringForLabel;
 
 @property (weak, nonatomic) IBOutlet UIImageView *loadImg;

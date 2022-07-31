@@ -488,7 +488,6 @@ CGPoint scalarMult2(CGPoint a, double sc) {
     
       CGContextRef ctx = UIGraphicsGetCurrentContext();
       CGContextSetStrokeColorWithColor(ctx, [UIColor grayColor].CGColor);
-    CGContextSetAlpha(ctx, 0.3f);
 
     
     
