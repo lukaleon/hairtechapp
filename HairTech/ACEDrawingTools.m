@@ -1271,7 +1271,7 @@ CAShapeLayer *shapelayer;
 
 - (void)draw
 {
-    NSLog(@"ERASER IN PROGRESS - 1");
+   // NSLog(@"ERASER IN PROGRESS - 1");
     [self.lineColor setStroke];
     [self setLineWidth:30.0];
     self.eraserWidth = 30.0;
@@ -1292,7 +1292,7 @@ CAShapeLayer *shapelayer;
 -(void)draw3
 {
     
-    NSLog(@"ERASER IN PROGRESS - 3");
+   // NSLog(@"ERASER IN PROGRESS - 3");
 
     [self.lineColor setStroke];
     if ( IDIOM == IPAD ) {

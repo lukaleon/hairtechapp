@@ -722,6 +722,10 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 
 #pragma mark - Touches methods
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    
+    
+    
 
     UITouch *touch = [touches anyObject];
     CGPoint firstTouche = [touch locationInView:self];
@@ -821,6 +825,14 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
                                                                  repeats:NO];
             
         }
+        
+        
+        
+        
+        
+        
+        
+
 
         self.currentTool = [self toolWithCurrentSettings];
         self.currentTool.lineColor = self.lineColor;
@@ -1126,9 +1138,49 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
         if(self.drawTool == ACEDrawingToolTypeEraser)
         {
             self.eraserPointer.center = CGPointMake(currentLocation.x, currentLocation.y);
-
+          
+            
+            /*CGPoint pointFoundInArray;
            
+           for (UITouch *touch in touches) {
+                    CGPoint touchLocation = [touch locationInView:self];
+                    for (id sublayer in self.layer.sublayers) {
+                        BOOL touchInLayer = NO;
+                        if ([sublayer isKindOfClass:[CAShapeLayer class]]) {
+                            CAShapeLayer *shapeLayer = sublayer;
+                          
+                    if((CGPathContainsPoint(shapeLayer.path, 0, self.eraserPointer.center, YES) )&&([shapeLayer.name  isEqual: @"circle"])){
+                        NSLog(@"CGPATH DETECTED");
+                    }
+                        }}
+            
+                }
+             */
+                        
+                    
+            
+            /* for (int i=0; i<[arrayOfPoints count]; i++)
+            {
+                
+                pointFoundInArray = CGPointFromString([arrayOfPoints objectAtIndex:i]);
+              
+                
+                if ( CGRectContainsPoint(self.eraserPointer.frame, pointFoundInArray) )
+                {
+                    
+                    [arrayOfPoints replaceObjectAtIndex:i withObject:NSStringFromCGPoint(self.eraserPointer.center)];
+                    
+                   // NSLog(@"array count = %lu", arrayOfPoints.count );
+                  //  [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
+                    //[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName];
+                }*/
+                
+                  //  }
+            //}
+                
         }
+            
+    
         
         
         
@@ -1692,6 +1744,8 @@ if(self.editMode == NO){
         [arrayOfPoints addObject: NSStringFromCGPoint(self.lastTouch)];
         replacedPoint = NO;
         
+       // [self drawLine:self.layer lineFromPointA:pointToReplaceInArray toPointB:self.lastTouch];
+
       //  [self alocatePointAtView:self.layer pointFromArray:pointToReplaceInArray];
       //  [self alocatePointAtView:self.layer pointFromArray:self.lastTouch];
     }
@@ -1705,7 +1759,7 @@ if(self.editMode == NO){
 
       //  [self alocatePointAtView:self.layer pointFromArray:self.firstTouch];
       //  [self alocatePointAtView:self.layer pointFromArray:self.lastTouch];
-
+        //[self drawLine:self.layer lineFromPointA:self.firstTouch toPointB:self.lastTouch];
         
     }
 
@@ -1789,17 +1843,17 @@ if(self.editMode == NO){
     pd = self.currentTool.c;
          
          
-    
+         [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.a)];
+         [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.d)];
+         
+        // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.a];
+        // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.d];
+         
+         [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
+
      }
     
-    [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.a)];
-    [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.d)];
-    
-   // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.a];
-   // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.d];
-    
-    [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
-
+   
     
     
     
@@ -1869,8 +1923,6 @@ if(self.editMode == NO){
         [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
         [arrayOfPoints removeLastObject];
         [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
-
-        
 
         [self updateCacheImage:YES];
         [self setNeedsDisplay];
@@ -2100,4 +2152,21 @@ if(self.editMode == NO){
 }
 
 */
+-(void)drawLine:(CALayer *)layer lineFromPointA:(CGPoint)pointA toPointB:(CGPoint)pointB
+{
+    CAShapeLayer *lineCA = [CAShapeLayer layer];
+    lineCA.name = @"lineNew";
+    UIBezierPath *lineCAPath=[UIBezierPath bezierPath];
+    [lineCAPath moveToPoint: pointA];
+    [lineCAPath addLineToPoint:pointB];
+    lineCA.path=lineCAPath.CGPath;
+    lineCA.lineWidth = 3.0;
+    lineCA.fillColor = nil;
+    lineCA.opacity = 1.0;
+    lineCA.strokeColor = [UIColor blueColor].CGColor;
+    [layer addSublayer:lineCA];
+    
+}
+
+
 @end
