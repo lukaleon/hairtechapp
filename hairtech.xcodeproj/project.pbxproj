@@ -15,6 +15,8 @@
 		409BA07A274BECEA00A7647C /* smalldot.png in Resources */ = {isa = PBXBuildFile; fileRef = 409BA078274BECEA00A7647C /* smalldot.png */; };
 		409BA07E274BEDE800A7647C /* sliderdots.png in Resources */ = {isa = PBXBuildFile; fileRef = 409BA07D274BEDE800A7647C /* sliderdots.png */; };
 		40A6F41928133C580056FA8A /* dragger.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A6F41828133C580056FA8A /* dragger.png */; };
+		40C99EDA289942FA00A517FD /* CAShapeLayer+Line.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */; };
+		40C99EDB289942FA00A517FD /* CAShapeLayer+CirclePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
 		40FAF8DD28049148004DA2BA /* width1.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D828049148004DA2BA /* width1.png */; };
 		40FAF8DE28049148004DA2BA /* width3.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D928049148004DA2BA /* width3.png */; };
@@ -367,6 +369,10 @@
 		409BA078274BECEA00A7647C /* smalldot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smalldot.png; path = "../../../Desktop/Hairtechapp - images/1x/smalldot.png"; sourceTree = "<group>"; };
 		409BA07D274BEDE800A7647C /* sliderdots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sliderdots.png; path = "../../../Desktop/Hairtechapp - images/1x/sliderdots.png"; sourceTree = "<group>"; };
 		40A6F41828133C580056FA8A /* dragger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dragger.png; path = "../../Hairtech New Img/dragger.png"; sourceTree = "<group>"; };
+		40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Line.m"; sourceTree = "<group>"; };
+		40C99ED7289942FA00A517FD /* CAShapeLayer+CirclePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+CirclePoint.h"; sourceTree = "<group>"; };
+		40C99ED8289942FA00A517FD /* CAShapeLayer+Line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Line.h"; sourceTree = "<group>"; };
+		40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+CirclePoint.m"; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
 		40FAF8D828049148004DA2BA /* width1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width1.png; sourceTree = "<group>"; };
@@ -906,6 +912,10 @@
 				B4188FB7171C7DBE0035785B /* ACEDrawingTools.m */,
 				B4188FB8171C7DBE0035785B /* ACEDrawingView.h */,
 				B4188FB9171C7DBE0035785B /* ACEDrawingView.m */,
+				40C99ED7289942FA00A517FD /* CAShapeLayer+CirclePoint.h */,
+				40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */,
+				40C99ED8289942FA00A517FD /* CAShapeLayer+Line.h */,
+				40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -1960,8 +1970,10 @@
 				B4682CAB1AFF4F9300FA2A5D /* MAThemeKit.m in Sources */,
 				B401CA081B04798000596292 /* Utility.m in Sources */,
 				B434126E16E61E25003FAFA7 /* ColorButton.m in Sources */,
+				40C99EDA289942FA00A517FD /* CAShapeLayer+Line.m in Sources */,
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
+				40C99EDB289942FA00A517FD /* CAShapeLayer+CirclePoint.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,
 				B4188FBA171C7DBE0035785B /* ACEDrawingTools.m in Sources */,
 				B4188FBB171C7DBE0035785B /* ACEDrawingView.m in Sources */,

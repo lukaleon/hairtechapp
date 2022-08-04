@@ -3,6 +3,8 @@
 #import "ColorViewController.h"
 #import "TextView.h"
 #import "UITextView+PinchZoom.h"
+#import "CAShapeLayer+Line.h"
+#import "CAShapeLayer+CirclePoint.h"
 
 #define ACEDrawingViewVersion   1.0.0
 
@@ -74,8 +76,21 @@ typedef enum {
     NSString *viewName;
     NSString *currentTechniqueName;
     CAShapeLayer *lineNew;
-}
+    
+    
+    BOOL controlPointsVisible;
+    
+    NSMutableArray *arrayOfCircles;
+    NSMutableArray *arrayOfLines;
+    
+    
+    IBOutlet UIPanGestureRecognizer *linePanRecognizer;
 
+}
+@property (nonatomic, weak) IBOutlet Circle *circlePoint1;
+//@property (nonatomic, weak) IBOutlet Circle *circlePoint2;
+
+@property (nonatomic, weak) IBOutlet Line *lineClass;
 
 -(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString*)techniqueName;
 

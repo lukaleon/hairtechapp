@@ -68,6 +68,9 @@
 @synthesize pointForRecognizer;
 @synthesize pan;
 @synthesize touchesForUpdate;
+@synthesize lineClass;
+@synthesize circlePoint1;
+
 
 CGFloat red;
 CGFloat green;
@@ -263,7 +266,9 @@ UIColor* tempColor;
 
 - (void)configure
 {
-    
+    arrayOfLines =[[NSMutableArray alloc]init];
+    arrayOfCircles =[NSMutableArray array];
+    controlPointsVisible = false;
     
     self.pointsLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 80, 500, 40)];
    
@@ -282,14 +287,16 @@ UIColor* tempColor;
     
    self.pointsCoord = [NSMutableArray array];
     
-      AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"CUURENT VIEW IS %@",appDelegate.currentView);
-    if([appDelegate.currentView isEqualToString:@"drawView"])
-    {
-
-    }
-
     
+    
+    UITapGestureRecognizer *lineTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(highlightLine:)];
+    [self addGestureRecognizer:lineTapRecognizer];
+    
+    linePanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleLinePan:)];
+    [self addGestureRecognizer:linePanRecognizer];
+    [linePanRecognizer setEnabled:NO];
+
+
 
 }
 
@@ -724,7 +731,7 @@ recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     
-    
+
     
 
     UITouch *touch = [touches anyObject];
@@ -1772,6 +1779,7 @@ if(self.editMode == NO){
  
 
     
+    [self drawLine:self.layer lineFromPointA:self.firstTouch toPointB:self.lastTouch lColor: self.lineColor];
 
     
 }
@@ -2039,7 +2047,7 @@ if(self.editMode == NO){
 
 #pragma mark - Sublayers Managment
 
-
+/*
 - (void)addShapeWhenDrawing
 {
   //  CGRect maxBounds = CGRectInset(self.bounds, 10.0f, 10.0f);
@@ -2063,6 +2071,7 @@ if(self.editMode == NO){
      [drawingLayer addSublayer:line];
     
 }
+*/
 
 
 -(void)savePointsToDefaults:(NSString*)name techniqueName:(NSString*)techName
@@ -2152,7 +2161,7 @@ if(self.editMode == NO){
 }
 
 */
--(void)drawLine:(CALayer *)layer lineFromPointA:(CGPoint)pointA toPointB:(CGPoint)pointB
+/*-(void)drawLine:(CALayer *)layer lineFromPointA:(CGPoint)pointA toPointB:(CGPoint)pointB
 {
     CAShapeLayer *lineCA = [CAShapeLayer layer];
     lineCA.name = @"lineNew";
@@ -2166,6 +2175,164 @@ if(self.editMode == NO){
     lineCA.strokeColor = [UIColor blueColor].CGColor;
     [layer addSublayer:lineCA];
     
+}*/
+
+- (void)highlightLine:(UITapGestureRecognizer*)sender {
+ 
+  CGPoint touchLocation = [sender locationInView:self];
+
+
+  //  for (int i=0; i<arrayOfLines.count;i++) {
+    // if ([[arrayOfLines objectAtIndex:i] isKindOfClass:[CAShapeLayer class]]) {
+    
+    for(id sublayer in arrayOfLines){
+        if ([sublayer isKindOfClass:[Line class]]) {
+            Line *shapeLayer =sublayer;
+            
+            Line *topSublayer = [arrayOfLines lastObject];
+            
+            
+
+          
+    if((CGPathContainsPoint(shapeLayer.path, 0, touchLocation, YES) && ([shapeLayer.name  isEqual: @"linenew"]))){
+        NSLog(@"DETECTED");
+
+
+        [shapeLayer drawCirclesX:shapeLayer.startPoint.x-3 circleY:shapeLayer.startPoint.y-3 currentLayer:topSublayer];
+        [shapeLayer drawCirclesX:shapeLayer.endPoint.x-3 circleY:shapeLayer.endPoint.y-3 currentLayer:topSublayer];
+        
+       
+      //[self addCircle1X:shapeLayer.startPoint.x-3 addCircle1Y:shapeLayer.startPoint.y-3];
+     // [self addCircle1X:shapeLayer.endPoint.x-3 addCircle1Y:shapeLayer.endPoint.y-3];
+        
+        [linePanRecognizer setEnabled:YES];
+        controlPointsVisible = true;
+        
+    }
+
+    else{
+        
+        [shapeLayer removeCircles];
+        controlPointsVisible = false;
+        [linePanRecognizer setEnabled:NO];
+
+    }
+       
+        
+}
+    }
+}
+
+-(void)drawLine:(CALayer *)layer lineFromPointA:(CGPoint)pointA toPointB:(CGPoint)pointB lColor:(UIColor*)lColor
+{
+    lineClass = [Line layer];
+    lineClass.name = @"linenew";
+    UIBezierPath *lineCAPath=[UIBezierPath bezierPath];
+    [lineCAPath moveToPoint: pointA];
+    [lineCAPath addLineToPoint:pointB];
+    CGPathRef thickPath = CGPathCreateCopyByStrokingPath(lineCAPath.CGPath, NULL, 2, kCGLineCapRound, kCGLineJoinMiter, 0);
+    lineClass.path=thickPath;
+   // lineCA.lineWidth = 2.0;
+    lineClass.fillColor = self.lineColor.CGColor;
+    lineClass.opacity = 1.0;
+    //lineClass.strokeColor = [UIColor blueColor].CGColor;
+    
+    lineClass.startPoint = pointA;
+    lineClass.endPoint = pointB;
+    
+    [layer addSublayer:lineClass];
+    [arrayOfLines addObject:lineClass];
+    NSLog(@"ARRAY OF lINES %lu",(unsigned long)arrayOfLines.count);
+    //NSLog(@"Sublayers on the screen %lu", [layer.sublayers count]);
+}
+-(void)addCircle1X:(CGFloat)circleX addCircle1Y:(CGFloat)circleY {
+    
+    NSLog(@"ADD CIRCLES METHOD");
+    
+    CAShapeLayer * circlePoint= [Circle layer];
+   // CAShapeLayer * circlePoint1 = [CAShapeLayer layer];
+    circlePoint.name = @"circle";
+    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(circleX,circleY,6, 6)];
+
+    circlePoint.path=circlePath.CGPath;
+    circlePoint.fillColor =[UIColor colorWithRed:4.0f/255.0f green:119.0f/255.0f blue:190.0f/255.0f alpha:1.0f].CGColor;
+    circlePoint.opacity = 1.0;
+    circlePoint.lineWidth=1;
+    circlePoint.strokeColor = [UIColor whiteColor].CGColor;
+    
+    circlePoint.shadowColor = [UIColor grayColor].CGColor;
+    circlePoint.shadowOffset = CGSizeMake(0.1f, 0.1f);
+    circlePoint.shadowRadius = 0.4f;
+   circlePoint.shadowOpacity = 0.6f;
+    [self.layer addSublayer:circlePoint];
+    [arrayOfCircles addObject:circlePoint];
+}
+
+
+
+-(void)removeCircles{
+    
+    
+    [arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+    [arrayOfCircles removeAllObjects];
+}
+
+
+- (void)handleLinePan:(UIPanGestureRecognizer *)recognizer {
+   
+    CGFloat firstX;
+    CGFloat firstY;
+    
+    CGPoint translatedPoint = [recognizer translationInView:recognizer.view];
+
+        if (recognizer.state == UIGestureRecognizerStateBegan) {
+            firstX = recognizer.view.center.x;
+            firstY = recognizer.view.center.y;
+        }
+
+    translatedPoint = CGPointMake(recognizer.view.center.x+translatedPoint.x, recognizer.view.center.y+translatedPoint.y);
+    
+    [recognizer.view setCenter:translatedPoint];
+    [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    
+    for (int i=0; i<arrayOfLines.count;i++) {
+     if ([[arrayOfLines objectAtIndex:i] isKindOfClass:[CAShapeLayer class]]) {
+         Line *shapeLayer = [arrayOfLines objectAtIndex:i];
+          
+    if((CGPathContainsPoint(shapeLayer.path, 0, translatedPoint, YES) && ([shapeLayer.name  isEqual: @"linenew"]))){
+        NSLog(@"DETECTED");
+   [recognizer setTranslation:CGPointMake(0,0) inView:self];
+    //CGPoint p = [recognizer locationInView:shapeLayer.frame];
+    
+      
+        //  recognizer.view.center = CGPointMake(recognizer.view.center.x + [recognizer locationInView:self].x,
+             //                              recognizer.view.center.y + [recognizer locationInView:self].y);
+        
+        shapeLayer.frame = CGRectMake(shapeLayer.startPoint.x, shapeLayer.startPoint.y, shapeLayer.frame.size.width, shapeLayer.frame.size.height);
+        
+        //CGRectMake(shapeLayer.bounds.origin.x,
+                                  //    shapeLayer.bounds.origin.y, [recognizer locationInView:self].x, [recognizer locationInView:self].y);
+        
+   }
+    }
+  // else {
+    //   self.textView.backgroundColor = [UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:170.0f/255.0f alpha:0.1] ;
+   //}
+    
+    
+    /*if (recognizer.state == UIGestureRecognizerStateEnded) {
+        pan = YES;
+        touchesForUpdate = 0;
+
+        CGPoint finalPoint = [recognizer locationInView:self];
+        
+      pointForRecognizer = CGPointMake(self.textView.frame.origin.x,self.textView.frame.origin.y);
+
+     //   pointForRecognizer = CGPointMake(self.textView.center.x,self.textView.center.y);
+ 
+    }*/
+}
 }
 
 
