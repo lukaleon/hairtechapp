@@ -2190,14 +2190,12 @@ if(self.editMode == NO){
             Line *shapeLayer =sublayer;
             
             Line *topSublayer = [arrayOfLines lastObject];
-            
-            
-
-          
-    if((CGPathContainsPoint(shapeLayer.path, 0, touchLocation, YES) && ([shapeLayer.name  isEqual: @"linenew"]))){
+                        
+    //if((CGPathContainsPoint(shapeLayer.path, 0, touchLocation, YES) && ([shapeLayer.name  isEqual: @"linenew"]))){
         NSLog(@"DETECTED");
 
-
+        if(([shapeLayer pointInside:touchLocation path:shapeLayer.path])&&([shapeLayer.name  isEqual: @"linenew"])){
+                
         [shapeLayer drawCirclesX:shapeLayer.startPoint.x-3 circleY:shapeLayer.startPoint.y-3 currentLayer:topSublayer];
         [shapeLayer drawCirclesX:shapeLayer.endPoint.x-3 circleY:shapeLayer.endPoint.y-3 currentLayer:topSublayer];
         
@@ -2230,8 +2228,8 @@ if(self.editMode == NO){
     UIBezierPath *lineCAPath=[UIBezierPath bezierPath];
     [lineCAPath moveToPoint: pointA];
     [lineCAPath addLineToPoint:pointB];
-    CGPathRef thickPath = CGPathCreateCopyByStrokingPath(lineCAPath.CGPath, NULL, 2, kCGLineCapRound, kCGLineJoinMiter, 0);
-    lineClass.path=thickPath;
+    lineClass.pathOfLine = CGPathCreateCopyByStrokingPath(lineCAPath.CGPath, NULL, 2, kCGLineCapRound, kCGLineJoinMiter, 0);
+    lineClass.path=lineClass.pathOfLine;
    // lineCA.lineWidth = 2.0;
     lineClass.fillColor = self.lineColor.CGColor;
     lineClass.opacity = 1.0;

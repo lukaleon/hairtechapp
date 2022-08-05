@@ -15,7 +15,6 @@
 
 
 
-
 - (id)init {
     if ((self = [super init])) {
         self.fillColor = [UIColor blueColor].CGColor;
@@ -53,5 +52,39 @@
     [arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [arrayOfCircles removeAllObjects];
 }
+
+-(BOOL) pointInside:(CGPoint)point path:(CGPathRef)newPath
+{
+   
+    
+    CGRect tmpFrame = CGPathGetBoundingBox(newPath);
+    CGRect biggerFrame = CGRectMake(tmpFrame.origin.x-2,
+                                    tmpFrame.origin.y-2,
+                                    tmpFrame.size.width+5,
+                                    tmpFrame.size.height+5);
+                                    
+    CGPathRef newCG =  CGPathCreateWithRect(biggerFrame, NULL);
+    return CGPathContainsPoint(newCG, 0, point, YES);
+    
+    
+    
+    /*
+    
+    
+    
+    // CGRect newArea = CGRectMake(self.bounds.origin.x - 5, self.bounds.origin.y - 5, self.bounds.size.width + 10, self.bounds.size.height + 10);
+    
+    CGRect newArea = CGRectMake(newArea.origin.x-5 , newArea.origin.y- 5, newArea.size.width + 10, newArea.size.height + 10);
+    
+    Ui
+    
+  // linePath = CGPathCreateWithRect(newArea, NULL);
+    return CGRectContainsPoint(newArea, point);
+    
+    return CGPathContainsPoint(path, 0, point, YES);
+*/
+}
+
+
 
 @end
