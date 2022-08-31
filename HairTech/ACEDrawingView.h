@@ -3,8 +3,8 @@
 #import "ColorViewController.h"
 #import "TextView.h"
 #import "UITextView+PinchZoom.h"
-#import "CAShapeLayer+Line.h"
-#import "CAShapeLayer+CirclePoint.h"
+#import "JVDrawingLayer.h"
+#import "CircleLayer.h"
 
 #define ACEDrawingViewVersion   1.0.0
 
@@ -20,11 +20,7 @@ typedef enum {
    
 } ACEDrawingToolType;
 
-
-
-
-
-@protocol ACEDrawingViewDelegate, ACEDrawingTool;
+@protocol ACEDrawingViewDelegate, ACEDrawingTool,ACEDrawingViewDataSource;
 
 @interface ACEDrawingView : UIView <ColorViewControllerDelegate,UITextViewDelegate>
 
@@ -77,20 +73,41 @@ typedef enum {
     NSString *currentTechniqueName;
     CAShapeLayer *lineNew;
     
+    NSMutableArray *lookupArray;
     
-    BOOL controlPointsVisible;
-    
-    NSMutableArray *arrayOfCircles;
-    NSMutableArray *arrayOfLines;
-    
-    
-    IBOutlet UIPanGestureRecognizer *linePanRecognizer;
-
+    BOOL touchesMoved;
+    BOOL menuVisible;
+    UIMenuController * menu;
 }
-@property (nonatomic, weak) IBOutlet Circle *circlePoint1;
-//@property (nonatomic, weak) IBOutlet Circle *circlePoint2;
+@property (nonatomic, assign) BOOL eraserSelected;
+@property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);
+@property (nonatomic, assign) JVDrawingType type;
 
-@property (nonatomic, weak) IBOutlet Line *lineClass;
+@property (nonatomic, assign) CircleLayer * circleLayer1;
+@property (nonatomic, assign) CircleLayer * circleLayer2;
+@property (nonatomic, assign) CircleLayer * circleLayer3;
+
+@property NSMutableArray * arrayOfCircles;
+@property CGFloat zoomFactor;
+
+- (BOOL)revoke;
+
+
+
+-(void)updateZoomFactor:(CGFloat)zoomFactor;
+
+
+
+@property (nonatomic, weak) IBOutlet id <ACEDrawingViewDataSource> dataSource;
+
+- (void)reloadData;
+- (void)reloadDataInRect:(CGRect)rect;
+
+
+
+//End of declaration of properties for drawing UIBezierPath Shapes
+
+
 
 -(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString*)techniqueName;
 
@@ -101,11 +118,6 @@ typedef enum {
 
 @property (nonatomic, strong) UIBezierPath *tapTarget;
 
-- (void)reloadDataInRect:(CGRect)rect;
-
-@property (nonatomic, strong) NSMutableArray *shapes;
-
-@property (nonatomic, assign) NSUInteger selectedShapeIndex;
 
 
 
@@ -153,34 +165,6 @@ typedef enum {
 
 
 @property (nonatomic, strong) UIImageView *eraserPointer;
-
-@property (nonatomic, strong) UIImageView *pixelBox;
-@property (nonatomic, strong) UIImageView *pixelBox2;
-@property (nonatomic, strong) UIImageView *pixelBox3;
-@property (nonatomic, strong) UIImageView *pixelBox4;
-@property (nonatomic, strong) UIImageView *pixelBox5;
-@property (nonatomic, strong) UIImageView *pixelBox6;
-@property (nonatomic, strong) UIImageView *pixelBox7;
-@property (nonatomic, strong) UIImageView *pixelBox8;
-@property (nonatomic, strong) UIImageView *pixelBox9;
-@property (nonatomic, strong) UIImageView *pixelBox10;
-@property (nonatomic, strong) UIImageView *pixelBox11;
-@property (nonatomic, strong) UIImageView *pixelBox12;
-@property (nonatomic, strong) UIImageView *pixelBox13;
-@property (nonatomic, strong) UIImageView *pixelBox14;
-@property (nonatomic, strong) UIImageView *pixelBox15;
-@property (nonatomic, strong) UIImageView *pixelBox16;
-@property (nonatomic, strong) UIImageView *pixelBox17;
-@property (nonatomic, strong) UIImageView *pixelBox18;
-@property (nonatomic, strong) UIImageView *pixelBox19;
-@property (nonatomic, strong) UIImageView *pixelBox20;
-@property (nonatomic, strong) UIImageView *pixelBox21;
-@property (nonatomic, strong) UIImageView *pixelBox22;
-@property (nonatomic, strong) UIImageView *pixelBox23;
-@property (nonatomic, strong) UIImageView *pixelBox24;
-@property (nonatomic, strong) UIImageView *pixelBox25;
-@property (nonatomic, strong) UIImageView *pixelBox26;
-@property (nonatomic, strong) UIImageView *pixelBox27;
 
 @property  BOOL *editModeCanceled;
 
@@ -248,11 +232,29 @@ typedef enum {
 - (void)redoLatestStep;
 
 -(void)getScreenShot:(UIImage*)img;
-//@property (nonatomic, weak)IBOutlet UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic, weak)IBOutlet UIPanGestureRecognizer *panRecognizer;
+@property (nonatomic, weak)IBOutlet UITapGestureRecognizer *tapRecognizer;
+
+
+
+
+- (NSUInteger)numberOfShapesInDrawingView:(ACEDrawingView *)drawingView;
+- (UIBezierPath *)drawingView:(ACEDrawingView *)drawingView pathForShapeAtIndex:(NSUInteger)shapeIndex;
+- (UIColor *)drawingView:(ACEDrawingView *)drawingView lineColorForShapeAtIndex:(NSUInteger)shapeIndex;
+
+- (NSUInteger)indexOfSelectedShapeInDrawingView:(ACEDrawingView *)drawingView;
+
+
+
+
 
 @end
 
 #pragma mark -
+
+
+
+
 
 @protocol ACEDrawingViewDelegate <NSObject>
 

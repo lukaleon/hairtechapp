@@ -176,7 +176,7 @@ CGPoint scalarMult(CGPoint a, double sc) {
     //if(appDelegate.dashedCurve==YES){
     NSLog(@" This is DRAW-1 method !!!!!");
   CGContextRef context = UIGraphicsGetCurrentContext();
-    
+        CGContextSetShouldAntialias(context, YES);
     // set the line properties
     CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
     CGContextSetLineCap(context, kCGLineCapRound);
@@ -433,6 +433,8 @@ CGPoint scalarMult2(CGPoint a, double sc) {
 -(void)draw
 {
     UIBezierPath * path = [[UIBezierPath alloc] init];
+    
+    
     [path  moveToPoint:d]; //add yourStartPoint here
     [path addLineToPoint:c];// add yourEndPoint here
     [self.lineColor setStroke];
@@ -1176,49 +1178,31 @@ CAShapeLayer *shapelayer;
 
 - (void)draw
 {
-    CGContextRef context = UIGraphicsGetCurrentContext();
+   
+    UIBezierPath *path=[UIBezierPath bezierPath];
+    [path  moveToPoint:self.firstPoint]; //add yourStartPoint here
+    [path addLineToPoint:self.lastPoint];// add yourEndPoint here
+    [self.lineColor setStroke];
+    CGPathRef pathRef = CGPathCreateCopyByStrokingPath(path.CGPath, NULL, 2, kCGLineCapRound, kCGLineJoinMiter, 0);
+    [path setLineWidth:self.lineWidthNew];
+   
+    [path setLineCapStyle:kCGLineCapRound];
+    [path stroke];
+
     
-    // set the line properties
-    CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
-    CGContextSetLineCap(context, kCGLineCapRound);
- 
-    if ( IDIOM == IPAD ) {
-        CGContextSetLineWidth(context, self.lineWidthNew);
-    }
-    else{
-        CGContextSetLineWidth(context, self.lineWidthNew);
-        
-    }
-    
-    CGContextSetAlpha(context, 1.0);
-    
-    // draw the line
-    CGContextMoveToPoint(context, self.firstPoint.x, self.firstPoint.y);
-    CGContextAddLineToPoint(context, self.lastPoint.x, self.lastPoint.y);
-    CGContextStrokePath(context);
+
 }
 -(void)draw3
 {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    // set the line properties
-    CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
-    CGContextSetLineCap(context, kCGLineCapRound);
-
-    if ( IDIOM == IPAD ) {
-        CGContextSetLineWidth(context, self.lineWidthNew);
-    }
-    else{
-        CGContextSetLineWidth(context,self.lineWidthNew);
-        
-    }
-    
-    CGContextSetAlpha(context, 1.0);
-    
-    // draw the line
-    CGContextMoveToPoint(context, self.firstPoint.x, self.firstPoint.y);
-    CGContextAddLineToPoint(context, self.lastPoint.x, self.lastPoint.y);
-    CGContextStrokePath(context);
+    UIBezierPath *path=[UIBezierPath bezierPath];
+    [path  moveToPoint:self.firstPoint]; //add yourStartPoint here
+    [path addLineToPoint:self.lastPoint];// add yourEndPoint here
+    [self.lineColor setStroke];
+    CGPathRef pathRef = CGPathCreateCopyByStrokingPath(path.CGPath, NULL, 2, kCGLineCapRound, kCGLineJoinMiter, 0);
+    [path setLineWidth:self.lineWidthNew];
+   
+    [path setLineCapStyle:kCGLineCapRound];
+    [path stroke];
    
 }
 #if !ACE_HAS_ARC

@@ -143,6 +143,24 @@
     return NO;
 }
 
+-(BOOL)checkNameForSpecialSymbols {
+    
+    NSLog(@"This CHECKER.");
+
+    NSString *string = self.textField.text;
+
+    NSString *specialCharacterString = @"!~`@#$%^&*+();:={}[],<>?\\/\"\'";
+    NSCharacterSet *specialCharacterSet = [NSCharacterSet
+                                           characterSetWithCharactersInString:specialCharacterString];
+
+    if ([string.lowercaseString rangeOfCharacterFromSet:specialCharacterSet].length) {
+        NSLog(@"contains special characters");
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 -(BOOL)checkEnteredName{
     
     NSMutableString *bfcol1 =@"thumb1";
@@ -181,7 +199,7 @@
     
    
     
-    if([self checkEnteredName])
+    if ([self checkEnteredName] )
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!"
                                                         message:@"The technique with such name exists"
@@ -191,17 +209,11 @@
         [alert show];
         [self checkEnteredName];
     }
-    
- 
-    
-    
-    
-    
-    
-    if(![self checkEnteredName]){
+    if (![self checkEnteredName]){
     [self closeSubViewManually];
     return [textField resignFirstResponder];
     }
+    
 }
 
 -(void)copyFileFromBundleToDocs:(NSString*)fileName {
@@ -717,9 +729,23 @@
     
     
     
-    if(![self checkEnteredName]&&(![self checkNameLength])&&[self checkButtonSelected]){
+    if(![self checkEnteredName]&&(![self checkNameLength])&&[self checkButtonSelected]&&![self checkNameForSpecialSymbols]){
        [self closeSubViewManually];
     }
+    
+    if ([self checkNameForSpecialSymbols]) {
+        
+        UIAlertView *alert4 = [[UIAlertView alloc] initWithTitle:@"Warning!"
+                                                        message:@"This string contains illegal characters"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert4 show];
+        [self checkNameForSpecialSymbols];
+    }
+    
+    
+
 }
 
 -(BOOL)checkButtonSelected{

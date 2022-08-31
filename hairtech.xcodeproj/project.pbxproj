@@ -9,14 +9,11 @@
 /* Begin PBXBuildFile section */
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40632361287314C3008E8324 /* lastPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 40632360287314C3008E8324 /* lastPoint.png */; };
+		407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
 		407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B702750033600BA0474 /* ASValuePopUpView.m */; };
-		409BA079274BECEA00A7647C /* bigdot.png in Resources */ = {isa = PBXBuildFile; fileRef = 409BA077274BECEA00A7647C /* bigdot.png */; };
-		409BA07A274BECEA00A7647C /* smalldot.png in Resources */ = {isa = PBXBuildFile; fileRef = 409BA078274BECEA00A7647C /* smalldot.png */; };
-		409BA07E274BEDE800A7647C /* sliderdots.png in Resources */ = {isa = PBXBuildFile; fileRef = 409BA07D274BEDE800A7647C /* sliderdots.png */; };
 		40A6F41928133C580056FA8A /* dragger.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A6F41828133C580056FA8A /* dragger.png */; };
-		40C99EDA289942FA00A517FD /* CAShapeLayer+Line.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */; };
-		40C99EDB289942FA00A517FD /* CAShapeLayer+CirclePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */; };
+		40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB525328B8FF62001B97B6 /* CircleLayer.m */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
 		40FAF8DD28049148004DA2BA /* width1.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D828049148004DA2BA /* width1.png */; };
 		40FAF8DE28049148004DA2BA /* width3.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D928049148004DA2BA /* width3.png */; };
@@ -361,18 +358,15 @@
 /* Begin PBXFileReference section */
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
 		40632360287314C3008E8324 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lastPoint.png; path = "../../Hairtech New Img/lastPoint.png"; sourceTree = "<group>"; };
+		407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVDrawingLayer.m; sourceTree = "<group>"; };
+		407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVDrawingLayer.h; sourceTree = "<group>"; };
 		407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
 		407D4B6F2750033600BA0474 /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
 		407D4B702750033600BA0474 /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
 		407D4B712750033600BA0474 /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
-		409BA077274BECEA00A7647C /* bigdot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bigdot.png; path = "../../../Desktop/Hairtechapp - images/1x/bigdot.png"; sourceTree = "<group>"; };
-		409BA078274BECEA00A7647C /* smalldot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smalldot.png; path = "../../../Desktop/Hairtechapp - images/1x/smalldot.png"; sourceTree = "<group>"; };
-		409BA07D274BEDE800A7647C /* sliderdots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sliderdots.png; path = "../../../Desktop/Hairtechapp - images/1x/sliderdots.png"; sourceTree = "<group>"; };
 		40A6F41828133C580056FA8A /* dragger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dragger.png; path = "../../Hairtech New Img/dragger.png"; sourceTree = "<group>"; };
-		40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+Line.m"; sourceTree = "<group>"; };
-		40C99ED7289942FA00A517FD /* CAShapeLayer+CirclePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+CirclePoint.h"; sourceTree = "<group>"; };
-		40C99ED8289942FA00A517FD /* CAShapeLayer+Line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAShapeLayer+Line.h"; sourceTree = "<group>"; };
-		40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAShapeLayer+CirclePoint.m"; sourceTree = "<group>"; };
+		40AB525228B8FF62001B97B6 /* CircleLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleLayer.h; sourceTree = "<group>"; };
+		40AB525328B8FF62001B97B6 /* CircleLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleLayer.m; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
 		40FAF8D828049148004DA2BA /* width1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width1.png; sourceTree = "<group>"; };
@@ -819,6 +813,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		407011CC28B4DF95003CACB0 /* Layer */ = {
+			isa = PBXGroup;
+			children = (
+				407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */,
+				407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */,
+				40AB525228B8FF62001B97B6 /* CircleLayer.h */,
+				40AB525328B8FF62001B97B6 /* CircleLayer.m */,
+			);
+			name = Layer;
+			sourceTree = "<group>";
+		};
 		407D4B6D2750032300BA0474 /* Slider */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,10 +917,7 @@
 				B4188FB7171C7DBE0035785B /* ACEDrawingTools.m */,
 				B4188FB8171C7DBE0035785B /* ACEDrawingView.h */,
 				B4188FB9171C7DBE0035785B /* ACEDrawingView.m */,
-				40C99ED7289942FA00A517FD /* CAShapeLayer+CirclePoint.h */,
-				40C99ED9289942FA00A517FD /* CAShapeLayer+CirclePoint.m */,
-				40C99ED8289942FA00A517FD /* CAShapeLayer+Line.h */,
-				40C99ED6289942FA00A517FD /* CAShapeLayer+Line.m */,
+				407011CC28B4DF95003CACB0 /* Layer */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -1541,9 +1543,6 @@
 				B4631D1818115FCE00468AC8 /* pinterest.png */,
 				B430C08518055822007D4B60 /* ribboon.png */,
 				B4631D1318115CC400468AC8 /* facebook.png */,
-				409BA077274BECEA00A7647C /* bigdot.png */,
-				409BA07D274BEDE800A7647C /* sliderdots.png */,
-				409BA078274BECEA00A7647C /* smalldot.png */,
 				B4631D1418115CC400468AC8 /* facebook@2x.png */,
 				B4631D0F18115C1100468AC8 /* twitter.png */,
 				B4631D1018115C1100468AC8 /* twitter@2x.png */,
@@ -1699,7 +1698,6 @@
 				B4908BD016FA72ED00E092CE /* hairtech_Intro.png in Resources */,
 				B42AC0FA20AB20D7004E8988 /* right_7p.png in Resources */,
 				B4EB2BCC2374150A00F149C6 /* men-iphone7-full.png in Resources */,
-				409BA07A274BECEA00A7647C /* smalldot.png in Resources */,
 				B4908BD216FA768000E092CE /* intro_background.png in Resources */,
 				B42DB26F21C46539003B3733 /* eraser_new_selected.png in Resources */,
 				B4908BD716FA88A000E092CE /* witget2.png in Resources */,
@@ -1761,7 +1759,6 @@
 				B49F548721CEABCF00810981 /* text_tool_selected.png in Resources */,
 				B42AC0B420AA12BB004E8988 /* ipad_right.png in Resources */,
 				B4EB2BA2237414ED00F149C6 /* men-right-11-sm.png in Resources */,
-				409BA079274BECEA00A7647C /* bigdot.png in Resources */,
 				B42AC0B520AA12BB004E8988 /* ipad_back.png in Resources */,
 				B48F3E6B17120464006DE532 /* View_Tophead_created.png in Resources */,
 				B46561A720BD6D6400BF5BB9 /* Default@2x.png in Resources */,
@@ -1827,7 +1824,6 @@
 				B4E2BD89171EFDF5009FE701 /* redo_btn@2x~ipad.png in Resources */,
 				B4EB2BBF2374150A00F149C6 /* men-iphone7-left-tr.png in Resources */,
 				B4EB2B9C237414ED00F149C6 /* men-left-11-tr.png in Resources */,
-				409BA07E274BEDE800A7647C /* sliderdots.png in Resources */,
 				B4241290172151070050F1E1 /* btn_home2@2x~ipad.png in Resources */,
 				B42AC0CD20AA15B5004E8988 /* ipad_top_sm.png in Resources */,
 				B4EB2B7C237414D900F149C6 /* men-ipad-right.png in Resources */,
@@ -1942,6 +1938,7 @@
 				B419661717F9CCC8003E9159 /* UIView+REFrostedViewController.m in Sources */,
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
+				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				B4D82DB2165D78C70069D457 /* DrawViewControllerRight.m in Sources */,
 				B4FA974D16680C4100F36E34 /* Cell.m in Sources */,
 				B4FA975016680CDB00F36E34 /* CellBackground.m in Sources */,
@@ -1963,6 +1960,7 @@
 				B4F25E752142F929003091C2 /* CHMagnifierView.m in Sources */,
 				B4F48D3016D81DCE0053D2D5 /* FrontHeadViewController.m in Sources */,
 				40DC4707284A143900509D4D /* Ruler.m in Sources */,
+				407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */,
 				407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */,
 				B4F48D3E16D82A530053D2D5 /* BackHeadViewController.m in Sources */,
 				B4B64DD116DE3BA800FC54B7 /* HelpViewController.m in Sources */,
@@ -1970,10 +1968,8 @@
 				B4682CAB1AFF4F9300FA2A5D /* MAThemeKit.m in Sources */,
 				B401CA081B04798000596292 /* Utility.m in Sources */,
 				B434126E16E61E25003FAFA7 /* ColorButton.m in Sources */,
-				40C99EDA289942FA00A517FD /* CAShapeLayer+Line.m in Sources */,
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
-				40C99EDB289942FA00A517FD /* CAShapeLayer+CirclePoint.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,
 				B4188FBA171C7DBE0035785B /* ACEDrawingTools.m in Sources */,
 				B4188FBB171C7DBE0035785B /* ACEDrawingView.m in Sources */,
@@ -2071,7 +2067,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -2117,7 +2113,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
