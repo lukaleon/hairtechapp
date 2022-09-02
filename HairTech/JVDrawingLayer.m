@@ -10,18 +10,17 @@
 #import <UIKit/UIKit.h>
 
 #define JVDRAWINGPATHWIDTH 2
-#define JVDRAWINGBUFFER 10
+#define JVDRAWINGBUFFER 14
 #define JVDRAWINGORIGINCOLOR [UIColor blackColor].CGColor
 #define JVDRAWINGSELECTEDCOLOR [UIColor redColor].CGColor
 
 @interface JVDrawingLayer ()
-@property (nonatomic, assign) CGRect controlP1;
-@property (nonatomic, assign) CGRect controlP2;
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) CGPoint endPoint;
 @property (nonatomic, assign) CGPoint controlPointOfCurve;
 @property (nonatomic, strong) NSMutableArray *pointArray;
 @property (nonatomic, strong) NSMutableArray *trackArray;
+@property (nonatomic, assign) BOOL editedLine;
 
 @end
 
@@ -36,6 +35,7 @@
         self.isVisible = NO;
         self.trackArray = [[NSMutableArray alloc] init];
         self.arrayOfCircles = [NSMutableArray array];
+        self.editedLine = NO;
         
         
     }
@@ -124,6 +124,7 @@
     CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
     CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
     CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+    
     CGFloat diffrence = distanceStart + distanceEnd - distance;
     return diffrence <= JVDRAWINGBUFFER  || distanceStart <= JVDRAWINGBUFFER || distanceEnd <= JVDRAWINGBUFFER;
 }
@@ -141,10 +142,38 @@
     } else {
         self.startP = self.startPoint;
         self.endP = self.endPoint;
-        self.midP = midPoint(self.startPoint, self.endPoint);
+        //self.midP = midPoint(self.startPoint, self.endPoint);
+        
+        
+        
+        if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
+            if(self.editedLine){
+            self.midP = self.controlPointOfCurve;
+            } else {
+                self.midP = midPoint(self.startPoint, self.endPoint);
+            }
+                CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
+                CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
+                CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
+        
+                CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
+                if (diffrence <= JVDRAWINGBUFFER || distanceStart <= JVDRAWINGBUFFER || distanceEnd <= JVDRAWINGBUFFER) {
+                    CGFloat min = MIN(distanceStart, distanceEnd);
+                    if (MIN(min, 2*JVDRAWINGBUFFER) == min) {
+                        if (min == distanceStart) return JVDrawingTouchHead;
+                        if (min == distanceEnd) return JVDrawingTouchEnd;
+                    
+                    }
+                };
+        if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFER)
+        return JVDrawingTouchMid;
+        
+        }
+        
         CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
         CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
         CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+
         CGFloat diffrence = distanceStart + distanceEnd - distance;
         if (diffrence <= JVDRAWINGBUFFER || distanceStart <= JVDRAWINGBUFFER || distanceEnd <= JVDRAWINGBUFFER) {
             CGFloat min = MIN(distanceStart, distanceEnd);
@@ -155,6 +184,8 @@
                 return JVDrawingTouchMid;
             }
         };
+        
+        
     }
     
     return NO;
@@ -181,8 +212,18 @@
           [NSNumber numberWithInt:2+layer.lineWidth],nil]];
     }
     if (JVDrawingTypeCurvedLine == type) {
+        layer.startPoint = startPoint;
         layer.strokeColor = line_Color.CGColor;
         layer.fillColor = [UIColor clearColor].CGColor;
+        
+    }
+    if (JVDrawingTypeCurvedDashLine == type) {
+        layer.startPoint = startPoint;
+        layer.strokeColor = line_Color.CGColor;
+        layer.fillColor = [UIColor clearColor].CGColor;
+        [layer setLineDashPattern:
+        [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
+        [NSNumber numberWithInt:2+layer.lineWidth],nil]];
         
     }
     return layer;
@@ -224,8 +265,10 @@
 
 - (void)moveControlPointWithPreviousPoint:(CGPoint)currentPoint{
    self.midPmoving = currentPoint;
-
+    // self.controlPointOfCurve = currentPoint;
     [self moveCurvedLinePathWithStartPoint:self.startPoint endPoint:self.endPoint midPoint:currentPoint isSelected:self.isSelected];
+   
+
 }
 
 - (void)moveGrafiitiPathPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint {
@@ -264,9 +307,11 @@
             break;
             
         case JVDrawingTypeCurvedLine:
-            [self moveCurvedLinePathWithStartPoint:startPoint endPoint:endPoint midPoint:self.midPmoving isSelected:isSelected];
+            [self moveCurvedLinePathWithStartPoint:startPoint endPoint:endPoint midPoint:self.controlPointOfCurve isSelected:isSelected];
             break;
-            
+        case JVDrawingTypeCurvedDashLine:
+            [self moveCurvedLinePathWithStartPoint:startPoint endPoint:endPoint midPoint:self.controlPointOfCurve isSelected:isSelected];
+            break;
         case JVDrawingTypeGraffiti:
             [self moveGraffitiPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
             break;
@@ -281,6 +326,10 @@
     if (self.type == JVDrawingTypeGraffiti) {
         [trackDic setObject:NSStringFromCGPoint([self.pointArray[0] CGPointValue]) forKey:@"startPoint"];
     }
+//    if (self.type == JVDrawingTypeCurvedLine) {
+//        [trackDic setObject:NSStringFromCGPoint(self.controlPointOfCurve) forKey:@"controlPoint"];
+//
+//    }
     [trackDic setObject:NSStringFromCGPoint(self.endPoint) forKey:@"endPoint"];
     [trackDic setObject:@(self.isSelected) forKey:@"isSelected"];
     [trackDic setObject:@(self.type) forKey:@"type"];
@@ -385,7 +434,6 @@
 
 - (UIBezierPath *)createDashedLinePathWithEndPoint:(CGPoint)endPoint andStartPoint:(CGPoint)startPoint length:(CGFloat)length
 {
-    NSLog(@"Drawing dashed line");
     UIBezierPath * path = [UIBezierPath bezierPath];
     [path  moveToPoint:startPoint]; //add yourStartPoint here
     [path addLineToPoint:endPoint];// add yourEndPoint here
@@ -397,36 +445,41 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     return CGPointMake ((p1.x + p2.x) * 0.5,(p1.y + p2.y) * 0.5);
 }
 
-CGPoint P01Point(CGPoint startPoint,CGPoint midPoint)
-{
-    return CGPointMake ((startPoint.x + midPoint.x) * 0.5,(startPoint.y + midPoint.y) * 0.5);
-}
-CGPoint P12Point(CGPoint startPoint,CGPoint midPoint)
-{
-    return CGPointMake ((startPoint.x + midPoint.x) * 0.5,(startPoint.y + midPoint.y) * 0.5);
-}
-
-CGPoint P012Point(CGPoint p01,CGPoint p12)
-{
-    return CGPointMake ((p01.x + p12.x) * 0.5,(p01.y + p12.y) * 0.5);
-}
-
 - (UIBezierPath *)createCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length {
+    NSLog(@"create curved line ");
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:startPoint];
     [path addQuadCurveToPoint:endPoint controlPoint:midPoint(startPoint, endPoint)];
+    self.controlPointOfCurve = midPoint(startPoint, endPoint);
     return path;
     
 }
 
 - (UIBezierPath *)editCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length {
+   
+    NSLog(@"edit curved line ");
+    CGPoint newPoint1;
+    CGPoint newPoint2;
+    newPoint1 = midPoint(startPoint, endPoint);
+    newPoint2 = midPt;
+    float distanceFromPx2toP3 = [self distanceBetweenStartPoint:newPoint1 endPoint:newPoint2];
+    float mag = sqrt(pow((newPoint2.x - newPoint1.x),2) + pow((newPoint2.y - newPoint1.y),2));
+    float P3x = newPoint2.x + distanceFromPx2toP3 * (newPoint2.x - newPoint1.x) / mag;
+    float P3y = newPoint2.y + distanceFromPx2toP3 * (newPoint2.y - newPoint1.y) / mag;
+
+    CGPoint  P3 = CGPointMake(P3x, P3y);
+
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:startPoint];
-    [path addCurveToPoint:endPoint controlPoint1:P012Point(P01Point(startPoint, midPt), P12Point(endPoint, midPt)) controlPoint2:P012Point(P01Point(startPoint, midPt), P12Point(endPoint, midPt))];
-    
-    
-//    [path addQuadCurveToPoint:endPoint controlPoint:P012Point(P01Point(startPoint, midPt), P12Point(endPoint, midPt))];
-    self.controlPoint = P012Point(P01Point(startPoint, midPt), P12Point(endPoint, midPt));
+    [path addQuadCurveToPoint:endPoint controlPoint:P3];
+    self.controlPointOfCurve = midPt;
+//    CGPoint test = midPoint(newPoint1, P3);
+//    if (self.controlPointOfCurve.x != test.x && self.controlPointOfCurve.y != test.y) {
+//        self.controlPointOfCurve = test;
+//    }
+    self.midPmoving = self.controlPointOfCurve;
+    self.midP = self.controlPointOfCurve;
+    self.editedLine = YES;
     return path;
 }
 
@@ -441,17 +494,17 @@ CGPoint P012Point(CGPoint p01,CGPoint p12)
     CGFloat distance = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
     if (distance < 22) {
         
-        dist = self.lineWidth+(distance/5);
+        dist = self.lineWidth+(distance/6);
         NSLog(@"dist = %f", dist);
     }
     else{
-        dist = self.lineWidth+4.4;
+        dist = self.lineWidth+3;
     }
    
         CGFloat distanceX = dist * (ABS(endPoint.x - startPoint.x) / distance);
         CGFloat distanceY = dist * (ABS(endPoint.y - startPoint.y) / distance);
-        CGFloat distX = dist/2 * (ABS(endPoint.y - startPoint.y) / distance);
-        CGFloat distY = dist/2 * (ABS(endPoint.x - startPoint.x) / distance);
+        CGFloat distX = dist/2.4 * (ABS(endPoint.y - startPoint.y) / distance);
+        CGFloat distY = dist/2.4 * (ABS(endPoint.x - startPoint.x) / distance);
     
     
     if (endPoint.x >= startPoint.x)

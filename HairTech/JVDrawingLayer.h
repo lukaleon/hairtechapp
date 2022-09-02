@@ -9,11 +9,12 @@
 #import <QuartzCore/QuartzCore.h>
 
 typedef NS_ENUM(NSInteger, JVDrawingType) {
-    JVDrawingTypeArrow = 0,     //单箭头
-    JVDrawingTypeLine,          //直线
-    JVDrawingTypeCurvedLine,    //双箭头尺
-    JVDrawingTypeDashedLine,     //双直线尺
-    JVDrawingTypeGraffiti,       //涂鸦
+    JVDrawingTypeArrow = 0,
+    JVDrawingTypeLine,
+    JVDrawingTypeCurvedLine,
+    JVDrawingTypeCurvedDashLine,
+    JVDrawingTypeDashedLine,
+    JVDrawingTypeGraffiti,
     
 };
 

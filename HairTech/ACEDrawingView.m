@@ -119,7 +119,7 @@ UIColor* tempColor;
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     self.isFirstTouch = YES;
     self.isMoveLayer = NO;
-    if (self.selectedLayer.type != JVDrawingTypeCurvedLine){
+    if (self.selectedLayer.type != JVDrawingTypeCurvedLine ||self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
     self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                                        target:self
                                                      selector:@selector(showLoupe2:)
@@ -143,13 +143,21 @@ UIColor* tempColor;
     CGPoint currentPoint = [touch locationInView:self];
     CGPoint previousPoint = [touch previousLocationInView:self];
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
-    
+    self.type = self.bufferType;
+
     
     if (self.isFirstTouch) {
-        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
-            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
-        } else {
+
+//        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
+//            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+      
+            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:8 ofPath:self.selectedLayer.path]){
+                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+                
+            }
+         else {
             [self removeCircles];
+            
             self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
             [self.layer addSublayer:self.drawingLayer];
         }
@@ -157,7 +165,8 @@ UIColor* tempColor;
         if (self.isMoveLayer) {
             if (self.selectedLayer.type == JVDrawingTypeGraffiti) {
                 [self.selectedLayer moveGrafiitiPathPreviousPoint:previousPoint currentPoint:currentPoint];
-            } else if (self.selectedLayer.type == JVDrawingTypeCurvedLine) {
+                // Curved line creating and moving
+            } else if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine) {
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
@@ -165,7 +174,7 @@ UIColor* tempColor;
                         break;
                     case JVDrawingTouchMid:
                         [self.selectedLayer moveControlPointWithPreviousPoint:currentPoint];
-                        [self controlCirclePosition:self.selectedLayer.controlPoint  forLayer:self.circleLayer3 atIndex:0];
+                        [self controlCirclePosition:currentPoint  forLayer:self.circleLayer3 atIndex:0];
                         break;
                     case JVDrawingTouchEnd:
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
@@ -203,6 +212,7 @@ UIColor* tempColor;
                 }
             }
         } else {
+            NSLog(@"end of creation of line");
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             if (self.magnifierView.hidden == NO && count ==1){
                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
@@ -222,7 +232,6 @@ UIColor* tempColor;
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch) {
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
-        
     } else {
         if (self.isMoveLayer) {
             [self.selectedLayer addToTrack];
@@ -254,8 +263,8 @@ UIColor* tempColor;
                         [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
                         [self.layerArray removeObject:self.selectedLayer];
                         [self.layerArray addObject:self.selectedLayer];
+                        self.type = self.selectedLayer.type;
                         [self placeCirclesAtLine:layer];
-                        
                         
                     }
                     break;
@@ -276,7 +285,7 @@ UIColor* tempColor;
 }
 
 -(void)placeCirclesAtLine:(JVDrawingLayer*)layer{
-    if (JVDrawingTypeCurvedLine == self.type){
+    if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type){
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
         self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
         self.circleLayer3 = [CircleLayer addCircleToPoint:layer.midP scaleFactor:self.zoomFactor];
@@ -320,6 +329,9 @@ UIColor* tempColor;
 -(void)removeCircles{
     [self.arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [self.arrayOfCircles removeAllObjects];
+    self.selectedLayer = nil;
+    self.selectedLayer.isSelected = NO;
+
 }
 
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
@@ -332,6 +344,12 @@ UIColor* tempColor;
 }
 
 -(void)removeCirclesOnZoom{
+    self.selectedLayer.isSelected = NO;
+    self.selectedLayer = nil;
+    [self removeCircles];
+    [self setNeedsDisplay];
+}
+-(void)removeCirclesOnZoomDelegate{
     self.selectedLayer.isSelected = NO;
     self.selectedLayer = nil;
     [self removeCircles];
@@ -351,8 +369,12 @@ UIColor* tempColor;
         }else{
             middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
         }
+    if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type){
+        rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
+    } else {
         rectOfMenu = CGRectMake(middlePoint.x, middlePoint.y, 0, 0);
-        
+
+    }
         if (@available(iOS 13.0, *)) {
             NSLog(@"IOS ABOVE 13");
             [self becomeFirstResponder];
@@ -361,7 +383,6 @@ UIColor* tempColor;
                 [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
             [menu showMenuFromView:self rect:rectOfMenu];
         } else {
-            NSLog(@"IOS LOWER THAN 13");
             
             UIMenuController *menu = [UIMenuController sharedMenuController];
             menu.menuItems = @[

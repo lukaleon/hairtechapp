@@ -473,7 +473,10 @@
    [self.btn setEnabled:NO];
    [self.btn setHidden:YES];
     
-    self.drawingView.drawTool = ACEDrawingToolTypeLine;
+    //self.drawingView.drawTool = ACEDrawingToolTypeLine;
+    
+    self.drawingView.type = JVDrawingTypeLine;
+    self.drawingView.bufferType = JVDrawingTypeLine;
     self.drawingView.lineColor = self.lineExtract;
     
     self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
@@ -1363,19 +1366,24 @@
             if(dashLineCount % 2 == 0){
                 
                 //self.drawingView.drawTool = ACEDrawingToolTypeDashCurve;
-                self.drawingView.type = JVDrawingTypeCurvedLine;
+                self.drawingView.type = JVDrawingTypeCurvedDashLine;
+                self.drawingView.bufferType = JVDrawingTypeCurvedDashLine;
 
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = YES;
+                [self.drawingView removeCirclesOnZoomDelegate];
+
             }
             else{
                 //self.drawingView.drawTool = ACEDrawingToolTypeCurve;
                 self.drawingView.type = JVDrawingTypeCurvedLine;
+                self.drawingView.bufferType = JVDrawingTypeCurvedLine;
 
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = NO;
+                [self.drawingView removeCirclesOnZoomDelegate];
 
                 
             }
@@ -1405,12 +1413,15 @@
             
             
             self.drawingView.type = JVDrawingTypeDashedLine;
+            self.drawingView.bufferType = JVDrawingTypeDashedLine;
+
            // self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
             self.drawingView.lineColor = self.blueExtract;
             
             [self saveCurrentToolToUserDeafaults:1.0 forKey:@"currentTool"];
 
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+            [self.drawingView removeCirclesOnZoomDelegate];
 
             break;
         case 2:
@@ -1438,10 +1449,12 @@
             //self.drawingView.drawTool = ACEDrawingToolTypeArrow;
             
             self.drawingView.type = JVDrawingTypeArrow;
+            self.drawingView.bufferType = JVDrawingTypeArrow;
 
             self.drawingView.lineColor = self.redExtract;
             [self saveCurrentToolToUserDeafaults:2.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+            [self.drawingView removeCirclesOnZoomDelegate];
 
             
             break;
@@ -1469,11 +1482,12 @@
             
            // self.drawingView.drawTool = ACEDrawingToolTypeLine;
             self.drawingView.type = JVDrawingTypeLine;
+            self.drawingView.bufferType = JVDrawingTypeLine;
 
             self.drawingView.lineColor = self.lineExtract;
             [self saveCurrentToolToUserDeafaults:3.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-
+            [self.drawingView removeCirclesOnZoomDelegate];
             break;
         case 4:
             dashLineCount = 0;
@@ -1528,10 +1542,14 @@
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
             self.drawingView.type = JVDrawingTypeGraffiti;
+            self.drawingView.bufferType = JVDrawingTypeGraffiti;
+
            // self.drawingView.drawTool = ACEDrawingToolTypePen;
             self.drawingView.lineColor = self.penExtract;
             [self saveCurrentToolToUserDeafaults:5.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+            [self.drawingView removeCirclesOnZoomDelegate];
+
             break;
             
            /* AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

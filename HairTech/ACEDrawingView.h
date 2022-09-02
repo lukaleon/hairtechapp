@@ -79,13 +79,20 @@ typedef enum {
     BOOL menuVisible;
     UIMenuController * menu;
 }
+
+
+
 @property (nonatomic, assign) BOOL eraserSelected;
 @property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);
 @property (nonatomic, assign) JVDrawingType type;
+@property (nonatomic, assign) JVDrawingType bufferType;
+
 
 @property (nonatomic, assign) CircleLayer * circleLayer1;
 @property (nonatomic, assign) CircleLayer * circleLayer2;
 @property (nonatomic, assign) CircleLayer * circleLayer3;
+@property (nonatomic, assign) CircleLayer * circleLayer4;
+
 
 @property NSMutableArray * arrayOfCircles;
 @property CGFloat zoomFactor;
@@ -245,6 +252,7 @@ typedef enum {
 - (NSUInteger)indexOfSelectedShapeInDrawingView:(ACEDrawingView *)drawingView;
 
 
+-(void)removeCirclesOnZoomDelegate;
 
 
 
@@ -272,7 +280,6 @@ double dist2(CGPoint a, CGPoint b);
 
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;
-
 
 
 
