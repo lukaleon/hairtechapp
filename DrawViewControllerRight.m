@@ -389,15 +389,9 @@ NSString * tempColorString;
     
     recognizer.delegate = self;
     //[textview addGestureRecognizer:recognizer];
-    [self.drawingView.textView addGestureRecognizer:recognizer];
-    
-    
-    
-    /////////////////
-    
-    self.drawingView.textView.delegate = self;
-    [self.drawingView.textView setHidden:YES];
-///////////////////////////////////////////////////////////////
+//    [self.drawingView.textView addGestureRecognizer:recognizer];
+//    self.drawingView.textView.delegate = self;
+//    [self.drawingView.textView setHidden:YES];
 
     self.drawingView.delegate = self;
 

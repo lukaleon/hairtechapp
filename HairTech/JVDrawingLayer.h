@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, JVDrawingType) {
     JVDrawingTypeCurvedDashLine,
     JVDrawingTypeDashedLine,
     JVDrawingTypeGraffiti,
+    JVDrawingTypeText,
     
 };
 

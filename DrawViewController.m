@@ -214,20 +214,19 @@
 }
 
 - (void)textViewDidChange:(UITextView *)txtView{
-    
+    NSLog(@"textview changed" );
     float height = txtView.contentSize.height;
-    float width = txtView.contentSize.width;
+    //float width = txtView.contentSize.width;
 
     [UITextView beginAnimations:nil context:nil];
     [UITextView setAnimationDuration:0.1];
-    
     CGRect frame = txtView.frame;
-    
-    frame.size.height = height+22; //Give it some padding
+    frame.size.height = height;
    // frame.size.width = width + 10.0; //Give it some padding
-
     txtView.frame = frame;
+    [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
+    
 }
 
 -(void)setupButtons
@@ -300,16 +299,24 @@
 }
 
 
+-(void)addTextViewToDrawingView{
+    
+    CGRect rectOrigin = CGRectMake(0,0,100,24);
+    [self.drawingView addTextViewToRect:rectOrigin];
+    [self.drawingView.textViewNew setHidden:YES];
+}
+-(void)makeTextViewVisible {
+    
+    [self.drawingView.textViewNew setHidden:NO];
+    [self.drawingView addJVDTextView];
 
-
+}
 
 -(void)viewDidLoad{
     
    
-    
-    
-    
-    
+    [self addTextViewToDrawingView];
+        
     
     [self LoadColorsAtStart];
     [self setupButtons];
@@ -317,8 +324,8 @@
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     
     self.drawingView.viewControllerName = @"left";
-    
-    
+   
+
     [super viewDidLoad];
     
     
@@ -447,17 +454,17 @@
         recognizer.delegate = self;
         //[textview addGestureRecognizer:recognizer];
     
-        [self.drawingView.textView addGestureRecognizer:recognizer];
+        //[self.drawingView.textView addGestureRecognizer:recognizer];
     
 
 
      /////////////////
      
-    self.drawingView.textView.delegate = self;
-    [self.drawingView.textView setHidden:YES];
+   // [self.drawingView.textView setHidden:YES];
     
         //////////////////
     self.drawingView.delegate = self;
+    self.drawingView.textViewNew.delegate = self;
 
     
        lineButton.selected = YES;
@@ -1512,11 +1519,15 @@
             
             
             
-            self.drawingView.drawTool = ACEDrawingToolTypeText;
+            self.drawingView.type = JVDrawingTypeText;
             self.drawingView.lineColor = [UIColor blackColor];
-             [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
-            [self.drawingView addTextViewToMiddle];
+             [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
+                                               self.drawingView.bounds.origin.y,
+                                               self.drawingView.bounds.size.width,
+                                               self.drawingView.bounds.size.height) animated:YES];
+            [self makeTextViewVisible];
             [self setButtonUNVisibleTextPressed];
+            
             
             break;
         case 5:

@@ -10,12 +10,9 @@
 #import "ACEDrawingView.h"
 
 @interface TextView : UITextView
-{
 
-}
 
 @property UIImage * bgImage;
-
 @property CGPoint coords_xy;
-
 @end
+

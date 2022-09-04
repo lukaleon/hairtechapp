@@ -5,6 +5,7 @@
 #import "UITextView+PinchZoom.h"
 #import "JVDrawingLayer.h"
 #import "CircleLayer.h"
+#import "TextRect.h"
 
 #define ACEDrawingViewVersion   1.0.0
 
@@ -81,7 +82,7 @@ typedef enum {
 }
 
 
-
+@property (nonatomic, retain) UITextView * textViewNew;
 @property (nonatomic, assign) BOOL eraserSelected;
 @property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);
 @property (nonatomic, assign) JVDrawingType type;
@@ -92,17 +93,21 @@ typedef enum {
 @property (nonatomic, assign) CircleLayer * circleLayer2;
 @property (nonatomic, assign) CircleLayer * circleLayer3;
 @property (nonatomic, assign) CircleLayer * circleLayer4;
+@property (nonatomic, assign) TextRect * textRect;
+
+
 
 
 @property NSMutableArray * arrayOfCircles;
 @property CGFloat zoomFactor;
 
 - (BOOL)revoke;
+-(void)addTextViewToRect:(CGRect)rect;
 
 
-
+-(void)adjustRectWhenTextChanged:(CGRect)frame;
 -(void)updateZoomFactor:(CGFloat)zoomFactor;
-
+-(void)addJVDTextView;
 
 
 @property (nonatomic, weak) IBOutlet id <ACEDrawingViewDataSource> dataSource;
@@ -159,7 +164,7 @@ typedef enum {
 @property (nonatomic,assign) CGPoint pc;
 @property (nonatomic,assign) CGPoint pd;
 
-@property (nonatomic, unsafe_unretained) IBOutlet UITextView *textView;
+
 
 
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
+		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
 		40632361287314C3008E8324 /* lastPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 40632360287314C3008E8324 /* lastPoint.png */; };
 		407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
@@ -357,6 +358,8 @@
 
 /* Begin PBXFileReference section */
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
+		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
+		403F27F928C352190092DA5D /* TextRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRect.m; sourceTree = "<group>"; };
 		40632360287314C3008E8324 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lastPoint.png; path = "../../Hairtech New Img/lastPoint.png"; sourceTree = "<group>"; };
 		407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVDrawingLayer.m; sourceTree = "<group>"; };
 		407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVDrawingLayer.h; sourceTree = "<group>"; };
@@ -820,6 +823,8 @@
 				407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */,
 				40AB525228B8FF62001B97B6 /* CircleLayer.h */,
 				40AB525328B8FF62001B97B6 /* CircleLayer.m */,
+				403F27F828C352190092DA5D /* TextRect.h */,
+				403F27F928C352190092DA5D /* TextRect.m */,
 			);
 			name = Layer;
 			sourceTree = "<group>";
@@ -1923,6 +1928,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				403F27FA28C352190092DA5D /* TextRect.m in Sources */,
 				CEB7E75A1649A62A0099C14C /* main.m in Sources */,
 				B401CA011B04796E00596292 /* FMDatabase.m in Sources */,
 				B4BBBBAD1AF36E0D00A9FA45 /* WEBlockingGestureRecognizer.m in Sources */,

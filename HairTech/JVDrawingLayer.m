@@ -224,7 +224,6 @@
         [layer setLineDashPattern:
         [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
         [NSNumber numberWithInt:2+layer.lineWidth],nil]];
-        
     }
     return layer;
 
