@@ -132,7 +132,7 @@ UIColor* tempColor;
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.eraserSelected){
+    if (self.eraserSelected || self.type == JVDrawingTypeText ){
         return;
     }
     unsigned long count = [[event allTouches] count];
@@ -156,11 +156,12 @@ UIColor* tempColor;
                 
             }
          else {
+             if ( self.type != JVDrawingTypeText ){
             [self removeCircles];
-            
             self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
             [self.layer addSublayer:self.drawingLayer];
-        }
+             }
+             }
     } else {
         if (self.isMoveLayer) {
             if (self.selectedLayer.type == JVDrawingTypeGraffiti) {
@@ -180,11 +181,32 @@ UIColor* tempColor;
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
                         break;
+                    
+                    default:
+                        break;
+                }
+            }
+            else if (self.selectedLayer.type == JVDrawingTypeText) {
+                switch (self.isMoveLayer) {
+                    case JVDrawingTouchHead:
+                        [self.selectedLayer moveTextWithStartPoint:currentPoint ofRect:self.textRect.frame];
+                        [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
+                        break;
+                    case JVDrawingTouchMid:
+                        [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
+                        //[self controlCirclePosition:currentPoint  forLayer:self.circleLayer3 atIndex:0];
+                        break;
+                    case JVDrawingTouchEnd:
+                        [self.selectedLayer moveTextWithEndPoint:currentPoint];
+                        [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
+                        break;
                         
                     default:
                         break;
                 }
-            } else {
+                
+            }
+            else {
                 
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
@@ -331,9 +353,16 @@ UIColor* tempColor;
     [self.arrayOfCircles removeAllObjects];
     self.selectedLayer = nil;
     self.selectedLayer.isSelected = NO;
-
+//    if (self.textViewNew.hidden == NO){
+//    [self hideTextViewAndRect];
+//    }
 }
-
+-(void)hideTextViewAndRect {
+    
+//    [self.textRect removeFromSuperlayer];
+//    [self.textViewNew resignFirstResponder];
+//    [self.textViewNew setHidden:YES];
+}
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
     [self.touchTimer invalidate];
     [self.magnifierView setHidden:YES];
@@ -402,7 +431,7 @@ UIColor* tempColor;
 
 
 #pragma mark Add Text View
-
+/*
 -(void)addJVDTextView {
     //CGRect rectOrigin = CGRectMake(0,0,100,24);
    // CGRect rectOriginForTextView = CGRectMake(rectOrigin.origin.x + 10,
@@ -435,23 +464,77 @@ UIColor* tempColor;
     [self.arrayOfCircles addObject:self.circleLayer2];
     
 }
--(void)addTextViewToRect:(CGRect)rect {
-    self.textViewNew = [[UITextView alloc] init];
-    self.textViewNew.text = @"TEXT";
-    self.textViewNew.backgroundColor = [UIColor clearColor];
-    self.textViewNew.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:self.textViewNew];
-    [self.textViewNew sizeToFit];
-    self.textViewNew.frame = rect;
-    self.textViewNew.center =  self.center;
-}
--(void)adjustRectWhenTextChanged:(CGRect)frame {
-    NSLog(@"Adjusting textview");
-    UIBezierPath *textViewPath=[UIBezierPath bezierPath];
-    textViewPath = [UIBezierPath bezierPathWithRect:frame];
-    self.textRect.path =  textViewPath.CGPath;
+
+-(void)positionCircleOnTextView:(CGPoint)point forLayer:(CircleLayer*)circle{
+    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-4 / self.zoomFactor, point.y-4 / self.zoomFactor, 8 / self.zoomFactor, 8 / self.zoomFactor)];
+    circle.path = circlePath.CGPath;
+}*/
+
+ 
+ 
+-(void)adjustRectWhenTextChanged:(CGRect)rect {
+//    UIBezierPath *textViewPath=[UIBezierPath bezierPath];
+//    textViewPath = [UIBezierPath bezierPathWithRect:frame];
+//    self.textRect.path =  textViewPath.CGPath;
+//
+//    CGPoint leftPoint = CGPointMake(self.textViewNew.frame.origin.x,
+//                                    self.textViewNew.frame.origin.y +
+//                                    self.textViewNew.frame.size.height / 2);
+//    CGPoint rightPoint = CGPointMake(self.textViewNew.frame.origin.x +
+//                                     self.textViewNew.frame.size.width,
+//                                     self.textViewNew.frame.origin.y +
+//                                     self.textViewNew.frame.size.height / 2);
+//    [self positionCircleOnTextView:leftPoint forLayer:self.circleLayer1];
+//    [self positionCircleOnTextView:rightPoint forLayer:self.circleLayer2];
+   
+    
+    CGRect newRect = CGRectMake(self.userResizableView.frame.origin.x,
+                                        self.userResizableView.frame.origin.y,
+                                        self.userResizableView.frame.size.width, self.userResizableView.contentView.frame.size.height);
+   // if (self >= self.userResizableView.frame.size.height){
+    [self.userResizableView newFrame:self.textViewNew.frame.size.height];
+        
+  //  }
 }
 
+- (void)userResizingView:(SPUserResizableView *)userResizableView;
+{
+    
+   
+}
+
+- (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView {
+    [currentlyEditingView hideEditingHandles];
+    currentlyEditingView = userResizableView;
+    
+    
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView] withEvent:nil]) {
+        return NO;
+    }
+    return YES;
+}
+-(void)addFrameForTextView{
+    CGRect gripFrame = CGRectMake(0, 0, 200, 50);
+    self.userResizableView = [[SPUserResizableView alloc] initWithFrame:gripFrame];
+    self.textViewNew = [[UITextView alloc] initWithFrame:gripFrame];
+    self.textViewNew.text = @"TEXT";
+    self.textViewNew.backgroundColor = [UIColor yellowColor];
+    self.textViewNew.textAlignment = NSTextAlignmentCenter;
+   // [self.textViewNew sizeToFit];
+    [self.textViewNew becomeFirstResponder];
+    self.userResizableView.center = self.center;
+    self.userResizableView.contentView = self.textViewNew;
+    self.userResizableView.delegate = self;
+
+    //[self.userResizableView sizeToFit];
+    [self.userResizableView showEditingHandles];
+    currentlyEditingView = self.userResizableView;
+    lastEditedView = self.userResizableView;
+    [self addSubview:self.userResizableView];
+}
 #pragma mark Initializattion
 - (id)initWithFrame:(CGRect)frame
 {
@@ -841,7 +924,7 @@ UIColor* tempColor;
     pan=NO;
     [self.delegate setButtonVisibleTextPressed];*/
 }
-/*
+
 - (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
     
     
@@ -854,23 +937,9 @@ UIColor* tempColor;
     [recognizer setTranslation:CGPointMake(0,0) inView:self];
     
     
-    CGPoint p = [recognizer locationInView:self.textView];
+    CGPoint p = [recognizer locationInView:self.textViewNew];
     
-    if (CGRectContainsPoint(self.dragger.frame,p))
-    {
-        
-        NSLog(@"%f",[recognizer locationInView:self].x);
-        
-        //  recognizer.view.center = CGPointMake(recognizer.view.center.x + [recognizer locationInView:self].x,
-        //                              recognizer.view.center.y + [recognizer locationInView:self].y);
-        
-        recognizer.view.frame = CGRectMake(self.textView.bounds.origin.x,
-                                           self.textView.bounds.origin.y, [recognizer locationInView:self].x, [recognizer locationInView:self].y);
-        
-    }
-    else {
-        self.textView.backgroundColor = [UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:170.0f/255.0f alpha:0.1] ;
-    }
+
     
     
     if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -879,14 +948,14 @@ UIColor* tempColor;
         
         CGPoint finalPoint = [recognizer locationInView:self];
         
-        pointForRecognizer = CGPointMake(self.textView.frame.origin.x,self.textView.frame.origin.y);
+        pointForRecognizer = CGPointMake(self.textViewNew.frame.origin.x,self.textViewNew.frame.origin.y);
         
         //   pointForRecognizer = CGPointMake(self.textView.center.x,self.textView.center.y);
         
     }
 }
 
-*/
+
 /*
 -(void)addTextViewToMiddle
 {

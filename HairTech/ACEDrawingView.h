@@ -6,6 +6,8 @@
 #import "JVDrawingLayer.h"
 #import "CircleLayer.h"
 #import "TextRect.h"
+#import "SPUserResizableView.h"
+
 
 #define ACEDrawingViewVersion   1.0.0
 
@@ -23,9 +25,11 @@ typedef enum {
 
 @protocol ACEDrawingViewDelegate, ACEDrawingTool,ACEDrawingViewDataSource;
 
-@interface ACEDrawingView : UIView <ColorViewControllerDelegate,UITextViewDelegate>
+@interface ACEDrawingView : UIView <ColorViewControllerDelegate,UITextViewDelegate,SPUserResizableViewDelegate>
 
 {
+    SPUserResizableView *currentlyEditingView;
+    SPUserResizableView *lastEditedView;
     SEL changer;
     
     CGRect screenRect;
@@ -79,9 +83,14 @@ typedef enum {
     BOOL touchesMoved;
     BOOL menuVisible;
     UIMenuController * menu;
+    
+    CGFloat previousWidth;
+    CGFloat previousHeight;
 }
 
+-(void)addFrameForTextView;
 
+@property SPUserResizableView *userResizableView;
 @property (nonatomic, retain) UITextView * textViewNew;
 @property (nonatomic, assign) BOOL eraserSelected;
 @property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);
@@ -105,7 +114,7 @@ typedef enum {
 -(void)addTextViewToRect:(CGRect)rect;
 
 
--(void)adjustRectWhenTextChanged:(CGRect)frame;
+-(void)adjustRectWhenTextChanged:(CGRect)rect;
 -(void)updateZoomFactor:(CGFloat)zoomFactor;
 -(void)addJVDTextView;
 

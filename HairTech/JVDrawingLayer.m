@@ -36,79 +36,13 @@
         self.trackArray = [[NSMutableArray alloc] init];
         self.arrayOfCircles = [NSMutableArray array];
         self.editedLine = NO;
-        
-        
     }
     return self;
 }
 
-//-(void)addCircle:(CAShapeLayer*)circle toPoint:(CGPoint)point
-//{
-//    NSLog(@"ADD CIRCLE LAAYER");
-//    circle = [CAShapeLayer layer];
-//    UIBezierPath *circlePath=[UIBezierPath bezierPath];
-//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-4, point.y-4, 8, 8)];
-//    circle.path=circlePath.CGPath;
-//    circle.fillColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
-//    circle.opacity = 1.0;
-//    circle.strokeColor = [UIColor whiteColor].CGColor;
-//    circle.shadowRadius = 1.0;
-//    circle.shadowOpacity = 0.6;
-//    circle.shadowOffset = CGSizeMake(0,0);
-//    circle.shadowColor = [UIColor darkGrayColor].CGColor;
-//    circle.zPosition = 10;
-//    [self addSublayer:circle];
-//    [self.arrayOfCircles addObject:circle];
-//
-//}
-//
-//-(void)circlePosition:(CGPoint)point atIndex:(int)idx{
-//    UIBezierPath *circlePath=[UIBezierPath bezierPath];
-//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-4, point.y-4, 8, 8)];
-//    CAShapeLayer *layer =  [CAShapeLayer layer];
-//    layer =  [self.arrayOfCircles objectAtIndex:idx];
-//    layer.path=circlePath.CGPath;
-//}
-
 - (void)setIsSelected:(BOOL)isSelected
 {
     _isSelected = isSelected;
-
-//    if (isSelected && JVDrawingTypeGraffiti != self.type)
-//    {
-//        if( self.isVisible == NO ){
-//            
-//            [self addCircle:self.circle1 toPoint:self.startPoint];
-//            [self addCircle:self.circle2 toPoint:self.endPoint];
-//       
-//
-//            self.isVisible = YES;
-//            NSLog(@"Adding circles");
-//
-//        }
-//        else
-//        {
-//            NSLog(@"Array of circles count %lu", self.arrayOfCircles.count);
-//
-//            NSLog(@"startPoint X Y %f %f",self.startPoint.x, self.startPoint.y );
-//            [self circlePosition:self.startPoint atIndex:0];
-//            [self circlePosition:self.endPoint atIndex:1];
-//            NSLog(@"Moving lines & circles");
-//
-//        }
-//    }
-//    else
-//    {
-//        
-//        if( self.isVisible == YES &&  JVDrawingTypeGraffiti != self.type ){
-//                [self.arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
-//                 [self.arrayOfCircles removeAllObjects];
-//                self.isVisible = NO;
-//                NSLog(@"Array of circles count %lu", self.arrayOfCircles.count);
-//
-//        }
-//
-//    }
 }
 
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path
@@ -229,6 +163,15 @@
 
 }
 
++ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
+    JVDrawingLayer *layer = [[[self class] alloc] init];
+
+    layer.startPoint = startPoint;
+    layer.endPoint = endPoint;
+    
+    return layer;
+}
+
 - (void)movePathWithEndPoint:(CGPoint)endPoint {
     [self movePathWithEndPoint:endPoint isSelected:self.isSelected];
 
@@ -314,6 +257,9 @@
         case JVDrawingTypeGraffiti:
             [self moveGraffitiPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
             break;
+        case JVDrawingTypeText:
+            [self moveLinePathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
         default:
             break;
     }
@@ -375,6 +321,17 @@
         return NO;
     }*/
     return YES;
+}
+
+-(void)moveTextWithStartPoint:(CGPoint)startPoint ofRect:(CGRect)rect{
+    NSLog(@"Move text");
+
+    CGRect txtRect = CGRectMake(startPoint.x, startPoint.y, rect.size.width, rect.size.height);
+    UIBezierPath *textRect=[UIBezierPath bezierPath];
+    textRect = [UIBezierPath bezierPathWithRect:txtRect];
+    self.path = textRect.CGPath;
+
+    
 }
 
 - (void)moveArrowPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected {

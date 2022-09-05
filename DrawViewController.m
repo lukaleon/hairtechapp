@@ -212,20 +212,27 @@
     NSLog(@"I have extracted colors");
     
 }
+- (BOOL)textFieldShouldBeginEditing:(UITextView *)textView
+{
+return YES;
+}
 
 - (void)textViewDidChange:(UITextView *)txtView{
-    NSLog(@"textview changed" );
-    float height = txtView.contentSize.height;
-    //float width = txtView.contentSize.width;
 
+
+    
+    
+    float height = txtView.contentSize.height;
     [UITextView beginAnimations:nil context:nil];
     [UITextView setAnimationDuration:0.1];
     CGRect frame = txtView.frame;
-    frame.size.height = height;
-   // frame.size.width = width + 10.0; //Give it some padding
+    frame.size.height = height + 20;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
+
+    
+    
     
 }
 
@@ -298,24 +305,24 @@
    self.redoBut.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
 }
 
-
--(void)addTextViewToDrawingView{
-    
-    CGRect rectOrigin = CGRectMake(0,0,100,24);
-    [self.drawingView addTextViewToRect:rectOrigin];
-    [self.drawingView.textViewNew setHidden:YES];
-}
--(void)makeTextViewVisible {
-    
-    [self.drawingView.textViewNew setHidden:NO];
-    [self.drawingView addJVDTextView];
-
-}
+//
+//-(void)addTextViewToDrawingView{
+//
+//    CGRect rectOrigin = CGRectMake(0,0,100,24);
+//    [self.drawingView addTextViewToRect:rectOrigin];
+//    [self.drawingView.textViewNew setHidden:YES];
+//}
+//-(void)makeTextViewVisible {
+//
+//    [self.drawingView.textViewNew setHidden:NO];
+//    [self.drawingView addJVDTextView];
+//
+//}
 
 -(void)viewDidLoad{
     
    
-    [self addTextViewToDrawingView];
+   // [self addTextViewToDrawingView];
         
     
     [self LoadColorsAtStart];
@@ -454,7 +461,7 @@
         recognizer.delegate = self;
         //[textview addGestureRecognizer:recognizer];
     
-        //[self.drawingView.textView addGestureRecognizer:recognizer];
+        [self.drawingView.textViewNew addGestureRecognizer:recognizer];
     
 
 
@@ -464,7 +471,7 @@
     
         //////////////////
     self.drawingView.delegate = self;
-    self.drawingView.textViewNew.delegate = self;
+    //self.drawingView.textViewNew.delegate = self;
 
     
        lineButton.selected = YES;
@@ -1225,14 +1232,9 @@
         blackbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
         penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
         lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        
-        
-        
-        
         [self.view setNeedsDisplay];
         
         [penbtn addGestureRecognizer:longpresspenbtn];
-        
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
@@ -1267,15 +1269,11 @@
         [self.popoverController dismissPopoverAnimated:YES];
         self.popoverController = nil;
     }
-    
-    
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     
-    
     self.popoverController = nil;
-    
     [penbtn addGestureRecognizer:longpresspenbtn];
     [blackbtn addGestureRecognizer:longpressblackbtn];
     [bluebtn addGestureRecognizer:longpressbluebtn];
@@ -1287,17 +1285,8 @@
 
 -(void) sliderDidSelectWidth:(CGFloat)lineWidth {
     
-    
-    
-    NSLog(@"Arrow Width = %f",lineWidth);
-    
-    
     self.drawingView.lineWidth = lineWidth;
-
 }
-
-
-
 
 -(void) saveFloatToUserDefaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -1310,8 +1299,6 @@
     return [userDefaults floatForKey:key];
 }
 
-
-/*Current tool */
 -(void) saveCurrentToolToUserDeafaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setFloat:x forKey:key];
@@ -1326,23 +1313,13 @@
 
 - (IBAction)pencilPressed:(id)sender {
     
-   
-        
-        [self.popTipLine hide];
-        [self.popTipCurve hide];
-
-        
-        
-   
-
-    
+    [self.popTipLine hide];
+    [self.popTipCurve hide];
     UIButton * PressedButton = (UIButton*)sender;
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     switch(PressedButton.tag)
     {
-        
         case 0:
-            
             dashLineCount=dashLineCount+1;
             blackbtn.selected=YES;
             penbtn.selected = NO;
@@ -1352,53 +1329,36 @@
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-
-         
             [self addShadowToButton];
-            
-            
+    
             blackbtn.backgroundColor=self.blackExtract;
-            
             penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
          
-           
             [self saveCurrentToolToUserDeafaults:0.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-            
-            
-           
             if(dashLineCount % 2 == 0){
-                
-                //self.drawingView.drawTool = ACEDrawingToolTypeDashCurve;
                 self.drawingView.type = JVDrawingTypeCurvedDashLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedDashLine;
-
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = YES;
                 [self.drawingView removeCirclesOnZoomDelegate];
-
             }
             else{
-                //self.drawingView.drawTool = ACEDrawingToolTypeCurve;
                 self.drawingView.type = JVDrawingTypeCurvedLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedLine;
-
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = NO;
                 [self.drawingView removeCirclesOnZoomDelegate];
-
-                
             }
             break;
         case 1:
            dashLineCount = 0;
             bluebtn.selected=YES;
-
             penbtn.selected = NO;
             blackbtn.selected=NO;
             redbtn.selected=NO;
@@ -1406,27 +1366,18 @@
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-
-            
             [self addShadowToButton];
 
-            
             penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = self.blueExtract;
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
-            
-            
             self.drawingView.type = JVDrawingTypeDashedLine;
             self.drawingView.bufferType = JVDrawingTypeDashedLine;
-
-           // self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
             self.drawingView.lineColor = self.blueExtract;
-            
             [self saveCurrentToolToUserDeafaults:1.0 forKey:@"currentTool"];
-
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             [self.drawingView removeCirclesOnZoomDelegate];
 
@@ -1434,7 +1385,6 @@
         case 2:
             dashLineCount = 0;
             redbtn.selected=YES;
-
             penbtn.selected = NO;
             blackbtn.selected=NO;
             bluebtn.selected=NO;
@@ -1442,32 +1392,24 @@
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-
             [self addShadowToButton];
-
             
             penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             blackbtn.backgroundColor=[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = self.redExtract;
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-            
-            
-            //self.drawingView.drawTool = ACEDrawingToolTypeArrow;
-            
+                    
             self.drawingView.type = JVDrawingTypeArrow;
             self.drawingView.bufferType = JVDrawingTypeArrow;
-
             self.drawingView.lineColor = self.redExtract;
             [self saveCurrentToolToUserDeafaults:2.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             [self.drawingView removeCirclesOnZoomDelegate];
-
             
             break;
         case 3:
             dashLineCount = 0;
-
             penbtn.selected = NO;
             blackbtn.selected=NO;
             bluebtn.selected=NO;
@@ -1476,29 +1418,23 @@
             lineButton.selected=YES;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-
             [self addShadowToButton];
 
-            
             penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = self.lineExtract;
-            
-            
-           // self.drawingView.drawTool = ACEDrawingToolTypeLine;
             self.drawingView.type = JVDrawingTypeLine;
             self.drawingView.bufferType = JVDrawingTypeLine;
-
             self.drawingView.lineColor = self.lineExtract;
             [self saveCurrentToolToUserDeafaults:3.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             [self.drawingView removeCirclesOnZoomDelegate];
+            
             break;
         case 4:
             dashLineCount = 0;
-
             penbtn.selected = NO;
             blackbtn.selected=NO;
             bluebtn.selected=NO;
@@ -1507,32 +1443,27 @@
             lineButton.selected=NO;
             textbtn.selected = YES;
             self.drawingView.eraserSelected = NO;
-
             [self addShadowToButton];
-
             
             penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-            
-            
-            
             self.drawingView.type = JVDrawingTypeText;
+            self.drawingView.bufferType = JVDrawingTypeText;
             self.drawingView.lineColor = [UIColor blackColor];
-             [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
-                                               self.drawingView.bounds.origin.y,
-                                               self.drawingView.bounds.size.width,
-                                               self.drawingView.bounds.size.height) animated:YES];
-            [self makeTextViewVisible];
-            [self setButtonUNVisibleTextPressed];
-            
-            
+            [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
+                                              self.drawingView.bounds.origin.y,
+                                              self.drawingView.bounds.size.width,
+                                              self.drawingView.bounds.size.height) animated:YES];
+            [self.drawingView addFrameForTextView];
+            self.drawingView.textViewNew.delegate = self;
+
+            //[self setButtonUNVisibleTextPressed];
             break;
         case 5:
             dashLineCount = 0;
-
             penbtn.selected = YES;
             blackbtn.selected=NO;
             bluebtn.selected=NO;
@@ -1541,11 +1472,8 @@
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-
-            
             [self addShadowToButton];
 
-            
             penbtn.backgroundColor = self.penExtract;
             blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
@@ -1554,26 +1482,12 @@
             
             self.drawingView.type = JVDrawingTypeGraffiti;
             self.drawingView.bufferType = JVDrawingTypeGraffiti;
-
-           // self.drawingView.drawTool = ACEDrawingToolTypePen;
             self.drawingView.lineColor = self.penExtract;
             [self saveCurrentToolToUserDeafaults:5.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             [self.drawingView removeCirclesOnZoomDelegate];
 
             break;
-            
-           /* AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            if(dashLineCount % 2 == 0){
-                appDelegate.dashedCurve1 = YES;
-                [blackbtn setBackgroundImage: [UIImage imageNamed:@"dash_selected.png"] forState:UIControlStateSelected];
-            }
-            else{
-                [blackbtn setBackgroundImage: [UIImage imageNamed:@"Curve_selected.png"] forState:UIControlStateSelected];
-                appDelegate.dashedCurve1 = NO;
-            }*/
-            
-            
     }
     
 
@@ -1592,8 +1506,6 @@
     textbtn.selected = NO;
     self.drawingView.eraserSelected = YES;
     [self addShadowToButton];
-
-    
     
     penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
@@ -1601,12 +1513,8 @@
     redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     
-   // self.drawingView.type =  JVDrawingTypeEraser;
     self.drawingView.lineColor = [UIColor whiteColor];
     self.drawingView.lineWidth = 30.0;
-
-    
-    
 }
 
 - (IBAction)reset:(id)sender {

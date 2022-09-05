@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
+		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
 		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
 		40632361287314C3008E8324 /* lastPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 40632360287314C3008E8324 /* lastPoint.png */; };
 		407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */; };
@@ -358,6 +359,8 @@
 
 /* Begin PBXFileReference section */
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
+		40179E0128C6734C0090CB0C /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
+		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
 		403F27F928C352190092DA5D /* TextRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRect.m; sourceTree = "<group>"; };
 		40632360287314C3008E8324 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lastPoint.png; path = "../../Hairtech New Img/lastPoint.png"; sourceTree = "<group>"; };
@@ -816,9 +819,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		40179E0028C6733C0090CB0C /* Frame */ = {
+			isa = PBXGroup;
+			children = (
+				40179E0128C6734C0090CB0C /* SPUserResizableView.h */,
+				40179E0228C6734C0090CB0C /* SPUserResizableView.m */,
+			);
+			name = Frame;
+			sourceTree = "<group>";
+		};
 		407011CC28B4DF95003CACB0 /* Layer */ = {
 			isa = PBXGroup;
 			children = (
+				40179E0028C6733C0090CB0C /* Frame */,
 				407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */,
 				407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */,
 				40AB525228B8FF62001B97B6 /* CircleLayer.h */,
@@ -1983,6 +1996,7 @@
 				B41A9F0D213E3E8300B53A11 /* HapticHelper.m in Sources */,
 				B4364A9E176F714100466B0D /* TextView.m in Sources */,
 				B4BBEEE91779C6E900FEBFC3 /* toolbar_view.m in Sources */,
+				40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */,
 				B47059F51779DA300093C781 /* toolbar.m in Sources */,
 				B4FE27901BC6F2F90019530F /* HMPopUpView.m in Sources */,
 				B4C4AFF8178BDD5D00C0F7EF /* UiPopoverListView.m in Sources */,
