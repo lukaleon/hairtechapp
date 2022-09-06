@@ -55,7 +55,7 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
 //    CGRect lowerRight = CGRectMake(self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
 //    CGRect lowerLeft = CGRectMake(0.0, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
 //    CGRect upperMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, 0.0, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
-//    CGRect lowerMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
+   CGRect lowerMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
     CGRect middleLeft = CGRectMake(0.0, (self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize)/2, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
     CGRect middleRight = CGRectMake(self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize, (self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize)/2, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
     
@@ -155,7 +155,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 //    CGPointSPUserResizableViewAnchorPointPair upperRight = { CGPointMake(self.bounds.size.width, 0.0), SPUserResizableViewUpperRightAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair middleRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height/2), SPUserResizableViewMiddleRightAnchorPoint };
 //    CGPointSPUserResizableViewAnchorPointPair lowerRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height), SPUserResizableViewLowerRightAnchorPoint };
-//    CGPointSPUserResizableViewAnchorPointPair lowerMiddle = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height), SPUserResizableViewLowerMiddleAnchorPoint };
+  // CGPointSPUserResizableViewAnchorPointPair lowerMiddle = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height), SPUserResizableViewLowerMiddleAnchorPoint };
 //    CGPointSPUserResizableViewAnchorPointPair lowerLeft = { CGPointMake(0, self.bounds.size.height), SPUserResizableViewLowerLeftAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair middleLeft = { CGPointMake(0, self.bounds.size.height/2), SPUserResizableViewMiddleLeftAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair centerPoint = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2), SPUserResizableViewNoResizeAnchorPoint };
@@ -178,6 +178,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    
+    
     // Notify the delegate we've begun our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidBeginEditing:)]) {
         [self.delegate userResizableViewDidBeginEditing:self];
@@ -193,13 +196,18 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
         // When translating, all calculations are done in the view's coordinate space.
         touchStart = [touch locationInView:self];
     }
+    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//    if (self.contentView.isFirstResponder != YES){
+   [self.contentView becomeFirstResponder];
+//    }
     // Notify the delegate we've ended our editing session.
     if (self.delegate && [self.delegate respondsToSelector:@selector(userResizableViewDidEndEditing:)]) {
         [self.delegate userResizableViewDidEndEditing:self];
     }
+    
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -217,7 +225,9 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     [borderView setHidden:YES];
 }
 
+
 - (void)resizeUsingTouchLocation:(CGPoint)touchPoint {
+    //[self.contentView resignFirstResponder];
     // (1) Update the touch point if we're outside the superview.
     if (self.preventsPositionOutsideSuperview) {
         CGFloat border = kSPUserResizableViewGlobalInset + kSPUserResizableViewInteractiveBorderSize/2;
@@ -245,7 +255,11 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     CGFloat newX = self.frame.origin.x + deltaX;
     CGFloat newY = self.frame.origin.y + deltaY;
     CGFloat newWidth = self.frame.size.width + deltaW;
-    CGFloat newHeight = self.frame.size.height + deltaH;
+    CGFloat hNew = [self.delegate getTextViewHeight];
+    newHeight = hNew;
+     // newHeight = self.frame.size.height - deltaW;
+
+//    newHeight = self.contentView.frame.size.height;
     
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
@@ -315,9 +329,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if ([self isResizing]) {
         [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(userResizingView:)]) {
-            [self.delegate userResizingView:self];
-        }
+        
     } else {
         [self translateUsingTouchLocation:[[touches anyObject] locationInView:self]];
     }

@@ -221,7 +221,7 @@ return YES;
 
 
     
-    
+
     float height = txtView.contentSize.height;
     [UITextView beginAnimations:nil context:nil];
     [UITextView setAnimationDuration:0.1];
@@ -230,8 +230,18 @@ return YES;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
-
     
+//    [UITextView beginAnimations:nil context:nil];
+//    [UITextView setAnimationDuration:0.1];
+//    CGFloat fixedWidth = txtView.frame.size.width;
+//       CGSize newSize = [txtView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
+//       CGRect newFrame = txtView.frame;
+//       newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+//       txtView.frame = newFrame;
+//       [self.drawingView adjustRectWhenTextChanged:newFrame];
+//
+//      [UITextView commitAnimations];
+
     
     
 }

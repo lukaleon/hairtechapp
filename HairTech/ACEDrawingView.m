@@ -474,34 +474,15 @@ UIColor* tempColor;
  
  
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
-//    UIBezierPath *textViewPath=[UIBezierPath bezierPath];
-//    textViewPath = [UIBezierPath bezierPathWithRect:frame];
-//    self.textRect.path =  textViewPath.CGPath;
-//
-//    CGPoint leftPoint = CGPointMake(self.textViewNew.frame.origin.x,
-//                                    self.textViewNew.frame.origin.y +
-//                                    self.textViewNew.frame.size.height / 2);
-//    CGPoint rightPoint = CGPointMake(self.textViewNew.frame.origin.x +
-//                                     self.textViewNew.frame.size.width,
-//                                     self.textViewNew.frame.origin.y +
-//                                     self.textViewNew.frame.size.height / 2);
-//    [self positionCircleOnTextView:leftPoint forLayer:self.circleLayer1];
-//    [self positionCircleOnTextView:rightPoint forLayer:self.circleLayer2];
-   
-    
-    CGRect newRect = CGRectMake(self.userResizableView.frame.origin.x,
-                                        self.userResizableView.frame.origin.y,
-                                        self.userResizableView.frame.size.width, self.userResizableView.contentView.frame.size.height);
-   // if (self >= self.userResizableView.frame.size.height){
-    [self.userResizableView newFrame:self.textViewNew.frame.size.height];
-        
-  //  }
-}
 
-- (void)userResizingView:(SPUserResizableView *)userResizableView;
-{
-    
-   
+    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.bounds.origin.x, self.textViewNew.bounds.origin.y) toView:self];
+    CGRect newRect = CGRectMake(origin.x,
+                                origin.y,
+                                self.userResizableView.frame.size.width,
+                                self.textViewNew.frame.size.height);
+    [self.userResizableView newFrame:newRect.size.height];
+    [self.userResizableView sizeToFit];
+  
 }
 
 - (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView {
@@ -511,30 +492,47 @@ UIColor* tempColor;
     
 }
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView] withEvent:nil]) {
+    if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView.contentView] withEvent:nil]) {
+     //   [self.textViewNew becomeFirstResponder];
+        [currentlyEditingView showEditingHandles];
         return NO;
     }
+  [self.textViewNew resignFirstResponder];
+    [currentlyEditingView hideEditingHandles];
+
+
     return YES;
+    
 }
 -(void)addFrameForTextView{
-    CGRect gripFrame = CGRectMake(0, 0, 200, 50);
+    CGRect gripFrame = CGRectMake(0, 0, 70, 55);
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:gripFrame];
     self.textViewNew = [[UITextView alloc] initWithFrame:gripFrame];
+    [self.textViewNew setFont:[UIFont systemFontOfSize:15]];
     self.textViewNew.text = @"TEXT";
-    self.textViewNew.backgroundColor = [UIColor yellowColor];
+    self.textViewNew.backgroundColor = [UIColor clearColor];
     self.textViewNew.textAlignment = NSTextAlignmentCenter;
-   // [self.textViewNew sizeToFit];
-    [self.textViewNew becomeFirstResponder];
     self.userResizableView.center = self.center;
     self.userResizableView.contentView = self.textViewNew;
     self.userResizableView.delegate = self;
-
-    //[self.userResizableView sizeToFit];
     [self.userResizableView showEditingHandles];
     currentlyEditingView = self.userResizableView;
     lastEditedView = self.userResizableView;
     [self addSubview:self.userResizableView];
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showKeyboard)];
+    [gestureRecognizer setDelegate:self];
+    [self addGestureRecognizer:gestureRecognizer];
 }
+-(void)showKeyboard{
+    
+}
+
+- (CGFloat)getTextViewHeight{
+    
+    return self.textViewNew.contentSize.height + 22;
+}
+
 #pragma mark Initializattion
 - (id)initWithFrame:(CGRect)frame
 {
@@ -615,14 +613,15 @@ UIColor* tempColor;
 }
 -(void)initializeGestureRecognizers{
   
-//    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDetected:)];
-//    [self addGestureRecognizer:tapRecognizer];
+//   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self.userResizableView action:@selector(tapTextView:)];
+//     [self.textViewNew addGestureRecognizer:tap];
     
 //    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
 //    [self addGestureRecognizer:panRecognizer];
 //    panRecognizer.enabled = NO;
-    UILongPressGestureRecognizer * longPressLine = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showMenu)];
-    [self addGestureRecognizer:longPressLine];
+//    UILongPressGestureRecognizer * longPressLine = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showMenu)];
+//    [self addGestureRecognizer:longPressLine];
+    
 }
 
 - (void)configure
@@ -641,7 +640,6 @@ UIColor* tempColor;
     self.lineColor = tempColor;
     self.backgroundColor = [UIColor clearColor];
     self.pointsCoord = [NSMutableArray array];
-    //self.textViewNew.delegate = self;
     
 }
 
