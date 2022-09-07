@@ -83,9 +83,13 @@ typedef enum {
     BOOL touchesMoved;
     BOOL menuVisible;
     UIMenuController * menu;
+    UIMenuController * menuForTextView;
+
     
     CGFloat previousWidth;
     CGFloat previousHeight;
+    UITapGestureRecognizer *gestureRecognizer;
+    UITapGestureRecognizer *gestureRecognizer2;
 }
 
 -(void)addFrameForTextView;
@@ -108,6 +112,8 @@ typedef enum {
 
 
 @property NSMutableArray * arrayOfCircles;
+@property NSMutableArray * arrayOfTextViews;
+
 @property CGFloat zoomFactor;
 
 - (BOOL)revoke;

@@ -28,6 +28,8 @@ typedef struct SPUserResizableViewAnchorPoint {
     CGFloat newHeight;
     // Used to determine which components of the bounds we'll be modifying, based upon where the user's touch started.
     SPUserResizableViewAnchorPoint anchorPoint;
+    BOOL textViewResponder;
+
     
     //id <SPUserResizableViewDelegate> delegate;
 }
@@ -47,7 +49,6 @@ typedef struct SPUserResizableViewAnchorPoint {
 - (void)hideEditingHandles;
 - (void)showEditingHandles;
 - (void)newFrame:(CGFloat)height;
-
 @end
 
 @protocol SPUserResizableViewDelegate <NSObject>
@@ -62,5 +63,7 @@ typedef struct SPUserResizableViewAnchorPoint {
 
 - (void)userResizingView:(SPUserResizableView *)userResizableView;
 - (CGFloat)getTextViewHeight;
+- (void)hideHandlesAndMenu;
+
 
 @end

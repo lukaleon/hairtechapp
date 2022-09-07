@@ -212,16 +212,19 @@
     NSLog(@"I have extracted colors");
     
 }
-- (BOOL)textFieldShouldBeginEditing:(UITextView *)textView
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    if ([textView.text isEqualToString:@"TEXT"]){
+    [textView setSelectedTextRange:[textView textRangeFromPosition:textView.beginningOfDocument toPosition:textView.endOfDocument]];
+    }
+
 return YES;
 }
 
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    //handle user taps text view to type text
+}
 - (void)textViewDidChange:(UITextView *)txtView{
-
-
-    
-
     float height = txtView.contentSize.height;
     [UITextView beginAnimations:nil context:nil];
     [UITextView setAnimationDuration:0.1];
@@ -230,20 +233,6 @@ return YES;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
-    
-//    [UITextView beginAnimations:nil context:nil];
-//    [UITextView setAnimationDuration:0.1];
-//    CGFloat fixedWidth = txtView.frame.size.width;
-//       CGSize newSize = [txtView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
-//       CGRect newFrame = txtView.frame;
-//       newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-//       txtView.frame = newFrame;
-//       [self.drawingView adjustRectWhenTextChanged:newFrame];
-//
-//      [UITextView commitAnimations];
-
-    
-    
 }
 
 -(void)setupButtons

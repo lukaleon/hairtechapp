@@ -119,6 +119,14 @@ UIColor* tempColor;
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     self.isFirstTouch = YES;
     self.isMoveLayer = NO;
+    if (self.type == JVDrawingTypeText){
+        gestureRecognizer.enabled = YES;
+        gestureRecognizer2.enabled = YES;
+    }
+    else {
+        gestureRecognizer.enabled = NO;
+        gestureRecognizer2.enabled = NO;
+    }
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine ||self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
     self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                                        target:self
@@ -431,50 +439,24 @@ UIColor* tempColor;
 
 
 #pragma mark Add Text View
-/*
--(void)addJVDTextView {
-    //CGRect rectOrigin = CGRectMake(0,0,100,24);
-   // CGRect rectOriginForTextView = CGRectMake(rectOrigin.origin.x + 10,
-                                   //            rectOrigin.origin.y + 12,
-                                     //         rectOrigin.size.width-padding,rectOrigin.size.height - padding);
-    //CGPoint superCenter = CGPointMake(CGRectGetMidX([superview bounds]), CGRectGetMidY([superview bounds]));
-  
-    //[self addTextViewToRect:rectOrigin];
-    self.textRect = [TextRect addRect:self.textViewNew.frame  centerPoint:self.center];
-    [self.layer addSublayer:self.textRect];
-    
-    CGPoint leftPoint = CGPointMake(self.textViewNew.frame.origin.x,
-                                    self.textViewNew.frame.origin.y +
-                                    self.textViewNew.frame.size.height / 2);
-    CGPoint rightPoint = CGPointMake(self.textViewNew.frame.origin.x +
-                                     self.textViewNew.frame.size.width,
-                                     self.textViewNew.frame.origin.y +
-                                     self.textViewNew.frame.size.height / 2);
-    [self placeCirclesAtTextView:leftPoint rightPoint:rightPoint];
 
- 
+-(void)editTextView{
+    [self.textViewNew becomeFirstResponder];
+    [currentlyEditingView hideEditingHandles];
+    [self showTextViewFrame];
+
 }
--(void)placeCirclesAtTextView:(CGPoint)left rightPoint:(CGPoint)right {
-    
-    self.circleLayer1 = [CircleLayer addCircleToPoint:left scaleFactor:self.zoomFactor];
-    self.circleLayer2 = [CircleLayer addCircleToPoint:right scaleFactor:self.zoomFactor];
-    [self.layer addSublayer:self.circleLayer1];
-    [self.layer addSublayer:self.circleLayer2];
-    [self.arrayOfCircles addObject:self.circleLayer1];
-    [self.arrayOfCircles addObject:self.circleLayer2];
-    
+-(void)showTextViewFrame{
+    self.textViewNew.layer.borderColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
+    self.textViewNew.layer.borderWidth = 1.0;
+}
+-(void)hideTextViewFrame{
+    self.textViewNew.layer.borderColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:0.0].CGColor;
+    self.textViewNew.layer.borderWidth = 1.0;
+
 }
 
--(void)positionCircleOnTextView:(CGPoint)point forLayer:(CircleLayer*)circle{
-    UIBezierPath *circlePath = [UIBezierPath bezierPath];
-    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-4 / self.zoomFactor, point.y-4 / self.zoomFactor, 8 / self.zoomFactor, 8 / self.zoomFactor)];
-    circle.path = circlePath.CGPath;
-}*/
-
- 
- 
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
-
     CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.bounds.origin.x, self.textViewNew.bounds.origin.y) toView:self];
     CGRect newRect = CGRectMake(origin.x,
                                 origin.y,
@@ -493,25 +475,31 @@ UIColor* tempColor;
 }
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView.contentView] withEvent:nil]) {
-     //   [self.textViewNew becomeFirstResponder];
-        [currentlyEditingView showEditingHandles];
+       //[self.textViewNew becomeFirstResponder];
+       [currentlyEditingView showEditingHandles];
         return NO;
     }
-  [self.textViewNew resignFirstResponder];
-    [currentlyEditingView hideEditingHandles];
-
-
+   // [self.textViewNew resignFirstResponder];
+   // [currentlyEditingView hideEditingHandles];
     return YES;
     
 }
--(void)addFrameForTextView{
-    CGRect gripFrame = CGRectMake(0, 0, 70, 55);
-    self.userResizableView = [[SPUserResizableView alloc] initWithFrame:gripFrame];
-    self.textViewNew = [[UITextView alloc] initWithFrame:gripFrame];
+- (void)setupTextView:(const CGRect *)gripFrame {
+    self.textViewNew = [[UITextView alloc] initWithFrame:*gripFrame];
     [self.textViewNew setFont:[UIFont systemFontOfSize:15]];
+    self.textViewNew.textColor = [UIColor blackColor];
     self.textViewNew.text = @"TEXT";
     self.textViewNew.backgroundColor = [UIColor clearColor];
     self.textViewNew.textAlignment = NSTextAlignmentCenter;
+    self.textViewNew.editable = YES;
+    self.textViewNew.selectable = YES;
+}
+
+-(void)addFrameForTextView{
+    
+    CGRect gripFrame = CGRectMake(0, 0, 70, 55);
+    self.userResizableView = [[SPUserResizableView alloc] initWithFrame:gripFrame];
+    [self setupTextView:&gripFrame];
     self.userResizableView.center = self.center;
     self.userResizableView.contentView = self.textViewNew;
     self.userResizableView.delegate = self;
@@ -519,20 +507,81 @@ UIColor* tempColor;
     currentlyEditingView = self.userResizableView;
     lastEditedView = self.userResizableView;
     [self addSubview:self.userResizableView];
+    [self.arrayOfTextViews addObject:self.userResizableView];
+   
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showKeyboard)];
-    [gestureRecognizer setDelegate:self];
-    [self addGestureRecognizer:gestureRecognizer];
+    gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuOnTextView:)];
+    [self.userResizableView addGestureRecognizer:gestureRecognizer];
+    gestureRecognizer.numberOfTapsRequired = 1;
+   //[gestureRecognizer setDelegate:self];
+    
+    gestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenuForTextView)];
+    [self addGestureRecognizer:gestureRecognizer2];
+    gestureRecognizer2.numberOfTapsRequired = 1;
+   // [gestureRecognizer2 setDelegate:self];
+    
+   
 }
--(void)showKeyboard{
+
+- (void)showMenuOnTextView:(UIGestureRecognizer*)sender {
+        NSLog(@"Show menu from textview");
+        CGRect rectOfMenu = CGRectMake(self.userResizableView.frame.origin.x +
+                                      (self.userResizableView.frame.size.width / 2),
+                                       self.userResizableView.frame.origin.y ,
+                                       0, 0);
+    if (self.textViewNew.isFirstResponder != YES){
+        if (@available(iOS 13.0, *)) {
+            NSLog(@"IOS ABOVE 13");
+            [self becomeFirstResponder];
+            menuForTextView = [UIMenuController sharedMenuController];
+            menuForTextView.menuItems = @[
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)]];
+            [menuForTextView showMenuFromView:self rect:rectOfMenu];
+        } else {
+            
+            UIMenuController *menu = [UIMenuController sharedMenuController];
+            menu.menuItems = @[
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)]];
+            [menu setTargetRect:rectOfMenu inView:self];
+            [menu setMenuVisible:YES animated:YES];
+        }
+    }
+
+}
+-(void)hideMenuForTextView{
     
+    if (menuForTextView.isMenuVisible) {
+            [menuForTextView setMenuVisible:NO animated:YES];
+        }
+    
+    else if (self.textViewNew.isFirstResponder == YES){
+        [self.textViewNew resignFirstResponder];
+        [self hideTextViewFrame];
+        [currentlyEditingView showEditingHandles];
+
+    }
+    else {
+        [self.textViewNew resignFirstResponder];
+        [currentlyEditingView hideEditingHandles];
+        [self.userResizableView removeFromSuperview];
+        [self.textViewNew removeFromSuperview];
+        
+    }
+    menuVisible = NO;
+
 }
 
 - (CGFloat)getTextViewHeight{
     
     return self.textViewNew.contentSize.height + 22;
 }
-
+- (void)hideHandlesAndMenu{
+    if (menuForTextView.isMenuVisible) {
+            [menuForTextView setMenuVisible:NO animated:YES];
+        }
+    menuVisible = NO;
+    
+}
 #pragma mark Initializattion
 - (id)initWithFrame:(CGRect)frame
 {
@@ -640,6 +689,7 @@ UIColor* tempColor;
     self.lineColor = tempColor;
     self.backgroundColor = [UIColor clearColor];
     self.pointsCoord = [NSMutableArray array];
+    self.arrayOfTextViews = [NSMutableArray array];
     
 }
 
