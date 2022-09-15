@@ -768,6 +768,15 @@ Technique *technique = [self.techniques objectAtIndex:index];
     [cell.contentView.layer setCornerRadius:15.0f];
     cell.clipsToBounds = YES;
     
+    cell.contentView.layer.masksToBounds = YES;
+
+    cell.layer.shadowColor = [UIColor blackColor].CGColor;
+    cell.layer.shadowOffset = CGSizeMake(0,0);
+    cell.layer.shadowRadius = 8.0f;
+    cell.layer.shadowOpacity = 0.2f;
+    cell.layer.masksToBounds = NO;
+    cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
+
     
    /* [cell.layer setBorderColor:fillColor.CGColor];
     
@@ -1013,6 +1022,8 @@ Technique *technique = [self.techniques objectAtIndex:index];
     //[cell.contentView.layer setBorderWidth:4.0f];
     [cell.contentView.layer setCornerRadius:15.0f];
     
+    [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
+
 //    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
 //    [cell.layer setShadowColor:fillColor.CGColor];
 //    [cell.layer setShadowRadius:2.0f];
@@ -1710,7 +1721,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
        // Technique *tech = [self.techniques objectAtIndex:[indexPath row]];
     HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename Technique" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" delegate:self];
     
-    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorWithRed:74.0/255.0 green:76.0/255.0 blue:88.0/255.0 alpha:1.000] titleColor: [UIColor colorWithRed:250.0/255.0 green:250.0/255.0 blue:250.0/255.0 alpha:1.000] buttonViewColor:[UIColor colorWithRed:74.0/255.0 green:76.0/255.0 blue:88.0/255.0 alpha:1.000] buttonBGColor:[UIColor colorWithRed:74.0/255.0 green:76.0/255.0 blue:88.0/255.0 alpha:1.000] buttonTextColor: [UIColor colorWithRed:250.0/255.0 green:250.0/255.0 blue:250.0/255.0 alpha:1.000]];
+    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] titleColor: [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000] buttonViewColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] buttonBGColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] buttonTextColor: [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000]];
     
     [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
     
@@ -1719,10 +1730,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
         
      
     }
-    
-   
-    
-    
    
 }
 

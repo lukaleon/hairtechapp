@@ -316,6 +316,20 @@ return YES;
    self.redoBut.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
 }
 
+- (void)setupBottomToolBar {
+    self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
+    self.imageToolbar1.alpha = 1.0f;
+    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0f]CGColor]];
+    [self.imageToolbar1.layer setCornerRadius:25.0f];
+    [super viewDidLoad];
+    self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.imageToolbar1.layer.shadowOffset = CGSizeMake(0,0);
+    self.imageToolbar1.layer.shadowRadius = 8.0f;
+    self.imageToolbar1.layer.shadowOpacity = 0.2f;
+    self.imageToolbar1.layer.masksToBounds = NO;
+    self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
+}
+
 //
 //-(void)addTextViewToDrawingView{
 //
@@ -333,7 +347,6 @@ return YES;
 -(void)viewDidLoad{
     
    
-   // [self addTextViewToDrawingView];
         
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
@@ -342,9 +355,7 @@ return YES;
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     
     self.drawingView.viewControllerName = @"left";
-   
-
-    [super viewDidLoad];
+    [self setupBottomToolBar];
     
     
     
@@ -432,20 +443,8 @@ return YES;
     }
     
     
-    
-
-    
-    
-    
-    
     [self adGridToImgView];
-    
-    
-    
-    
-    
-    
-    
+
     self.navigationItem.title=self.stringFromVC;
     
   //  [self.navigationController.navigationBar
@@ -465,31 +464,13 @@ return YES;
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
     
     self.view.backgroundColor = mycolor2;
-    //self.toolbar.backgroundColor = mycolor2;
-
-      //  UIPanGestureRecognizer * recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.drawingView action:@selector(handlePan:)];
-        
-     //   recognizer.delegate = self;
-        //[textview addGestureRecognizer:recognizer];
     
-     //   [self.drawingView.textViewNew addGestureRecognizer:recognizer];
-    
-
-
-     /////////////////
-     
-   // [self.drawingView.textView setHidden:YES];
-    
-        //////////////////
     self.drawingView.delegate = self;
-    //self.drawingView.textViewNew.delegate = self;
-
+    
+    [self.toolbarImg.layer setBorderWidth:2.0];
+    [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
     
        lineButton.selected = YES;
-
-    UIColor *color = self.lineExtract;
-    
-
     
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
@@ -498,8 +479,7 @@ return YES;
    [self.btn setEnabled:NO];
    [self.btn setHidden:YES];
     
-    //self.drawingView.drawTool = ACEDrawingToolTypeLine;
-    
+
     self.drawingView.type = JVDrawingTypeLine;
     self.drawingView.bufferType = JVDrawingTypeLine;
     self.drawingView.previousType = lineButton;
@@ -521,11 +501,6 @@ return YES;
 
     
 
-   // self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStylePlain target:self action:@selector(closeAndSave:)];
-    //////-------------------------------------------
-    
- 
-   
     
     
     longpressblackbtn = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandler:)];
@@ -644,7 +619,6 @@ return YES;
     }
     self.viewForImg.frame = imageViewFrame;
     
-    // [pinchGestureRecognizer requireGestureRecognizerToFail:panGestureRecognizer];
 }
 
 
@@ -1335,6 +1309,7 @@ return YES;
             eraserbtn.selected=NO;
             lineButton.selected=NO;
             textbtn.selected = NO;
+           
             self.drawingView.eraserSelected = NO;
             [self addShadowToButton];
     
@@ -2068,7 +2043,7 @@ self.previewImageView.layer.sublayers = nil;
 
 
     [self.imageView setHidden:YES];
-    [self.imageToolbar1 setHidden:YES];
+   // [self.imageToolbar1 setHidden:YES];
     [self.toolbarImg setHidden:YES];
     [self.toolbar setHidden:YES];
   //  self.labelHairTech.textColor = [UIColor darkGrayColor];

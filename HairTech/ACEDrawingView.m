@@ -324,7 +324,7 @@ UIColor* tempColor;
         rect = CGRectInset(rect, -9.0f, -9.0f);
         [self addFrameForTextView:rect centerPoint:layer.position text:layer.text];
         [self.delegate selectTextTool:self.textTypesSender isSelected:YES];
-//        [self revoke];
+        [self revoke];
     } else {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
         self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
@@ -588,7 +588,7 @@ UIColor* tempColor;
                                  self.textViewNew.bounds.size.width,
                                  self.textViewNew.bounds.size.height);
 
-
+        if (![self.textViewNew.text isEqualToString:@""]){
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
                                                                      text:self.textViewNew.text
@@ -596,12 +596,15 @@ UIColor* tempColor;
                                                                 lineWidth:self.lineWidth
                                                                 lineColor:self.lineColor
                                                                 isSelected:NO];
-        textViewSelected = NO;
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
+            NSLog(@"text added to layer");
+    }
+        textViewSelected = NO;
         [self.delegate selectPreviousTool:self.previousType];
+
     }
     menuVisible = NO;
 

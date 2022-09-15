@@ -24,6 +24,11 @@ static UIImage *deleteButtonImg;
             [self.layer setCornerRadius:15.0f];
             [self.layer setOpacity:1.0f];
             
+            [self.layer setShadowOffset:CGSizeMake(0, 2)];
+            [self.layer setShadowColor:[[UIColor blackColor] CGColor]];
+            [self.layer setShadowRadius:8.0f];
+            [self.layer setShadowOpacity:0.9];
+            
            // [self.cell_menu_btn setBackgroundImage:[UIImage imageNamed:@"btn_cell_menu_fl.png"] forState:UIControlStateNormal];
             /*
             self.barImage =[[UIImageView alloc] initWithFrame:CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height/9)];
@@ -37,14 +42,9 @@ static UIImage *deleteButtonImg;
             
 
             
-        /*
-          [self.layer setShadowOffset:CGSizeMake(0, 2)];
-            [self.layer setShadowColor:[[UIColor blackColor] CGColor]];
-
-            [self.layer setShadowRadius:8.0f];
-            [self.layer setShadowOpacity:0.9];
         
-          */
+        
+          
             
             tapCount = 1;
         }

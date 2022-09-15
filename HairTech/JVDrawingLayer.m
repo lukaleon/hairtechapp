@@ -173,10 +173,10 @@
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
-    CGRect rect = CGRectMake(frame.origin.x - 4.6, frame.origin.y + 1.4, frame.size.width, frame.size.height);
+//    CGRect rect = CGRectMake(frame.origin.x - 4, frame.origin.y + 1, frame.size.width, frame.size.height); iPad
+    CGRect rect = CGRectMake(frame.origin.x - 4.5, frame.origin.y + 1, frame.size.width, frame.size.height);
+
     UIBezierPath *path = [UIBezierPath bezierPath];
-    
-    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 10;
     paragraphStyle.alignment = NSTextAlignmentCenter;

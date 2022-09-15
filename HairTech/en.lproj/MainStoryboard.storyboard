@@ -449,7 +449,7 @@
                                     <action selector="buttonTouched:" destination="BWP-GD-b2N" eventType="touchUpInside" id="WuO-yc-7hb"/>
                                 </connections>
                             </button>
-                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" image="instruments_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="WgF-dD-q7b">
+                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WgF-dD-q7b">
                                 <rect key="frame" x="0.0" y="882" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
@@ -751,12 +751,13 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bfy-li-3Cr">
                                 <rect key="frame" x="0.0" y="64" width="768" height="961"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.80708050727844238" green="0.81641387939453125" blue="0.81622457504272461" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="273" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXu-Lq-dvW">
                                 <rect key="frame" x="0.0" y="64" width="428" height="842"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="xUo-g8-Vbk">
                                     <size key="itemSize" width="246" height="380"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -921,9 +922,6 @@
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <connections>
-                                                    <outlet property="textView" destination="yfY-bN-haY" id="2d6-KO-OtX"/>
-                                                </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -933,7 +931,7 @@
                                     <outlet property="delegate" destination="m5A-xJ-t5X" id="MAJ-0Y-Itd"/>
                                 </connections>
                             </scrollView>
-                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" image="instruments_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="n5p-Cf-0GY">
+                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5p-Cf-0GY">
                                 <rect key="frame" x="0.0" y="882" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
@@ -1173,17 +1171,6 @@
                                     <action selector="buttonTouched:" destination="m5A-xJ-t5X" eventType="touchUpInside" id="RVL-sB-VH2"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yfY-bN-haY" customClass="TextView">
-                                <rect key="frame" x="264" y="438" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="textColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="VaY-Nh-pAc" id="xsr-KJ-Opc"/>
-                                </connections>
-                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="BBo-V8-49G"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1268,9 +1255,6 @@
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <connections>
-                                                    <outlet property="textView" destination="YKW-xh-AFd" id="xG8-7Z-luo"/>
-                                                </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1280,7 +1264,7 @@
                                     <outlet property="delegate" destination="7ME-3P-5aP" id="ALq-QX-VTb"/>
                                 </connections>
                             </scrollView>
-                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" image="instruments_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="6MQ-pa-JXX">
+                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6MQ-pa-JXX">
                                 <rect key="frame" x="0.0" y="882" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
@@ -1524,17 +1508,6 @@
                                     <action selector="buttonTouched:" destination="7ME-3P-5aP" eventType="touchUpInside" id="Cuk-CC-GZ0"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKW-xh-AFd" customClass="TextView">
-                                <rect key="frame" x="264" y="438" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="textColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="VaY-Nh-pAc" id="h5n-gy-Q09"/>
-                                </connections>
-                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wYM-FI-1qE"/>
                         <color key="backgroundColor" red="0.21289995312690735" green="0.51224100589752197" blue="0.75000882148742676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1626,9 +1599,6 @@
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <connections>
-                                                    <outlet property="textView" destination="iUr-H6-Jbk" id="ynv-De-BWU"/>
-                                                </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1638,7 +1608,7 @@
                                     <outlet property="delegate" destination="em5-71-e0v" id="UaL-jB-xvt"/>
                                 </connections>
                             </scrollView>
-                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" image="instruments_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="M8N-P6-v8k">
+                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M8N-P6-v8k">
                                 <rect key="frame" x="0.0" y="882" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
@@ -1881,17 +1851,6 @@
                                     <action selector="buttonTouched:" destination="em5-71-e0v" eventType="touchUpInside" id="6hc-CY-UkM"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iUr-H6-Jbk" customClass="TextView">
-                                <rect key="frame" x="264" y="438" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="VaY-Nh-pAc" id="3Ig-3s-ab2"/>
-                                </connections>
-                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="RkF-wf-0Z9"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1978,9 +1937,6 @@
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <connections>
-                                                    <outlet property="textView" destination="4kI-zC-N90" id="L3A-po-e6X"/>
-                                                </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1990,7 +1946,7 @@
                                     <outlet property="delegate" destination="PxP-G6-Acb" id="8aL-UE-Y4F"/>
                                 </connections>
                             </scrollView>
-                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" image="instruments_bar.png" translatesAutoresizingMaskIntoConstraints="NO" id="nDG-l7-ZTK">
+                            <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nDG-l7-ZTK">
                                 <rect key="frame" x="0.0" y="882" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
@@ -2233,17 +2189,6 @@
                                     <action selector="buttonTouched:" destination="PxP-G6-Acb" eventType="touchUpInside" id="gaS-mt-w0h"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4kI-zC-N90" customClass="TextView">
-                                <rect key="frame" x="264" y="438" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="VaY-Nh-pAc" id="zW3-zo-naP"/>
-                                </connections>
-                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="V9g-KF-v12"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2327,7 +2272,6 @@
         <image name="female-def.png" width="228" height="296"/>
         <image name="female-sel.png" width="228" height="296"/>
         <image name="gear.png" width="32" height="32"/>
-        <image name="instruments_bar.png" width="768" height="44"/>
         <image name="intro_background.png" width="753" height="1004"/>
         <image name="iphone7plus.png" width="1081" height="1921"/>
         <image name="left_7p_tr.png" width="1081" height="1921"/>

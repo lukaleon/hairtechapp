@@ -119,7 +119,7 @@
      IBOutlet UIScrollView *scrollView;
     
     NSArray *buttons;
-
+    BOOL textSelected;
 
 }
 @property (nonatomic, assign) int numberOfColumns;

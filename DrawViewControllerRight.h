@@ -124,6 +124,7 @@ int dashLineCount;
      UIImage *tempthumbimage;
      
      NSArray *buttons;
+     BOOL textSelected;
 
     
 }

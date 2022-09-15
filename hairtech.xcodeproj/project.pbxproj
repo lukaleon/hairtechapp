@@ -819,6 +819,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		400A01BB28D3AEE2007B156A /* DrawingViews */ = {
+			isa = PBXGroup;
+			children = (
+				CE856FF4164D3F8300EE21B4 /* DrawViewController.h */,
+				CE856FF5164D3F8300EE21B4 /* DrawViewController.m */,
+				B4D82DAE165D77B80069D457 /* DrawViewControllerRight.h */,
+				B4D82DB1165D78C70069D457 /* DrawViewControllerRight.m */,
+				B4ADB97316A035EF009ED1A9 /* TopHeadViewController.h */,
+				B4ADB97416A035EF009ED1A9 /* TopHeadViewController.m */,
+				B4A1618016D8082D008B7FB2 /* FrontHeadViewController.h */,
+				B4A1617C16D8071B008B7FB2 /* FrontHeadViewController.m */,
+				B4F48D3916D827180053D2D5 /* BackHeadViewController.h */,
+				B4F48D3A16D8272C0053D2D5 /* BackHeadViewController.m */,
+			);
+			name = DrawingViews;
+			sourceTree = "<group>";
+		};
 		40179E0028C6733C0090CB0C /* Frame */ = {
 			isa = PBXGroup;
 			children = (
@@ -1310,16 +1327,7 @@
 			children = (
 				B47059F21779DA1C0093C781 /* Toolbars */,
 				B4188FBC171C7DC60035785B /* Tools */,
-				CE856FF4164D3F8300EE21B4 /* DrawViewController.h */,
-				CE856FF5164D3F8300EE21B4 /* DrawViewController.m */,
-				B4D82DAE165D77B80069D457 /* DrawViewControllerRight.h */,
-				B4D82DB1165D78C70069D457 /* DrawViewControllerRight.m */,
-				B4ADB97316A035EF009ED1A9 /* TopHeadViewController.h */,
-				B4ADB97416A035EF009ED1A9 /* TopHeadViewController.m */,
-				B4A1618016D8082D008B7FB2 /* FrontHeadViewController.h */,
-				B4A1617C16D8071B008B7FB2 /* FrontHeadViewController.m */,
-				B4F48D3916D827180053D2D5 /* BackHeadViewController.h */,
-				B4F48D3A16D8272C0053D2D5 /* BackHeadViewController.m */,
+				400A01BB28D3AEE2007B156A /* DrawingViews */,
 			);
 			name = DrawControllers;
 			sourceTree = "<group>";

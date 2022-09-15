@@ -127,6 +127,7 @@
     IBOutlet UIScrollView *scrollView;
     
     NSArray *buttons;
+    BOOL textSelected;
 
 }
 

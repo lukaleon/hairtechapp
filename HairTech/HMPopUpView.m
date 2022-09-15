@@ -43,14 +43,14 @@
         
         self.backgroundColor = [UIColor clearColor];
         HUD = [[UIView alloc] initWithFrame:self.bounds];
-        HUD.backgroundColor = [UIColor colorWithRed:0.694 green:0.722 blue:0.760 alpha:1.000];
+        HUD.backgroundColor = [UIColor colorWithRed:0.900 green:0.900 blue:0.900 alpha:1.000];
         HUD.alpha = .7;
         [self addSubview:HUD];
         
         //Creating the view which contains all UI components
         containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, 170)];
         containerView.backgroundColor = [UIColor blackColor];
-        containerView.layer.cornerRadius = 5;
+        containerView.layer.cornerRadius = 15;
         containerView.clipsToBounds = YES;
         
         CGRect cnvwFrame = containerView.bounds;
@@ -70,7 +70,7 @@
         lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 20, cvFrame.origin.y + 15, cvFrame.size.width - 40, 22)];
         lblTitle.numberOfLines = 1;
         lblTitle.text = title;
-        lblTitle.textColor = [UIColor whiteColor];
+        lblTitle.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
         lblTitle.textAlignment = NSTextAlignmentCenter;
         lblTitle.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
         [containerView addSubview:lblTitle];
@@ -81,38 +81,38 @@
         txtField.backgroundColor = [UIColor colorWithRed:0.723 green:0.718 blue:0.742 alpha:0.4];
         txtField.layer.cornerRadius = 3;
         txtField.clipsToBounds = YES;
-        txtField.textColor = [UIColor whiteColor];
+        txtField.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
         txtField.tintColor = [UIColor blackColor];
         txtField.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
         txtField.delegate = self;
         [containerView addSubview:txtField];
         
         //Button view creation
-        buttonView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 130, cvFrame.size.width, cvFrame.size.height - 130)];
+        buttonView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 115, cvFrame.size.width, cvFrame.size.height - 130)];
         buttonView.backgroundColor = [UIColor whiteColor];
         [containerView addSubview:buttonView];
         
         //Action button creation
-        btnOk = [[UIButton alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 131, cvFrame.size.width / 2 - 1, 39)];
+        btnOk = [[UIButton alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 115, cvFrame.size.width / 2 - 1, 39)];
         [btnOk setTitle:okBtnTtl forState:UIControlStateNormal];
         btnOk.backgroundColor = [UIColor blackColor];
-        btnOk.titleLabel.textColor = [UIColor whiteColor];
+        btnOk.titleLabel.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
         btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
         btnOk.enabled = NO;
-        btnOk.alpha = 0.5;
+        btnOk.alpha = 1;
         [containerView addSubview:btnOk];
         [btnOk addTarget:self action:@selector(acceptAction) forControlEvents:UIControlEventTouchUpInside];
         
-        btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(btnOk.frame.origin.x + btnOk.frame.size.width + 1, cvFrame.origin.y + 131, cvFrame.size.width / 2, 39)];
+        btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(btnOk.frame.origin.x + btnOk.frame.size.width + 1, cvFrame.origin.y + 115, cvFrame.size.width / 2, 39)];
         [btnCancel setTitle:cnclBtnTtl forState:UIControlStateNormal];
         btnCancel.backgroundColor = [UIColor blackColor];
-        btnCancel.titleLabel.textColor = [UIColor whiteColor];
+        btnCancel.titleLabel.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
         btnCancel.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
         [containerView addSubview:btnCancel];
         [btnCancel addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
         
         middleView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, separatorView.frame.origin.y + separatorView.frame.size.height, cvFrame.size.width, btnOk.frame.origin.y)];
-        middleView.backgroundColor = [UIColor colorWithRed:74.0/255.0 green:76.0/255.0 blue:88.0/255.0 alpha:1.000];
+        middleView.backgroundColor = [UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000];
         [containerView insertSubview:middleView belowSubview:txtField];
         
         presentDuration = DEFAULT_PRESENTATION_ANIMATION_DURATION;
@@ -147,9 +147,9 @@
     // btnOk.titleLabel.textColor = btnTxtColor;
     // btnCancel.titleLabel.textColor = btnTxtColor;
     
-    [btnOk setTitleColor:btnTxtColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
-    [btnCancel setTitleColor:btnTxtColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
-    btnCancel.titleLabel.textColor = [UIColor colorWithRed:0.181 green:0.663 blue:0.882 alpha:1.000];
+  //  [btnOk setTitleColor:ttlColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
+   // [btnCancel setTitleColor:ttlColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
+ //   btnCancel.titleLabel.textColor = ttlColor;//[UIColor colorWithRed:0.64 green:0.64 blue:0.64 alpha:1.000];
 //    [btnOk.titleLabel setTextColor:btnTxtColor];
     
 }
