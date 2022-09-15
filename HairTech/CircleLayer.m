@@ -23,7 +23,7 @@
     CircleLayer * layer = [[[self class] alloc] init];
 
     UIBezierPath *circlePath=[UIBezierPath bezierPath];
-    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-4 / scaleFactor  , point.y-4 / scaleFactor , 8 / scaleFactor, 8 / scaleFactor )];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-5 / scaleFactor  , point.y-5 / scaleFactor , 10 / scaleFactor, 10 / scaleFactor )];
     layer.path=circlePath.CGPath;
     layer.fillColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
     layer.opacity = 1.0;

@@ -27,7 +27,7 @@
 
 
 
-@interface DrawViewController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate , UIScrollViewDelegate>{
+@interface DrawViewController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate , UIScrollViewDelegate, UITextViewDelegate>{
     
     
     
@@ -155,10 +155,8 @@
     
     BOOL digitsPopTipDismissed;
     BOOL timerPopTipDismissed;
-  
-    
-    
-    NSArray *buttons; 
+    NSArray *buttons;
+    BOOL textSelected;
   
 }
 

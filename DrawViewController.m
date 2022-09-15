@@ -214,6 +214,7 @@
 }
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    
     if ([textView.text isEqualToString:@"TEXT"]){
     [textView setSelectedTextRange:[textView textRangeFromPosition:textView.beginningOfDocument toPosition:textView.endOfDocument]];
     }
@@ -323,7 +324,7 @@ return YES;
    
    // [self addTextViewToDrawingView];
         
-    
+    textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
     [self setupButtons];
     
@@ -455,12 +456,12 @@ return YES;
     self.view.backgroundColor = mycolor2;
     //self.toolbar.backgroundColor = mycolor2;
 
-        UIPanGestureRecognizer * recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.drawingView action:@selector(handlePan:)];
+      //  UIPanGestureRecognizer * recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.drawingView action:@selector(handlePan:)];
         
-        recognizer.delegate = self;
+     //   recognizer.delegate = self;
         //[textview addGestureRecognizer:recognizer];
     
-        [self.drawingView.textViewNew addGestureRecognizer:recognizer];
+     //   [self.drawingView.textViewNew addGestureRecognizer:recognizer];
     
 
 
@@ -490,28 +491,17 @@ return YES;
     
     self.drawingView.type = JVDrawingTypeLine;
     self.drawingView.bufferType = JVDrawingTypeLine;
+    self.drawingView.previousType = lineButton;
     self.drawingView.lineColor = self.lineExtract;
-    
     self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-
-
+    
     penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
     lineButton.backgroundColor = self.lineExtract;
-    
-    
-    
-  
- //  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImage) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImageRetina) name:UIApplicationWillTerminateNotification object:nil];
-    
- 
-    
-  //  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImageRetina) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
     
     tap=NO;
@@ -1309,7 +1299,13 @@ return YES;
     return [userDefaults floatForKey:key];
 }
 
-
+-(void)selectPreviousTool:(id)sender{
+    [self pencilPressed:sender];
+}
+-(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected{
+    textSelected = isSelected;
+    [self pencilPressed:sender];
+}
 - (IBAction)pencilPressed:(id)sender {
     
     [self.popTipLine hide];
@@ -1339,16 +1335,21 @@ return YES;
             [self saveCurrentToolToUserDeafaults:0.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             if(dashLineCount % 2 == 0){
+                [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedDashLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedDashLine;
+                self.drawingView.previousType = sender;
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = YES;
                 [self.drawingView removeCirclesOnZoomDelegate];
             }
             else{
+                [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedLine;
+                self.drawingView.previousType = sender;
+
                 self.drawingView.lineColor = self.blackExtract;
                 [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = NO;
@@ -1373,8 +1374,10 @@ return YES;
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
+            [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeDashedLine;
             self.drawingView.bufferType = JVDrawingTypeDashedLine;
+            self.drawingView.previousType = sender;
             self.drawingView.lineColor = self.blueExtract;
             [self saveCurrentToolToUserDeafaults:1.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
@@ -1399,8 +1402,10 @@ return YES;
             redbtn.backgroundColor = self.redExtract;
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
                     
+            [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeArrow;
             self.drawingView.bufferType = JVDrawingTypeArrow;
+            self.drawingView.previousType = sender;
             self.drawingView.lineColor = self.redExtract;
             [self saveCurrentToolToUserDeafaults:2.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
@@ -1424,8 +1429,11 @@ return YES;
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = self.lineExtract;
+
+            [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeLine;
             self.drawingView.bufferType = JVDrawingTypeLine;
+            self.drawingView.previousType = sender;
             self.drawingView.lineColor = self.lineExtract;
             [self saveCurrentToolToUserDeafaults:3.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
@@ -1449,17 +1457,22 @@ return YES;
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
+            
+            [self.drawingView enableGestures];
             self.drawingView.type = JVDrawingTypeText;
             self.drawingView.bufferType = JVDrawingTypeText;
             self.drawingView.lineColor = [UIColor blackColor];
+            self.drawingView.textTypesSender = sender; //Should be saved to user defaults
             [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
                                               self.drawingView.bounds.origin.y,
                                               self.drawingView.bounds.size.width,
                                               self.drawingView.bounds.size.height) animated:YES];
-            [self.drawingView addFrameForTextView];
+            CGRect gripFrame = CGRectMake(0, 0, 70, 55);
+            if (!textSelected){
+            [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center];
+            }
             self.drawingView.textViewNew.delegate = self;
-
-            //[self setButtonUNVisibleTextPressed];
+           // [self setButtonUNVisibleTextPressed];
             break;
         case 5:
             dashLineCount = 0;
@@ -1479,8 +1492,10 @@ return YES;
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
+            [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeGraffiti;
             self.drawingView.bufferType = JVDrawingTypeGraffiti;
+            self.drawingView.previousType = sender;
             self.drawingView.lineColor = self.penExtract;
             [self saveCurrentToolToUserDeafaults:5.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];

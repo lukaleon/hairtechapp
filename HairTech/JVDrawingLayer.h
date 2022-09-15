@@ -55,7 +55,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 -(void)addCircleToPoint:(CGPoint)point;
 + (JVDrawingLayer *)createLayerWithStartPoint:(CGPoint)startPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
-+ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
+
++ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color isSelected:(BOOL)isSelected;
 
 - (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 
@@ -81,5 +82,6 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 - (BOOL)revokeUntilHidden;
 
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path;
+- (BOOL)isPoint:(CGPoint)p  ofPath:(CGPathRef)path;
 
 @end

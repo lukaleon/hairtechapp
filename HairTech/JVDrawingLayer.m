@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 #define JVDRAWINGPATHWIDTH 2
-#define JVDRAWINGBUFFER 14
+#define JVDRAWINGBUFFER 16
 #define JVDRAWINGORIGINCOLOR [UIColor blackColor].CGColor
 #define JVDRAWINGSELECTEDCOLOR [UIColor redColor].CGColor
 
@@ -47,6 +47,7 @@
 
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path
 {
+  
     CGPathRef hitPath = CGPathCreateCopyByStrokingPath(path, NULL, distance*2, kCGLineCapRound, kCGLineJoinRound, 0);
     BOOL isWithinDistance = CGPathContainsPoint(hitPath, NULL, p, false);
     CGPathRelease(hitPath);
@@ -163,12 +164,42 @@
 
 }
 
-+ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
++ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color isSelected:(BOOL)isSelected{
     JVDrawingLayer *layer = [[[self class] alloc] init];
-
     layer.startPoint = startPoint;
-    layer.endPoint = endPoint;
+    layer.isSelected = isSelected;
+    layer.type = type;
+    CGRect rect = CGRectMake(frame.origin.x - 4, frame.origin.y + 2, frame.size.width, frame.size.height);
+    UIBezierPath *path = [UIBezierPath bezierPath];
     
+    CATextLayer *textLayer = [CATextLayer layer];
+    layer.frame = rect;
+   // NSLog(@"Layer origin %f, %f", layer.bounds.size.width, layer.bounds.size.height );
+    
+    [textLayer setFontSize:15];
+    [textLayer setFont:@"Helvetica"];
+    [textLayer setFrame:layer.bounds];
+    [textLayer setBackgroundColor:[UIColor clearColor].CGColor];
+    [textLayer setString:text];
+    [textLayer setAlignmentMode:kCAAlignmentCenter];
+   // [textLayer setTruncationMode:kCATruncationMiddle];
+    [textLayer setWrapped:YES];
+    [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
+    textLayer.contentsScale = [[UIScreen mainScreen] scale];
+    layer.backgroundColor = [[UIColor yellowColor] CGColor];
+    //layer.fillColor = [[UIColor clearColor]CGColor];
+    int step = 0;
+    for(int i=1;i<=rect.size.width/10;i++){
+    CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+    [path moveToPoint:newP];
+    [path addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+    step = step + 10;
+    }
+    layer.path = path.CGPath;
+    
+   // NSLog(@"text origin %f, %f", textLayer.bounds.size.width, textLayer.bounds.size.height );
+
+    [layer addSublayer:textLayer];
     return layer;
 }
 
@@ -323,16 +354,16 @@
     return YES;
 }
 
--(void)moveTextWithStartPoint:(CGPoint)startPoint ofRect:(CGRect)rect{
-    NSLog(@"Move text");
-
-    CGRect txtRect = CGRectMake(startPoint.x, startPoint.y, rect.size.width, rect.size.height);
-    UIBezierPath *textRect=[UIBezierPath bezierPath];
-    textRect = [UIBezierPath bezierPathWithRect:txtRect];
-    self.path = textRect.CGPath;
-
-    
-}
+//-(void)moveTextWithStartPoint:(CGPoint)startPoint ofRect:(CGRect)rect{
+//    NSLog(@"Move text");
+//
+//    CGRect txtRect = CGRectMake(startPoint.x, startPoint.y, rect.size.width, rect.size.height);
+//    UIBezierPath *textRect=[UIBezierPath bezierPath];
+//    textRect = [UIBezierPath bezierPathWithRect:txtRect];
+//    self.path = textRect.CGPath;
+//
+//
+//}
 
 - (void)moveArrowPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected {
     UIBezierPath *path = [UIBezierPath bezierPath];

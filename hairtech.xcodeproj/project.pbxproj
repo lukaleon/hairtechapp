@@ -97,7 +97,7 @@
 		B434129116E61E41003FAFA7 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B434128016E61E41003FAFA7 /* popoverBg@2x.png */; };
 		B434129216E61E41003FAFA7 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = B434128116E61E41003FAFA7 /* popoverBgSimple.png */; };
 		B434129316E61E41003FAFA7 /* README in Resources */ = {isa = PBXBuildFile; fileRef = B434128216E61E41003FAFA7 /* README */; };
-		B4364A9E176F714100466B0D /* TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4364A9D176F714100466B0D /* TextView.m */; };
+		B4364A9E176F714100466B0D /* TextViewCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = B4364A9D176F714100466B0D /* TextViewCustom.m */; };
 		B43A5656167A6A3000D886C1 /* LoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B43A5655167A6A3000D886C1 /* LoadingViewController.m */; };
 		B43B184D17F46404006C9052 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B43B184C17F46404006C9052 /* Accelerate.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		B43B185517F466E7006C9052 /* burger.png in Resources */ = {isa = PBXBuildFile; fileRef = B43B185017F466E7006C9052 /* burger.png */; };
@@ -476,8 +476,8 @@
 		B434128016E61E41003FAFA7 /* popoverBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popoverBg@2x.png"; sourceTree = "<group>"; };
 		B434128116E61E41003FAFA7 /* popoverBgSimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = popoverBgSimple.png; sourceTree = "<group>"; };
 		B434128216E61E41003FAFA7 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		B4364A9C176F714100466B0D /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
-		B4364A9D176F714100466B0D /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
+		B4364A9C176F714100466B0D /* TextViewCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewCustom.h; sourceTree = "<group>"; };
+		B4364A9D176F714100466B0D /* TextViewCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewCustom.m; sourceTree = "<group>"; };
 		B43A5654167A6A3000D886C1 /* LoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingViewController.h; sourceTree = "<group>"; };
 		B43A5655167A6A3000D886C1 /* LoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingViewController.m; sourceTree = "<group>"; };
 		B43B184C17F46404006C9052 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -929,8 +929,8 @@
 		B4188FBC171C7DC60035785B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				B4364A9C176F714100466B0D /* TextView.h */,
-				B4364A9D176F714100466B0D /* TextView.m */,
+				B4364A9C176F714100466B0D /* TextViewCustom.h */,
+				B4364A9D176F714100466B0D /* TextViewCustom.m */,
 				B4188FB6171C7DBE0035785B /* ACEDrawingTools.h */,
 				B4188FB7171C7DBE0035785B /* ACEDrawingTools.m */,
 				B4188FB8171C7DBE0035785B /* ACEDrawingView.h */,
@@ -1994,7 +1994,7 @@
 				B4188FBB171C7DBE0035785B /* ACEDrawingView.m in Sources */,
 				B429A75421CEEE4700F56F09 /* UITextView+PinchZoom.m in Sources */,
 				B41A9F0D213E3E8300B53A11 /* HapticHelper.m in Sources */,
-				B4364A9E176F714100466B0D /* TextView.m in Sources */,
+				B4364A9E176F714100466B0D /* TextViewCustom.m in Sources */,
 				B4BBEEE91779C6E900FEBFC3 /* toolbar_view.m in Sources */,
 				40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */,
 				B47059F51779DA300093C781 /* toolbar.m in Sources */,

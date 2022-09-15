@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ACEDrawingView.h"
 
-@interface TextView : UITextView
+@interface TextViewCustom : UITextView
 
 
 @property UIImage * bgImage;
 @property CGPoint coords_xy;
++(TextViewCustom*)addTextView:(CGRect)rect;
 @end
 

@@ -322,7 +322,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [appearance configureWithOpaqueBackground];
         appearance.backgroundColor = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
         appearance.shadowColor =  [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-
        // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = self.navigationController.navigationBar.standardAppearance;
@@ -765,14 +764,16 @@ Technique *technique = [self.techniques objectAtIndex:index];
     
     
     UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-    cell.contentView.BackgroundColor =  fillColor;
+    cell.contentView.backgroundColor =  fillColor;
+    [cell.contentView.layer setCornerRadius:15.0f];
+    cell.clipsToBounds = YES;
+    
     
    /* [cell.layer setBorderColor:fillColor.CGColor];
-    [cell.contentView.layer setCornerRadius:0.0f];
     
     [cell.layer setBorderWidth:1.0f];
     [cell.layer setBackgroundColor:fillColor.CGColor];
-    [cell.layer setCornerRadius:1.0f];
+    
     
     [cell.layer setShadowOffset:CGSizeMake(0, 0)];
     [cell.layer setShadowColor:fillColor.CGColor];
@@ -833,7 +834,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
      if ( IDIOM == IPAD ) {
          
          
-         [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0.0]];
+         [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
          
      }else{
     
@@ -845,10 +846,10 @@ Technique *technique = [self.techniques objectAtIndex:index];
          CGFloat screenWidth = screenRect.size.width;
          CGFloat screenHeight = screenRect.size.height;
          
-       
-         
          [cell.image setFrame:CGRectMake(0, 0, (screenWidth*80)/100, (screenHeight*80)/100)];
-       
+         [cell.contentView.layer setCornerRadius:15.0f];
+
+
     
         
         }
@@ -1003,21 +1004,20 @@ Technique *technique = [self.techniques objectAtIndex:index];
    
     Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
     
-    UIColor *fillColor = [UIColor colorWithRed:30.0/255.0 green:135.0/255.0 blue:220.0/255.0 alpha:1.0];
-   cell.contentView.BackgroundColor =  fillColor;
-    /*
-   [cell.layer setBorderColor:fillColor.CGColor];
-    [cell.contentView.layer setCornerRadius:5.0f];
+    UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
+   cell.contentView.backgroundColor =  fillColor;
     
-    [cell.layer setBorderWidth:4.0f];
-    [cell.layer setBackgroundColor:fillColor.CGColor];
-    [cell.layer setCornerRadius:5.0f];
+ //  [cell.layer setBorderColor:fillColor.CGColor];
+   // [cell.contentView.layer setCornerRadius:5.0f];
     
-    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
-    [cell.layer setShadowColor:fillColor.CGColor];
-    [cell.layer setShadowRadius:2.0f];
-    [cell.layer setShadowOpacity:1.0];
-    */
+    //[cell.contentView.layer setBorderWidth:4.0f];
+    [cell.contentView.layer setCornerRadius:15.0f];
+    
+//    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
+//    [cell.layer setShadowColor:fillColor.CGColor];
+//    [cell.layer setShadowRadius:2.0f];
+//    [cell.layer setShadowOpacity:1.0];
+    
     
     
     
@@ -1344,11 +1344,11 @@ Technique *technique = [self.techniques objectAtIndex:index];
 {
     
     UIColor *fillColor = [UIColor colorWithRed:30.0/255.0 green:135.0/255.0 blue:220.0/255.0 alpha:1.0];
-    cell.contentView.BackgroundColor =  fillColor;
+    cell.contentView.backgroundColor =  fillColor;
     [cell.layer setBorderColor:fillColor.CGColor];
      [cell.layer setBorderWidth:4.0f];
     [cell.layer setBackgroundColor:fillColor.CGColor];
-    [cell.layer setCornerRadius:5.0f];
+    [cell.layer setCornerRadius:15.0f];
     //[self.layer setOpacity:0.7f];
     
     [cell.layer setShadowOffset:CGSizeMake(0, 0)];
@@ -1391,34 +1391,16 @@ Technique *technique = [self.techniques objectAtIndex:index];
     */
     
     Cell *cell = [self.collectionView cellForItemAtIndexPath:self.tappedCellPath];
-
-   // UIColor *fillColor =[UIColor colorWithRed:220.0f/255.0f green:220.0f/255.0f blue:220.0f/255.0f alpha:0.7f];
-    //cell.contentView.BackgroundColor =  fillColor;
-    /*
-    [cell.layer setBorderColor:fillColor.CGColor];
-    [cell.contentView.layer setCornerRadius:1.0f];
     
-   // [cell.layer setBorderWidth:3.0f];
-    [cell.layer setBackgroundColor:fillColor.CGColor];
-    [cell.layer setCornerRadius:1.0f];
-   // [cell.layer setOpacity:0.7f];
-
-   /*
-    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
-    [cell.layer setShadowColor:fillColor.CGColor];
-    [cell.layer setShadowRadius:0.0f];
-    [cell.layer setShadowOpacity:1.0];
-     
-*/
     UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-    cell.contentView.BackgroundColor =  fillColor;
+    cell.contentView.backgroundColor =  fillColor;
     
     [cell.layer setBorderColor:fillColor.CGColor];
-    [cell.contentView.layer setCornerRadius:0.0f];
+    [cell.contentView.layer setCornerRadius:15.0f];
     
     [cell.layer setBorderWidth:1.0f];
     [cell.layer setBackgroundColor:fillColor.CGColor];
-    [cell.layer setCornerRadius:1.0f];
+    [cell.layer setCornerRadius:15.0f];
     
     [cell.layer setShadowOffset:CGSizeMake(0, 0)];
     [cell.layer setShadowColor:fillColor.CGColor];

@@ -1,7 +1,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ColorViewController.h"
-#import "TextView.h"
+#import "TextViewCustom.h"
 #import "UITextView+PinchZoom.h"
 #import "JVDrawingLayer.h"
 #import "CircleLayer.h"
@@ -82,6 +82,7 @@ typedef enum {
     
     BOOL touchesMoved;
     BOOL menuVisible;
+    BOOL frameVisible;
     UIMenuController * menu;
     UIMenuController * menuForTextView;
 
@@ -90,16 +91,20 @@ typedef enum {
     CGFloat previousHeight;
     UITapGestureRecognizer *gestureRecognizer;
     UITapGestureRecognizer *gestureRecognizer2;
+    BOOL textViewSelected;
 }
-
--(void)addFrameForTextView;
+-(void)enableGestures;
+-(void)disableGestures;
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center;
 
 @property SPUserResizableView *userResizableView;
-@property (nonatomic, retain) UITextView * textViewNew;
+@property (nonatomic, retain) TextViewCustom * textViewNew;
 @property (nonatomic, assign) BOOL eraserSelected;
 @property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);
 @property (nonatomic, assign) JVDrawingType type;
 @property (nonatomic, assign) JVDrawingType bufferType;
+@property (nonatomic ,assign) id previousType;
+@property (nonatomic ,assign) id textTypesSender;
 
 
 @property (nonatomic, assign) CircleLayer * circleLayer1;
@@ -259,8 +264,8 @@ typedef enum {
 - (void)redoLatestStep;
 
 -(void)getScreenShot:(UIImage*)img;
-@property (nonatomic, weak)IBOutlet UIPanGestureRecognizer *panRecognizer;
-@property (nonatomic, weak)IBOutlet UITapGestureRecognizer *tapRecognizer;
+//@property (nonatomic, weak)IBOutlet UIPanGestureRecognizer *panRecognizer;
+//@property (nonatomic, weak)IBOutlet UITapGestureRecognizer *tapRecognizer;
 
 
 
@@ -286,21 +291,16 @@ typedef enum {
 
 @protocol ACEDrawingViewDelegate <NSObject>
 
-- (UIColor *)colorAtPixel:(CGPoint)point;
-
-
 double dist(CGPoint a, CGPoint b);
 double dist2(CGPoint a, CGPoint b);
+- (UIColor *)colorAtPixel:(CGPoint)point;
 -(void)setButtonVisibleTextPressed;
 -(void)setButtonVisible;
-
+-(void)selectPreviousTool:(id)sender;
+-(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected;
 
 
 @optional
-
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;
-
-
-
 @end
