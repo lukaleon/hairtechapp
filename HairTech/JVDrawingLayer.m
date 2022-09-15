@@ -8,6 +8,8 @@
 
 #import "JVDrawingLayer.h"
 #import <UIKit/UIKit.h>
+#import <CoreText/CoreText.h>
+
 
 #define JVDRAWINGPATHWIDTH 2
 #define JVDRAWINGBUFFER 16
@@ -21,6 +23,7 @@
 @property (nonatomic, strong) NSMutableArray *pointArray;
 @property (nonatomic, strong) NSMutableArray *trackArray;
 @property (nonatomic, assign) BOOL editedLine;
+//@property (nonatomic, assign) NSString * text;
 
 @end
 
@@ -169,25 +172,40 @@
     layer.startPoint = startPoint;
     layer.isSelected = isSelected;
     layer.type = type;
-    CGRect rect = CGRectMake(frame.origin.x - 4, frame.origin.y + 2, frame.size.width, frame.size.height);
+    layer.text = text;
+    CGRect rect = CGRectMake(frame.origin.x - 4.6, frame.origin.y + 1.4, frame.size.width, frame.size.height);
     UIBezierPath *path = [UIBezierPath bezierPath];
+    
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 10;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+
+    NSDictionary *attrsDictionary =
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
+     NSParagraphStyleAttributeName: paragraphStyle};
+
     
     CATextLayer *textLayer = [CATextLayer layer];
     layer.frame = rect;
    // NSLog(@"Layer origin %f, %f", layer.bounds.size.width, layer.bounds.size.height );
-    
-    [textLayer setFontSize:15];
-    [textLayer setFont:@"Helvetica"];
+    textLayer.string = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
+
+//    [textLayer setFontSize:15];
+//    [textLayer setFont:@"Helvetica"];
     [textLayer setFrame:layer.bounds];
     [textLayer setBackgroundColor:[UIColor clearColor].CGColor];
-    [textLayer setString:text];
+//    [textLayer setString:text];
     [textLayer setAlignmentMode:kCAAlignmentCenter];
-   // [textLayer setTruncationMode:kCATruncationMiddle];
     [textLayer setWrapped:YES];
     [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
     textLayer.contentsScale = [[UIScreen mainScreen] scale];
-    layer.backgroundColor = [[UIColor yellowColor] CGColor];
-    //layer.fillColor = [[UIColor clearColor]CGColor];
+    [textLayer setMasksToBounds:YES];
+
+
+    
+    layer.backgroundColor = [[UIColor clearColor] CGColor];
+    layer.fillColor = [[UIColor clearColor]CGColor];
     int step = 0;
     for(int i=1;i<=rect.size.width/10;i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);

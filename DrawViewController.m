@@ -214,6 +214,14 @@
 }
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    float height = textView.contentSize.height;
+    [UITextView beginAnimations:nil context:nil];
+    [UITextView setAnimationDuration:0.1];
+    CGRect frame = textView.frame;
+    frame.size.height = height + 20;
+    textView.frame = frame;
+    [self.drawingView adjustRectWhenTextChanged:frame];
+    [UITextView commitAnimations];
     
     if ([textView.text isEqualToString:@"TEXT"]){
     [textView setSelectedTextRange:[textView textRangeFromPosition:textView.beginningOfDocument toPosition:textView.endOfDocument]];
@@ -234,6 +242,9 @@ return YES;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
+    
+//    [txtView scrollRangeToVisible:NSMakeRange(txtView.text.length, 0)];
+//        [txtView scrollRectToVisible:[txtView caretRectForPosition:txtView.endOfDocument] animated:NO];
 }
 
 -(void)setupButtons
@@ -1300,6 +1311,7 @@ return YES;
 }
 
 -(void)selectPreviousTool:(id)sender{
+    textSelected = NO;
     [self pencilPressed:sender];
 }
 -(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected{
@@ -1467,9 +1479,9 @@ return YES;
                                               self.drawingView.bounds.origin.y,
                                               self.drawingView.bounds.size.width,
                                               self.drawingView.bounds.size.height) animated:YES];
-            CGRect gripFrame = CGRectMake(0, 0, 70, 55);
+            CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
-            [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center];
+            [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT"];
             }
             self.drawingView.textViewNew.delegate = self;
            // [self setButtonUNVisibleTextPressed];

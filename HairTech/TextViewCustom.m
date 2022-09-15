@@ -8,6 +8,7 @@
 
 #import "TextViewCustom.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreText/CoreText.h>
 
 @implementation TextViewCustom
 
@@ -58,39 +59,38 @@
 */
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-        
+
         self.frame = frame;
         [self setFont:[UIFont fontWithName:@"Helvetica" size:15]];
         self.textColor = [UIColor blackColor];
-        self.text = @"TEXT";
         self.backgroundColor = [UIColor clearColor];
         self.textAlignment = NSTextAlignmentCenter;
+        self.textContainerInset = UIEdgeInsetsMake(1.8, 0.8, 1.8, 1.2);
         self.editable = YES;
         self.selectable = YES;
-        self.backgroundColor = [UIColor redColor];
         self.textContainer.lineFragmentPadding = 0;
-        
+        //self.textContainerInset = UIEdgeInsetsZero;
+       
+       
+
     }
     return self;
 }
+-(void)passText:(NSString *)text{
+  
+    self.textContainer.lineFragmentPadding = 0;
+    self.textContainerInset = UIEdgeInsetsZero;
 
-+(TextViewCustom*)addTextView:(CGRect)rect
-{
-    TextViewCustom * textView = [[[self class] alloc] init];
-    textView.frame = rect;
-    [textView setFont:[UIFont fontWithName:@"Helvetica" size:15]];
-    textView.textColor = [UIColor blackColor];
-    textView.text = @"TEXT";
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textAlignment = NSTextAlignmentCenter;
-    textView.editable = YES;
-    textView.selectable = YES;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textContainer.lineFragmentPadding = 0;
-   // textView.userInteractionEnabled = YES;
-    
-    return textView;
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+
+    paragraphStyle.lineSpacing = -0.20;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+
+    NSDictionary *attrsDictionary =
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
+     NSParagraphStyleAttributeName: paragraphStyle};
+
+    self.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
+   // self.text = text;
 }
-
-
 @end

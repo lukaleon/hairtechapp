@@ -322,8 +322,9 @@ UIColor* tempColor;
     else if (JVDrawingTypeText == self.type){
         CGRect rect = [self convertRect:layer.frame toView:self];
         rect = CGRectInset(rect, -9.0f, -9.0f);
-        [self addFrameForTextView:rect centerPoint:layer.position];
+        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text];
         [self.delegate selectTextTool:self.textTypesSender isSelected:YES];
+//        [self revoke];
     } else {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
         self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
@@ -417,7 +418,10 @@ UIColor* tempColor;
             middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
         }
     if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type){
-        rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
+        //rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
+
+        rectOfMenu = CGRectMake(self.selectedLayer.midP.x,self.selectedLayer.midP.y,0,0) ;
+        
     } else {
         rectOfMenu = CGRectMake(middlePoint.x, middlePoint.y, 0, 0);
 
@@ -494,10 +498,11 @@ UIColor* tempColor;
     
 }
 
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center{
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text{
     
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
     self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect];
+    [self.textViewNew passText:text];
     self.userResizableView.center = center;
     self.userResizableView.contentView = self.textViewNew;
     self.userResizableView.delegate = self;

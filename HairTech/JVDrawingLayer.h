@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, assign) CGPoint startP;
 @property (nonatomic, assign) CGPoint endP;
 @property (nonatomic, assign) CGPoint midP;
+@property (nonatomic, assign) NSString *text;
 
 
 

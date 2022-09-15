@@ -95,7 +95,7 @@ typedef enum {
 }
 -(void)enableGestures;
 -(void)disableGestures;
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center;
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text;
 
 @property SPUserResizableView *userResizableView;
 @property (nonatomic, retain) TextViewCustom * textViewNew;
