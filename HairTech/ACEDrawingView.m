@@ -109,6 +109,7 @@ UIColor* tempColor;
 - (BOOL)revoke {
     BOOL status = [self.selectedLayer revokeUntilHidden];
     if (status) {
+        [self hideMenu];
         [self.selectedLayer removeFromSuperlayer];
         [self.layerArray removeObject:self.selectedLayer];
         self.selectedLayer = nil;
@@ -261,7 +262,7 @@ UIColor* tempColor;
            
             for (JVDrawingLayer *layer in self.layerArray) {
 
-                if ([layer isPoint:currentPoint withinDistance:8 ofPath:layer.path]){
+                if ([layer isPoint:currentPoint withinDistance:12 ofPath:layer.path]){
                     [layer caculateLocationWithPoint:currentPoint];
                     // tapped on a layer
                     layerHasBeenPicked = YES;
@@ -469,7 +470,7 @@ UIColor* tempColor;
 }
 
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
-    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.bounds.origin.x, self.textViewNew.bounds.origin.y) toView:self];
+    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.bounds.origin.x, self.textViewNew.bounds.origin.y) toView:self.superview];
     CGRect newRect = CGRectMake(origin.x,
                                 origin.y,
                                 self.userResizableView.frame.size.width,
@@ -551,7 +552,7 @@ UIColor* tempColor;
             [self becomeFirstResponder];
             menuForTextView = [UIMenuController sharedMenuController];
             menuForTextView.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)]];
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)] ];
             [menuForTextView showMenuFromView:self rect:rectOfMenu];
         } else {
             
@@ -563,6 +564,23 @@ UIColor* tempColor;
         }
     }
 
+}
+-(void)removeTextView{
+    
+    if(textViewSelected){
+        [self revoke];
+        [self.textViewNew resignFirstResponder];
+        self.textViewNew.userInteractionEnabled = NO;
+        [currentlyEditingView hideEditingHandles];
+        [self.userResizableView removeFromSuperview];
+        [self.textViewNew removeFromSuperview];
+    } else {
+        [self.textViewNew resignFirstResponder];
+        self.textViewNew.userInteractionEnabled = NO;
+        [currentlyEditingView hideEditingHandles];
+        [self.userResizableView removeFromSuperview];
+        [self.textViewNew removeFromSuperview];
+    }
 }
 -(void)hideMenuForTextView{
     

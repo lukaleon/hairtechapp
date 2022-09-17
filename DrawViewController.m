@@ -249,55 +249,54 @@ return YES;
 
 -(void)setupButtons
 {
-    redbtn.layer.cornerRadius = 25.0;
-    redbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    redbtn.layer.shadowOpacity = 0.5;
-    redbtn.layer.shadowRadius = 2;
-    redbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    redbtn.layer.cornerRadius = 12.0;
+//    redbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    redbtn.layer.shadowOpacity = 0.5;
+//    redbtn.layer.shadowRadius = 2;
+//    redbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     redbtn.backgroundColor = self.redExtract;
     
-    lineButton.layer.cornerRadius = 25.0;
-    lineButton.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    lineButton.layer.shadowOpacity = 0.5;
-    lineButton.layer.shadowRadius = 2;
-    lineButton.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    lineButton.layer.cornerRadius = 12.0;
+//    lineButton.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    lineButton.layer.shadowOpacity = 0.5;
+//    lineButton.layer.shadowRadius = 2;
+//    lineButton.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     lineButton.backgroundColor = self.lineExtract;
     
-    bluebtn.layer.cornerRadius = 25.0;
-    bluebtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    bluebtn.layer.shadowOpacity = 0.5;
-    bluebtn.layer.shadowRadius = 2;
-    bluebtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    bluebtn.layer.cornerRadius = 12.0;
+//    bluebtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    bluebtn.layer.shadowOpacity = 0.5;
+//    bluebtn.layer.shadowRadius = 2;
+//    bluebtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     bluebtn.backgroundColor = self.blueExtract;
     
-    penbtn.layer.cornerRadius = 25.0;
-    penbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    penbtn.layer.shadowOpacity = 0.5;
-    penbtn.layer.shadowRadius = 2;
-    penbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    penbtn.layer.cornerRadius = 12.0;
+//    penbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    penbtn.layer.shadowOpacity = 0.5;
+//    penbtn.layer.shadowRadius = 2;
+//    penbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     penbtn.backgroundColor = self.penExtract;
     
-    blackbtn.layer.cornerRadius = 25.0;
-    blackbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    blackbtn.layer.shadowOpacity = 0.5;
-    blackbtn.layer.shadowRadius = 2;
-    blackbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    blackbtn.layer.cornerRadius = 12.0;
+//    blackbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    blackbtn.layer.shadowOpacity = 0.5;
+//    blackbtn.layer.shadowRadius = 2;
+//    blackbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     blackbtn.backgroundColor = self.blackExtract;
     
-    eraserbtn.layer.cornerRadius = 25.0;
-    eraserbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    eraserbtn.layer.shadowOpacity = 0.5;
-    eraserbtn.layer.shadowRadius = 2;
-    eraserbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    eraserbtn.layer.cornerRadius = 12.0;
+//    eraserbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
+//    eraserbtn.layer.shadowOpacity = 0.5;
+//    eraserbtn.layer.shadowRadius = 2;
+//    eraserbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     
-   self.btn.layer.cornerRadius = 25.0;
+   self.btn.layer.cornerRadius = 15.0;
     self.btn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
     self.btn.layer.shadowOpacity = 0.5;
     self.btn.layer.shadowRadius = 2;
     self.btn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-    self.btn.layer.cornerRadius = 25.0;
     
-    textbtn.layer.cornerRadius = 25.0;
+    textbtn.layer.cornerRadius = 15.0;
     textbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
     textbtn.layer.shadowOpacity = 0.5;
     textbtn.layer.shadowRadius = 2;
@@ -319,8 +318,8 @@ return YES;
 - (void)setupBottomToolBar {
     self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
     self.imageToolbar1.alpha = 1.0f;
-    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0f]CGColor]];
-    [self.imageToolbar1.layer setCornerRadius:25.0f];
+    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:248.0/255.0 green:250.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+    [self.imageToolbar1.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageToolbar1.layer.shadowOffset = CGSizeMake(0,0);

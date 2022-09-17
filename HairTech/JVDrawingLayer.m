@@ -15,6 +15,8 @@
 #define JVDRAWINGBUFFER 16
 #define JVDRAWINGORIGINCOLOR [UIColor blackColor].CGColor
 #define JVDRAWINGSELECTEDCOLOR [UIColor redColor].CGColor
+#define IDIOM    UI_USER_INTERFACE_IDIOM()
+#define IPAD     UIUserInterfaceIdiomPad
 
 @interface JVDrawingLayer ()
 @property (nonatomic, assign) CGPoint startPoint;
@@ -173,24 +175,23 @@
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
-//    CGRect rect = CGRectMake(frame.origin.x - 4, frame.origin.y + 1, frame.size.width, frame.size.height); iPad
-    CGRect rect = CGRectMake(frame.origin.x - 4.5, frame.origin.y + 1, frame.size.width, frame.size.height);
-
+    CGRect rect;
+    if (IDIOM == IPAD) {
+       rect = CGRectMake(frame.origin.x - 0.5 , frame.origin.y + 1 , frame.size.width, frame.size.height); //iPad
+    } else {
+       rect = CGRectMake(frame.origin.x - 4.5, frame.origin.y + 1, frame.size.width, frame.size.height);
+    }
     UIBezierPath *path = [UIBezierPath bezierPath];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 10;
     paragraphStyle.alignment = NSTextAlignmentCenter;
-
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
      NSParagraphStyleAttributeName: paragraphStyle};
-
-    
     CATextLayer *textLayer = [CATextLayer layer];
     layer.frame = rect;
    // NSLog(@"Layer origin %f, %f", layer.bounds.size.width, layer.bounds.size.height );
     textLayer.string = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
-
 //    [textLayer setFontSize:15];
 //    [textLayer setFont:@"Helvetica"];
     [textLayer setFrame:layer.bounds];
@@ -201,11 +202,9 @@
     [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
     textLayer.contentsScale = [[UIScreen mainScreen] scale];
     [textLayer setMasksToBounds:YES];
-
-
-    
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     layer.fillColor = [[UIColor clearColor]CGColor];
+    //adding lines to path to detect tap
     int step = 0;
     for(int i=1;i<=rect.size.width/10;i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
@@ -214,9 +213,7 @@
     step = step + 10;
     }
     layer.path = path.CGPath;
-    
    // NSLog(@"text origin %f, %f", textLayer.bounds.size.width, textLayer.bounds.size.height );
-
     [layer addSublayer:textLayer];
     return layer;
 }
