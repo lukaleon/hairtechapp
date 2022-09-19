@@ -56,7 +56,7 @@
     CGPathRef hitPath = CGPathCreateCopyByStrokingPath(path, NULL, distance*2, kCGLineCapRound, kCGLineJoinRound, 0);
     BOOL isWithinDistance = CGPathContainsPoint(hitPath, NULL, p, false);
     CGPathRelease(hitPath);
-    NSLog(@"IS WITHIN DISTANCE %d", isWithinDistance);
+  //  NSLog(@"IS WITHIN DISTANCE %d", isWithinDistance);
     return isWithinDistance;
 }
 
@@ -328,7 +328,7 @@
 }
 
 - (BOOL)revokeUntilHidden {
-    /*if (self.trackArray.count!=1) {
+    if (self.trackArray.count!=1) {
         NSMutableDictionary *trackDic = [self.trackArray objectAtIndex:self.trackArray.count-2];
         CGPoint startPoint = CGPointFromString(trackDic[@"startPoint"]);
         CGPoint endPoint = CGPointFromString(trackDic[@"endPoint"]);
@@ -365,7 +365,7 @@
         self.type = type;
         [self.trackArray removeLastObject];
         return NO;
-    }*/
+    }
     return YES;
 }
 
@@ -549,6 +549,8 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
 
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
+
+    
     CGFloat xDist = (endPoint.x - startPoint.x);
     CGFloat yDist = (endPoint.y - startPoint.y);
     return sqrt((xDist * xDist) + (yDist * yDist));

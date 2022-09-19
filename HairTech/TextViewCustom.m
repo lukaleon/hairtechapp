@@ -69,6 +69,8 @@
         self.editable = YES;
         self.selectable = YES;
         self.textContainer.lineFragmentPadding = 0;
+        //[self sizeToFit];
+        
         //self.textContainerInset = UIEdgeInsetsZero;
        
        
@@ -80,17 +82,12 @@
   
     self.textContainer.lineFragmentPadding = 0;
     self.textContainerInset = UIEdgeInsetsZero;
-
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-
     paragraphStyle.lineSpacing = -0.20;
     paragraphStyle.alignment = NSTextAlignmentCenter;
-
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
      NSParagraphStyleAttributeName: paragraphStyle};
-
     self.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
-   // self.text = text;
 }
 @end

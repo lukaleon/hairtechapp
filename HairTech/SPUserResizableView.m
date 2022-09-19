@@ -12,8 +12,8 @@
    what they actually see as the bounding box. */
 #define kSPUserResizableViewGlobalInset 5.0
 
-#define kSPUserResizableViewDefaultMinWidth 48.0
-#define kSPUserResizableViewDefaultMinHeight 48.0
+#define kSPUserResizableViewDefaultMinWidth 38.0
+#define kSPUserResizableViewDefaultMinHeight 38.0
 #define kSPUserResizableViewInteractiveBorderSize 8.0
 
 static SPUserResizableViewAnchorPoint SPUserResizableViewNoResizeAnchorPoint = { 0.0, 0.0, 0.0, 0.0 };
@@ -273,17 +273,16 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     CGFloat newWidth = self.frame.size.width + deltaW;
     CGFloat hNew = [self.delegate getTextViewHeight];
     newHeight = hNew;
+    NSLog(@"NEW HEIGHT %f", newHeight);
      // newHeight = self.frame.size.height - deltaW;
 
-//    newHeight = self.contentView.frame.size.height;
-    
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
         newWidth = self.frame.size.width;
         newX = self.frame.origin.x;
     }
-    if (newHeight < self.minHeight) {
-        newHeight = self.frame.size.height;
+    if (newHeight < minHeight) {
+       newHeight = self.frame.size.height;
         newY = self.frame.origin.y;
     }
     

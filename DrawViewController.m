@@ -318,7 +318,7 @@ return YES;
 - (void)setupBottomToolBar {
     self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
     self.imageToolbar1.alpha = 1.0f;
-    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:248.0/255.0 green:250.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0.7f]CGColor]];
     [self.imageToolbar1.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -529,42 +529,28 @@ return YES;
     [penbtn addGestureRecognizer:longpresspenbtn];
 
     
-  
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.7;
     scrollView.maximumZoomScale = 5.0;
     scrollView.contentSize = self.viewForImg.frame.size;
 
-    NSLog(@"page width = %f", screenRect.size.width);
-    NSLog(@"page height = %f", screenRect.size.height);
-    
-    
-    
-    
+
     [AMPopTip appearance].font = [UIFont fontWithName:@"Avenir-Medium" size:15];
-    
-    
     self.popTipCurve = [AMPopTip popTip];
     self.popTipCurve.shouldDismissOnTap = YES;
     self.popTipCurve.edgeMargin = 5;
     self.popTipCurve.offset = 2;
     self.popTipCurve.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.popTipCurve.shouldDismissOnTap = YES;
- 
-    
+
     self.popTipLine = [AMPopTip popTip];
     self.popTipLine.shouldDismissOnTap = YES;
     self.popTipLine.edgeMargin = 5;
     self.popTipLine.offset = 2;
     self.popTipLine.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.popTipLine.shouldDismissOnTap = YES;
-    
-    
-    
-    
-    
+
     NSUserDefaults *sharedDefaults = [NSUserDefaults standardUserDefaults];
-    
     if ([sharedDefaults boolForKey:@"FirstPopCurve1"])
     {
        [self.popTipCurve showText:@"Tap to change type of curved line" direction:AMPopTipDirectionUp maxWidth:200 inView:self.view fromFrame:blackbtn.frame];
@@ -755,7 +741,7 @@ return YES;
             
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
             self.popoverController.delegate = self;
-            [self.popoverController presentPopoverFromRect:CGRectMake(penbtn.frame.origin.x,penbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+            [self.popoverController presentPopoverFromRect:CGRectMake(penbtn.frame.origin.x,penbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
         }
         else if
             (gestureRecognizer.state==UIGestureRecognizerStateEnded)
@@ -781,41 +767,31 @@ return YES;
     [self pencilPressed:[self.view viewWithTag:0]];
 
     NSLog(@"Long press");
-    penbtn.selected = NO;
-    blackbtn.selected=YES;
-    bluebtn.selected=NO;
-    redbtn.selected=NO;
-    eraserbtn.selected=NO;
-    lineButton.selected=NO;
+//    penbtn.selected = NO;
+//    blackbtn.selected = YES;
+//    bluebtn.selected = NO;
+//    redbtn.selected = NO;
+//    eraserbtn.selected = NO;
+//    lineButton.selected = NO;
     
-    longpressblackbtn .minimumPressDuration = 0.2;
-   
+    longpressblackbtn.minimumPressDuration = 0.2;
     [longpressblackbtn setDelaysTouchesBegan:YES];
-    [self addShadowToButton];
-
-    
-    
-    
+//    [self addShadowToButton];
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
-        
         ColorViewController *contentViewController = [[ColorViewController alloc] init];
         contentViewController.delegate = self;
-        
         contentViewController.currentPenColor = self.blackExtract;
-
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
-        
-      
-        [self.popoverController presentPopoverFromRect:CGRectMake(blackbtn.frame.origin.x,blackbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        [self.popoverController presentPopoverFromRect:CGRectMake(blackbtn.frame.origin.x,blackbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     else
     {
        
 
     }
-    blackbtn.selected=YES;
+//    blackbtn.selected = YES;
     
    // [self pencilPressed:[self.view viewWithTag:0]];
     //[self saveColorsToDefaults];
@@ -858,7 +834,7 @@ return YES;
         self.popoverController.delegate = self;
         
       
-        [self.popoverController presentPopoverFromRect:CGRectMake(bluebtn.frame.origin.x,bluebtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        [self.popoverController presentPopoverFromRect:CGRectMake(bluebtn.frame.origin.x,bluebtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     
         
@@ -908,7 +884,7 @@ return YES;
         self.popoverController.delegate = self;
         
       
-        [self.popoverController presentPopoverFromRect:CGRectMake(redbtn.frame.origin.x,redbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        [self.popoverController presentPopoverFromRect:CGRectMake(redbtn.frame.origin.x,redbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
         
     }
     
@@ -962,7 +938,7 @@ return YES;
         self.popoverController.delegate = self;
         
        
-        [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
   //  [self saveColorsToDefaults];
 
@@ -1300,7 +1276,6 @@ return YES;
     switch(PressedButton.tag)
     {
         case 0:
-            dashLineCount=dashLineCount+1;
             blackbtn.selected=YES;
             penbtn.selected = NO;
             bluebtn.selected=NO;
@@ -1320,30 +1295,34 @@ return YES;
          
             [self saveCurrentToolToUserDeafaults:0.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-            if(dashLineCount % 2 == 0){
+            if(curveToggleIsOn){
+                scrollView.pinchGestureRecognizer.enabled = YES;
                 [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedDashLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedDashLine;
                 self.drawingView.previousType = sender;
                 self.drawingView.lineColor = self.blackExtract;
-                [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = YES;
                 [self.drawingView removeCirclesOnZoomDelegate];
             }
             else{
+                scrollView.pinchGestureRecognizer.enabled = YES;
                 [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedLine;
                 self.drawingView.previousType = sender;
-
                 self.drawingView.lineColor = self.blackExtract;
-                [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
                 appDelegate.dashedCurve = NO;
                 [self.drawingView removeCirclesOnZoomDelegate];
             }
+            curveToggleIsOn = !curveToggleIsOn;
+            [self.blackbtn setImage:[UIImage imageNamed:curveToggleIsOn ? @"curve_solid.png" :@"curve_dash.png"] forState:UIControlStateSelected];
+
+
             break;
         case 1:
-           dashLineCount = 0;
+            curveToggleIsOn = nil;
+            dashLineCount = 0;
             bluebtn.selected=YES;
             penbtn.selected = NO;
             blackbtn.selected=NO;
@@ -1360,6 +1339,7 @@ return YES;
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
+            scrollView.pinchGestureRecognizer.enabled = YES;
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeDashedLine;
             self.drawingView.bufferType = JVDrawingTypeDashedLine;
@@ -1371,6 +1351,7 @@ return YES;
 
             break;
         case 2:
+            curveToggleIsOn = nil;
             dashLineCount = 0;
             redbtn.selected=YES;
             penbtn.selected = NO;
@@ -1387,7 +1368,8 @@ return YES;
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = self.redExtract;
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-                    
+            
+            scrollView.pinchGestureRecognizer.enabled = YES;
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeArrow;
             self.drawingView.bufferType = JVDrawingTypeArrow;
@@ -1399,6 +1381,7 @@ return YES;
             
             break;
         case 3:
+            curveToggleIsOn = nil;
             dashLineCount = 0;
             penbtn.selected = NO;
             blackbtn.selected=NO;
@@ -1415,7 +1398,7 @@ return YES;
             bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = self.lineExtract;
-
+            scrollView.pinchGestureRecognizer.enabled = YES;
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeLine;
             self.drawingView.bufferType = JVDrawingTypeLine;
@@ -1427,6 +1410,7 @@ return YES;
             
             break;
         case 4:
+            curveToggleIsOn = nil;
             dashLineCount = 0;
             penbtn.selected = NO;
             blackbtn.selected=NO;
@@ -1444,6 +1428,7 @@ return YES;
             redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
             
+            scrollView.pinchGestureRecognizer.enabled = NO;
             [self.drawingView enableGestures];
             self.drawingView.type = JVDrawingTypeText;
             self.drawingView.bufferType = JVDrawingTypeText;
@@ -1461,6 +1446,7 @@ return YES;
            // [self setButtonUNVisibleTextPressed];
             break;
         case 5:
+            curveToggleIsOn = nil;
             dashLineCount = 0;
             penbtn.selected = YES;
             blackbtn.selected=NO;

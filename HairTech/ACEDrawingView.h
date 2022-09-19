@@ -92,6 +92,8 @@ typedef enum {
     UITapGestureRecognizer *gestureRecognizer;
     UITapGestureRecognizer *gestureRecognizer2;
     BOOL textViewSelected;
+    CGPoint startOfLine;
+    CGPoint currentPointOfLine;
 }
 -(void)enableGestures;
 -(void)disableGestures;
@@ -121,7 +123,7 @@ typedef enum {
 
 @property CGFloat zoomFactor;
 
-- (BOOL)revoke;
+- (void)revoke;
 -(void)addTextViewToRect:(CGRect)rect;
 
 

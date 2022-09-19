@@ -105,25 +105,38 @@ UIColor* tempColor;
 //    }
 //    return self;
 //}
+- (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
 
-- (BOOL)revoke {
-    BOOL status = [self.selectedLayer revokeUntilHidden];
-    if (status) {
+    
+    CGFloat xDist = (endPoint.x - startPoint.x);
+    CGFloat yDist = (endPoint.y - startPoint.y);
+    return sqrt((xDist * xDist) + (yDist * yDist));
+}
+
+- (void)revoke {
+    //BOOL status = [self.selectedLayer revokeUntilHidden];
+   // if (status) {
         [self hideMenu];
-        [self.selectedLayer removeFromSuperlayer];
         [self.layerArray removeObject:self.selectedLayer];
+        [self.selectedLayer removeFromSuperlayer];
         self.selectedLayer = nil;
-    }
-    return status;
+        NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
+   // }
+    //return status;
 }
 #pragma mark Touches Methods
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-  
+    if (self.eraserSelected || self.type == JVDrawingTypeText ){
+        return;
+    }
     NSLog(@"touches began");
     self.isFirstTouch = YES;
     self.isMoveLayer = NO;
-   
+    UITouch *touch = [touches anyObject];
+    CGPoint currentPoint = [touch locationInView:self];
+    startOfLine = currentPoint;
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine || self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
     self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                                        target:self
@@ -137,6 +150,9 @@ UIColor* tempColor;
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+   
+    NSLog(@"touches moved drawing");
+
     if (self.eraserSelected || self.type == JVDrawingTypeText ){
         return;
     }
@@ -154,19 +170,17 @@ UIColor* tempColor;
     
     if (self.isFirstTouch) {
 
-//        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
-//            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
+            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
       
-            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 ofPath:self.selectedLayer.path]){
-                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+         //   if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 ofPath:self.selectedLayer.path]){
+//                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
                 
             }
          else {
-            // if ( self.type != JVDrawingTypeText ){
             [self removeCircles];
-            self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
-            [self.layer addSublayer:self.drawingLayer];
-             //}
+                 self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
+                 [self.layer addSublayer:self.drawingLayer];
              }
     } else {
         if (self.isMoveLayer) {
@@ -236,6 +250,9 @@ UIColor* tempColor;
     }
     
     self.isFirstTouch = NO;
+    
+    NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
+
 }
 
 - (void)setSelectedLayer:(JVDrawingLayer *)selectedLayer {
@@ -244,7 +261,9 @@ UIColor* tempColor;
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     NSLog(@"touches ended");
-        
+    
+    NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
+
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch) {
         [self.layerArray addObject:self.drawingLayer];
@@ -278,7 +297,7 @@ UIColor* tempColor;
                         // draw new selection
                         self.selectedLayer = layer;
                         self.selectedLayer.isSelected = YES;
-                        [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
+                       // [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
                         [self.layerArray removeObject:self.selectedLayer];
                         [self.layerArray addObject:self.selectedLayer];
                         self.type = self.selectedLayer.type;
@@ -321,10 +340,11 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
     else if (JVDrawingTypeText == self.type){
+        textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
         rect = CGRectInset(rect, -9.0f, -9.0f);
         [self addFrameForTextView:rect centerPoint:layer.position text:layer.text];
-        [self.delegate selectTextTool:self.textTypesSender isSelected:YES];
+        [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
         [self revoke];
     } else {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
@@ -477,9 +497,7 @@ UIColor* tempColor;
                                 self.textViewNew.frame.size.height);
     [self.userResizableView newFrame:newRect.size.height];
     [self.userResizableView sizeToFit];
-  
 }
-
 - (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView {
     [currentlyEditingView hideEditingHandles];
     currentlyEditingView = userResizableView;
@@ -530,13 +548,11 @@ UIColor* tempColor;
 }
 
 -(void)disableGestures{
-    NSLog(@"enable gestures");
-
     gestureRecognizer.enabled = NO;
     gestureRecognizer2.enabled = NO;
 }
 -(void)enableGestures{
-    NSLog(@"disable gestures");
+
     gestureRecognizer.enabled = YES;
     gestureRecognizer2.enabled = YES;
 }
@@ -552,8 +568,9 @@ UIColor* tempColor;
             [self becomeFirstResponder];
             menuForTextView = [UIMenuController sharedMenuController];
             menuForTextView.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)] ];
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)]];
             [menuForTextView showMenuFromView:self rect:rectOfMenu];
+
         } else {
             
             UIMenuController *menu = [UIMenuController sharedMenuController];
@@ -574,12 +591,16 @@ UIColor* tempColor;
         [currentlyEditingView hideEditingHandles];
         [self.userResizableView removeFromSuperview];
         [self.textViewNew removeFromSuperview];
+        [self.delegate selectPreviousTool:self.previousType];
+
     } else {
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
         [self.userResizableView removeFromSuperview];
         [self.textViewNew removeFromSuperview];
+        [self.delegate selectPreviousTool:self.previousType];
+
     }
 }
 -(void)hideMenuForTextView{
@@ -629,8 +650,7 @@ UIColor* tempColor;
 }
 
 - (CGFloat)getTextViewHeight{
-    
-    return self.textViewNew.contentSize.height + 22;
+    return self.textViewNew.contentSize.height + 20;
 }
 - (void)hideHandlesAndMenu{
     if (menuForTextView.isMenuVisible) {

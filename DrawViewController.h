@@ -157,7 +157,8 @@
     BOOL timerPopTipDismissed;
     NSArray *buttons;
     BOOL textSelected;
-  
+    BOOL curveToggleIsOn;
+
 }
 
 @property (nonatomic, assign) int numberOfColumns;

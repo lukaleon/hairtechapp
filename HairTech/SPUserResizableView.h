@@ -64,6 +64,6 @@ typedef struct SPUserResizableViewAnchorPoint {
 - (void)userResizingView:(SPUserResizableView *)userResizableView;
 - (CGFloat)getTextViewHeight;
 - (void)hideHandlesAndMenu;
-
+- (void)adjustTextViewToFrame:(CGRect)rect;
 
 @end
