@@ -154,7 +154,6 @@ UIColor* tempColor;
     if (UIMenuController.sharedMenuController.isMenuVisible) {
         [UIMenuController.sharedMenuController setMenuVisible:NO animated:YES];
     }
-
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -262,11 +261,6 @@ UIColor* tempColor;
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
 
 }
-
-- (void)setSelectedLayer:(JVDrawingLayer *)selectedLayer {
-    _selectedLayer = selectedLayer;
-}
-
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     NSLog(@"touches ended");
     
@@ -275,6 +269,9 @@ UIColor* tempColor;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
         [self.layerArray addObject:self.drawingLayer];
+        if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
+            [self selectLayer:[self.layerArray lastObject]];
+        }
        // [self.drawingLayer addToTrack];
     } else {
         if (self.isMoveLayer) {
@@ -300,15 +297,8 @@ UIColor* tempColor;
                         self.selectedLayer.isSelected = NO;
                         [self removeCircles];
                         [self hideMenu];
-                        
                         // draw new selection
-                        self.selectedLayer = layer;
-                        self.selectedLayer.isSelected = YES;
-                        [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
-                        [self.layerArray removeObject:self.selectedLayer];
-                        [self.layerArray addObject:self.selectedLayer];
-                        self.type = self.selectedLayer.type;
-                        [self placeCirclesAtLine:layer];
+                        [self selectLayer:layer];
                         
                     }
                     break;
@@ -331,6 +321,21 @@ UIColor* tempColor;
     }
    
     
+}
+- (void)setSelectedLayer:(JVDrawingLayer *)selectedLayer {
+    _selectedLayer = selectedLayer;
+}
+
+- (void)selectLayer:(JVDrawingLayer *)layer {
+    [layer caculateLocationWithPoint:layer.frame.origin];                    // tapped on a layer
+    self.selectedLayer = layer;
+    self.selectedLayer.isSelected = YES;
+    [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
+    [self.layerArray removeObject:self.selectedLayer];
+    [self.layerArray addObject:self.selectedLayer];
+    self.type = self.selectedLayer.type;
+    [self placeCirclesAtLine:layer];
+    NSLog(@"selecting curve");
 }
 #pragma mark Placing Circles On Line
 
@@ -526,6 +531,9 @@ UIColor* tempColor;
 
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text{
     
+    if ([self.userResizableView.subviews containsObject:self.textViewNew]){
+        [self hideAndSaveTextViewWhenNewAdded];
+    }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
     self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect];
     [self.textViewNew passText:text];
@@ -580,7 +588,7 @@ UIColor* tempColor;
 
         } else {
             
-            UIMenuController *menu = [UIMenuController sharedMenuController];
+            menuForTextView = [UIMenuController sharedMenuController];
             menuForTextView.menuItems = @[
                 [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)],[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)] ];
             [menuForTextView setTargetRect:rectOfMenu inView:self];
@@ -607,7 +615,6 @@ UIColor* tempColor;
         [self.textViewNew removeFromSuperview];
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
-
     }
 }
 -(void)hideMenuForTextView{
@@ -626,15 +633,12 @@ UIColor* tempColor;
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
         [self.userResizableView removeFromSuperview];
-      //  [self.textViewNew removeFromSuperview];
-        
         CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self];
         CGRect rect = CGRectMake(origin.x,
                                  origin.y,
                                  self.textViewNew.bounds.size.width,
                                  self.textViewNew.bounds.size.height);
-
-        if (![self.textViewNew.text isEqualToString:@""]){
+        if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
                                                                      text:self.textViewNew.text
@@ -650,10 +654,33 @@ UIColor* tempColor;
     }
         textViewSelected = NO;
         [self.delegate selectPreviousTool:self.previousType];
-
     }
     menuVisible = NO;
+}
 
+-(void)hideAndSaveTextViewWhenNewAdded{
+    [self.textViewNew resignFirstResponder];
+    self.textViewNew.userInteractionEnabled = NO;
+    [currentlyEditingView hideEditingHandles];
+    [self.userResizableView removeFromSuperview];
+    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self];
+    CGRect rect = CGRectMake(origin.x,
+                             origin.y,
+                             self.textViewNew.bounds.size.width,
+                             self.textViewNew.bounds.size.height);
+    if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
+        self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
+                                                                    frame:rect
+                                                                     text:self.textViewNew.text
+                                                                     type:self.type
+                                                                lineWidth:self.lineWidth
+                                                                lineColor:self.lineColor
+                                                               isSelected:NO];
+        [self.layer addSublayer:self.drawingLayer];
+        [self.layerArray addObject:self.drawingLayer];
+        [self.drawingLayer addToTrack];
+        [self.textViewNew removeFromSuperview];
+    }
 }
 
 - (CGFloat)getTextViewHeight{

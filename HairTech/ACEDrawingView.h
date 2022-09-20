@@ -300,8 +300,6 @@ double dist2(CGPoint a, CGPoint b);
 -(void)setButtonVisible;
 -(void)selectPreviousTool:(id)sender;
 -(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected;
-
-
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;
