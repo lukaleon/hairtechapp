@@ -117,10 +117,17 @@ UIColor* tempColor;
 - (void)revoke {
     //BOOL status = [self.selectedLayer revokeUntilHidden];
    // if (status) {
+
+    
         [self hideMenu];
+//    for (CAShapeLayer * layer in self.layer.sublayers) {
+//        if (layer = )
+//    }
         [self.layerArray removeObject:self.selectedLayer];
         [self.selectedLayer removeFromSuperlayer];
+        self.selectedLayer.isSelected = NO;
         self.selectedLayer = nil;
+    self.drawingLayer = nil;
         NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
    // }
     //return status;
@@ -147,6 +154,7 @@ UIColor* tempColor;
     if (UIMenuController.sharedMenuController.isMenuVisible) {
         [UIMenuController.sharedMenuController setMenuVisible:NO animated:YES];
     }
+
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -243,7 +251,7 @@ UIColor* tempColor;
         } else {
             NSLog(@"end of creation of line");
             [self.drawingLayer movePathWithEndPoint:currentPoint];
-            if (self.magnifierView.hidden == NO && count ==1){
+            if (self.magnifierView.hidden == NO && count == 1){
                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
             }
         }
@@ -265,12 +273,12 @@ UIColor* tempColor;
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
 
     [self hideLoupe];
-    if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch) {
+    if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
         [self.layerArray addObject:self.drawingLayer];
-        [self.drawingLayer addToTrack];
+       // [self.drawingLayer addToTrack];
     } else {
         if (self.isMoveLayer) {
-            [self.selectedLayer addToTrack];
+        //[self.selectedLayer addToTrack];
         }
         if (self.isFirstTouch) {
             
@@ -282,8 +290,7 @@ UIColor* tempColor;
             for (JVDrawingLayer *layer in self.layerArray) {
 
                 if ([layer isPoint:currentPoint withinDistance:12 ofPath:layer.path]){
-                    [layer caculateLocationWithPoint:currentPoint];
-                    // tapped on a layer
+                    [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                     layerHasBeenPicked = YES;
                     if (layer == self.selectedLayer && !menuVisible) {
                         // the layer is already selectedl; show the menu
@@ -297,7 +304,7 @@ UIColor* tempColor;
                         // draw new selection
                         self.selectedLayer = layer;
                         self.selectedLayer.isSelected = YES;
-                       // [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
+                        [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
                         [self.layerArray removeObject:self.selectedLayer];
                         [self.layerArray addObject:self.selectedLayer];
                         self.type = self.selectedLayer.type;
@@ -574,10 +581,10 @@ UIColor* tempColor;
         } else {
             
             UIMenuController *menu = [UIMenuController sharedMenuController];
-            menu.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)]];
-            [menu setTargetRect:rectOfMenu inView:self];
-            [menu setMenuVisible:YES animated:YES];
+            menuForTextView.menuItems = @[
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)],[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)] ];
+            [menuForTextView setTargetRect:rectOfMenu inView:self];
+            [menuForTextView setMenuVisible:YES animated:YES];
         }
     }
 
@@ -589,16 +596,16 @@ UIColor* tempColor;
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
-        [self.userResizableView removeFromSuperview];
         [self.textViewNew removeFromSuperview];
+        [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
 
     } else {
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
-        [self.userResizableView removeFromSuperview];
         [self.textViewNew removeFromSuperview];
+        [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
 
     }
@@ -606,7 +613,7 @@ UIColor* tempColor;
 -(void)hideMenuForTextView{
     
     if (menuForTextView.isMenuVisible) {
-            [menuForTextView setMenuVisible:NO animated:YES];
+        [menuForTextView setMenuVisible:NO animated:YES];
         }
     
     else if (self.textViewNew.isFirstResponder == YES){

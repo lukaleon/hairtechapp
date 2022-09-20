@@ -549,11 +549,11 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
 
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
-
-    
+  
     CGFloat xDist = (endPoint.x - startPoint.x);
     CGFloat yDist = (endPoint.y - startPoint.y);
-    return sqrt((xDist * xDist) + (yDist * yDist));
+    return  hypot((xDist), (yDist));
+//    return sqrt((xDist * xDist) + (yDist * yDist));
 }
 
 - (CGFloat)angleWithFirstPoint:(CGPoint)firstPoint andSecondPoint:(CGPoint)secondPoint

@@ -274,7 +274,7 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     CGFloat hNew = [self.delegate getTextViewHeight];
     newHeight = hNew;
     NSLog(@"NEW HEIGHT %f", newHeight);
-     // newHeight = self.frame.size.height - deltaW;
+//    newHeight = self.frame.size.height - deltaW;
 
     // (4) If the new frame is too small, cancel the changes.
     if (newWidth < self.minWidth) {
