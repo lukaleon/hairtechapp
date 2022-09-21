@@ -34,6 +34,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.frame = [UIScreen mainScreen].bounds;
+       // self.frame =
         self.lineJoin = kCALineJoinRound;
         self.lineCap = kCALineCapRound;
         self.isSelected = NO;
@@ -41,15 +42,35 @@
         self.trackArray = [[NSMutableArray alloc] init];
         self.arrayOfCircles = [NSMutableArray array];
         self.editedLine = NO;
+       // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
+        
+
     }
     return self;
 }
 
+//- (void)setIsSelected:(BOOL)isSelected
+//{
+//    _isSelected = isSelected;
+//}
 - (void)setIsSelected:(BOOL)isSelected
 {
     _isSelected = isSelected;
-}
+    
+    if (isSelected && self.type == JVDrawingTypeGraffiti)
+    {
+        self.opacity = 0.5;
+    }
+    else
+    {
 
+        self.opacity = 1;
+    }
+    
+//    if ((self.type != JVDrawingTypeGraffiti || self.type != JVDrawingTypeText) &&  !isSelected){
+//        
+//    }
+}
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path
 {
   
@@ -176,11 +197,7 @@
     layer.type = type;
     layer.text = text;
     CGRect rect;
-    if (IDIOM == IPAD) {
-       rect = CGRectMake(frame.origin.x - 0.5 , frame.origin.y + 1 , frame.size.width, frame.size.height); //iPad
-    } else {
-       rect = CGRectMake(frame.origin.x - 4.5, frame.origin.y + 1, frame.size.width, frame.size.height);
-    }
+    rect = CGRectMake(frame.origin.x - 9 , frame.origin.y - 9 , frame.size.width, frame.size.height);
     UIBezierPath *path = [UIBezierPath bezierPath];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 10;
@@ -200,8 +217,8 @@
     [textLayer setAlignmentMode:kCAAlignmentCenter];
     [textLayer setWrapped:YES];
     [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
-    textLayer.contentsScale = [[UIScreen mainScreen] scale];
     [textLayer setMasksToBounds:YES];
+    textLayer.contentsScale = [[UIScreen mainScreen] scale] * 3;
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     layer.fillColor = [[UIColor clearColor]CGColor];
     //adding lines to path to detect tap
@@ -213,8 +230,8 @@
     step = step + 10;
     }
     layer.path = path.CGPath;
-   // NSLog(@"text origin %f, %f", textLayer.bounds.size.width, textLayer.bounds.size.height );
     [layer addSublayer:textLayer];
+
     return layer;
 }
 

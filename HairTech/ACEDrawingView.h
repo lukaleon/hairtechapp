@@ -117,7 +117,7 @@ typedef enum {
 
 
 
-
+-(void)removeCircles;
 @property NSMutableArray * arrayOfCircles;
 @property NSMutableArray * arrayOfTextViews;
 

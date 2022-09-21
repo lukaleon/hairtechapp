@@ -185,6 +185,7 @@ UIColor* tempColor;
                 
             }
          else {
+             self.selectedLayer.isSelected = NO;
             [self removeCircles];
                  self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
                  [self.layer addSublayer:self.drawingLayer];
@@ -354,6 +355,8 @@ UIColor* tempColor;
     else if (JVDrawingTypeText == self.type){
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
+        NSLog(@"text layer frame %f, %f", rect.origin.x, rect.origin.y);
+
         rect = CGRectInset(rect, -9.0f, -9.0f);
         [self addFrameForTextView:rect centerPoint:layer.position text:layer.text];
         [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
@@ -530,7 +533,7 @@ UIColor* tempColor;
 }
 
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text{
-    
+    self.selectedLayer.isSelected = NO;
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndSaveTextViewWhenNewAdded];
     }
@@ -633,11 +636,14 @@ UIColor* tempColor;
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
         [self.userResizableView removeFromSuperview];
+        
         CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self];
+     
         CGRect rect = CGRectMake(origin.x,
                                  origin.y,
                                  self.textViewNew.bounds.size.width,
                                  self.textViewNew.bounds.size.height);
+        NSLog(@"text layer frame %f, %f", origin.x, origin.y);
         if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
@@ -699,7 +705,6 @@ UIColor* tempColor;
     self = [super initWithFrame:frame];
     if (self) {
 
-        
         //  [self configure];
         
     }
@@ -708,32 +713,19 @@ UIColor* tempColor;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
+
     self = [super initWithCoder:aDecoder];
     if (self) {
         
         self.userInteractionEnabled = YES;
-        //self.frame = [UIScreen mainScreen].bounds;
         self.layerArray = [[NSMutableArray alloc] init];
         self.type = JVDrawingTypeLine;        
         pan=NO;
         touchesForUpdate = 0;
-        
         [self configure];
-        
-        
-        dot =[[UIImageView alloc] initWithFrame:CGRectMake(20,20,10,10)];
-        dot.image=[UIImage imageNamed:@"dot2.png"];
-        [self addSubview:dot];
-        dot.alpha = 0;
-        
-        
-        dot2 =[[UIImageView alloc] initWithFrame:CGRectMake(20,20,10,10)];
-        dot2.image=[UIImage imageNamed:@"dot2.png"];
-        [self addSubview:dot2];
-        dot2.alpha = 0;
-        
         drawingLayer = [CALayer layer];
         [self.layer addSublayer:drawingLayer];
+        
         
         arrayOfLastPoints = [[NSArray alloc]init];
         self.zoomFactor = 1;

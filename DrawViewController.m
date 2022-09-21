@@ -354,7 +354,7 @@ return YES;
 -(void)viewDidLoad{
     
    
-        
+
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
     [self setupButtons];
@@ -1524,7 +1524,6 @@ return YES;
         self.NewImageView.image = nil;
         [self.drawingView clear];
         self.drawingView.backgroundColor =[UIColor clearColor];
-       
         [self updateButtonStatus];
                //[self saveImage];
      // [Flurry logEvent:@"Clear_Screen_Pressed"];

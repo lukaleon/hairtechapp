@@ -348,37 +348,37 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oNt-t3-8P7">
-                                <rect key="frame" x="-1" y="63" width="431" height="867"/>
+                                <rect key="frame" x="0.0" y="63" width="431" height="867"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EeY-Nz-MJ1">
-                                <rect key="frame" x="4" y="10" width="417" height="906"/>
+                                <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9W9-y4-YS4">
-                                        <rect key="frame" x="0.0" y="0.0" width="417" height="906"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" image="iphone7plus.png" translatesAutoresizingMaskIntoConstraints="NO" id="mue-L6-TmJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="417" height="906"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <gestureRecognizers/>
                                             </imageView>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" placeholderIntrinsicWidth="748" placeholderIntrinsicHeight="1004" translatesAutoresizingMaskIntoConstraints="NO" id="VaY-Nh-pAc" customClass="ACEDrawingView">
-                                                <rect key="frame" x="0.0" y="0.0" width="417" height="906"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" image="left_7p_tr.png" translatesAutoresizingMaskIntoConstraints="NO" id="Qgq-Cn-yZy" userLabel="tempImage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="417" height="906"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </imageView>
                                                     <imageView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" image="left_7p_tr.png" translatesAutoresizingMaskIntoConstraints="NO" id="3tJ-W4-mFC">
-                                                        <rect key="frame" x="0.0" y="0.0" width="417" height="906"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="430" height="920"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                         <color key="tintColor" red="0.21289995312690735" green="0.51224100589752197" blue="0.75000882148742676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <gestureRecognizers/>
