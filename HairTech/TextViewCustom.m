@@ -78,8 +78,8 @@
     }
     return self;
 }
--(void)passText:(NSString *)text{
-  
+-(void)passText:(NSString *)text color:(UIColor*)color{
+   // self.textColor = color;
     self.textContainer.lineFragmentPadding = 0;
     self.textContainerInset = UIEdgeInsetsZero;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -87,7 +87,7 @@
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
-     NSParagraphStyleAttributeName: paragraphStyle};
+     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : color};
     self.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
 }
 @end

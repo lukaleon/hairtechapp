@@ -120,7 +120,7 @@ static BOOL OSVersionIsAtLeast(float version) {
 	return self;
 }
 
-- (id)initWithContentViewController:(UIViewController *)viewController {
+- (id)initWithContentViewController:(UIView *)viewController {
 	if ((self = [self init])) {
 		self.contentViewController = viewController;
 	}
@@ -131,7 +131,7 @@ static BOOL OSVersionIsAtLeast(float version) {
 	[self dismissPopoverAnimated:NO];
 }
 
-- (void)setContentViewController:(UIViewController *)vc {
+- (void)setContentViewController:(UIView *)vc {
 	if (vc != _contentViewController) {
 		_contentViewController = vc;
 	}
@@ -157,13 +157,13 @@ static BOOL OSVersionIsAtLeast(float version) {
 		_popoverVisible = YES;
         
         if ([self forwardAppearanceMethods]) {
-            [_contentViewController viewDidAppear:YES];
+           // [_contentViewController viewDidAppear:YES];
         }
 	} else if ([animationID isEqual:@"FadeOut"]) {
 		_popoverVisible = NO;
         
         if ([self forwardAppearanceMethods]) {
-            [_contentViewController viewDidDisappear:YES];
+           // [_contentViewController viewDidDisappear:YES];
         }
 		[self removeView];
 		
@@ -202,7 +202,7 @@ static BOOL OSVersionIsAtLeast(float version) {
 	[self dismissPopoverAnimated:NO];
     
     //First force a load view for the contentViewController so the popoverContentSize is properly initialized
-	[_contentViewController view];
+	[_contentViewController self];
 	
 	[self determineContentSize];
 	
@@ -230,13 +230,13 @@ static BOOL OSVersionIsAtLeast(float version) {
     
 	[_backgroundView addSubview:containerView];
 	
-	containerView.contentView = _contentViewController.view;
+	containerView.contentView = _contentViewController;
     
 	self.view = containerView;
 	[self updateBackgroundPassthroughViews];
 	
     if ([self forwardAppearanceMethods]) {
-        [_contentViewController viewWillAppear:animated];
+       // [_contentViewController viewWillAppear:animated];
     }
 	[self.view becomeFirstResponder];
 	_popoverVisible = YES;
@@ -262,7 +262,7 @@ static BOOL OSVersionIsAtLeast(float version) {
         
 	} else {
         if ([self forwardAppearanceMethods]) {
-            [_contentViewController viewDidAppear:animated];
+           // [_contentViewController viewDidAppear:animated];
         }
 	}
 }
@@ -399,9 +399,9 @@ static BOOL OSVersionIsAtLeast(float version) {
 - (void)determineContentSize {
     if (CGSizeEqualToSize(_popoverContentSize, CGSizeZero)) {
         if ([_contentViewController respondsToSelector:@selector(preferredContentSize)]) {
-            _effectivePopoverContentSize = _contentViewController.preferredContentSize;
+            _effectivePopoverContentSize = _contentViewController.frame.size;
         } else {
-            _effectivePopoverContentSize = _contentViewController.contentSizeForViewInPopover;
+            _effectivePopoverContentSize = _contentViewController.frame.size;
         }
 	} else {
         _effectivePopoverContentSize = _popoverContentSize;
@@ -415,7 +415,7 @@ static BOOL OSVersionIsAtLeast(float version) {
 - (void)dismissPopoverAnimated:(BOOL)animated userInitiated:(BOOL)userInitiated {
 	if (self.view) {
         if ([self forwardAppearanceMethods]) {
-            [_contentViewController viewWillDisappear:animated];
+           // [_contentViewController viewWillDisappear:animated];
         }
 		_popoverVisible = NO;
 		[self.view resignFirstResponder];
@@ -438,7 +438,7 @@ static BOOL OSVersionIsAtLeast(float version) {
             
 		} else {
             if ([self forwardAppearanceMethods]) {
-                [_contentViewController viewDidDisappear:animated];
+               // [_contentViewController viewDidDisappear:animated];
             }
             [self removeView];
 		}

@@ -145,7 +145,7 @@ UIColor* tempColor;
     CGPoint currentPoint = [touch locationInView:self];
     startOfLine = currentPoint;
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine || self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
-    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                        target:self
                                                      selector:@selector(showLoupe2:)
                                                      userInfo:nil
@@ -358,7 +358,7 @@ UIColor* tempColor;
         NSLog(@"text layer frame %f, %f", rect.origin.x, rect.origin.y);
 
         rect = CGRectInset(rect, -9.0f, -9.0f);
-        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text];
+        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text color:layer.lineColor_];
         [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
         [self revoke];
     } else {
@@ -409,7 +409,7 @@ UIColor* tempColor;
     self.zoomFactor = zoomFactor;
     self.drawingLayer.zoomFactor = zoomFactor;
     [self removeCirclesOnZoom];
-    CGFloat screenAndZoomScale = zoomFactor * [UIScreen mainScreen].scale;
+    zoomIdx = zoomFactor * [UIScreen mainScreen].scale;
     // Walk the layer and view hierarchies separately. We need to reach all tiled layers.
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toView:self.userResizableView];
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toLayer:self.textViewNew.layer];
@@ -532,14 +532,14 @@ UIColor* tempColor;
     
 }
 
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text{
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color{
     self.selectedLayer.isSelected = NO;
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndSaveTextViewWhenNewAdded];
     }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
     self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect];
-    [self.textViewNew passText:text];
+    [self.textViewNew passText:text color:color];
     self.userResizableView.center = center;
     self.userResizableView.contentView = self.textViewNew;
     self.userResizableView.delegate = self;
@@ -547,8 +547,12 @@ UIColor* tempColor;
     currentlyEditingView = self.userResizableView;
     lastEditedView = self.userResizableView;
     [self addSubview:self.userResizableView];
+    [self applyScale:zoomIdx toView:self.userResizableView];
+    [self applyScale:zoomIdx toView:self.textViewNew];
+
     [self.arrayOfTextViews addObject:self.userResizableView];
-   
+    
+    /**Gesture recognizers for UITextView**/
     gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuOnTextView:)];
     [self.userResizableView addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.numberOfTapsRequired = 1;
@@ -629,34 +633,32 @@ UIColor* tempColor;
     else if (self.textViewNew.isFirstResponder == YES){
         [self.textViewNew resignFirstResponder];
         [self hideTextViewFrame];
-        [currentlyEditingView showEditingHandles];
-    }
+        [currentlyEditingView showEditingHandles];    }
     else if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
         [self.userResizableView removeFromSuperview];
         
-        CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self];
+        CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self.window];
      
         CGRect rect = CGRectMake(origin.x,
                                  origin.y,
                                  self.textViewNew.bounds.size.width,
                                  self.textViewNew.bounds.size.height);
-        NSLog(@"text layer frame %f, %f", origin.x, origin.y);
         if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
                                                                      text:self.textViewNew.text
                                                                      type:self.type
                                                                 lineWidth:self.lineWidth
-                                                                lineColor:self.lineColor
+                                                                lineColor:self.textViewNew.textColor
                                                                 isSelected:NO];
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
-            NSLog(@"text added to layer");
+        [self.delegate removeTextSettings];
     }
         textViewSelected = NO;
         [self.delegate selectPreviousTool:self.previousType];

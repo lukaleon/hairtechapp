@@ -158,9 +158,9 @@
     NSArray *buttons;
     BOOL textSelected;
     BOOL curveToggleIsOn;
-
+    ColorViewController *contentTextView;
+    BOOL textSetterState;
 }
-
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;
 
@@ -202,6 +202,8 @@
 @property (weak,nonatomic) IBOutlet UIImageView * toolbarImg;
 
 @property (nonatomic, strong) WEPopoverController *popoverController;
+@property (nonatomic, strong) WEPopoverController *popoverTextSettings;
+
 @property (nonatomic, retain) UIPopoverController *listPopoverDrawController;
 @property (weak,nonatomic)UIImage *imagethumb1;
 @property (weak,nonatomic)UIImage *imagethumb2;
@@ -275,6 +277,8 @@
 @property UIColor* blueExtract;
 @property UIColor* redExtract;
 @property UIColor* lineExtract;
+@property UIColor* textExtract;
+
 
 
 

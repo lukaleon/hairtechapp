@@ -27,7 +27,7 @@
  */
 @interface WEPopoverController : NSObject
 
-@property(nonatomic, strong) UIViewController *contentViewController;
+@property(nonatomic, strong) UIView *contentViewController;
 
 @property(nonatomic, weak, readonly) UIView *presentedFromView;
 @property(nonatomic, assign, readonly) CGRect presentedFromRect;
@@ -49,7 +49,7 @@
 + (WEPopoverContainerViewProperties *)defaultContainerViewProperties;
 + (void)setDefaultContainerViewProperties:(WEPopoverContainerViewProperties *)properties;
 
-- (id)initWithContentViewController:(UIViewController *)theContentViewController;
+- (id)initWithContentViewController:(UIView *)theContentViewController;
 
 - (void)dismissPopoverAnimated:(BOOL)animated;
 

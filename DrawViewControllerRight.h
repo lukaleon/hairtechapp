@@ -125,6 +125,7 @@ int dashLineCount;
      
      NSArray *buttons;
      BOOL textSelected;
+     BOOL curveToggleIsOn;
 
     
 }

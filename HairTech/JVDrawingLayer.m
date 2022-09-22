@@ -196,6 +196,7 @@
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
+    layer.lineColor_ = line_Color;
     CGRect rect;
     rect = CGRectMake(frame.origin.x - 9 , frame.origin.y - 9 , frame.size.width, frame.size.height);
     UIBezierPath *path = [UIBezierPath bezierPath];
@@ -204,19 +205,17 @@
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
-     NSParagraphStyleAttributeName: paragraphStyle};
+     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : line_Color};
     CATextLayer *textLayer = [CATextLayer layer];
     layer.frame = rect;
-   // NSLog(@"Layer origin %f, %f", layer.bounds.size.width, layer.bounds.size.height );
     textLayer.string = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
-//    [textLayer setFontSize:15];
-//    [textLayer setFont:@"Helvetica"];
+    //textLayer.string = textString;
     [textLayer setFrame:layer.bounds];
     [textLayer setBackgroundColor:[UIColor clearColor].CGColor];
-//    [textLayer setString:text];
     [textLayer setAlignmentMode:kCAAlignmentCenter];
     [textLayer setWrapped:YES];
-    [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
+    //[textLayer setForegroundColor:[line_Color CGColor]];
+    
     [textLayer setMasksToBounds:YES];
     textLayer.contentsScale = [[UIScreen mainScreen] scale] * 3;
     layer.backgroundColor = [[UIColor clearColor] CGColor];

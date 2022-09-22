@@ -14,7 +14,7 @@
 
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
-
+#define btnColor  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0]
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -208,6 +208,7 @@
     [self.colorBar5 setTextColor:self.penExtract];
 
     
+    self.textExtract = [UIColor blackColor];
     
     NSLog(@"I have extracted colors");
     
@@ -250,77 +251,37 @@ return YES;
 -(void)setupButtons
 {
     redbtn.layer.cornerRadius = 15;
-//    redbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    redbtn.layer.shadowOpacity = 0.5;
-//    redbtn.layer.shadowRadius = 2;
-//    redbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     redbtn.backgroundColor = self.redExtract;
     
     lineButton.layer.cornerRadius = 15;
-//    lineButton.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    lineButton.layer.shadowOpacity = 0.5;
-//    lineButton.layer.shadowRadius = 2;
-//    lineButton.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     lineButton.backgroundColor = self.lineExtract;
     
     bluebtn.layer.cornerRadius = 15;
-//    bluebtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    bluebtn.layer.shadowOpacity = 0.5;
-//    bluebtn.layer.shadowRadius = 2;
-//    bluebtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     bluebtn.backgroundColor = self.blueExtract;
     
     penbtn.layer.cornerRadius = 15;
-//    penbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    penbtn.layer.shadowOpacity = 0.5;
-//    penbtn.layer.shadowRadius = 2;
-//    penbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     penbtn.backgroundColor = self.penExtract;
     
     blackbtn.layer.cornerRadius = 15;
-//    blackbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    blackbtn.layer.shadowOpacity = 0.5;
-//    blackbtn.layer.shadowRadius = 2;
-//    blackbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
     blackbtn.backgroundColor = self.blackExtract;
     
-    eraserbtn.layer.cornerRadius = 15;
-//    eraserbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    eraserbtn.layer.shadowOpacity = 0.5;
-//    eraserbtn.layer.shadowRadius = 2;
-//    eraserbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    textbtn.layer.cornerRadius = 15.0;
+    textbtn.backgroundColor = [UIColor blackColor];
     
-   self.btn.layer.cornerRadius = 15.0;
+    eraserbtn.layer.cornerRadius = 15.0;
+    
+
+    penbtn.backgroundColor =  btnColor;
+    blackbtn.backgroundColor = btnColor;
+    bluebtn.backgroundColor = btnColor;
+    redbtn.backgroundColor =  btnColor;
+    textbtn.backgroundColor = btnColor;
+    
+    self.btn.layer.cornerRadius = 15.0;
     self.btn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
     self.btn.layer.shadowOpacity = 0.5;
     self.btn.layer.shadowRadius = 2;
     self.btn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-    
-    textbtn.layer.cornerRadius = 15.0;
-//    textbtn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-//    textbtn.layer.shadowOpacity = 0.5;
-//    textbtn.layer.shadowRadius = 2;
-//    textbtn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-    textbtn.backgroundColor = [UIColor blackColor];
-
-    self.undoBut.layer.cornerRadius = 19.0;
-    self.undoBut.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-    self.undoBut.layer.shadowOpacity = 0.5;
-    self.undoBut.layer.shadowRadius = 2;
-    self.undoBut.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-    
-     self.redoBut.layer.cornerRadius = 19.0;
-    self.redoBut.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
-     self.redoBut.layer.shadowOpacity = 0.5;
-     self.redoBut.layer.shadowRadius = 2;
-   self.redoBut.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
-    
-    
-    penbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-    blackbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-    bluebtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-    redbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-    textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
 }
 
 - (void)setupBottomToolBar {
@@ -705,7 +666,11 @@ return YES;
 }
 - (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)thePopoverController {
     //The popover is automatically dismissed if you click outside it, unless you return NO here
-    return YES;
+    if (thePopoverController != self.popoverTextSettings){
+        return YES;
+    } else {
+        return  NO;
+    }
 }
 - (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
     NSLog(@"Longpress PEN");
@@ -721,7 +686,6 @@ return YES;
         eraserbtn.selected=NO;
         lineButton.selected=NO;
         
-        [self addShadowToButton];
 
         [longpresspenbtn setDelaysTouchesBegan:YES];
 
@@ -729,14 +693,14 @@ return YES;
         if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
         {
             
-            ColorViewController *contentViewController = [[ColorViewController alloc] init];
+            
+            ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
             contentViewController.delegate = self;
-            
             contentViewController.currentPenColor = self.penExtract;
-            
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
             self.popoverController.delegate = self;
             [self.popoverController presentPopoverFromRect:CGRectMake(penbtn.frame.origin.x,penbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+
         }
         else if
             (gestureRecognizer.state==UIGestureRecognizerStateEnded)
@@ -774,12 +738,12 @@ return YES;
 //    [self addShadowToButton];
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
-        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blackExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
         [self.popoverController presentPopoverFromRect:CGRectMake(blackbtn.frame.origin.x,blackbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+
     }
     else
     {
@@ -813,7 +777,6 @@ return YES;
     longpressbluebtn .minimumPressDuration = 0.2;
     [longpressbluebtn setDelaysTouchesBegan:YES];
   
-    [self addShadowToButton];
 
     
      
@@ -821,15 +784,13 @@ return YES;
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
 
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
-        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blueExtract;
 
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
-        
-      
         [self.popoverController presentPopoverFromRect:CGRectMake(bluebtn.frame.origin.x,bluebtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+
     }
     
         
@@ -860,7 +821,6 @@ return YES;
     longpressredbtn .minimumPressDuration = 0.2;
     //longpressbluebtn .minimumPressDuration = 0.2;
     
-    [self addShadowToButton];
 
     
     
@@ -871,7 +831,7 @@ return YES;
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
         
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.redExtract;
 
@@ -880,7 +840,7 @@ return YES;
         
       
         [self.popoverController presentPopoverFromRect:CGRectMake(redbtn.frame.origin.x,redbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-        
+
     }
     
  //   [self saveColorsToDefaults];
@@ -919,14 +879,12 @@ return YES;
     longpresslinebtn .minimumPressDuration = 0.2;
     [longpresslinebtn setDelaysTouchesBegan:YES];
     
-    [self addShadowToButton];
 
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
         
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
         contentViewController.delegate = self;
-        
         contentViewController.currentPenColor = self.lineExtract;
 
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -934,6 +892,7 @@ return YES;
         
        
         [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+
     }
   //  [self saveColorsToDefaults];
 
@@ -944,10 +903,7 @@ return YES;
 }
 -(void)extractRGBforPen:(UIColor*)tempcolor
 {
-    
-    /////// PUT NSNOTIFICATION METHOD TO SEND SAVED COLOS;
     redtemp5 = 0.0; greentemp5= 0.0; bluetemp5 = 0.0; alphatemp5 = 1.0;
-    
     [tempcolor getRed:&redtemp5 green:&greentemp5 blue:&bluetemp5 alpha:&alphatemp5];
     self.penExtract=tempcolor;
     red_pen=redtemp5;
@@ -955,36 +911,25 @@ return YES;
     blue_pen=bluetemp5;
     alpha_pen=1.0;
     opacity=1.0;
-    //  brush_blue=3.0;
-    NSLog(@"Color was extracted");
-    
 }
 
 
 -(void)extractRGBforBlue:(UIColor*)tempcolor
 {
-    
-    /////// PUT NSNOTIFICATION METHOD TO SEND SAVED COLOS;
     redtemp2 = 0.0; greentemp2= 0.0; bluetemp2 = 0.0; alphatemp2 = 1.0;
-    
     [tempcolor getRed:&redtemp2 green:&greentemp2 blue:&bluetemp2 alpha:&alphatemp2];
     self.blueExtract=tempcolor;
-    
     red_blue=redtemp2;
     green_blue=greentemp2;
     blue_blue=bluetemp2;
     alpha_blue=1.0;
     opacity=1.0;
     brush_blue=3.0;
-    NSLog(@"Color was extracted");
-    
-    
 }
 
 -(void)extractRGBforBlack:(UIColor*)tempcolor
 {
     redtemp1 = 0.0; greentemp1= 0.0; bluetemp1 = 0.0; alpha = 1.0;
-    
     [tempcolor getRed:&redtemp1 green:&greentemp1 blue:&bluetemp1 alpha:&alphatemp1];
     self.blackExtract=tempcolor;
     red =redtemp1;
@@ -993,16 +938,10 @@ return YES;
     alpha=1.0;
     opacity=1.0;
     brush=3.5;
-    NSLog(@"Color was extracted");
-    
-    
 }
 -(void)extractRGBforRed:(UIColor*)tempcolor
 {
-    
-    /////// PUT NSNOTIFICATION METHOD TO SEND SAVED COLOS;
     redtemp3 = 0.0; greentemp3= 0.0; bluetemp3 = 0.0; alphatemp3 = 1.0;
-    
     [tempcolor getRed:&redtemp3 green:&greentemp3 blue:&bluetemp3 alpha:&alphatemp3];
     self.redExtract=tempcolor;
     red_red=redtemp3;
@@ -1011,16 +950,11 @@ return YES;
     alpha_red=1.0;
     opacity=1.0;
     brush_red=3.5;
-    
-    NSLog(@"Color was extracted");
-    
-    
 }
 
 -(void)extractRGBforLine:(UIColor*)tempcolor
 {
     redtemp4 = 0.0; greentemp4= 0.0; bluetemp4 = 0.0; alphatemp4 = 1.0;
-    
     [tempcolor getRed:&redtemp4 green:&greentemp4 blue:&bluetemp4 alpha:&alphatemp4];
     self.lineExtract=tempcolor;
     red_line =redtemp4;
@@ -1029,9 +963,19 @@ return YES;
     alpha_line=1.0;
     opacity=1.0;
     brush_line=3.0;
-    NSLog(@"Color was extracted");
+}
+-(void)extractRGBforText:(UIColor*)tempcolor
+{
+    redtemp4 = 0.0; greentemp4= 0.0; bluetemp4 = 0.0; alphatemp4 = 1.0;
     
-    
+    [tempcolor getRed:&redtemp4 green:&greentemp4 blue:&bluetemp4 alpha:&alphatemp4];
+    self.textExtract=tempcolor;
+    red_line =redtemp4;
+    green_line=greentemp4;
+    blue_line=bluetemp4;
+    alpha_line=1.0;
+    opacity=1.0;
+    brush_line=3.0;
 }
 -(NSString *)UIColorToHexStringWithRed:(CGFloat*)myred green:(CGFloat*)mygreen blue:(CGFloat*)myblue  alpha:(CGFloat*)myalpha{
     
@@ -1041,29 +985,18 @@ return YES;
     return hexString;
 }
 
--(void) colorPopoverControllerDidSelectColor:(NSString *)hexColor {
+-(void)colorPopoverControllerDidSelectColor:(NSString *)hexColor {
     if(penbtn.selected==YES){
-        
-        
         [self extractRGBforPen:[GzColors colorFromHex:hexColor]];
-        
         self.drawingView.drawTool = ACEDrawingToolTypePen;
         self.drawingView.lineColor = self.penExtract;
-        
         [self.colorBar5 setTextColor:self.penExtract];
         self.penbtn.backgroundColor = self.penExtract;
         
-       
-        blackbtn.backgroundColor=[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        
-        
-        //  blackbtn.layer.borderColor = [[GzColors colorFromHex:hexColor]CGColor];
-        
-        //    [self.drawcontrollerRightdelegate selectedBtn:hexColor];
-        
+        blackbtn.backgroundColor = btnColor;
+        bluebtn.backgroundColor = btnColor;
+        redbtn.backgroundColor = btnColor;
+        lineButton.backgroundColor = btnColor;
         [self.view setNeedsDisplay];
         
         [penbtn addGestureRecognizer:longpresspenbtn];
@@ -1071,72 +1004,35 @@ return YES;
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        
         [self.popoverController dismissPopoverAnimated:YES];
         self.popoverController = nil;
-        
-        
-       // [self.drawcontrollerdelegate selectedBtn:hexColor];
-        
-        
-        
     }
     
     
     if(    blackbtn.selected==YES){
         [self extractRGBforBlack:[GzColors colorFromHex:hexColor]];
-        
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        // if(curveToggleIsOn){
-            
-            self.drawingView.drawTool = ACEDrawingToolTypeCurve;
-            self.drawingView.lineColor = self.blackExtract;
-            self.blackbtn.backgroundColor = self.blackExtract;
-          //  [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
-            
-            
-    
-            
-      //      appDelegate.dashedCurve = YES;
-      //  }
-        //else{
-            self.drawingView.drawTool = ACEDrawingToolTypeCurve;
-            self.drawingView.lineColor = self.blackExtract;
-            self.blackbtn.backgroundColor = self.blackExtract;
-            
-         //   [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
-            
-       //  appDelegate.dashedCurve = NO;
-      //  }
-       // curveToggleIsOn = !curveToggleIsOn;
-       // [self.blackbtn setImage:[UIImage imageNamed:curveToggleIsOn ? @"curveNew.png" :@"curveDashNew.png"] forState:UIControlStateSelected];
-        
-      //  [self.colorBar1 setTextColor:self.blackExtract];
-        self.penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        
+        self.drawingView.drawTool = ACEDrawingToolTypeCurve;
+        self.drawingView.lineColor = self.blackExtract;
+        self.blackbtn.backgroundColor = self.blackExtract;
+        self.drawingView.drawTool = ACEDrawingToolTypeCurve;
+        self.drawingView.lineColor = self.blackExtract;
+        self.blackbtn.backgroundColor = self.blackExtract;
+        self.penbtn.backgroundColor = btnColor;
+        bluebtn.backgroundColor = btnColor;
+        redbtn.backgroundColor = btnColor;
+        lineButton.backgroundColor = btnColor;
         
         [self.view setNeedsDisplay];
-
         [penbtn addGestureRecognizer:longpresspenbtn];
-        
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        
-        
         [self.popoverController dismissPopoverAnimated:YES];
         self.popoverController = nil;
     }
     
-    
-    if(bluebtn.selected==YES){
+    if (bluebtn.selected==YES){
         [self extractRGBforBlue:[GzColors colorFromHex:hexColor]];
         self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
         
@@ -1145,10 +1041,10 @@ return YES;
         [self.colorBar2 setTextColor:self.blueExtract];
         
          self.bluebtn.backgroundColor = self.blueExtract;
-        blackbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        self.penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
+        blackbtn.backgroundColor = btnColor;
+        self.penbtn.backgroundColor = btnColor;
+        redbtn.backgroundColor = btnColor;
+        lineButton.backgroundColor = btnColor;
         
         [self.view setNeedsDisplay];
         
@@ -1172,10 +1068,10 @@ return YES;
         [self.colorBar3 setTextColor:self.redExtract];
          self.redbtn.backgroundColor = self.redExtract;
         
-        bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        blackbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
+        bluebtn.backgroundColor = btnColor;
+        blackbtn.backgroundColor = btnColor;
+        penbtn.backgroundColor = btnColor;
+        lineButton.backgroundColor =btnColor;
         [self.view setNeedsDisplay];
         
         [penbtn addGestureRecognizer:longpresspenbtn];
@@ -1196,10 +1092,10 @@ return YES;
         [self.colorBar4 setTextColor:self.lineExtract];
          self.lineButton.backgroundColor = self.lineExtract;
         
-        bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        blackbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-        redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
+        bluebtn.backgroundColor = btnColor;
+        blackbtn.backgroundColor = btnColor;
+        penbtn.backgroundColor = btnColor;
+        redbtn.backgroundColor = btnColor;
         
         [self.view setNeedsDisplay];
         
@@ -1262,7 +1158,12 @@ return YES;
     textSelected = isSelected;
     [self pencilPressed:sender];
 }
-
+-(void)addTextFromTextSettings{
+    NSLog(@"add text from text setttings");
+    textSelected = NO;
+    [self pencilPressed:[self.view viewWithTag:4]];
+    
+}
 - (IBAction)pencilPressed:(id)sender {
     
     [self.popTipLine hide];
@@ -1279,20 +1180,13 @@ return YES;
             eraserbtn.selected=NO;
             lineButton.selected=NO;
             textbtn.selected = NO;
-           
             self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-    
             blackbtn.backgroundColor=self.blackExtract;
-            penbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            bluebtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            redbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            lineButton.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
+            [self makeButtonSelected];
+            
             [self saveCurrentToolToUserDeafaults:0.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             if(curveToggleIsOn){
-                scrollView.pinchGestureRecognizer.enabled = YES;
                 [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedDashLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedDashLine;
@@ -1302,7 +1196,6 @@ return YES;
                 [self.drawingView removeCirclesOnZoomDelegate];
             }
             else{
-                scrollView.pinchGestureRecognizer.enabled = YES;
                 [self.drawingView disableGestures];
                 self.drawingView.type = JVDrawingTypeCurvedLine;
                 self.drawingView.bufferType = JVDrawingTypeCurvedLine;
@@ -1327,17 +1220,10 @@ return YES;
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-
             bluebtn.backgroundColor = self.blueExtract;
-            penbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            blackbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            redbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            lineButton.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
+            [self makeButtonSelected];
 
-            
-            scrollView.pinchGestureRecognizer.enabled = YES;
+
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeDashedLine;
             self.drawingView.bufferType = JVDrawingTypeDashedLine;
@@ -1358,22 +1244,15 @@ return YES;
             eraserbtn.selected=NO;
             lineButton.selected=NO;
             textbtn.selected = NO;
-            self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-            
             redbtn.backgroundColor = self.redExtract;
-            penbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            blackbtn.backgroundColor= [UIColor colorWithRed:0.20 green:0.20 blue:0.46 alpha:1.0];
-            bluebtn.backgroundColor =[UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            lineButton.backgroundColor =[UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
+            self.drawingView.eraserSelected = NO;
+            self.drawingView.lineColor = self.redExtract;
 
-            scrollView.pinchGestureRecognizer.enabled = YES;
+            [self makeButtonSelected];
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeArrow;
             self.drawingView.bufferType = JVDrawingTypeArrow;
             self.drawingView.previousType = sender;
-            self.drawingView.lineColor = self.redExtract;
             [self saveCurrentToolToUserDeafaults:2.0 forKey:@"currentTool"];
             self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
             [self.drawingView removeCirclesOnZoomDelegate];
@@ -1390,16 +1269,9 @@ return YES;
             lineButton.selected=YES;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-            
             lineButton.backgroundColor = self.lineExtract;
-            penbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            blackbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            bluebtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            redbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-
-            scrollView.pinchGestureRecognizer.enabled = YES;
+            
+            [self makeButtonSelected];
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeLine;
             self.drawingView.bufferType = JVDrawingTypeLine;
@@ -1421,29 +1293,22 @@ return YES;
             lineButton.selected=NO;
             textbtn.selected = YES;
             self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-            
-            penbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            blackbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            bluebtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            redbtn.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            lineButton.backgroundColor =  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            
-            scrollView.pinchGestureRecognizer.enabled = NO;
+            [self makeButtonSelected];
+
             [self.drawingView enableGestures];
             self.drawingView.type = JVDrawingTypeText;
             self.drawingView.bufferType = JVDrawingTypeText;
-            self.drawingView.lineColor = [UIColor blackColor];
+            self.drawingView.lineColor = self.textExtract;
             self.drawingView.textTypesSender = sender; //Should be saved to user defaults
-            [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
-                                              self.drawingView.bounds.origin.y,
-                                              self.drawingView.bounds.size.width,
-                                              self.drawingView.bounds.size.height) animated:YES];
             CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
-            [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT"];
+                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract];
             }
             self.drawingView.textViewNew.delegate = self;
+            if (contentTextView == nil){
+                [self showTextColorsAndSize];
+                
+            }
            // [self setButtonUNVisibleTextPressed];
             break;
         case 5:
@@ -1457,15 +1322,9 @@ return YES;
             lineButton.selected=NO;
             textbtn.selected = NO;
             self.drawingView.eraserSelected = NO;
-            [self addShadowToButton];
-
             penbtn.backgroundColor = self.penExtract;
-            blackbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            bluebtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            redbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            lineButton.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-            textbtn.backgroundColor = [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0];
-
+            
+            [self makeButtonSelected];
             [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeGraffiti;
             self.drawingView.bufferType = JVDrawingTypeGraffiti;
@@ -1493,14 +1352,7 @@ return YES;
     lineButton.selected=NO;
     textbtn.selected = NO;
     self.drawingView.eraserSelected = YES;
-    [self addShadowToButton];
-    
-    penbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-    blackbtn.backgroundColor =[UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-    bluebtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-    redbtn.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-    lineButton.backgroundColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0];
-    
+    [self makeButtonSelected];
     self.drawingView.lineColor = [UIColor whiteColor];
     self.drawingView.lineWidth = 30.0;
 }
@@ -2291,11 +2143,60 @@ self.previewImageView.layer.sublayers = nil;
 
     
 }
+-(void)makeButtonSelected {
+    for(int i=0; i< buttons.count; i++) {
+        
+        if(![[buttons objectAtIndex:i] isSelected]){
+            UIButton *btn = [buttons objectAtIndex:i];
+            btn.backgroundColor = btnColor;
+        }
+    }
+}
 
 
+-(void)removeTextSettings{
+    NSLog(@"remove text settings");
+    [contentTextView removeFromSuperview];
+    contentTextView = nil;
+}
+-(void)showTextColorsAndSize{
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES];
+    contentTextView.center = self.imageToolbar1.center;
+    contentTextView.currentPenColor = self.blackExtract;
+    textSetterState = YES;
+    contentTextView.delegate = self;
+    [self.view addSubview:contentTextView];
+    
+   // contentViewController.preferredContentSize = self.imageToolbar1.frame.size;
+    //Popover presentation controlller Keep for future dev //
+//    popupPresentationController.delegate = self;
+//    [self presentViewController:contentViewController animated:YES completion:nil];
+//    popupPresentationController = [contentViewController popoverPresentationController];
+
+}
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
+;
+}
+
+- (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
+    NSLog(@"selected color for text");
+    [self extractRGBforText:[GzColors colorFromHex:hexColor]];
+    self.drawingView.lineColor = self.textExtract;
+    self.textbtn.backgroundColor = self.textExtract;
+    self.drawingView.textViewNew.textColor = self.textExtract;
+}
+
+-(void)dismissTextSettings{
+    [self.popoverTextSettings dismissPopoverAnimated:NO];
+    self.popoverTextSettings = nil;
+    
+}
+/*
 -(void)addShadowToButton
 {
-/*
+
     for(int i=0; i< buttons.count; i++) {
         
         if([[buttons objectAtIndex:i] isSelected]){
@@ -2317,8 +2218,8 @@ self.previewImageView.layer.sublayers = nil;
             
         }
     }
-    */
+    
 }
-
+*/
 
 @end

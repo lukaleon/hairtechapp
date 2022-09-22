@@ -94,10 +94,11 @@ typedef enum {
     BOOL textViewSelected;
     CGPoint startOfLine;
     CGPoint currentPointOfLine;
+    CGFloat zoomIdx;
 }
 -(void)enableGestures;
 -(void)disableGestures;
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text;
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color;
 
 @property SPUserResizableView *userResizableView;
 @property (nonatomic, retain) TextViewCustom * textViewNew;
@@ -300,6 +301,8 @@ double dist2(CGPoint a, CGPoint b);
 -(void)setButtonVisible;
 -(void)selectPreviousTool:(id)sender;
 -(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected;
+-(void)removeTextSettings;
+
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;

@@ -15,13 +15,14 @@
 @protocol ColorViewControllerDelegate<NSObject>
 
 - (void)colorPopoverControllerDidSelectColor:(NSString *)hexColor;
-
+- (void)colorPopoverDidSelectTextColor:(NSString *)hexColor;
 - (void)sliderDidSelectWidth:(CGFloat)lineWidth;
+- (void)addTextFromTextSettings;
 @end
 
 
 
-@interface ColorViewController : UIViewController<ASValueTrackingSliderDelegate,ASValueTrackingSliderDataSource>{
+@interface ColorViewController : UIView<ASValueTrackingSliderDelegate,ASValueTrackingSliderDataSource>{
     
     id <ColorViewControllerDelegate> __weak delegate;
     
@@ -31,13 +32,21 @@
     BOOL sliderActive;
     NSArray *numbers;
     
-    
-    
+    BOOL textSelected;
+    CAShapeLayer *line;
+    CGFloat lastColorButtonX;
+    CGFloat lineCoordinateX;
     
     
 
 }
+@property IBOutlet CAShapeLayer * lineSeparator;
+@property(nonatomic, strong)  IBOutlet UIButton * button1;
+@property (nonatomic, strong) IBOutlet UIButton * button2;
+@property (nonatomic, strong) IBOutlet UIButton * button3;
 
+- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected;
+@property (nonatomic, assign) BOOL isTextSelected;
 //@property(nonatomic, strong) UISlider *slider;
 
 @property(nonatomic, strong) NSMutableArray *buttonCollection;
@@ -48,6 +57,9 @@
 
 
 @property (weak, nonatomic) IBOutlet UILabel *timerText;
+@property (retain, nonatomic) IBOutlet UIButton *btnFontDecrease;
+@property (retain, nonatomic) IBOutlet UIButton *btnFontIncrease;
+
 
 
 @property (nonatomic, retain) IBOutlet UIButton *widthButton1;
