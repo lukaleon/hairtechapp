@@ -218,16 +218,30 @@
 }
 
 -(void)decreaseFontSize:(UIButton*)button{
-    if(button.highlighted)
-        [button setHighlighted:NO];
-    else
+    
+    if (self.fontSize >= 8 ){
+        self.fontSize = self.fontSize - 4;
+        [delegate textSettingsDidSelectFontSize:self.fontSize];
+    }
+    if(button.highlighted){
+    [button setHighlighted:NO];
+    } else {
         [button setHighlighted:YES];
+    }
 }
 -(void)increaseFontSize:(UIButton*)button{
-    if(button.highlighted)
-        [button setHighlighted:NO];
-    else
-        [button setHighlighted:YES];
+    
+    if(button.highlighted) {
+        if (self.fontSize <= 60){
+            self.fontSize = self.fontSize + 4;
+            [delegate textSettingsDidSelectFontSize:self.fontSize];
+        }
+    [button setHighlighted:NO];
+}
+else {
+    [button setHighlighted:YES];
+}
+
 }
 -(void)addNewTextView:(UIButton*)button{
     if(button.highlighted)

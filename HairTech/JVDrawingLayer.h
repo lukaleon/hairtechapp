@@ -46,6 +46,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, assign) JVDrawingType type;
 @property (nonatomic, assign) CGFloat lineWidth_;
 @property (nonatomic, assign) UIColor * lineColor_;
+@property (nonatomic, assign) CGFloat fontSize;
+
 @property (nonatomic, assign) BOOL isVisible;
 @property (nonatomic, strong) NSMutableArray *arrayOfCircles;
 @property  CGFloat zoomFactor;
@@ -57,7 +59,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 -(void)addCircleToPoint:(CGPoint)point;
 + (JVDrawingLayer *)createLayerWithStartPoint:(CGPoint)startPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
 
-+ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color isSelected:(BOOL)isSelected;
++ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize  isSelected:(BOOL)isSelected ;
 
 - (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 

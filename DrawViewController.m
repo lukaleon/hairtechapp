@@ -209,7 +209,7 @@
 
     
     self.textExtract = [UIColor blackColor];
-    
+    self.fontSizeVC = 15;
     NSLog(@"I have extracted colors");
     
 }
@@ -1302,11 +1302,16 @@ return YES;
             self.drawingView.textTypesSender = sender; //Should be saved to user defaults
             CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
-                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract];
+                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract font:self.fontSizeVC];
+                self.drawingView.textViewFontSize = self.fontSizeVC;
+                contentTextView.fontSize = self.fontSizeVC;
+
             }
             self.drawingView.textViewNew.delegate = self;
             if (contentTextView == nil){
                 [self showTextColorsAndSize];
+                contentTextView.fontSize = self.drawingView.textViewFontSize;
+
                 
             }
            // [self setButtonUNVisibleTextPressed];
@@ -2188,10 +2193,27 @@ self.previewImageView.layer.sublayers = nil;
     self.drawingView.textViewNew.textColor = self.textExtract;
 }
 
--(void)dismissTextSettings{
-    [self.popoverTextSettings dismissPopoverAnimated:NO];
-    self.popoverTextSettings = nil;
+//-(void)dismissTextSettings{
+//    [self.popoverTextSettings dismissPopoverAnimated:NO];
+//    self.popoverTextSettings = nil;
+//}
+
+- (void)textSettingsDidSelectFontSize:(CGFloat)fontSize
+{
+  //  self.drawingView.textViewNew.font =  [UIFont fontWithName:@"Helvetica" size:fontSize];
+    //self.drawingView.textViewFontSize = fontSize;
     
+    self.drawingView.textViewFontSize = fontSize;
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = -0.20;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+    NSDictionary *attrsDictionary =
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
+     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.textExtract};
+    self.drawingView.textViewNew.attributedText = [[NSAttributedString alloc] initWithString:self.drawingView.textViewNew.text attributes:attrsDictionary];
+    [self textViewDidChange:self.drawingView.textViewNew];
+    
+   // [self textViewShouldBeginEditing:self.drawingView.textViewNew];
 }
 /*
 -(void)addShadowToButton

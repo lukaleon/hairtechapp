@@ -96,9 +96,10 @@ typedef enum {
     CGPoint currentPointOfLine;
     CGFloat zoomIdx;
 }
+@property CGFloat textViewFontSize;
 -(void)enableGestures;
 -(void)disableGestures;
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color;
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize;
 
 @property SPUserResizableView *userResizableView;
 @property (nonatomic, retain) TextViewCustom * textViewNew;

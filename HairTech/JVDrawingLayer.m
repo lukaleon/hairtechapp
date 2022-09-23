@@ -190,21 +190,23 @@
 
 }
 
-+ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color isSelected:(BOOL)isSelected{
++ (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize isSelected:(BOOL)isSelected{
     JVDrawingLayer *layer = [[[self class] alloc] init];
     layer.startPoint = startPoint;
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
     layer.lineColor_ = line_Color;
+    layer.fontSize = fontSize;
     CGRect rect;
     rect = CGRectMake(frame.origin.x - 9 , frame.origin.y - 9 , frame.size.width, frame.size.height);
     UIBezierPath *path = [UIBezierPath bezierPath];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 10;
     paragraphStyle.alignment = NSTextAlignmentCenter;
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
     NSDictionary *attrsDictionary =
-    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
      NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : line_Color};
     CATextLayer *textLayer = [CATextLayer layer];
     layer.frame = rect;
@@ -214,7 +216,7 @@
     [textLayer setBackgroundColor:[UIColor clearColor].CGColor];
     [textLayer setAlignmentMode:kCAAlignmentCenter];
     [textLayer setWrapped:YES];
-    //[textLayer setForegroundColor:[line_Color CGColor]];
+  //  [textLayer setForegroundColor:[line_Color CGColor]];
     
     [textLayer setMasksToBounds:YES];
     textLayer.contentsScale = [[UIScreen mainScreen] scale] * 3;

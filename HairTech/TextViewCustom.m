@@ -57,11 +57,11 @@
     [UITextView commitAnimations];
 }
 */
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame font:(CGFloat)fontSize text:(NSString*)text color:(UIColor*)color{
     if ((self = [super initWithFrame:frame])) {
 
         self.frame = frame;
-        [self setFont:[UIFont fontWithName:@"Helvetica" size:15]];
+        [self setFont:[UIFont fontWithName:@"Helvetica" size:fontSize]];
         self.textColor = [UIColor blackColor];
         self.backgroundColor = [UIColor clearColor];
         self.textAlignment = NSTextAlignmentCenter;
@@ -69,16 +69,14 @@
         self.editable = YES;
         self.selectable = YES;
         self.textContainer.lineFragmentPadding = 0;
+        [self passText:text color:color fontSize:fontSize];
         //[self sizeToFit];
-        
         //self.textContainerInset = UIEdgeInsetsZero;
-       
-       
-
     }
     return self;
 }
--(void)passText:(NSString *)text color:(UIColor*)color{
+
+-(void)passText:(NSString *)text color:(UIColor*)color fontSize:(CGFloat)fontSize{
    // self.textColor = color;
     self.textContainer.lineFragmentPadding = 0;
     self.textContainerInset = UIEdgeInsetsZero;
@@ -86,8 +84,9 @@
     paragraphStyle.lineSpacing = -0.20;
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attrsDictionary =
-    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:15.0f],
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
      NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : color};
     self.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attrsDictionary];
 }
+
 @end

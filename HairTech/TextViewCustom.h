@@ -13,7 +13,9 @@
 
 @property UIImage * bgImage;
 @property CGPoint coords_xy;
+- (id)initWithFrame:(CGRect)frame font:(CGFloat)fontSize text:(NSString*)text color:(UIColor*)color;
+
 +(TextViewCustom*)addTextView:(CGRect)rect;
--(void)passText:(NSString *)text color:(UIColor*)color;
+//-(void)passText:(NSString *)text color:(UIColor*)color;
 @end
 

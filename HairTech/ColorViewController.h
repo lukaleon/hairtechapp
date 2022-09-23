@@ -13,7 +13,7 @@
 
 
 @protocol ColorViewControllerDelegate<NSObject>
-
+- (void)textSettingsDidSelectFontSize:(CGFloat)fontSize;
 - (void)colorPopoverControllerDidSelectColor:(NSString *)hexColor;
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor;
 - (void)sliderDidSelectWidth:(CGFloat)lineWidth;
@@ -40,6 +40,7 @@
     
 
 }
+@property CGFloat fontSize;
 @property IBOutlet CAShapeLayer * lineSeparator;
 @property(nonatomic, strong)  IBOutlet UIButton * button1;
 @property (nonatomic, strong) IBOutlet UIButton * button2;

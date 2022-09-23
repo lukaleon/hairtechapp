@@ -127,10 +127,8 @@ UIColor* tempColor;
         [self.selectedLayer removeFromSuperlayer];
         self.selectedLayer.isSelected = NO;
         self.selectedLayer = nil;
-    self.drawingLayer = nil;
-        NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
-   // }
-    //return status;
+        self.drawingLayer = nil;
+  
 }
 #pragma mark Touches Methods
 
@@ -358,7 +356,7 @@ UIColor* tempColor;
         NSLog(@"text layer frame %f, %f", rect.origin.x, rect.origin.y);
 
         rect = CGRectInset(rect, -9.0f, -9.0f);
-        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text color:layer.lineColor_];
+        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text color:layer.lineColor_ font:layer.fontSize];
         [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
         [self revoke];
     } else {
@@ -505,6 +503,7 @@ UIColor* tempColor;
 }
 
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
+    NSLog(@"Adjuxting textview frame");
     CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.bounds.origin.x, self.textViewNew.bounds.origin.y) toView:self.superview];
     CGRect newRect = CGRectMake(origin.x,
                                 origin.y,
@@ -532,14 +531,14 @@ UIColor* tempColor;
     
 }
 
--(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color{
+-(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize{
     self.selectedLayer.isSelected = NO;
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndSaveTextViewWhenNewAdded];
     }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
-    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect];
-    [self.textViewNew passText:text color:color];
+    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];
+    //[self.textViewNew passText:text color:color];
     self.userResizableView.center = center;
     self.userResizableView.contentView = self.textViewNew;
     self.userResizableView.delegate = self;
@@ -614,6 +613,8 @@ UIColor* tempColor;
         [self.textViewNew removeFromSuperview];
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
+        [self.delegate removeTextSettings];
+
 
     } else {
         [self.textViewNew resignFirstResponder];
@@ -622,6 +623,8 @@ UIColor* tempColor;
         [self.textViewNew removeFromSuperview];
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
+        [self.delegate removeTextSettings];
+
     }
 }
 -(void)hideMenuForTextView{
@@ -653,7 +656,8 @@ UIColor* tempColor;
                                                                      type:self.type
                                                                 lineWidth:self.lineWidth
                                                                 lineColor:self.textViewNew.textColor
-                                                                isSelected:NO];
+                                                                fontSize:self.textViewFontSize
+                                                                isSelected:NO ];
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
@@ -683,6 +687,7 @@ UIColor* tempColor;
                                                                      type:self.type
                                                                 lineWidth:self.lineWidth
                                                                 lineColor:self.lineColor
+                                                                 fontSize:self.textViewFontSize
                                                                isSelected:NO];
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];

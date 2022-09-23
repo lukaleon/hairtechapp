@@ -160,7 +160,9 @@
     BOOL curveToggleIsOn;
     ColorViewController *contentTextView;
     BOOL textSetterState;
+
 }
+@property CGFloat fontSizeVC;
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;
 
