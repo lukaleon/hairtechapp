@@ -694,7 +694,7 @@ return YES;
         {
             
             
-            ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
             contentViewController.delegate = self;
             contentViewController.currentPenColor = self.penExtract;
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -738,7 +738,8 @@ return YES;
 //    [self addShadowToButton];
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blackExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
@@ -1154,15 +1155,33 @@ return YES;
     textSelected = NO;
     [self pencilPressed:sender];
 }
+- (void)selectTextTool:(id)sender {
+    curveToggleIsOn = nil;
+    dashLineCount = 0;
+    penbtn.selected = NO;
+    blackbtn.selected=NO;
+    bluebtn.selected=NO;
+    redbtn.selected=NO;
+    eraserbtn.selected=NO;
+    lineButton.selected=NO;
+    textbtn.selected = YES;
+    self.drawingView.eraserSelected = NO;
+    [self makeButtonSelected];
+    
+    [self.drawingView enableGestures];
+    self.drawingView.type = JVDrawingTypeText;
+    self.drawingView.bufferType = JVDrawingTypeText;
+    self.drawingView.lineColor = self.textExtract;
+    self.drawingView.textTypesSender = sender;
+    [self showTextColorsAndSize];
+}
 -(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected{
     textSelected = isSelected;
-    [self pencilPressed:sender];
+    [self selectTextTool:sender]; //Should be saved to user defaults
 }
 -(void)addTextFromTextSettings{
-    NSLog(@"add text from text setttings");
     textSelected = NO;
     [self pencilPressed:[self.view viewWithTag:4]];
-    
 }
 - (IBAction)pencilPressed:(id)sender {
     
@@ -1283,6 +1302,7 @@ return YES;
             
             break;
         case 4:
+
             curveToggleIsOn = nil;
             dashLineCount = 0;
             penbtn.selected = NO;
@@ -1302,11 +1322,12 @@ return YES;
             self.drawingView.textTypesSender = sender; //Should be saved to user defaults
             CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
+                NSLog(@"Pencil text pressed text not selected");
                 [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract font:self.fontSizeVC];
-                self.drawingView.textViewFontSize = self.fontSizeVC;
-                contentTextView.fontSize = self.fontSizeVC;
-
+                //self.drawingView.textViewFontSize = self.fontSizeVC;
+                //contentTextView.fontSize = self.fontSizeVC;
             }
+            
             self.drawingView.textViewNew.delegate = self;
             if (contentTextView == nil){
                 [self showTextColorsAndSize];

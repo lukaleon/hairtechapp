@@ -70,7 +70,7 @@
 }
 - (void)textColorString:(int)count {
     for (int i=0; i<=count; i++) {
-        if (CGColorEqualToColor(self.currentPenColor.CGColor,[GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
+        if (CGColorEqualToColor(self.currentPenColor.CGColor,[GzColors colorFromHex:[self.colorCollectionForText objectAtIndex:i]].CGColor))
         {
             [self currentColorIndicator:[self.buttonCollection objectAtIndex:i]];
         }
@@ -88,6 +88,7 @@
         [self loadColorButtonsForText];
     }
     [self LoadColorsAtStart];
+   
     if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 2.0 ){
         [self button1Select];
     }
@@ -115,7 +116,7 @@
     if(!_isTextSelected){
         [self penColorString:11];
     } else {
-        [self penColorString:5];
+        [self textColorString:5];
     }
 }
 
@@ -159,7 +160,7 @@
                             nil];
 }
 -(void) createSimplyfiedOrdenatedColorsArrayForText{
-    self.colorCollection = [NSArray arrayWithObjects:
+    self.colorCollectionForText = [NSArray arrayWithObjects:
                             
                             Black,
                             RoyalBlue,
@@ -169,56 +170,98 @@
                             DarkSlateGray,
                             nil];
 }
+- (void)addHorizontalLine {
+    CAShapeLayer *line = [CAShapeLayer layer];
+    UIBezierPath *linePath=[UIBezierPath bezierPath];
+    [linePath moveToPoint: CGPointMake(0,36)];
+    [linePath addLineToPoint:CGPointMake(240,36)];
+    line.path=linePath.CGPath;
+    line.fillColor = nil;
+    line.opacity = 0.1;
+    line.strokeColor = [UIColor grayColor].CGColor;
+    [self.layer addSublayer:line];
+}
+
 -(void)loadColorButtons{
-    self.layer.cornerRadius = 15;
     UIColor *color = [UIColor grayColor];
     CGColorRef gray = color.CGColor;
+    self.layer.cornerRadius = 15;
     self.layer.shadowColor = gray;
     self.layer.shadowOffset = CGSizeMake(0, 0);
     self.layer.shadowRadius = 7;
     self.layer.shadowOpacity = 0.2;
     self.layer.masksToBounds = NO;
-
     [self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
+    
     UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 36, 240,80)];
     scroll.contentSize = CGSizeMake(200, 320);
     [self addSubview:scroll];
     [scroll setScrollEnabled:NO];
     [self addWidthButtons];
-    [self addLineSeparator:0 y1:36 x2:self.frame.size.width y2:36];
-
-	if (self.buttonCollection != nil) {
-		for (ColorButton *colorButton in self.buttonCollection) {
-			[colorButton removeFromSuperview];
-		}
-		self.buttonCollection = nil;
-	}
-        self.buttonCollection = [[NSMutableArray alloc]init];
-    int colorNumber = 0;
-    
-    for (int i=0; i<=1; i++) {
-        for (int j=0; j<=5; j++) {
-            
-            ColorButton *colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
-            colorButton.frame = CGRectMake(14+(j*36), 14+(i*36), 28, 28);
-            [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
-            [colorButton setSelected:NO];
-            [colorButton setNeedsDisplay];
-            [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-            [colorButton setHexColor:[self.colorCollection objectAtIndex:colorNumber]];
-            colorButton.layer.cornerRadius = 14;
-            colorButton.layer.masksToBounds = YES;
-            colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
-            colorButton.layer.borderWidth = 0.0f;
-            colorNumber ++;
-            [self.buttonCollection addObject:colorButton];
-            [scroll addSubview:colorButton];
+    [self addHorizontalLine];
+    if (self.buttonCollection != nil) {
+        for (ColorButton *colorButton in self.buttonCollection) {
+            [colorButton removeFromSuperview];
         }
+        self.buttonCollection = nil;
     }
+    
+    self.buttonCollection = [[NSMutableArray alloc]init];
+
+   // dispatch_queue_t myQueue = dispatch_queue_create("com.gazapps.myqueue", 0);
+  //  dispatch_async(myQueue, ^{
+        int colorNumber = 0;
+        for (int i=0; i<=1; i++) {
+            for (int j=0; j<=5; j++) {
+                
+                ColorButton *colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
+                colorButton.frame = CGRectMake(14+(j*36), 14+(i*36), 28, 28);
+                [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
+                [colorButton setSelected:NO];
+                [colorButton setNeedsDisplay];
+                [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
+                [colorButton setHexColor:[self.colorCollection objectAtIndex:colorNumber]];
+                colorButton.layer.cornerRadius = 14;
+                colorButton.layer.masksToBounds = YES;
+                
+                
+                
+              //  colorButton.layer.borderColor = [UIColor blackColor].CGColor;
+                
+                colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
+                colorButton.layer.borderWidth = 0.0f;
+                
+               /* CAGradientLayer *gradient = [CAGradientLayer layer];
+                gradient.frame = colorButton.bounds;
+                //               gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor blackColor] CGColor], (id)[[UIColor whiteColor] CGColor], nil];
+                gradient.colors = [NSArray arrayWithObjects:(id)[ [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.45] CGColor], (id)[[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1]  CGColor], nil];
+                
+                
+                [colorButton.layer insertSublayer:gradient atIndex:0];
+                */
+                
+
+                
+                colorNumber ++;
+                
+                
+               //dispatch_sync(dispatch_get_main_queue(), ^{
+                    [self.buttonCollection addObject:colorButton];
+                    [scroll addSubview:colorButton];
+              // });//end block
+                
+
+            }
+        }
+        
+  //  });//end block
+   // dispatch_release(myQueue);
+    NSLog(@"COLOR BUTTONS %lu", self.buttonCollection.count);
+
 }
 
+
 -(void)decreaseFontSize:(UIButton*)button{
-    
     if (self.fontSize >= 8 ){
         self.fontSize = self.fontSize - 4;
         [delegate textSettingsDidSelectFontSize:self.fontSize];
@@ -264,8 +307,8 @@ else {
     [button setImage:img forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
     [button setBackgroundColor:[UIColor blackColor]];
-    button.frame = CGRectMake(startX,self.frame.origin.y + 14, 28.0, 28.0);
-    button.layer.cornerRadius = 15;
+    button.frame = CGRectMake(startX, self.frame.origin.y + 14, 28.0, 28.0);
+    button.layer.cornerRadius = 14;
     button.layer.masksToBounds = YES;
     button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
     button.layer.borderWidth = 0.0f;
@@ -275,31 +318,42 @@ else {
 - (CAShapeLayer*)addLineSeparator:(CGFloat)x1 y1:(CGFloat)y1 x2:(CGFloat)x2 y2:(CGFloat)y2 {
     CAShapeLayer *line = [CAShapeLayer layer];
     UIBezierPath *linePath=[UIBezierPath bezierPath];
-    [linePath moveToPoint: CGPointMake(x1,y1)];
-    [linePath addLineToPoint:CGPointMake(x2,y2)];
+    self.rectView = [[UIView alloc]initWithFrame:CGRectMake(x1, y1, x2, y2)];
+    self.rectView.backgroundColor = [UIColor clearColor];
+    [linePath moveToPoint:CGPointMake(x2/2, y1)];
+    [linePath addLineToPoint:CGPointMake(x2/2 ,y2)];
     line.path=linePath.CGPath;
-    line.fillColor = nil;
-    line.opacity = 0.1;
+    line.fillColor =nil;
+    line.opacity = 0.2;
     line.strokeColor = [UIColor grayColor].CGColor;
-    [self.layer addSublayer:line];
+                     
+    [self addSubview:self.rectView];
+    [self.rectView.layer addSublayer:line];
     return line;
 }
 
 -(void)loadColorButtonsForText{
+    CGRect sizeRect = [UIScreen mainScreen].bounds;
+    CGFloat screenPartitionIdx;
+   // NSLog(@"SCREEN PARTIOTION IDX %f", screenPartitionIdx);
     CGFloat originOfButtons;
     if (IDIOM == IPAD){
-        originOfButtons = self.frame.size.width / 3.5;
+        screenPartitionIdx = sizeRect.size.width / 14;
+        originOfButtons = screenPartitionIdx * 2;
     } else {
-        originOfButtons = 10;
+        screenPartitionIdx = sizeRect.size.width / 11;
+        originOfButtons = screenPartitionIdx / 2;
     }
     self.layer.cornerRadius = 15;
     [self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
    button1 =  [self fontButton:@"decreaseFontSize:" imageName1:@"a-sm.png" imageName2:@"a-sm-tr.png" startX:originOfButtons];
-   button2 = [self fontButton:@"increaseFontSize:" imageName1:@"a-big.png" imageName2:@"a-big-tr.png" startX:  button1.frame.origin.x + button1.frame.size.width];
+   button2 = [self fontButton:@"increaseFontSize:" imageName1:@"a-big.png" imageName2:@"a-big-tr.png" startX:  button1.frame.origin.x + screenPartitionIdx];
     
-    lineSeparator = [self addLineSeparator:button2.frame.origin.x + button2.frame.size.width + 5 y1:0 x2:button2.frame.origin.x + button2.frame.size.width + 5 y2:self.frame.size.height ];
-    lineCoordinateX = button2.frame.origin.x + button2.frame.size.width + 20;
-
+    //lineSeparator = [self addLineSeparator:button2.frame.origin.x + screenPartitionIdx   y1:0 x2:button2.frame.origin.x + screenPartitionIdx   y2:self.frame.size.height ];
+    lineSeparator = [self addLineSeparator:button2.frame.origin.x + button2.frame.size.width / 1.5   y1:0 x2:screenPartitionIdx y2:self.frame.size.height];
+    
+      //lineCoordinateX = button2.frame.origin.x + button2.frame.size.width + screenPartitionIdx / 2;
+    lineCoordinateX = self.rectView.center.x + screenPartitionIdx / 2;
     
     if (self.buttonCollection != nil) {
         for (ColorButton *colorButton in self.buttonCollection) {
@@ -312,12 +366,12 @@ else {
     
         for (int j=0; j<=5; j++) {
             ColorButton *colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
-            colorButton.frame = CGRectMake(lineCoordinateX + (j*36), self.frame.origin.y + 14, 28, 28);
+            colorButton.frame = CGRectMake(lineCoordinateX + (j*screenPartitionIdx), self.frame.origin.y + 14, 28, 28);
             [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
             [colorButton setSelected:NO];
             [colorButton setNeedsDisplay];
-            [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-            [colorButton setHexColor:[self.colorCollection objectAtIndex:colorNumber]];
+            [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollectionForText objectAtIndex:colorNumber]]];
+            [colorButton setHexColor:[self.colorCollectionForText objectAtIndex:colorNumber]];
             colorButton.layer.cornerRadius = 14;
             colorButton.layer.masksToBounds = YES;
             colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
@@ -327,7 +381,7 @@ else {
             [self addSubview:colorButton];
             lastColorButtonX = colorButton.frame.origin.x;
         }
-   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastColorButtonX + 36];
+   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastColorButtonX + screenPartitionIdx];
     }
 
 
@@ -347,10 +401,9 @@ else {
             [[self.buttonCollection objectAtIndex:i] setSelected:NO];
             [line removeFromSuperlayer];
         }
-        btn.selected = YES;
+       // btn.selected = YES;
         [self indicateSelctedButton:btn];
         [delegate colorPopoverDidSelectTextColor:btn.hexColor];
-
     }
 }
 

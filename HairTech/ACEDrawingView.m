@@ -285,7 +285,7 @@ UIColor* tempColor;
            
             for (JVDrawingLayer *layer in self.layerArray) {
 
-                if ([layer isPoint:currentPoint withinDistance:12 ofPath:layer.path]){
+                if ([layer isPoint:currentPoint withinDistance:8 ofPath:layer.path]){
                     [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                     layerHasBeenPicked = YES;
                     if (layer == self.selectedLayer && !menuVisible) {
@@ -353,10 +353,12 @@ UIColor* tempColor;
     else if (JVDrawingTypeText == self.type){
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
-        NSLog(@"text layer frame %f, %f", rect.origin.x, rect.origin.y);
-
         rect = CGRectInset(rect, -9.0f, -9.0f);
-        [self addFrameForTextView:rect centerPoint:layer.position text:layer.text color:layer.lineColor_ font:layer.fontSize];
+        [self addFrameForTextView:rect
+                      centerPoint:layer.position
+                             text:layer.text
+                            color:layer.lineColor_
+                             font:layer.fontSize];
         [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
         [self revoke];
     } else {
@@ -451,7 +453,8 @@ UIColor* tempColor;
         }else{
             middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
         }
-    if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type){
+        if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine){
+
         //rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
 
         rectOfMenu = CGRectMake(self.selectedLayer.midP.x,self.selectedLayer.midP.y,0,0) ;
@@ -532,12 +535,13 @@ UIColor* tempColor;
 }
 
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize{
+    self.textViewFontSize = fontSize;
     self.selectedLayer.isSelected = NO;
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndSaveTextViewWhenNewAdded];
     }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
-    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];
+    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];\
     //[self.textViewNew passText:text color:color];
     self.userResizableView.center = center;
     self.userResizableView.contentView = self.textViewNew;
@@ -614,6 +618,7 @@ UIColor* tempColor;
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
         [self.delegate removeTextSettings];
+        textViewSelected = NO;
 
 
     } else {
@@ -650,6 +655,7 @@ UIColor* tempColor;
                                  self.textViewNew.bounds.size.width,
                                  self.textViewNew.bounds.size.height);
         if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
+
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
                                                                      text:self.textViewNew.text
@@ -658,6 +664,8 @@ UIColor* tempColor;
                                                                 lineColor:self.textViewNew.textColor
                                                                 fontSize:self.textViewFontSize
                                                                 isSelected:NO ];
+        NSLog(@"Creting new layer from textView");
+
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
@@ -671,6 +679,8 @@ UIColor* tempColor;
 }
 
 -(void)hideAndSaveTextViewWhenNewAdded{
+    NSLog(@"HIDE AND SAVE text when new addded");
+
     [self.textViewNew resignFirstResponder];
     self.textViewNew.userInteractionEnabled = NO;
     [currentlyEditingView hideEditingHandles];
@@ -694,6 +704,8 @@ UIColor* tempColor;
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
     }
+    textViewSelected = NO;
+
 }
 
 - (CGFloat)getTextViewHeight{

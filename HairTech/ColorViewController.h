@@ -41,6 +41,7 @@
 
 }
 @property CGFloat fontSize;
+@property IBOutlet UIView * rectView;
 @property IBOutlet CAShapeLayer * lineSeparator;
 @property(nonatomic, strong)  IBOutlet UIButton * button1;
 @property (nonatomic, strong) IBOutlet UIButton * button2;
@@ -54,6 +55,8 @@
 
 
 @property (nonatomic, strong) NSArray *colorCollection;
+@property (nonatomic, strong) NSArray *colorCollectionForText;
+
 @property (nonatomic, weak) id <ColorViewControllerDelegate> delegate;
 
 
