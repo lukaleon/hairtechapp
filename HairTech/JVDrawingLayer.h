@@ -29,6 +29,9 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
     
    
 }
+@property (nonatomic, assign) NSMutableArray * arrayOfLayerPoints;
+@property (nonatomic, assign) CGPoint startPointToConnect;
+@property (nonatomic, assign) CGPoint endPointToConnect;
 @property (nonatomic, assign) CGPoint controlPoint;
 @property (nonatomic, assign) CGPoint startP;
 @property (nonatomic, assign) CGPoint endP;
@@ -57,6 +60,10 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, assign) CAShapeLayer *circle2;
 
 -(void)addCircleToPoint:(CGPoint)point;
+
+-(CGPoint)getStartPointOfLayer:(JVDrawingLayer *)layer;
+-(CGPoint)getEndPointOfLayer:(JVDrawingLayer *)layer;
+
 + (JVDrawingLayer *)createLayerWithStartPoint:(CGPoint)startPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize  isSelected:(BOOL)isSelected ;

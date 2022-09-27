@@ -35,6 +35,7 @@
 @property (nonatomic, assign) JVDrawingTouch isMoveLayer;//区分移动还是创建path 如果移动 移动哪里
 @property (nonatomic, strong) JVDrawingLayer *drawingLayer;//当前创建的path
 @property (nonatomic, strong) JVDrawingLayer *selectedLayer;//当前选中的path
+@property (nonatomic, strong) JVDrawingLayer *temporaryLayer;
 @property (nonatomic, strong) NSMutableArray *layerArray;//当前创建的path集合
 
 
@@ -115,20 +116,13 @@ UIColor* tempColor;
 }
 
 - (void)revoke {
-    //BOOL status = [self.selectedLayer revokeUntilHidden];
-   // if (status) {
-
-    
         [self hideMenu];
-//    for (CAShapeLayer * layer in self.layer.sublayers) {
-//        if (layer = )
-//    }
         [self.layerArray removeObject:self.selectedLayer];
         [self.selectedLayer removeFromSuperlayer];
         self.selectedLayer.isSelected = NO;
         self.selectedLayer = nil;
         self.drawingLayer = nil;
-  
+        [self updateAllPoints];
 }
 #pragma mark Touches Methods
 
@@ -152,7 +146,10 @@ UIColor* tempColor;
     if (UIMenuController.sharedMenuController.isMenuVisible) {
         [UIMenuController.sharedMenuController setMenuVisible:NO animated:YES];
     }
+    cycle = 0;
 }
+
+
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
    
@@ -172,30 +169,41 @@ UIColor* tempColor;
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
 
-    
     if (self.isFirstTouch) {
 
-        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
-            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+//        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
+//            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
       
-         //   if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 ofPath:self.selectedLayer.path]){
-//                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
-                
+            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 ofPath:self.selectedLayer.path]){
+                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             }
          else {
              self.selectedLayer.isSelected = NO;
-            [self removeCircles];
-                 self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint type:self.type lineWidth:self.lineWidth lineColor:self.lineColor];
-                 [self.layer addSublayer:self.drawingLayer];
+             [self removeCircles];
+             [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
+             self.firstTouch = previousPoint;
+             self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint
+                                                                      type:self.type
+                                                                 lineWidth:self.lineWidth
+                                                                 lineColor:self.lineColor];
+            [self.layer addSublayer:self.drawingLayer];
              }
     } else {
         if (self.isMoveLayer) {
+            if (cycle < 1){
+               CGPoint start =  [self.selectedLayer getStartPointOfLayer:self.selectedLayer];
+               CGPoint end = [self.selectedLayer getEndPointOfLayer:self.selectedLayer];
+                [arrayOfPoints removeObject:NSStringFromCGPoint(start)];
+                [arrayOfPoints removeObject:NSStringFromCGPoint(end)];
+                cycle++;
+            }
             if (self.selectedLayer.type == JVDrawingTypeGraffiti) {
                 [self.selectedLayer moveGrafiitiPathPreviousPoint:previousPoint currentPoint:currentPoint];
                 // Curved line creating and moving
             } else if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine) {
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
                         if (self.magnifierView.hidden == NO && count ==1){
@@ -208,6 +216,7 @@ UIColor* tempColor;
                         [self controlCirclePosition:currentPoint  forLayer:self.circleLayer3 atIndex:0];
                         break;
                     case JVDrawingTouchEnd:
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
                         if (self.magnifierView.hidden == NO && count ==1){
@@ -223,19 +232,34 @@ UIColor* tempColor;
                 
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
+                        NSLog(@"MOVING FIRST POINT");
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
+                        bufferStartPoint = currentPoint;
+                        bufferEndPoint = self.selectedLayer.endPointToConnect;
+
                         if (self.magnifierView.hidden == NO && count ==1){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
                     case JVDrawingTouchMid:
+                        NSLog(@"MOVING MIDDLE POINT");
+
                         [self hideLoupe]; // hide loupe when middle touched
                         [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
                         [self circlePosition:self.selectedLayer.startPmoving point2:self.selectedLayer.endPmoving forBothLayers:self.circleLayer1 circle2:self.circleLayer2];
+                        bufferStartPoint = self.selectedLayer.startPmoving;
+                        bufferEndPoint = self.selectedLayer.endPmoving;
+
+
                         break;
                     case JVDrawingTouchEnd:
+                        NSLog(@"MOVING END POINT");
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
+                        bufferEndPoint = currentPoint;
+                        bufferStartPoint = self.selectedLayer.startPointToConnect;
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
                         if (self.magnifierView.hidden == NO && count ==1){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
@@ -248,9 +272,12 @@ UIColor* tempColor;
             }
         } else {
             NSLog(@"end of creation of line");
+            [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
             [self.drawingLayer movePathWithEndPoint:currentPoint];
+            self.lastTouch = currentPoint;
             if (self.magnifierView.hidden == NO && count == 1){
                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
+            
             }
         }
     }
@@ -260,33 +287,42 @@ UIColor* tempColor;
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
 
 }
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"touches ended");
-    
-    NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
 
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
+    cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
+      //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
+
+        for (NSString * cgpointVal in arrayOfPoints)
+        {
+            CGPoint pointObj = CGPointFromString(cgpointVal);
+            [self alocatePointAtView:self.layer pointFromArray:pointObj];
+        }
+        
+        NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
+
         if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
             [self selectLayer:[self.layerArray lastObject]];
         }
        // [self.drawingLayer addToTrack];
     } else {
         if (self.isMoveLayer) {
-        //[self.selectedLayer addToTrack];
+            [self updateAllPoints];
+            NSLog(@"touches ended after moving");
         }
         if (self.isFirstTouch) {
-            
             BOOL layerHasBeenPicked = NO;
-            
             UITouch *touch = [touches anyObject];
             CGPoint currentPoint = [touch locationInView:self];
-           
             for (JVDrawingLayer *layer in self.layerArray) {
-
                 if ([layer isPoint:currentPoint withinDistance:8 ofPath:layer.path]){
-                    [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
+                   [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                     layerHasBeenPicked = YES;
                     if (layer == self.selectedLayer && !menuVisible) {
                         // the layer is already selectedl; show the menu
@@ -302,11 +338,7 @@ UIColor* tempColor;
                     }
                     break;
                 }
-                   
-              
             } //-for
-            
-            
             // if no layer has been picked up by the tap, remove the selection
             if (!layerHasBeenPicked) {
                 self.selectedLayer.isSelected = NO;
@@ -314,12 +346,46 @@ UIColor* tempColor;
                 [self removeCircles];
                 [self hideMenu];
             }
-            
             //       self.drawingLayerSelectedBlock(self.selectedLayer);
         }
     }
-   
-    
+}
+
+#pragma mark Points Detection
+- (void)detectNearestPoint:(CGPoint *)previousPoint {
+    CGPoint discoveryPoint;
+    CGFloat tolerance = 7;
+    // Had to Create these two arrays because there's no such thing as [NSDictionary objectAtIndex:]
+    NSArray *pointsArray;
+    CGFloat keyOfPointWithMinDistance = -1;
+    CGPoint nearestPointToTouchedPoint = CGPointZero;
+    int index = 0;
+        for (NSString * cgpointVal in arrayOfPoints){
+        discoveryPoint = CGPointFromString(cgpointVal);
+        if (fabs(previousPoint->x - discoveryPoint.x)<tolerance && fabs(previousPoint->y - discoveryPoint.y)<tolerance) {
+            //Calculating the distance between points with touchedPoint in their range(Square) and adding them to an array.
+            CGFloat distance = hypotf(previousPoint->x - discoveryPoint.x, previousPoint->y - discoveryPoint.y);
+            
+            // if (keyOfPointWithMinDistance == -1 || keyOfPointWithMinDistance < distance) {
+            if ( keyOfPointWithMinDistance < distance) {
+                keyOfPointWithMinDistance = distance;
+                nearestPointToTouchedPoint = discoveryPoint;
+              //  [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+                *previousPoint = nearestPointToTouchedPoint;
+            }
+            index++;
+        }
+    }
+}
+- (void)updateAllPoints {
+    [arrayOfPoints removeAllObjects];
+    for (JVDrawingLayer *layer in self.layerArray) {
+        CGPoint start = [layer getStartPointOfLayer:layer];
+        CGPoint end = [layer getEndPointOfLayer:layer];
+        [arrayOfPoints addObject:NSStringFromCGPoint(start)];
+        [arrayOfPoints addObject:NSStringFromCGPoint(end)];
+        NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
+    }
 }
 - (void)setSelectedLayer:(JVDrawingLayer *)selectedLayer {
     _selectedLayer = selectedLayer;
@@ -334,7 +400,6 @@ UIColor* tempColor;
     [self.layerArray addObject:self.selectedLayer];
     self.type = self.selectedLayer.type;
     [self placeCirclesAtLine:layer];
-    NSLog(@"selecting curve");
 }
 #pragma mark Placing Circles On Line
 
@@ -351,6 +416,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
     else if (JVDrawingTypeText == self.type){
+        self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
         rect = CGRectInset(rect, -9.0f, -9.0f);
@@ -359,7 +425,7 @@ UIColor* tempColor;
                              text:layer.text
                             color:layer.lineColor_
                              font:layer.fontSize];
-        [self.delegate selectTextTool:self.textTypesSender isSelected:textViewSelected];
+        [self.delegate selectTextTool:self.textTypesSender textColor:layer.lineColor_ fontSize:layer.fontSize isSelected:textViewSelected];
         [self revoke];
     } else {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
@@ -535,13 +601,13 @@ UIColor* tempColor;
 }
 
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize{
-    self.textViewFontSize = fontSize;
+    //self.textViewFontSize = fontSize;
     self.selectedLayer.isSelected = NO;
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndSaveTextViewWhenNewAdded];
     }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
-    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];\
+    self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];
     //[self.textViewNew passText:text color:color];
     self.userResizableView.center = center;
     self.userResizableView.contentView = self.textViewNew;
@@ -1543,8 +1609,8 @@ UIColor* tempColor;
     circle.strokeColor = [UIColor blueColor].CGColor;
     [layer addSublayer:circle];
 }
-
-
-
-
+-(void)removePointfromView:(CALayer *)layer pointFromArray:(CGPoint)pointFromArray
+{
+    [layer removeFromSuperlayer];
+}
 @end

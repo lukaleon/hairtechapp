@@ -155,6 +155,8 @@
 + (JVDrawingLayer *)createLayerWithStartPoint:(CGPoint)startPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
     NSLog(@"Creating Layer");
     JVDrawingLayer *layer = [[[self class] alloc] init];
+    layer.startPointToConnect = startPoint;
+    [layer.arrayOfLayerPoints addObject:NSStringFromCGPoint(layer.startPointToConnect)];
     layer.startPoint = startPoint;
     layer.type = type;
     layer.lineWidth = line_Width;
@@ -188,6 +190,12 @@
     }
     return layer;
 
+}
+-(CGPoint)getStartPointOfLayer:(JVDrawingLayer *)layer{
+    return self.startPoint;
+}
+-(CGPoint)getEndPointOfLayer:(JVDrawingLayer *)layer{
+    return  self.endPoint;
 }
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize isSelected:(BOOL)isSelected{
@@ -237,6 +245,7 @@
 }
 
 - (void)movePathWithEndPoint:(CGPoint)endPoint {
+    self.endPointToConnect = endPoint;
     [self movePathWithEndPoint:endPoint isSelected:self.isSelected];
 
     
@@ -518,7 +527,7 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
         NSLog(@"dist = %f", dist);
     }
     else{
-        dist = self.lineWidth+3;
+        dist = self.lineWidth+3.6;
     }
    
         CGFloat distanceX = dist * (ABS(endPoint.x - startPoint.x) / distance);

@@ -26,8 +26,12 @@ NSString *const FillColorAnimation = @"fillColor";
     NSMutableAttributedString *_attributedString;
     CAShapeLayer *_backgroundLayer;
     CATextLayer *_textLayer;
+    CATextLayer *_aSmall;
+    CATextLayer *_aBig;
+
     CGSize _oldSize;
     CGFloat _arrowCenterOffset;
+    
     
 }
 
@@ -40,6 +44,7 @@ NSString *const FillColorAnimation = @"fillColor";
         self.layer.anchorPoint = CGPointMake(0.5, 1);
         
         self.userInteractionEnabled = NO;
+        
         _backgroundLayer = [CAShapeLayer layer];
         _backgroundLayer.anchorPoint = CGPointMake(0, 0);
         
@@ -49,7 +54,6 @@ NSString *const FillColorAnimation = @"fillColor";
         _textLayer.contentsScale = [UIScreen mainScreen].scale;
         _textLayer.actions = @{@"bounds" : [NSNull null],   // prevent implicit animation of bounds
                                @"position" : [NSNull null]};// and position
-        
         [self.layer addSublayer:_backgroundLayer];
         [self.layer addSublayer:_textLayer];
         

@@ -207,8 +207,7 @@
     [self.colorBar4 setTextColor:self.lineExtract];
     [self.colorBar5 setTextColor:self.penExtract];
 
-    
-    self.textExtract = [UIColor blackColor];
+    self.textExtract = [self extractRGBforTextNew:[GzColors colorFromHex:@"0xFF292F40"]];
     self.fontSizeVC = 15;
     NSLog(@"I have extracted colors");
     
@@ -694,7 +693,7 @@ return YES;
         {
             
             
-            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.penExtract];
             contentViewController.delegate = self;
             contentViewController.currentPenColor = self.penExtract;
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -738,7 +737,7 @@ return YES;
 //    [self addShadowToButton];
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blackExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blackExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -785,7 +784,7 @@ return YES;
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
 
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blueExtract];        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blueExtract;
 
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -832,7 +831,7 @@ return YES;
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
         
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.redExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.redExtract;
 
@@ -884,7 +883,7 @@ return YES;
     if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
     {
         
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.lineExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.lineExtract;
 
@@ -977,6 +976,20 @@ return YES;
     alpha_line=1.0;
     opacity=1.0;
     brush_line=3.0;
+}
+-(UIColor*)extractRGBforTextNew:(UIColor*)tempcolor
+{
+    redtemp4 = 0.0; greentemp4= 0.0; bluetemp4 = 0.0; alphatemp4 = 1.0;
+    
+    [tempcolor getRed:&redtemp4 green:&greentemp4 blue:&bluetemp4 alpha:&alphatemp4];
+  //  self.textExtract=tempcolor;
+    red_line =redtemp4;
+    green_line=greentemp4;
+    blue_line=bluetemp4;
+    alpha_line=1.0;
+    opacity=1.0;
+    brush_line=3.0;
+    return tempcolor;
 }
 -(NSString *)UIColorToHexStringWithRed:(CGFloat*)myred green:(CGFloat*)mygreen blue:(CGFloat*)myblue  alpha:(CGFloat*)myalpha{
     
@@ -1121,14 +1134,10 @@ return YES;
     [redbtn addGestureRecognizer:longpressredbtn];
     [lineButton addGestureRecognizer:longpresslinebtn];
 }
-
-
-
 -(void) sliderDidSelectWidth:(CGFloat)lineWidth {
     
     self.drawingView.lineWidth = lineWidth;
 }
-
 -(void) saveFloatToUserDefaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setFloat:x forKey:key];
@@ -1150,12 +1159,11 @@ return YES;
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     return [userDefaults floatForKey:key];
 }
-
 -(void)selectPreviousTool:(id)sender{
     textSelected = NO;
     [self pencilPressed:sender];
 }
-- (void)selectTextTool:(id)sender {
+- (void)selectTextTool:(id)sender passColor:(UIColor*)color {
     curveToggleIsOn = nil;
     dashLineCount = 0;
     penbtn.selected = NO;
@@ -1173,13 +1181,20 @@ return YES;
     self.drawingView.bufferType = JVDrawingTypeText;
     self.drawingView.lineColor = self.textExtract;
     self.drawingView.textTypesSender = sender;
-    [self showTextColorsAndSize];
+    self.drawingView.textViewNew.delegate = self;
+    [self showTextColorsAndSize:color];
+    
 }
--(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected{
+-(void)selectTextTool:(id)sender textColor:(UIColor*)color fontSize:(CGFloat)fontSz isSelected:(BOOL)isSelected{
+    [self selectTextTool:sender passColor:color];
     textSelected = isSelected;
-    [self selectTextTool:sender]; //Should be saved to user defaults
+    contentTextView.fontSizee = fontSz;
+    self.drawingView.textViewFontSize = fontSz;
+    [contentTextView setFontSizee:fontSz];
+    [contentViewController setCurrentTextColorForIndicator:color];
 }
 -(void)addTextFromTextSettings{
+    NSLog(@"add text");
     textSelected = NO;
     [self pencilPressed:[self.view viewWithTag:4]];
 }
@@ -1320,18 +1335,21 @@ return YES;
             self.drawingView.bufferType = JVDrawingTypeText;
             self.drawingView.lineColor = self.textExtract;
             self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+            
             CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
-                NSLog(@"Pencil text pressed text not selected");
                 [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract font:self.fontSizeVC];
-                //self.drawingView.textViewFontSize = self.fontSizeVC;
-                //contentTextView.fontSize = self.fontSizeVC;
+                [contentTextView setFontSizee:self.fontSizeVC];
+                self.drawingView.textViewFontSize = self.fontSizeVC;
             }
             
             self.drawingView.textViewNew.delegate = self;
             if (contentTextView == nil){
-                [self showTextColorsAndSize];
-                contentTextView.fontSize = self.drawingView.textViewFontSize;
+                [self showTextColorsAndSize:self.textExtract]; //??????????? atttention
+                [contentTextView setFontSizee:self.fontSizeVC];
+
+
+                //contentTextView.fontSizee = self.drawingView.textViewFontSize;
 
                 
             }
@@ -2178,27 +2196,18 @@ self.previewImageView.layer.sublayers = nil;
         }
     }
 }
-
-
 -(void)removeTextSettings{
     NSLog(@"remove text settings");
     [contentTextView removeFromSuperview];
     contentTextView = nil;
 }
--(void)showTextColorsAndSize{
-    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES];
+-(void)showTextColorsAndSize:(UIColor*)color{
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color];
     contentTextView.center = self.imageToolbar1.center;
-    contentTextView.currentPenColor = self.blackExtract;
+    //contentTextView.currentPenColor = color;
     textSetterState = YES;
     contentTextView.delegate = self;
     [self.view addSubview:contentTextView];
-    
-   // contentViewController.preferredContentSize = self.imageToolbar1.frame.size;
-    //Popover presentation controlller Keep for future dev //
-//    popupPresentationController.delegate = self;
-//    [self presentViewController:contentViewController animated:YES completion:nil];
-//    popupPresentationController = [contentViewController popoverPresentationController];
-
 }
 -(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
@@ -2230,7 +2239,7 @@ self.previewImageView.layer.sublayers = nil;
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
-     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.textExtract};
+     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.drawingView.textViewNew.textColor};
     self.drawingView.textViewNew.attributedText = [[NSAttributedString alloc] initWithString:self.drawingView.textViewNew.text attributes:attrsDictionary];
     [self textViewDidChange:self.drawingView.textViewNew];
     

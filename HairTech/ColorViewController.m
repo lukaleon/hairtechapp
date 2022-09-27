@@ -1,5 +1,6 @@
 
 #import "ColorViewController.h"
+#import "ASValueTrackingSlider.h"
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
 
@@ -23,13 +24,14 @@
 
 
 
-- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected
+- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected color:(UIColor *)currentColor
 {
     self = [super initWithFrame:frame];
     if (self) {
 
         self.frame = frame;
         _isTextSelected = isSelected;
+        self.currentPenColor = currentColor;
         [self configure];
 
     }
@@ -77,15 +79,27 @@
     }
 }
 
+- (void)indicateCurrentColorAtStart {
+    CGColorRef colorRef = self.currentPenColor.CGColor;
+    NSString *colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
+    NSLog(@"PEN COLOR STRING = %@", colorString);
+    if(!_isTextSelected){
+        [self penColorString:11];
+    } else {
+        [self textColorString:5];
+    }
+}
+
 - (void)configure
 {
-
     if(!_isTextSelected){
         [self createSimplyfiedOrdenatedColorsArray];
         [self loadColorButtons];
+
     } else {
         [self createSimplyfiedOrdenatedColorsArrayForText];
         [self loadColorButtonsForText];
+
     }
     [self LoadColorsAtStart];
    
@@ -108,28 +122,26 @@
     {
         [self button5Select];
     }
-    
-    
-    CGColorRef colorRef = self.currentPenColor.CGColor;
-    NSString *colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
-    NSLog(@"PEN COLOR STRING = %@", colorString);
-    if(!_isTextSelected){
-        [self penColorString:11];
-    } else {
-        [self textColorString:5];
-    }
+    [self indicateCurrentColorAtStart];
 }
+
 
 - (void)setIsTextSelected:(BOOL)isTextSelected
 {
-
      _isTextSelected = isTextSelected;
     textSelected = isTextSelected;
     NSLog(@"BOOL in setter %s", textSelected ? "true" : "false");
 
 }
-
+-(void)setFontSizee:(CGFloat)fontSize{
+    _fontSizee = fontSize;
+    NSLog(@"FONT SIZE = %f", _fontSizee);
+}
+-(void)setCurrentTextColorForIndicator:(UIColor*)currentTextColorForIndicator{
+    _currentTextColorForIndicator = currentTextColorForIndicator;
+}
 //- (void)viewDidUnload
+
 //{
 //    [super viewDidUnload];
 //    // Release any retained subviews of the main view.
@@ -262,9 +274,9 @@
 
 
 -(void)decreaseFontSize:(UIButton*)button{
-    if (self.fontSize >= 8 ){
-        self.fontSize = self.fontSize - 4;
-        [delegate textSettingsDidSelectFontSize:self.fontSize];
+    if (self.fontSizee >= 8 ){
+        self.fontSizee = self.fontSizee - 4;
+        [delegate textSettingsDidSelectFontSize:self.fontSizee];
     }
     if(button.highlighted){
     [button setHighlighted:NO];
@@ -275,9 +287,9 @@
 -(void)increaseFontSize:(UIButton*)button{
     
     if(button.highlighted) {
-        if (self.fontSize <= 60){
-            self.fontSize = self.fontSize + 4;
-            [delegate textSettingsDidSelectFontSize:self.fontSize];
+        if (self.fontSizee <= 60){
+            self.fontSizee = self.fontSizee + 4;
+            [delegate textSettingsDidSelectFontSize:self.fontSizee];
         }
     [button setHighlighted:NO];
 }
@@ -294,7 +306,7 @@ else {
     [self.delegate addTextFromTextSettings];
 }
 
-- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX
+- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX width:(CGFloat)btnWidth yAxe:(CGFloat)yAxe
 {
     SEL selectorNew = NSSelectorFromString(selector);
      UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -307,8 +319,8 @@ else {
     [button setImage:img forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
     [button setBackgroundColor:[UIColor blackColor]];
-    button.frame = CGRectMake(startX, self.frame.origin.y + 14, 28.0, 28.0);
-    button.layer.cornerRadius = 14;
+    button.frame = CGRectMake(startX, self.frame.origin.y + yAxe, btnWidth, btnWidth);
+    button.layer.cornerRadius = btnWidth / 2;
     button.layer.masksToBounds = YES;
     button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
     button.layer.borderWidth = 0.0f;
@@ -342,12 +354,12 @@ else {
         originOfButtons = screenPartitionIdx * 2;
     } else {
         screenPartitionIdx = sizeRect.size.width / 11;
-        originOfButtons = screenPartitionIdx / 2;
+        originOfButtons = screenPartitionIdx / 2.4;
     }
     self.layer.cornerRadius = 15;
     [self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
-   button1 =  [self fontButton:@"decreaseFontSize:" imageName1:@"a-sm.png" imageName2:@"a-sm-tr.png" startX:originOfButtons];
-   button2 = [self fontButton:@"increaseFontSize:" imageName1:@"a-big.png" imageName2:@"a-big-tr.png" startX:  button1.frame.origin.x + screenPartitionIdx];
+    button1 =  [self fontButton:@"decreaseFontSize:" imageName1:@"a-sm.png" imageName2:@"a-sm-tr.png" startX:originOfButtons width: 34 yAxe:11];
+   button2 = [self fontButton:@"increaseFontSize:" imageName1:@"a-big.png" imageName2:@"a-big-tr.png" startX:  button1.frame.origin.x + screenPartitionIdx width:34 yAxe:11];
     
     //lineSeparator = [self addLineSeparator:button2.frame.origin.x + screenPartitionIdx   y1:0 x2:button2.frame.origin.x + screenPartitionIdx   y2:self.frame.size.height ];
     lineSeparator = [self addLineSeparator:button2.frame.origin.x + button2.frame.size.width / 1.5   y1:0 x2:screenPartitionIdx y2:self.frame.size.height];
@@ -381,7 +393,7 @@ else {
             [self addSubview:colorButton];
             lastColorButtonX = colorButton.frame.origin.x;
         }
-   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastColorButtonX + screenPartitionIdx];
+   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastColorButtonX + screenPartitionIdx width:28 yAxe:14];
     }
 
 
@@ -391,7 +403,7 @@ else {
     [self currentColorIndicator:btn];
 }
 
--(void) buttonPushed:(id)sender{
+-(void)buttonPushed:(id)sender{
     ColorButton *btn = (ColorButton *)sender;
     if (!_isTextSelected){
         [delegate colorPopoverControllerDidSelectColor:btn.hexColor];
@@ -402,8 +414,9 @@ else {
             [line removeFromSuperlayer];
         }
        // btn.selected = YES;
-        [self indicateSelctedButton:btn];
         [delegate colorPopoverDidSelectTextColor:btn.hexColor];
+        [self indicateSelctedButton:btn];
+
     }
 }
 
@@ -647,7 +660,6 @@ else {
 
 - (void)buttonTapped:(UIButton *)sender
 {
-    //I don't know how to tag each button here.
     switch(sender.tag){
 
     case 0:{
@@ -730,14 +742,9 @@ else {
     self.tColor4 = [UIColor colorWithRed:[prefers floatForKey:@"cr4"] green:[prefers floatForKey:@"cg4"] blue:[prefers floatForKey:@"cb4"] alpha:[prefers floatForKey:@"ca4"]];
     
     self.tColor6 = [UIColor colorWithRed:[prefers floatForKey:@"cr6"] green:[prefers floatForKey:@"cg6"] blue:[prefers floatForKey:@"cb6"] alpha:[prefers floatForKey:@"ca6"]];
-    
-    
-    
-    
+
     [prefers synchronize];
-    
-   
-    
+
     NSLog(@"I have extracted colors");
     
 }
@@ -766,4 +773,6 @@ else {
         line.strokeColor = [UIColor whiteColor].CGColor;
         [colorBtn.layer addSublayer:line];
 }
+
+
 @end

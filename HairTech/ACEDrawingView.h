@@ -95,6 +95,9 @@ typedef enum {
     CGPoint startOfLine;
     CGPoint currentPointOfLine;
     CGFloat zoomIdx;
+    CGPoint bufferStartPoint;
+    CGPoint bufferEndPoint;
+    int cycle;
 }
 @property CGFloat textViewFontSize;
 -(void)enableGestures;
@@ -302,7 +305,7 @@ double dist2(CGPoint a, CGPoint b);
 -(void)setButtonVisibleTextPressed;
 -(void)setButtonVisible;
 -(void)selectPreviousTool:(id)sender;
--(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected;
+-(void)selectTextTool:(id)sender textColor:(UIColor*)color fontSize:(CGFloat)fontSZ isSelected:(BOOL)isSelected;
 -(void)removeTextSettings;
 
 @optional

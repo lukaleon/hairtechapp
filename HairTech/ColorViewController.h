@@ -40,15 +40,18 @@
     
 
 }
-@property CGFloat fontSize;
+@property( nonatomic, assign) CGFloat fontSizee;
+@property( nonatomic, assign) UIColor * currentTextColorForIndicator;
+
 @property IBOutlet UIView * rectView;
 @property IBOutlet CAShapeLayer * lineSeparator;
 @property(nonatomic, strong)  IBOutlet UIButton * button1;
 @property (nonatomic, strong) IBOutlet UIButton * button2;
 @property (nonatomic, strong) IBOutlet UIButton * button3;
 
-- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected;
+- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected color:(UIColor*)currentColor;
 @property (nonatomic, assign) BOOL isTextSelected;
+
 //@property(nonatomic, strong) UISlider *slider;
 
 @property(nonatomic, strong) NSMutableArray *buttonCollection;

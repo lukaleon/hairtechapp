@@ -81,7 +81,7 @@
     self.textContainer.lineFragmentPadding = 0;
     self.textContainerInset = UIEdgeInsetsZero;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = -0.20;
+   // paragraphStyle.lineSpacing = -0.20;
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attrsDictionary =
     @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
