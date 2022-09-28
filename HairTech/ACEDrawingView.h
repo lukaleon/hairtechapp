@@ -98,6 +98,7 @@ typedef enum {
     CGPoint bufferStartPoint;
     CGPoint bufferEndPoint;
     int cycle;
+
 }
 @property CGFloat textViewFontSize;
 -(void)enableGestures;

@@ -529,13 +529,11 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     else{
         dist = self.lineWidth+3.6;
     }
-   
         CGFloat distanceX = dist * (ABS(endPoint.x - startPoint.x) / distance);
         CGFloat distanceY = dist * (ABS(endPoint.y - startPoint.y) / distance);
         CGFloat distX = dist/2.4 * (ABS(endPoint.y - startPoint.y) / distance);
         CGFloat distY = dist/2.4 * (ABS(endPoint.x - startPoint.x) / distance);
-    
-    
+
     if (endPoint.x >= startPoint.x)
     {
         if (endPoint.y >= startPoint.y)

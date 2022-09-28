@@ -130,6 +130,10 @@ UIColor* tempColor;
     if (self.eraserSelected || self.type == JVDrawingTypeText ){
         return;
     }
+    unsigned long count = [[event allTouches] count];
+    if (count > 1) {
+        return; // return amount of fingers touched right now
+    }
     NSLog(@"touches began");
     self.isFirstTouch = YES;
     self.isMoveLayer = NO;
@@ -148,7 +152,6 @@ UIColor* tempColor;
     }
     cycle = 0;
 }
-
 
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -171,10 +174,10 @@ UIColor* tempColor;
 
     if (self.isFirstTouch) {
 
-//        if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
+      //  if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
 //            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
       
-            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 ofPath:self.selectedLayer.path]){
+            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 / self.zoomFactor ofPath:self.selectedLayer.path]){
                 self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             }
          else {
@@ -190,9 +193,12 @@ UIColor* tempColor;
              }
     } else {
         if (self.isMoveLayer) {
+            
             if (cycle < 1){
                CGPoint start =  [self.selectedLayer getStartPointOfLayer:self.selectedLayer];
                CGPoint end = [self.selectedLayer getEndPointOfLayer:self.selectedLayer];
+                bufferEndPoint = end;
+                bufferStartPoint = start;
                 [arrayOfPoints removeObject:NSStringFromCGPoint(start)];
                 [arrayOfPoints removeObject:NSStringFromCGPoint(end)];
                 cycle++;
@@ -232,12 +238,12 @@ UIColor* tempColor;
                 
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
-                        NSLog(@"MOVING FIRST POINT");
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+                        [self autoPosition:&currentPoint basePoint:bufferEndPoint];
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-                        bufferStartPoint = currentPoint;
-                        bufferEndPoint = self.selectedLayer.endPointToConnect;
+//                        bufferStartPoint = currentPoint;
+//                        bufferEndPoint = self.selectedLayer.endPointToConnect;
 
                         if (self.magnifierView.hidden == NO && count ==1){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
@@ -249,17 +255,12 @@ UIColor* tempColor;
                         [self hideLoupe]; // hide loupe when middle touched
                         [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
                         [self circlePosition:self.selectedLayer.startPmoving point2:self.selectedLayer.endPmoving forBothLayers:self.circleLayer1 circle2:self.circleLayer2];
-                        bufferStartPoint = self.selectedLayer.startPmoving;
-                        bufferEndPoint = self.selectedLayer.endPmoving;
-
-
                         break;
                     case JVDrawingTouchEnd:
                         NSLog(@"MOVING END POINT");
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+                        [self autoPosition:&currentPoint basePoint:bufferStartPoint];
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
-                        bufferEndPoint = currentPoint;
-                        bufferStartPoint = self.selectedLayer.startPointToConnect;
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
                         if (self.magnifierView.hidden == NO && count ==1){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
@@ -273,6 +274,7 @@ UIColor* tempColor;
         } else {
             NSLog(@"end of creation of line");
             [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+            [self autoPosition:&currentPoint basePoint:self.firstTouch];
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             self.lastTouch = currentPoint;
             if (self.magnifierView.hidden == NO && count == 1){
@@ -290,6 +292,10 @@ UIColor* tempColor;
 
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    unsigned long count = [[event allTouches] count];
+    if (count > 1) {
+        return; // return amount of fingers touched right now
+    }
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     cycle = 0;
     [self hideLoupe];
@@ -299,11 +305,11 @@ UIColor* tempColor;
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
 
-        for (NSString * cgpointVal in arrayOfPoints)
-        {
-            CGPoint pointObj = CGPointFromString(cgpointVal);
-            [self alocatePointAtView:self.layer pointFromArray:pointObj];
-        }
+//        for (NSString * cgpointVal in arrayOfPoints)
+//        {
+//            CGPoint pointObj = CGPointFromString(cgpointVal);
+//            [self alocatePointAtView:self.layer pointFromArray:pointObj];
+//        }
         
         NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
 
@@ -321,7 +327,7 @@ UIColor* tempColor;
             UITouch *touch = [touches anyObject];
             CGPoint currentPoint = [touch locationInView:self];
             for (JVDrawingLayer *layer in self.layerArray) {
-                if ([layer isPoint:currentPoint withinDistance:8 ofPath:layer.path]){
+                if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
                    [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                     layerHasBeenPicked = YES;
                     if (layer == self.selectedLayer && !menuVisible) {
@@ -377,6 +383,15 @@ UIColor* tempColor;
         }
     }
 }
+    
+- (CGFloat) pointPairToBearingDegrees:(CGPoint)startingPoint secondPoint:(CGPoint) endingPoint
+    {
+        CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
+        float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
+        float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
+        bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
+        return bearingDegrees;
+    }
 - (void)updateAllPoints {
     [arrayOfPoints removeAllObjects];
     for (JVDrawingLayer *layer in self.layerArray) {
@@ -827,11 +842,11 @@ UIColor* tempColor;
     viewName = nameOfView;
     arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
     
-    for (NSString * cgpointVal in arrayOfPoints)
-    {
-        CGPoint pointObj = CGPointFromString(cgpointVal);
-        [self alocatePointAtView:self.layer pointFromArray:pointObj];
-    }
+//    for (NSString * cgpointVal in arrayOfPoints)
+//    {
+//        CGPoint pointObj = CGPointFromString(cgpointVal);
+//        [self alocatePointAtView:self.layer pointFromArray:pointObj];
+//    }
 }
 
 
@@ -1269,17 +1284,6 @@ UIColor* tempColor;
 
 
 
-- (CGFloat) pointPairToBearingDegrees:(CGPoint)startingPoint secondPoint:(CGPoint) endingPoint
-{
-    CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
-    float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
-    float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
-    bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
-    return bearingDegrees;
-}
-
-
-
 
 
 #pragma mark drawing Circles at Line
@@ -1609,8 +1613,67 @@ UIColor* tempColor;
     circle.strokeColor = [UIColor blueColor].CGColor;
     [layer addSublayer:circle];
 }
--(void)removePointfromView:(CALayer *)layer pointFromArray:(CGPoint)pointFromArray
-{
-    [layer removeFromSuperlayer];
+
+#pragma mark Angle Detection
+
+-(void)autoPosition:(CGPoint*)currentPoint basePoint:(CGPoint)firstPoint{
+    double dist = hypot((firstPoint.x - currentPoint->x), (firstPoint.y - currentPoint->y));
+    CGFloat f = [self pointPairToBearingDegrees:firstPoint secondPoint:*currentPoint];
+
+    if ((f<=48)&&(f>=42)&&dist>15){
+        double angle =   0.785398163;
+        double endX = cos(angle) * dist + firstPoint.x;
+        double endY = sin(angle) * dist + firstPoint.y;
+        *currentPoint = CGPointMake(endX, endY);
+        if(!performed45){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            NSLog(@"HAPTIC PERFORM 45");
+            performed45 = true;
+        }
+    }else{ performed45 = false;}
+        if ((f<=138)&&(f>=132)&&dist>15){
+        double angle =   2.35619449;
+        double endX = cos(angle) * dist + firstPoint.x;
+        double endY = sin(angle) * dist + firstPoint.y;
+        *currentPoint = CGPointMake(endX, endY);
+        if(!performed135){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            performed135 = true;
+        }
+    }else{ performed135 = false;}
+    if ((f<=228)&&(f>=222)&&dist>15){
+        double angle =   3.92699082;
+        double endX = cos(angle) * dist +firstPoint.x;
+        double endY = sin(angle) * dist + firstPoint.y;
+        *currentPoint = CGPointMake(endX, endY);
+        if(!performed225){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            performed225 = true;
+        }
+    }else{ performed225 = false;}
+    if ((f<=318)&&(f>=312)&&dist>15){
+        double angle =   5.49778714;
+        double endX = cos(angle) * dist + firstPoint.x;
+        double endY = sin(angle) * dist + firstPoint.y;
+        *currentPoint = CGPointMake(endX, endY);
+        if(!performed315){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            performed315 = true;
+        }
+    }else{ performed315 = false;}
+    if((currentPoint->x - firstPoint.x <= 6)&&(currentPoint->x - firstPoint.x >= -6)&&dist>15){
+        *currentPoint = CGPointMake(firstPoint.x, currentPoint->y);
+        if(!performedX){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            performedX = true;
+        }
+    }else{ performedX = false;}
+    if((currentPoint->y - firstPoint.y <= 6)&&(currentPoint->y - firstPoint.y >= -6)&&dist>15){
+        *currentPoint = CGPointMake(currentPoint->x, firstPoint.y);
+        if(!performedY){
+            [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            performedY = true;
+        }
+    }else{performedY = false;}
 }
 @end
