@@ -1,0 +1,18 @@
+{
+    "colors": [{
+        "name": "green",
+        "pictures": [{
+            "pic": "pic1.png",
+            "name": "green1"
+        }, {
+            "pic": "pic2.png",
+            "name": "green2"
+        }]
+    }, {
+        "name": "yellow",
+        "pictures": [{
+            "pic": "pic3.png",
+            "name": "yellow1"
+        }]
+    }]
+}

@@ -528,7 +528,7 @@ return YES;
     
     
     buttons = @[blackbtn, penbtn, redbtn, lineButton,bluebtn,textbtn,eraserbtn];
-    
+    //[self addCentralLine];
 }
 
 
@@ -2242,8 +2242,30 @@ self.previewImageView.layer.sublayers = nil;
      NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.drawingView.textViewNew.textColor};
     self.drawingView.textViewNew.attributedText = [[NSAttributedString alloc] initWithString:self.drawingView.textViewNew.text attributes:attrsDictionary];
     [self textViewDidChange:self.drawingView.textViewNew];
+    }
+
+-(void)addCentralLine
+{
+        CAShapeLayer *line = [CAShapeLayer layer];
+        UIBezierPath *linePath=[UIBezierPath bezierPath];
+        [linePath moveToPoint: CGPointMake(self.view.center.x,0)];
+        [linePath addLineToPoint:CGPointMake(self.view.center.x,self.view.frame.size.height)];
+        line.path=linePath.CGPath;
+        line.fillColor = nil;
+        line.lineCap = kCALineCapRound;
+        line.lineJoin = kCALineJoinRound;
+        line.opacity = 1;
+        line.lineWidth = 1.0;
+        line.strokeColor = [UIColor blackColor].CGColor;
+        [self.drawingView.layer addSublayer:line];
+}
+-(void)disableZoomWhenTouchesMoved{
+    scrollView.pinchGestureRecognizer.enabled = NO;
     
-   // [self textViewShouldBeginEditing:self.drawingView.textViewNew];
+}
+-(void)enableZoomWhenTouchesMoved{
+    scrollView.pinchGestureRecognizer.enabled = YES;
+
 }
 /*
 -(void)addShadowToButton
