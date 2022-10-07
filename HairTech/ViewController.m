@@ -91,78 +91,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
 }
 
-
-/*
--(void)dbOpenMethod{
-    
-    NSLog(@"DATA_BASE_WAS_Opened");
-
-    
-    
-    sqlite3_stmt *statement;
-    
-    if (sqlite3_open([dbPathString UTF8String], &techniqueDB)==SQLITE_OK) {
-        [arrayOfTechnique removeAllObjects];
-        
-        NSString *querySql = [NSString stringWithFormat:@"SELECT * FROM TECHNIQUES"];
-        const char* query_sql = [querySql UTF8String];
-        
-        if (sqlite3_prepare(techniqueDB, query_sql, -1, &statement, NULL)==SQLITE_OK) {
-            while (sqlite3_step(statement)==SQLITE_ROW) {
-                
-                NSString *techniquenamestr = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 1)];
-                NSString *dateString = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
-                NSString *techniqueImage = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
-                NSString *namethumb1 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 4)];
-                NSString *namethumb2 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 5)];
-                NSString *namethumb3 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
-                NSString *namethumb4 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
-                NSString *namethumb5 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 8)];
-                NSString *namebig1 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 9)];
-                NSString *namebig2 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 10)];
-                NSString *namebig3 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 11)];
-                NSString *namebig4 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 12)];
-                NSString *namebig5 = [[NSString alloc]initWithUTF8String:(const char *)sqlite3_column_text(statement, 13)];
-                
-                Technique *technique = [[Technique alloc]init];
-                
-                [technique setTechniquename:techniquenamestr];
-                [technique setDate:dateString];
-                
-                [technique setTechniqueimage:techniqueImage];
-                [technique setTechniqueimagethumb1:namethumb1];
-                [technique setTechniqueimagethumb2:namethumb2];
-                [technique setTechniqueimagethumb3:namethumb3];
-                [technique setTechniqueimagethumb4:namethumb4];
-                [technique setTechniqueimagethumb5:namethumb5];
-                [technique setTechniqueimagebig1:namebig1];
-                [technique setTechniqueimagebig2:namebig2];
-                [technique setTechniqueimagebig3:namebig3];
-                [technique setTechniqueimagebig4:namebig4];
-                [technique setTechniqueimagebig5:namebig5];
-                
-                [arrayOfTechnique addObject:technique];
-                lastAddedItem = [arrayOfTechnique count];
-                
-            }
-            
-
-        }
-        sqlite3_close(techniqueDB);
-
-    }
-    
-    [[self collectionView]reloadData];
-    if(arrayOfTechnique.count==0){
-        [self.editButtonOutlet setEnabled:NO];
-    }
-    else{
-        [self.editButtonOutlet setEnabled:YES];
-        
-    }
-
-}
-*/
 -(void) saveFloatToUserDefaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setFloat:x forKey:key];
@@ -302,13 +230,32 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 
--(void)setupAppearance{
+-(void)openInfoController{
     
-    
-    
-    
+    InfoViewController * viewController =[self.storyboard  instantiateViewControllerWithIdentifier:@"InfoViewController"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
+
+- (void)addNewTechniqueButton {
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self
+               action:@selector(openSubView:)
+     forControlEvents:UIControlEventTouchUpInside];
+    button.backgroundColor = [UIColor orangeColor];
+    button.adjustsImageWhenHighlighted = NO;
+    UIImage *img = [UIImage imageNamed:@"newtechnique.png"];
+    [button setImage:img forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"newtechnique_h.png"] forState:UIControlStateHighlighted];
+    [button setBackgroundColor:[UIColor whiteColor]];
+    button.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
+                              self.view.frame.origin.y + self.view.frame.size.height - 84, 50 , 50);
+    button.layer.cornerRadius = 25;
+    button.layer.masksToBounds = YES;
+    button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
+    button.layer.borderWidth = 0.0f;
+    [self.view addSubview:button];
+}
 
 -(void)viewDidLoad
 {
@@ -349,26 +296,22 @@ self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizin
     
     
    UIColor *barTextColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1];
-
     [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:barTextColor];
     
     
-    self.navigationItem.title=@"My Library";
+    self.navigationItem.title = @"My Library";
     
-    UIImage*settingImg=[UIImage imageNamed:@"trash.png"];
-    
-    
-    /*UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:settingImg style:UIBarButtonItemStylePlain target:self action:@selector(activateDeleteMode:)];
-    */
-    UIBarButtonItem*addNewTechnique=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(openSubView:)];
+    UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [leftCustomButton addTarget:self
+                         action:@selector(openInfoController)
+               forControlEvents:UIControlEventTouchUpInside];
+    [leftCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
+    [leftCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
 
-   /*   IMPORTANTE IMPORTANTE
-    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(activateDeleteMode:)];
-    //addButton.tintColor=barTextColor;
-    
-    
-   self.navigationItem.rightBarButtonItem = deleteButton;*/
-    self.navigationItem.leftBarButtonItem = addNewTechnique;
+    [leftCustomButton setImage:[UIImage imageNamed:@"info.png"] forState:UIControlStateNormal];
+    UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
+    self.navigationItem.leftBarButtonItems = @[leftButtonItem];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     
     // Bottom Border
@@ -431,21 +374,8 @@ self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizin
     [self populateCustomers];
     NSLog(@"Array-Count  %d",[self.techniques count]);
 
-    /* Long press gesture for editings technique name*/
-    /* To be done in next versions*/
     
-    
-    
-    
-   /* UILongPressGestureRecognizer *lpgr
-    = [[UILongPressGestureRecognizer alloc]
-       initWithTarget:self action:@selector(handleLongPress:)];
-    lpgr.minimumPressDuration = .2; //seconds
-    lpgr.delegate = self;
-   // lpgr.delaysTouchesBegan = YES;
-    [self.collectionView addGestureRecognizer:lpgr];
-*/
-    
+    [self addNewTechniqueButton];
 
     }
 

@@ -160,7 +160,6 @@
     BOOL curveToggleIsOn;
     ColorViewController *contentTextView;
     ColorViewController *contentViewController;
-
     BOOL textSetterState;
 
 }

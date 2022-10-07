@@ -126,9 +126,14 @@ int dashLineCount;
      NSArray *buttons;
      BOOL textSelected;
      BOOL curveToggleIsOn;
+     ColorViewController *contentTextView;
+     ColorViewController *contentViewController;
+
+     BOOL textSetterState;
 
     
 }
+@property CGFloat fontSizeVC;
 
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;
@@ -177,7 +182,7 @@ int dashLineCount;
 @property (weak, nonatomic) IBOutlet UILabel * colorBar4;
 @property (weak,nonatomic) IBOutlet UIImageView * toolbarImg;
 
-@property (nonatomic, strong) WEPopoverController *popoverController2;
+@property (nonatomic, strong) WEPopoverController *popoverController;
 
 
 
@@ -295,6 +300,8 @@ int dashLineCount;
 @property UIColor* blueExtract;
 @property UIColor* redExtract;
 @property UIColor* lineExtract;
+@property UIColor* textExtract;
+
 
 //@property int currenttag;
 
