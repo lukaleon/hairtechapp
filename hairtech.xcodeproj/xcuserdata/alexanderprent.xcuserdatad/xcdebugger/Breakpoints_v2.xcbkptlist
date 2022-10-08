@@ -174,8 +174,8 @@
             filePath = "DrawViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2057"
-            endingLineNumber = "2057"
+            startingLineNumber = "2051"
+            endingLineNumber = "2051"
             landmarkName = "-showTextColorsAndSize:"
             landmarkType = "7">
          </BreakpointContent>

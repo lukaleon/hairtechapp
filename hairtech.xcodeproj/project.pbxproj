@@ -35,6 +35,9 @@
 		4071B5F528DA1AC300CCC9C3 /* textNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F328DA1AC300CCC9C3 /* textNew.png */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
 		407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B702750033600BA0474 /* ASValuePopUpView.m */; };
+		407FB90228F17FA000371E24 /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90028F17FA000371E24 /* undoNew.png */; };
+		407FB90328F17FA000371E24 /* redoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90128F17FA000371E24 /* redoNew.png */; };
+		407FB90728F185ED00371E24 /* dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90628F185ED00371E24 /* dots.png */; };
 		40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB525328B8FF62001B97B6 /* CircleLayer.m */; };
 		40BC7FA428E58EAE00F7364A /* book.json in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FA328E58EAE00F7364A /* book.json */; };
 		40BC7FA828E7112A00F7364A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40BC7FA728E7112A00F7364A /* ViewController.m */; };
@@ -44,8 +47,6 @@
 		40BC7FC528EF794F00F7364A /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40BC7FC428EF794F00F7364A /* InfoViewController.m */; };
 		40BC7FD528F0254F00F7364A /* eraserNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD328F0254F00F7364A /* eraserNew.png */; };
 		40BC7FD628F0254F00F7364A /* eraserNew_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD428F0254F00F7364A /* eraserNew_sel.png */; };
-		40BC7FDD28F03CB200F7364A /* redoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FDB28F03CB200F7364A /* redoNew.png */; };
-		40BC7FDE28F03CB200F7364A /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FDC28F03CB200F7364A /* undoNew.png */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
 		40FAF8DD28049148004DA2BA /* width1.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D828049148004DA2BA /* width1.png */; };
 		40FAF8DE28049148004DA2BA /* width3.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D928049148004DA2BA /* width3.png */; };
@@ -423,6 +424,9 @@
 		407D4B6F2750033600BA0474 /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
 		407D4B702750033600BA0474 /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
 		407D4B712750033600BA0474 /* ASValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValueTrackingSlider.h; sourceTree = "<group>"; };
+		407FB90028F17FA000371E24 /* undoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undoNew.png; sourceTree = "<group>"; };
+		407FB90128F17FA000371E24 /* redoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redoNew.png; sourceTree = "<group>"; };
+		407FB90628F185ED00371E24 /* dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dots.png; sourceTree = "<group>"; };
 		40AB525228B8FF62001B97B6 /* CircleLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleLayer.h; sourceTree = "<group>"; };
 		40AB525328B8FF62001B97B6 /* CircleLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleLayer.m; sourceTree = "<group>"; };
 		40BC7FA328E58EAE00F7364A /* book.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = book.json; sourceTree = "<group>"; };
@@ -434,8 +438,6 @@
 		40BC7FC428EF794F00F7364A /* InfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		40BC7FD328F0254F00F7364A /* eraserNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eraserNew.png; path = "../../../../../Downloads/Untitled-2 2/eraserNew.png"; sourceTree = "<group>"; };
 		40BC7FD428F0254F00F7364A /* eraserNew_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eraserNew_sel.png; path = "../../../../../Downloads/Untitled-2 2/eraserNew_sel.png"; sourceTree = "<group>"; };
-		40BC7FDB28F03CB200F7364A /* redoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redoNew.png; sourceTree = "<group>"; };
-		40BC7FDC28F03CB200F7364A /* undoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undoNew.png; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
 		40FAF8D828049148004DA2BA /* width1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width1.png; sourceTree = "<group>"; };
@@ -977,8 +979,9 @@
 		4071B5C728D9F15F00CCC9C3 /* New Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				40BC7FDB28F03CB200F7364A /* redoNew.png */,
-				40BC7FDC28F03CB200F7364A /* undoNew.png */,
+				407FB90628F185ED00371E24 /* dots.png */,
+				407FB90128F17FA000371E24 /* redoNew.png */,
+				407FB90028F17FA000371E24 /* undoNew.png */,
 				40BC7FD428F0254F00F7364A /* eraserNew_sel.png */,
 				40BC7FD328F0254F00F7364A /* eraserNew.png */,
 				40BC7FC128EF746600F7364A /* info.png */,
@@ -1796,7 +1799,6 @@
 				B4EB2BCA2374150A00F149C6 /* men-iphone7-front-tr.png in Resources */,
 				B42AC0BD20AA1397004E8988 /* ipad_top_tr.png in Resources */,
 				B494D8E72179C3ED00F81552 /* btn_cell_menu.png in Resources */,
-				40BC7FDD28F03CB200F7364A /* redoNew.png in Resources */,
 				B434128416E61E41003FAFA7 /* popoverArrowDown.png in Resources */,
 				B4DCA2AF21C3A45F001BE392 /* btn_apply.png in Resources */,
 				B434128516E61E41003FAFA7 /* popoverArrowDown@2x.png in Resources */,
@@ -1810,7 +1812,6 @@
 				B434128816E61E41003FAFA7 /* popoverArrowLeft@2x.png in Resources */,
 				B434128916E61E41003FAFA7 /* popoverArrowLeftSimple.png in Resources */,
 				B4EB2B89237414D900F149C6 /* men-ipad-right-tr.png in Resources */,
-				40BC7FDE28F03CB200F7364A /* undoNew.png in Resources */,
 				B4EB2BA0237414ED00F149C6 /* men-back-11-tr.png in Resources */,
 				4043E2D428DB7E0500BF9FF8 /* a-sm.png in Resources */,
 				B434128A16E61E41003FAFA7 /* popoverArrowRight.png in Resources */,
@@ -1826,6 +1827,7 @@
 				B434128D16E61E41003FAFA7 /* popoverArrowUp.png in Resources */,
 				40BC7FB528EF1D8500F7364A /* newtechnique.png in Resources */,
 				B434128E16E61E41003FAFA7 /* popoverArrowUp@2x.png in Resources */,
+				407FB90228F17FA000371E24 /* undoNew.png in Resources */,
 				B434128F16E61E41003FAFA7 /* popoverArrowUpSimple.png in Resources */,
 				B46561A520BD6D6400BF5BB9 /* Default.png in Resources */,
 				B434129016E61E41003FAFA7 /* popoverBg.png in Resources */,
@@ -1847,6 +1849,7 @@
 				B49F548B21CEAF6900810981 /* undo.png in Resources */,
 				B4908BCC16FA60A700E092CE /* btn_loadingView.png in Resources */,
 				B46C61C120C71C5F0053DC14 /* front_7p_tr.png in Resources */,
+				407FB90328F17FA000371E24 /* redoNew.png in Resources */,
 				B4908BCE16FA63EA00E092CE /* Incoming-Call-Widget.png in Resources */,
 				B4908BD016FA72ED00E092CE /* hairtech_Intro.png in Resources */,
 				B42AC0FA20AB20D7004E8988 /* right_7p.png in Resources */,
@@ -1891,6 +1894,7 @@
 				B4A5FF2C170338CC00135CA2 /* btn_backhead.png in Resources */,
 				B4A5FF2D170338CC00135CA2 /* btn_fronthead.png in Resources */,
 				B4E4812D215118FB002F0CF4 /* eraser_pointer.png in Resources */,
+				407FB90728F185ED00371E24 /* dots.png in Resources */,
 				4043E2D828DCA42000BF9FF8 /* addText.png in Resources */,
 				B4CFBB8520C520A4007F4CCE /* btn_fronthead_x.png in Resources */,
 				B4A5FF2E170338CC00135CA2 /* btn_lefthead.png in Resources */,

@@ -261,7 +261,6 @@ return YES;
     
     eraserbtn.layer.cornerRadius = 15.0;
     
-
     penbtn.backgroundColor = btnColor;
     blackbtn.backgroundColor = btnColor;
     bluebtn.backgroundColor = btnColor;
@@ -269,7 +268,6 @@ return YES;
     textbtn.backgroundColor = btnColor;
     eraserbtn.backgroundColor = btnColor;
 
-    
     self.undoBut.layer.cornerRadius = 20;
     self.undoBut.backgroundColor = [UIColor whiteColor];
     self.undoBut.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
@@ -282,9 +280,6 @@ return YES;
     self.redoBut.layer.shadowOpacity = 0.2;
     self.redoBut.layer.shadowRadius = 2;
     self.redoBut.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
-
-
-    
     
     self.btn.layer.cornerRadius = 15.0;
     self.btn.layer.shadowColor = [UIColor colorWithRed:0.46 green:0.46 blue:0.46 alpha:1.0].CGColor;
@@ -307,24 +302,11 @@ return YES;
     self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
 }
 
-//
-//-(void)addTextViewToDrawingView{
-//
-//    CGRect rectOrigin = CGRectMake(0,0,100,24);
-//    [self.drawingView addTextViewToRect:rectOrigin];
-//    [self.drawingView.textViewNew setHidden:YES];
-//}
-//-(void)makeTextViewVisible {
-//
-//    [self.drawingView.textViewNew setHidden:NO];
-//    [self.drawingView addJVDTextView];
-//
-//}
 
 -(void)viewDidLoad{
     
-   
-
+    
+    
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
     [self setupButtons];
@@ -345,18 +327,18 @@ return YES;
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
-        if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"new_version"]))
-        {
+    if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"new_version"]))
+    {
         
         //[self.NewImageView setImage:[UIImage imageNamed:@"iphone7plus.png"]];
-            [self.NewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
+        [self.NewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
     }
     
     if (((screenHeight==1024)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
-       ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
-       ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"new_version"])){
+        ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
+        ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"new_version"])){
         
         [self.NewImageView setImage:[UIImage imageNamed:@"ipad_left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"ipad_left_tr.png"]];
@@ -374,18 +356,18 @@ return YES;
     /*----------------------MEN HEADS------------------------------*/
     
     
-     if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"men_heads"]))
-        {
+    if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"men_heads"]))
+    {
         
         //[self.NewImageView setImage:[UIImage imageNamed:@"iphone7plus.png"]];
-[self.NewImageView setImage:[UIImage imageNamed:@"men-iphone7-left.png"]];
+        [self.NewImageView setImage:[UIImage imageNamed:@"men-iphone7-left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"men-iphone7-left-tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"men-iphone7-left-tr.png"]];
     }
     
     if (((screenHeight==1024)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
-       ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
-       ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"men_heads"])){
+        ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
+        ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"men_heads"])){
         
         [self.NewImageView setImage:[UIImage imageNamed:@"men-ipad-left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"men-ipad-left-tr.png"]];
@@ -402,23 +384,16 @@ return YES;
     
     
     [self adGridToImgView];
-
+    
     self.navigationItem.title=self.stringFromVC;
     
-  //  [self.navigationController.navigationBar
- //    setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    //  [self.navigationController.navigationBar
+    //    setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     
     
-     UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(setColorButtonTapped:)];
     
-    UIBarButtonItem *resetButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(reset:)];
-
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:resetButton, actionButton, nil]];
     
-  //[KGStatusBar showWithStatus:@""];
- 
     [self.toolbar setClipsToBounds:YES];
-    
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
     
     self.view.backgroundColor = mycolor2;
@@ -428,32 +403,32 @@ return YES;
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
     
-       lineButton.selected = YES;
+    lineButton.selected = YES;
     
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText=0;
     
-   [self.btn setEnabled:NO];
-   [self.btn setHidden:YES];
+    [self.btn setEnabled:NO];
+    [self.btn setHidden:YES];
     
-
+    
     self.drawingView.type = JVDrawingTypeLine;
     self.drawingView.bufferType = JVDrawingTypeLine;
     self.drawingView.previousType = lineButton;
     self.drawingView.lineColor = self.lineExtract;
     self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-
+    
     lineButton.backgroundColor = self.lineExtract;
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImageRetina) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
     
     tap=NO;
     firstTap1=NO;
     firstTap2=NO;
-
-
+    
+    
     longpressblackbtn = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandler:)];
     longpressblackbtn .minimumPressDuration = 0.2;
     
@@ -479,14 +454,14 @@ return YES;
     longpresspenbtn .minimumPressDuration = 0.2;
     
     [penbtn addGestureRecognizer:longpresspenbtn];
-
+    
     
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.7;
     scrollView.maximumZoomScale = 5.0;
     scrollView.contentSize = self.viewForImg.frame.size;
-
-
+    
+    
     [AMPopTip appearance].font = [UIFont fontWithName:@"Avenir-Medium" size:15];
     self.popTipCurve = [AMPopTip popTip];
     self.popTipCurve.shouldDismissOnTap = YES;
@@ -494,20 +469,20 @@ return YES;
     self.popTipCurve.offset = 2;
     self.popTipCurve.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.popTipCurve.shouldDismissOnTap = YES;
-
+    
     self.popTipLine = [AMPopTip popTip];
     self.popTipLine.shouldDismissOnTap = YES;
     self.popTipLine.edgeMargin = 5;
     self.popTipLine.offset = 2;
     self.popTipLine.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.popTipLine.shouldDismissOnTap = YES;
-
+    
     NSUserDefaults *sharedDefaults = [NSUserDefaults standardUserDefaults];
     if ([sharedDefaults boolForKey:@"FirstPopCurve1"])
     {
-       [self.popTipCurve showText:@"Tap to change type of curved line" direction:AMPopTipDirectionUp maxWidth:200 inView:self.view fromFrame:blackbtn.frame];
+        [self.popTipCurve showText:@"Tap to change type of curved line" direction:AMPopTipDirectionUp maxWidth:200 inView:self.view fromFrame:blackbtn.frame];
         
-      
+        
         [sharedDefaults setBool:NO forKey:@"FirstPopCurve1"];
         [sharedDefaults synchronize];
         
@@ -519,17 +494,89 @@ return YES;
         
         [self.popTipLine showText:@"Long press to change color" direction:AMPopTipDirectionUp maxWidth:200 inView:self.view fromFrame:lineButton.frame];
         
-    
+        
     };
     
     
     
     buttons = @[blackbtn, penbtn, redbtn, lineButton,bluebtn,textbtn,eraserbtn];
-    //[self addCentralLine];
+    
+    
+    [self setupNavigationBarItems];
+}
+- (void)setupNavigationBarItems {
+    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [undo addTarget:self
+             action:@selector(undo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [redo addTarget:self
+             action:@selector(redo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [more addTarget:self
+             action:@selector(presentAlertView)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    [more setImage:[UIImage imageNamed:@"dots.png"] forState:UIControlStateNormal];
+    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+    
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+}
+-(void)presentAlertView{
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Action" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Presenting the great... StackOverFlow!"];
+//    [hogan addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14.0] range:NSMakeRange(24, 11)];
+//    [alertVC setValue:hogan forKey:@"attributedTitle"];
+    UIAlertAction *button = [UIAlertAction actionWithTitle:@"Share"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action){
+                                                   [self openShareMenu];
+                                                   }];
+    UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear Page"
+                                                     style:UIAlertActionStyleDestructive
+                                                   handler:^(UIAlertAction *action){
+                                                    [self clearPage];
+                                                   }];
+    UIAlertAction *button3 = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *action){
+                                                       //add code to make something happen once tapped
+                                                   }];
+//    [button setValue:[[UIImage systemImageNamed:@"trash"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+
+    [alertVC addAction:button];
+    [alertVC addAction:button2];
+    [alertVC addAction:button3];
+
+    [self presentViewController:alertVC animated:YES completion:nil];
+
+}
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
 }
 
-
-
+-(void)clearPage{
+    [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
+    // Do the delete
+    self.NewImageView.image = nil;
+    [self.drawingView clear];
+    self.drawingView.backgroundColor =[UIColor clearColor];
+    [self updateButtonStatus];
+}
 
 -(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view{
    // [self.drawingView updateZoomFactor:scrollView.zoomScale];
@@ -1559,21 +1606,19 @@ return YES;
     [self.drawingView undoLatestStep];
     [self updateButtonStatus];
 }
+-(void)undo{
+    NSLog(@"undo");
+//    [self.drawingView undoLatestStep];
+//    [self updateButtonStatus];
+    [self.drawingView revoke];
 
-
-
-- (IBAction)RedoButton:(id)sender {
-    
+}
+-(void)redo{
+    NSLog(@"redo");
     [self.drawingView redoLatestStep];
     [self updateButtonStatus];
 }
-- (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;
-{
-    [self updateButtonStatus];
-}
 
-
-///////////////////////////////////////////////////////////////////////
 
 -(UIImage*)captureScreenForMail
 {
@@ -1583,7 +1628,7 @@ self.previewImageView.layer.sublayers = nil;
     //[Flurry logEvent:@"Caprure_For_Mail"];
        [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
 
         UIGraphicsBeginImageContext(self.view.frame.size);
@@ -1591,13 +1636,13 @@ self.previewImageView.layer.sublayers = nil;
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
 
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
@@ -1605,7 +1650,7 @@ self.previewImageView.layer.sublayers = nil;
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1617,32 +1662,32 @@ self.previewImageView.layer.sublayers = nil;
 -(UIImage*)captureRetinaScreenForMail
 {
 
-       // self.previewImageView.layer.sublayers = nil;
+    [self.drawingView bringArrowsToFront];
 
         [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
     
     //[Flurry logEvent:@"Caprure_Retina_For_Mail"];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage*img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        self.showBar;
+        [self showBar];
         [self adGridToImgView];
         return img;
 
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1652,82 +1697,31 @@ self.previewImageView.layer.sublayers = nil;
 }
 
 
-- (IBAction)setColorButtonTapped:(id)sender{
+- (void)openShareMenu{
 
-   // if(self.drawingView.editMode ==YES)
-   // {
-     //   [self performSelector:@selector(buttonTouched:)];
-    
-   // }
     NSString *textToShare;
-    
-    
     textToShare = [NSString stringWithFormat:@"HAIRTECH - HEAD SHEETS"];
-    // NSString *        textToShare2 = [NSString stringWithFormat:@"fb://profile/230787750393258"];
-    
     UIImage *imageToShare;
-    /*if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        imageToShare =  [self captureRetinaScreenForMail];
-    }
-    else
-    {
-        imageToShare = [self captureScreenForMail];
-    }*/
-    
     imageToShare =  [self captureRetinaScreenForMail];
-    
-   // NSArray *itemsToShare = @[textToShare, imageToShare];
-    
-     NSMutableArray *itemsToShare = [NSMutableArray arrayWithObjects:textToShare, imageToShare, nil];
+    NSMutableArray *itemsToShare = [NSMutableArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
     
-    
-    
-    
-   /*
-    self.listPopoverdraw1 = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-    self.listPopoverdraw1.delegate = self;
-    
-    [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    */
-    
-    
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        // code here
-        
-        
         self.listPopoverdraw1 = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
         self.listPopoverdraw1.delegate = self;
-        
         [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-        
-        
     }
-    
-    
-    
-    
-    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        // code here
-        
         activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-        //activityViewController.preferredContentSize = CGSizeMake(400, 400);
-        
         [self presentViewController:activityViewController animated: YES completion: nil];
-        
         UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
         popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
         popoverPresentationController.sourceView = self.view;
         popoverPresentationController.sourceRect = CGRectMake(685,60,10,1);
     }
-    
 }
-
-
 
 -(void)dismissPopoverDraw1
 {
@@ -1777,7 +1771,7 @@ self.previewImageView.layer.sublayers = nil;
 
 
     [self.imageView setHidden:YES];
-   // [self.imageToolbar1 setHidden:YES];
+    [self.imageToolbar1 setHidden:YES];
     [self.toolbarImg setHidden:YES];
     [self.toolbar setHidden:YES];
   //  self.labelHairTech.textColor = [UIColor darkGrayColor];
@@ -2061,11 +2055,7 @@ self.previewImageView.layer.sublayers = nil;
     contentTextView.delegate = self;
     [self.view addSubview:contentTextView];
 }
--(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
-{
-    return UIModalPresentationNone;
-;
-}
+
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");

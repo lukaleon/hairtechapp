@@ -364,47 +364,16 @@ return YES;
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor clearColor]}];
     
-    
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(setColorButtonTapped:)];
-    
-    UIBarButtonItem *resetButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(reset:)];
-    
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:resetButton, actionButton, nil]];
-
-  //  [KGStatusBar showWithStatus:@""];
-
-
     [self.toolbar setClipsToBounds:YES];
     
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
     
     self.view.backgroundColor = mycolor2;
-   // self.toolbar.backgroundColor = mycolor2;
-    
-   // UIPanGestureRecognizer * recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.drawingView action:@selector(handlePan:)];
-    
-  //  recognizer.delegate = self;
-    //[textview addGestureRecognizer:recognizer];
-//    [self.drawingView.textView addGestureRecognizer:recognizer];
-//    self.drawingView.textView.delegate = self;
-//    [self.drawingView.textView setHidden:YES];
-
     self.drawingView.delegate = self;
-
-
-
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
+    [self.lineButton setSelected:YES];
 
-  
-  [self.lineButton setSelected:YES];
-    
-   
-
-   
-   // self.drawingView.lineColor = self.lineExtract;
-
-    
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText=0;
@@ -488,8 +457,69 @@ return YES;
     
     
     buttons = @[blackbtn, penbtn, redbtn, lineButton,bluebtn,textbtn,eraserbtn];
+    [self setupNavigationBarItems];
 
    
+}
+- (void)setupNavigationBarItems {
+    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [undo addTarget:self
+             action:@selector(undo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [redo addTarget:self
+             action:@selector(redo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [more addTarget:self
+             action:@selector(presentAlertView)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    [more setImage:[UIImage systemImageNamed:@"ellipsis"] forState:UIControlStateNormal];
+    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+    
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+}
+-(void)presentAlertView{
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Alert Title" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Presenting the great... StackOverFlow!"];
+//    [hogan addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:30.0] range:NSMakeRange(24, 11)];
+//    [alertVC setValue:hogan forKey:@"attributedTitle"];
+    UIAlertAction *button = [UIAlertAction actionWithTitle:@"Share"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action){
+                                                   [self openShareMenu];
+                                                   }];
+    UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear"
+                                                     style:UIAlertActionStyleDestructive
+                                                   handler:^(UIAlertAction *action){
+                                                    [self clearPage];
+                                                   }];
+    UIAlertAction *button3 = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *action){
+                                                       //add code to make something happen once tapped
+                                                   }];
+    [button setValue:[[UIImage imageNamed:@"image.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+
+    [alertVC addAction:button];
+    [alertVC addAction:button2];
+    [alertVC addAction:button3];
+
+    [self presentViewController:alertVC animated:YES completion:nil];
+
 }
 
 
@@ -1280,6 +1310,14 @@ return YES;
         actionSheet2 = nil;
     }
 }
+-(void)clearPage{
+    [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
+    // Do the delete
+    self.NewImageView.image = nil;
+    [self.drawingView clear];
+    self.drawingView.backgroundColor =[UIColor clearColor];
+    [self updateButtonStatus];
+}
 
 - (void)saveImage{
     
@@ -1518,18 +1556,18 @@ return YES;
     self.undoBut.enabled = [self.drawingView canUndo];
     self.redoBut.enabled = [self.drawingView canRedo];
 }
-
-- (IBAction)UndoButton:(id)sender {
-    
+-(void)undo{
+    NSLog(@"undo");
     [self.drawingView undoLatestStep];
     [self updateButtonStatus];
 }
-
-- (IBAction)RedoButton:(id)sender {
-    
+-(void)redo{
+    NSLog(@"redo");
     [self.drawingView redoLatestStep];
     [self updateButtonStatus];
 }
+
+
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;
 {
     [self updateButtonStatus];
@@ -1547,7 +1585,7 @@ self.previewImageView.layer.sublayers = nil;
     //[Flurry logEvent:@"Caprure_For_Mail"];
        [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
 
         UIGraphicsBeginImageContext(self.view.frame.size);
@@ -1555,7 +1593,7 @@ self.previewImageView.layer.sublayers = nil;
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1581,32 +1619,29 @@ self.previewImageView.layer.sublayers = nil;
 -(UIImage*)captureRetinaScreenForMail
 {
 
-       // self.previewImageView.layer.sublayers = nil;
-
-        [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
-    
-    //[Flurry logEvent:@"Caprure_Retina_For_Mail"];
-    if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+    [self.drawingView bringArrowsToFront];
+    [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
+        if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage*img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        self.showBar;
+        [self showBar];
         [self adGridToImgView];
         return img;
 
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1616,29 +1651,11 @@ self.previewImageView.layer.sublayers = nil;
 }
 
 
-- (IBAction)setColorButtonTapped:(id)sender{
-    
-    // if(self.drawingView.editMode ==YES)
-    // {
-    //   [self performSelector:@selector(buttonTouched:)];
-    
-    // }
+- (void)openShareMenu{
+ 
     NSString *textToShare;
-    
-    
     textToShare = [NSString stringWithFormat:@"HAIRTECH - HEAD SHEETS"];
-    // NSString *        textToShare2 = [NSString stringWithFormat:@"fb://profile/230787750393258"];
-    
     UIImage *imageToShare;
-    /*if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        imageToShare =  [self captureRetinaScreenForMail];
-    }
-    else
-    {
-        imageToShare = [self captureScreenForMail];
-    }*/
-    
     imageToShare =  [self captureRetinaScreenForMail];
     
    // NSArray *itemsToShare = @[textToShare, imageToShare];
@@ -1646,16 +1663,6 @@ self.previewImageView.layer.sublayers = nil;
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
-    
-    /*
-    self.listPopoverdraw1 = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-    self.listPopoverdraw1.delegate = self;
-    
-    [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    */
-    
-    
-    
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
         // code here
         
@@ -1664,21 +1671,9 @@ self.previewImageView.layer.sublayers = nil;
         self.listPopoverdraw1.delegate = self;
         
         [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-
-        
-        
     }
-    
-    
-    
-    
-    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        // code here
-        
         activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-        //activityViewController.preferredContentSize = CGSizeMake(400, 400);
-        
         [self presentViewController:activityViewController animated: YES completion: nil];
         
         UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
@@ -1686,8 +1681,6 @@ self.previewImageView.layer.sublayers = nil;
         popoverPresentationController.sourceView = self.view;
         popoverPresentationController.sourceRect = CGRectMake(685,60,10,1);
     }
-    
-
 }
 
 
