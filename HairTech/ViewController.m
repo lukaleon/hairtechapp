@@ -171,11 +171,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-//    [prefs setFloat:components1[0]  forKey:@"cr"];
- //   [prefs setFloat:components1[1]  forKey:@"cg"];
-  //  [prefs setFloat:components1[2]  forKey:@"cb"];
-   // [prefs setFloat:components1[3]  forKey:@"ca"];
-    
     [prefs setFloat:components2[0]  forKey:@"cr2"];
     [prefs setFloat:components2[1]  forKey:@"cg2"];
     [prefs setFloat:components2[2]  forKey:@"cb2"];
@@ -211,20 +206,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
-
-    //[self dbOpenMethod];
-   // [self dbCreateMethod];
- //[self reloadMyCollection];
     [self.collectionView  reloadData];
-
-    NSLog(@"VIEWILLAPPEAR-SHOW_SHOW_SHOW");
-    
-    
-    
-   
+ 
 }
 
 
@@ -263,16 +248,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-        appearance.shadowColor =  [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
+        appearance.backgroundColor = [UIColor colorNamed:@"bar2"];
+        appearance.shadowColor =  [UIColor clearColor];
        // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = self.navigationController.navigationBar.standardAppearance;
+        [self.navigationController prefersStatusBarHidden];
+        
+       
+
     }
-    
-    
-    
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"showPop"
@@ -287,20 +272,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(receiveTestNotification3:)
                                                  name:@"showDeletePop"
                                                object:nil];
-   
-    
-    
-    
 
-self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+   self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     
    UIColor *barTextColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1];
-    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:barTextColor];
-    
-    
+   [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:barTextColor];
+
     self.navigationItem.title = @"My Library";
-    
     UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [leftCustomButton addTarget:self
                          action:@selector(openInfoController)
@@ -313,68 +292,30 @@ self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizin
     self.navigationItem.leftBarButtonItems = @[leftButtonItem];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    
     // Bottom Border
-    UIColor *borderColor = [UIColor colorWithRed:0.72 green:0.72 blue:0.72 alpha:1];
-
-    
-    
-    //[KGStatusBar dismiss];
-
     [super viewDidLoad];
-    
-  
- 
     if ( IDIOM != IPAD ) {
         
         [self.sidemenuButton setAlpha:0];
     }
-    
-    
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
-  
-    
-    //UINib *cellNib = [UINib nibWithNibName:@"NibCell" bundle:nil];
-    //[self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"MY_CELL"];
 
-    
     self.techniques = [[NSMutableArray alloc] init];
-    
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-    
     self.techniques = [db getCustomers];
-
-
-    
-
     self.menuViewController = [[DEMOMenuViewController alloc] init];
     self.menuViewController.ViewController = self;
-
-    
     [self.toolbar_view setClipsToBounds:YES];
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    
     self.view.backgroundColor = mycolor2;
     self.toolbar_view.backgroundColor = mycolor2;
     
-    
-    
-    //[self.view setBackgroundColor:[UIColor underPageBackgroundColor]];
-
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
-    //  self.collectionView.collectionViewLayout = [[MyCustomLayout alloc] init];
-   //[self.collectionView setBackgroundColor:[UIColor colorWithRed:179.0/255.0 green:179.0/255.0 blue:185.0/255.0 alpha:0.8]];
-    //tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tapRecognizer.delegate=self;
-      
       i=0;
     tap=NO;
-    
     [self populateCustomers];
-    NSLog(@"Array-Count  %d",[self.techniques count]);
-
-    
     [self addNewTechniqueButton];
 
     }
@@ -414,13 +355,13 @@ self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizin
 
 -(void) populateCustomers
 {
+    NSString *homeDir = NSHomeDirectory();
+    NSLog(@"%@",homeDir);
+    
     self.techniques = [[NSMutableArray alloc] init];
     
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-    
     self.techniques = [db getCustomers];
-    NSLog(@"TECHNIQUES IN DATABASE = %d",self.techniques.count);
-    
      
 }
 
@@ -430,12 +371,10 @@ self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizin
     NSLog(@"addCustomerViewController");
     
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-    
     [db insertCustomer:technique];
-    
     [self populateCustomers];
-    
     [self.collectionView reloadData];
+
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -490,7 +429,8 @@ Technique *technique = [self.techniques objectAtIndex:index];
     indexpathtemp=NULL;
     
       EntryViewController *entryViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
-    
+    entryViewController.appVersion = technique.date;
+
     appDelegate.myGlobalName = technique.techniquename;
     self.sendImagenameToControllers = technique.techniquename;
     entryViewController.stringFromTextfield = self.sendImagenameToControllers;
@@ -578,68 +518,28 @@ Technique *technique = [self.techniques objectAtIndex:index];
     cell.layer.shadowOpacity = 0.2f;
     cell.layer.masksToBounds = NO;
     cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
-
-    
-   /* [cell.layer setBorderColor:fillColor.CGColor];
-    
-    [cell.layer setBorderWidth:1.0f];
-    [cell.layer setBackgroundColor:fillColor.CGColor];
-    
-    
-    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
-    [cell.layer setShadowColor:fillColor.CGColor];
-    [cell.layer setShadowRadius:0.0f];
-    [cell.layer setShadowOpacity:0.0];
-    
-    */
-    
-    
-      Technique *technique = [self.techniques objectAtIndex:indexPath.row];
-
-    
+    Technique *technique = [self.techniques objectAtIndex:indexPath.row];
     //cell.labelOne.text = technique.techniquename;
     cell.dateLabel.text = technique.techniquename;
-    
-    //@autoreleasepool {
-    
+
     NSMutableString *filenamethumb = @"%@/";
     NSMutableString *prefix = technique.techniquename;
     filenamethumb = [filenamethumb mutableCopy];
-   [filenamethumb appendString: prefix];
+    [filenamethumb appendString: prefix];
     filenamethumb = [filenamethumb mutableCopy];
     [filenamethumb appendString: @"Entry"];
-   filenamethumb = [filenamethumb mutableCopy];
-   [filenamethumb appendString: @".png"];
-   NSLog(@"CellForItemAtIndexPath: %@.",filenamethumb);
-    
-    NSLog(@"NAMEFROMMY_SUB_VIEW_techNAME: %@.",technique.techniquename);
-    NSLog(@"NAMEFROMMY_SUB_VIEW: %@.",tempstring);
-    
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: @".png"];
+   
     if ([technique.techniquename isEqualToString:tempstring]){
-    
         indexpathtemp = indexPath;
-        
-        NSLog(@"!!!!!!!!!!!!!!!!!!!!: %@.",technique.techniquename);
-        NSLog(@"!!!!!!!!!!!!!!!!!!!!++++: %@.",tempstring);
-
     }
 
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    
+    NSLog(@"",docDirectory);
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
-    
-    
-    
-    /*
-    cell_sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    cell_docDirectory = [cell_sysPaths objectAtIndex:0];
-    cell_filePath = [NSString stringWithFormat:filenamethumb, cell_docDirectory];
-    imageForCell = [[UIImage alloc]initWithContentsOfFile:cell_filePath];
-    */
-    
-    
     cell.image.image = tempimage;
    
      if ( IDIOM == IPAD ) {
@@ -648,33 +548,17 @@ Technique *technique = [self.techniques objectAtIndex:index];
          [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
          
      }else{
-    
-         
          CGSize  newsize;
          newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
-         
          CGRect screenRect = [[UIScreen mainScreen] bounds];
          CGFloat screenWidth = screenRect.size.width;
          CGFloat screenHeight = screenRect.size.height;
-         
          [cell.image setFrame:CGRectMake(0, 0, (screenWidth*80)/100, (screenHeight*80)/100)];
          [cell.contentView.layer setCornerRadius:15.0f];
-
-
-    
-        
         }
     
     return cell;
 }
-
-// the user tapped a collection item, load and set the image on the detail view controller
-//
-
-
-
-
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
@@ -688,38 +572,24 @@ Technique *technique = [self.techniques objectAtIndex:index];
     
     }
     if ([[segue identifier] isEqualToString:@"subView"])
-    {
-        [self openSubView];
-      
-}
-}
+            {
+                [self openSubView];
+            }
+    }
 
 
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    NSLog(@"Before entryVC");
-
     EntryViewController *entryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
-    
-    NSLog(@"After entryVC");
+    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
 
-    //entryVC.delegate1=self;
-    
-    
     Technique *technique = [self.techniques objectAtIndex:[indexPath row]];
-    
-    NSLog(@"After Technique*techniue");
-
-    NSLog(@"Technique name= %@",technique.techniqueimagethumb1);
-
     NSMutableString *filenamethumb1 = @"%@/";
     NSMutableString *prefix= technique.techniqueimagethumb1;
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
-    
 
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
@@ -742,10 +612,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     
     NSLog(@"DOCDIRECTORY %@.",docDirectory2);
     
-    
-    
-    
-    /////---------Delegate image to EntryViewController buttonTopHead---------/////////
     NSMutableString *filenamethumb3 = @"%@/";
     NSMutableString *prefix3= technique.techniqueimagethumb3;
     filenamethumb3 = [filenamethumb3 mutableCopy];
@@ -790,67 +656,37 @@ Technique *technique = [self.techniques objectAtIndex:index];
     self.image4 = tempimage4;
     self.image5 = tempimage5;
     
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    appDelegate.myGlobalName = technique.techniquename;
-    
-    self.sendImagenameToControllers = technique.techniquename;
-    
-    appDelegate.globalDate = technique.date;
-    entryVC.stringFromTextfield = self.sendImagenameToControllers;
-    
-    entryVC.entryImage1= self.image1;
-    entryVC.entryImage2 = self.image2;
-    entryVC.entryImage3 = self.image3;
-    entryVC.entryImage4 = self.image4;
-    entryVC.entryImage5 = self.image5;
-    
-    NSLog(@"Результат: EntryViewController Button1 = %@.and Button2 %@.",filenamethumb1,filenamethumb2);
-    
+    if(![technique.date isEqualToString:@"version22"]){
+        
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        appDelegate.myGlobalName = technique.techniquename;
+        self.sendImagenameToControllers = technique.techniquename;
+        appDelegate.globalDate = technique.date;
+        entryVC.stringFromTextfield = self.sendImagenameToControllers;
+        
+        entryVC.entryImage1= self.image1;
+        entryVC.entryImage2 = self.image2;
+        entryVC.entryImage3 = self.image3;
+        entryVC.entryImage4 = self.image4;
+        entryVC.entryImage5 = self.image5;
+        entryVC.appVersion = technique.date;
+        
+        Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
+        UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
+        cell.contentView.backgroundColor =  fillColor;
+        cell.contentView.layer.cornerRadius = 15.0f;
+        [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
+        [self.navigationController pushViewController: entryVC animated:YES];
+    } else
+    {
+        newEntryVC.navigationItem.title = technique.techniquename;
+        [self.navigationController pushViewController: newEntryVC animated:YES];
 
-    
-
-
-   
-    Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
-    
-    UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-   cell.contentView.backgroundColor =  fillColor;
-    
- //  [cell.layer setBorderColor:fillColor.CGColor];
-   // [cell.contentView.layer setCornerRadius:5.0f];
-    
-    //[cell.contentView.layer setBorderWidth:4.0f];
-    [cell.contentView.layer setCornerRadius:15.0f];
-    
-    [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
-
-//    [cell.layer setShadowOffset:CGSizeMake(0, 0)];
-//    [cell.layer setShadowColor:fillColor.CGColor];
-//    [cell.layer setShadowRadius:2.0f];
-//    [cell.layer setShadowOpacity:1.0];
-    
-    
-    
-    
-    //[self.delegate1 setImagesInEC:self didFinishWithItem1:self.image1 didFinishWithItem2:self.image2 didFinishWithItem3:self.image3 didFinishWithItem4:self.image4 didFinishWithItem5:self.image5];
-    
-    [self.navigationController pushViewController: entryVC animated:YES];
-
-   
     }
-
-
-
-
-/*
-- (void)collectionView:(UICollectionView *)colView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell* cell = [colView cellForItemAtIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
-}
-
-*/
+    
+    
+    
+    }
 
 -(void)openSubView:(id)sender
     {
@@ -863,28 +699,15 @@ Technique *technique = [self.techniques objectAtIndex:index];
 #pragma mark -passItemBack Method
 
 -(void) passItemBack:(MySubView *)controller didFinishWithItem:(NSString*)item{
-
    tempstring=item;
-
-    NSLog(@"Name for technique PASSITEMBACK = %@",item);
-
-    
 }
 
 #pragma mark -Save and Reload methods
 - (void) saveData:(NSString *)namefortech{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    
     ////////------SAVE DATA TO THE DATABASE-------------------------///////
-    
-   
-    NSLog(@"Name for technique PASSITEMBACK-APPDELEGATE = %@",namefortech);
-
     self.convertedLabel = namefortech;
-    
-    NSLog(@"Name for technique in SAVE DATA METHOD = %@",self.convertedLabel);
-    
+  
     NSMutableString *bfcol =@"Entry";
     foothumb =self.convertedLabel;
     foothumb = [self.convertedLabel mutableCopy];
@@ -892,8 +715,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     foothumb= [foothumb mutableCopy];
     [foothumb appendString:@".png"];
     NSLog(@"Результат in vc: %@.",foothumb);
-    
-    
     
     /////-----------Name for  thumbimage1 ---------------//////////
     
@@ -997,161 +818,12 @@ Technique *technique = [self.techniques objectAtIndex:index];
     [foobig5 appendString:@".png"];
     NSLog(@"Результат: %@.",foobig5);
     
-    
-   /*
-    char *error;
-    if (sqlite3_open([dbPathString UTF8String], &techniqueDB)==SQLITE_OK) {
-        NSString *inserStmt = [NSString stringWithFormat:@"INSERT INTO TECHNIQUES(TECHNIQUENAME,DATE,TECHNIQUEIMAGE,TECHNIQUENAMETHUMB1,TECHNIQUENAMETHUMB2,TECHNIQUENAMETHUMB3,TECHNIQUENAMETHUMB4,TECHNIQUENAMETHUMB5,TECHNIQUENAMEBIG1,TECHNIQUENAMEBIG2,TECHNIQUENAMEBIG3,TECHNIQUENAMEBIG4,TECHNIQUENAMEBIG5) values ('%s', '%s','%s', '%s','%s', '%s','%s', '%s','%s', '%s','%s', '%s','%s' )",[self.label.text UTF8String], [self.label.text UTF8String],[foothumb UTF8String],[foothumb1 UTF8String],[foothumb2 UTF8String],[foothumb3 UTF8String],[foothumb4 UTF8String],[foothumb5 UTF8String],[foobig1 UTF8String],[foobig2 UTF8String],[foobig3 UTF8String],[foobig4 UTF8String],[foobig5 UTF8String]];
-        
-        const char *insert_stmt = [inserStmt UTF8String];
-        
-        if (sqlite3_exec(techniqueDB, insert_stmt, NULL, NULL, &error)==SQLITE_OK) {
-            NSLog(@"Technique added");
-            
-            Technique *technique = [[Technique alloc]init];
-            
-            [technique setTechniquename:namefortech];
-            [technique setDate:namefortech];
-            [technique setTechniqueimage:foothumb];
-            [technique setTechniqueimagethumb1:foothumb1];
-            [technique setTechniqueimagethumb2:foothumb2];
-            [technique setTechniqueimagethumb3:foothumb3];
-            [technique setTechniqueimagethumb4:foothumb4];
-            [technique setTechniqueimagethumb5:foothumb5];
-            [technique setTechniqueimagebig1:foobig1];
-            [technique setTechniqueimagebig2:foobig2];
-            [technique setTechniqueimagebig3:foobig3];
-            [technique setTechniqueimagebig4:foobig4];
-            [technique setTechniqueimagebig5:foobig5];
-            
-            [arrayOfTechnique addObject:technique];
-           lastAddedItem = [arrayOfTechnique count];
-            
-
-            
-        }
-        sqlite3_close(techniqueDB);
-        
-    }
-    /////////------END OF SAVING METHOD ---------------------------////////
-    [[self collectionView ] reloadData];
-*/
-    
 }
 
 - (void)reloadMyCollection
 {
-
 [[self collectionView ] reloadData];
-
-
 }
-
-
-
-
-/*
-- (void)activateDeleteMode:(id)sender
-{
-
-    if (tap==YES){
-   NSLog(@"Да крантно");
-        
-        [self.collectionView removeGestureRecognizer:tapRecognizer];
-         
- 
-        UIColor *mycolor2 = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f];
-    
-       [self.editButtonOutlet setTintColor:mycolor2];
-       // self.label.text = @"MY LIBRARY";
-        [self.addTechnique setEnabled:YES];
-        NSLog(@"The barbutton was tapped TAP ==NO" );
-        
-        for (Cell *cell in [self.collectionView visibleCells]) {
-            [cell setEditing:NO animated:NO];
-        }
-        
-        tap=NO;
-         }
-   
-   else
-    {
-        
-        for (Cell *cell in [self.collectionView visibleCells]) {
-            [cell setEditing:YES animated:YES];
-        }
-
-        
-        NSLog(@"Кратности нет");
-        UIColor *mycolor = [UIColor colorWithRed:163.0f/255.0f green:187.0f/255.0f blue:211.0f/255.0f alpha:1.0f];
-  
-        [self.editButtonOutlet setTintColor:mycolor];
-        //self.label.text = @"TAP TECHNIQUE TO DELETE";
-        NSLog(@"The barbutton was tapped TAP == YES" );
-        [self.addTechnique setEnabled:NO];
-        //[self reloadMyCollection];
-        tap=YES;
-
-        
-        [self.collectionView addGestureRecognizer:tapRecognizer];
-    }
-   // [self showConfirmationPopOver];
-
- 
-    
-
-    
-}*/
-/*
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    
-    
-    
-}
-*/
-
-
-#pragma mark -Delete Cells From CollectionView
-/*
-- (void)handleTapGesture:(UITapGestureRecognizer *)sender
-{
-    
-  
-   if (tap==YES)
- {
-       
-       if (sender.state == UIGestureRecognizerStateEnded){
-
-    //if (CGRectIntersectsRect(cell.frame, rect)) {
-
-    CGPoint initialPinchPoint = [sender locationInView:self.collectionView];
- 
-           self.tappedCellPath = [self.collectionView indexPathForItemAtPoint:initialPinchPoint];
-            if (self.tappedCellPath!=nil)
-        {
-        //////----------------------------------------
-            Cell *cell = [self.collectionView cellForItemAtIndexPath:self.tappedCellPath];
-             [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
-            [self colorCellFrame:cell];
-            [self showConfirmationPopOver];
-            tap=YES;
-    }
-    }
-       
-
-}
-//}
- 
-}
-*/
-/*
-- (BOOL) isDeletionModeActiveForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout
-{
-    NSLog(@"RETURN DELETE MODE");
-    return isDeletionModeActive;
-
-}
-*/
 
 -(void)colorCellFrame:(UICollectionViewCell*)cell
 {
@@ -1168,53 +840,18 @@ Technique *technique = [self.techniques objectAtIndex:index];
     [cell.layer setShadowColor:fillColor.CGColor];
     [cell.layer setShadowRadius:5.0f];
     [cell.layer setShadowOpacity:1.0];
-    /*
-    UIColor *fillColor = [UIColor colorWithRed:250.0/255.0 green:195.0/255.0 blue:50.0/255.0 alpha:0.9];
-
-    cell.contentView.BackgroundColor =  fillColor;
-    [cell.layer setBorderColor:[UIColor colorWithRed:250.0/255.0 green:195.0/255.0 blue:50.0/255.0 alpha:0.9].CGColor];
-    [cell.contentView.layer setCornerRadius:5.0f];
-     */
 }
 
 -(void)colorBackCellFrame{
-   /*
+   
     Cell *cell = [self.collectionView cellForItemAtIndexPath:self.tappedCellPath];
-
-    UIColor *fillColor = [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:0.8];
-
-    //cell.contentView.BackgroundColor =  fillColor;
-    [cell.layer setBorderColor:[UIColor colorWithRed:220.0f/255.0f green:220.0f/255.0f blue:220.0f/255.0f alpha:0.7f].CGColor];
-    //[cell.layer setBorderColor:[UIColor colorWithRed:220.0/255.0 green:70.0/255.0 blue:70.0/255.0 alpha:0.8].CGColor];
-   // [cell.contentView.layer setCornerRadius:5.0f];
-    
-    
-    [cell.layer setBorderWidth:3.0f];
-    [cell.layer setBackgroundColor:[[UIColor whiteColor]CGColor]];
-    [cell.layer setCornerRadius:5.0f];
-    [cell.layer setOpacity:1.0f];
-    
-    [cell.layer setShadowOffset:CGSizeMake(0, 2)];
-    //[self.layer setShadowColor:[[UIColor darkGrayColor] CGColor]];
-    [cell.layer setShadowColor:[[UIColor blackColor] CGColor]];
-    
-    [cell.layer setShadowRadius:8.0f];
-    [cell.layer setShadowOpacity:0.9];
-    
-    */
-    
-    Cell *cell = [self.collectionView cellForItemAtIndexPath:self.tappedCellPath];
-    
     UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
     cell.contentView.backgroundColor =  fillColor;
-    
     [cell.layer setBorderColor:fillColor.CGColor];
     [cell.contentView.layer setCornerRadius:15.0f];
-    
     [cell.layer setBorderWidth:1.0f];
     [cell.layer setBackgroundColor:fillColor.CGColor];
     [cell.layer setCornerRadius:15.0f];
-    
     [cell.layer setShadowOffset:CGSizeMake(0, 0)];
     [cell.layer setShadowColor:fillColor.CGColor];
     [cell.layer setShadowRadius:0.0f];
@@ -1465,24 +1102,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
     NSLog(@"Directory Contents:\n%@", [fileManager directoryContentsAtPath: appFolderPath]);
 }
 
-/*
--(void)deleteData:(NSString *)deleteQuery
-{
-    char *error;
-    
-    if (sqlite3_exec(techniqueDB, [deleteQuery UTF8String], NULL, NULL, &error)==SQLITE_OK) {
-        NSLog(@"Person deleted");
-    }
-    [Flurry logEvent:@"Technique_deleted"];
-}
-
-*/
-
-
 - (IBAction)showSideMenu:(id)sender{
-    
-    //[Flurry logEvent:@"Side_Menu_Opened"];
- // self.menuViewController = [[REFrostedViewController alloc] init];
 [self.menuViewController presentFromViewController:self animated:YES completion:nil];
 
 }
@@ -1490,17 +1110,10 @@ Technique *technique = [self.techniques objectAtIndex:index];
 
 - (void) receiveTestNotification:(NSNotification *)notification
 {
-    // [notification name] should always be @"TestNotification"
-    // unless you use this method for observation of other notifications
-    // as well.
-    
     if ([[notification name] isEqualToString:@"showPop"])
     {
-        
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
-        
-        
         __block NSUInteger index = NSUIntegerMax;
         
         [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
@@ -1700,10 +1313,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     [db insertCustomer:technique];
     [self populateCustomers];
     [self.collectionView reloadData];
-    
- 
-    
-    
 }
 
 
@@ -1716,8 +1325,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     
     return YES;
 }
-
-
 
 -(void)changeFileName:(NSString *)filename to:(NSString*)newFileName
 {
@@ -1764,7 +1371,5 @@ Technique *technique = [self.techniques objectAtIndex:index];
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
     return fileExist;
 }
-
-
 
 @end

@@ -513,7 +513,10 @@ return YES;
                                                        //add code to make something happen once tapped
                                                    }];
     [button setValue:[[UIImage imageNamed:@"image.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
-
+    [button2 setValue:[[UIImage systemImageNamed:@"trash"]
+                       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    
     [alertVC addAction:button];
     [alertVC addAction:button2];
     [alertVC addAction:button3];
@@ -1319,6 +1322,55 @@ return YES;
     [self updateButtonStatus];
 }
 
+
+-(void)screentShot{
+    UIGraphicsBeginImageContextWithOptions(self.viewForImg.bounds.size, NO, [UIScreen mainScreen].scale);
+
+      // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
+
+     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
+
+       UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+       UIGraphicsEndImageContext();
+    
+    filenamethumb2 = self.labelDrawController.text;
+    filenamethumb2 = [filenamethumb2 mutableCopy];
+    [filenamethumb2 appendString: @"thumb2"];
+    filenamethumb2 = [filenamethumb2 mutableCopy];
+    [filenamethumb2 appendString: @".png"];
+    NSLog(@"РезультатDrawViewCtrl thumb 2 : %@.",filenamethumb2);
+    
+   NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:filenamethumb2];
+    NSData * thumbdata = UIImagePNGRepresentation(newImage);
+    [thumbdata writeToFile:thumbpath atomically:YES];
+
+    
+    
+    
+    ///------------Save big-size Image------------------------------------///////
+    
+    
+    filenamebig2 = self.labelDrawController.text;
+    filenamebig2 = [filenamebig2 mutableCopy];
+    [filenamebig2 appendString: @"big2"];
+    filenamebig2 = [filenamebig2 mutableCopy];
+    [filenamebig2 appendString: @".png"];
+    
+
+    NSLog(@"Результат збереження великоиі картинки: %@.",filenamebig2);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* path = [documentsDirectory stringByAppendingPathComponent:filenamebig2];
+    NSData *data = UIImagePNGRepresentation(self.NewImageView.image);
+    [data writeToFile:path atomically:YES];
+    
+    
+}
+
+
 - (void)saveImage{
     
 
@@ -1456,8 +1508,15 @@ return YES;
     if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale < 2.0))
     {*/
-        [self saveImageRetina];
-        // non-Retina display
+    
+    
+    
+    [self screentShot];
+       // [self saveImageRetina];
+    
+
+
+    // non-Retina display
        // [self saveImage];
         
    // }

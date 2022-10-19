@@ -133,6 +133,8 @@ int dashLineCount;
 
     
 }
+@property (nonatomic, assign) NSString * appVersion;
+
 @property CGFloat fontSizeVC;
 
 @property (nonatomic, assign) int numberOfColumns;

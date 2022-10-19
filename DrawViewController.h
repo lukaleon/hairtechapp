@@ -15,7 +15,7 @@
 @class EntryViewController;
 @protocol DrawViewControllerDelegate<NSObject>
 
--(void) passItemBack:(DrawViewController *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5;
+-(void) passItemBack:(DrawViewController *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5 version:(NSString*)version;
 
 -(void)selectedBtn:(NSString*)color;
 
@@ -163,6 +163,8 @@
     BOOL textSetterState;
 
 }
+@property (nonatomic, assign) NSString * appVersion;
+
 @property CGFloat fontSizeVC;
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;

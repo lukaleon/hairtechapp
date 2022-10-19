@@ -100,12 +100,9 @@
     
 }
 
-
 -(void)loadMainImage
 {
     
-
-
     NSMutableString *filenamethumb = @"%@/";
     NSMutableString *prefix = self.stringForLabel;
     filenamethumb = [filenamethumb mutableCopy];
@@ -125,6 +122,7 @@
     NSData *data1 = [NSData dataWithContentsOfFile:filePath];
     UIImage *tempimage = [UIImage imageWithData:data1];
     self.NewImageView.image = tempimage;
+    
   //self.NewImageView.alpha = 1;
    // [self.drawingView getScreenShot:tempimage];
     tempimage = nil;
@@ -134,9 +132,6 @@
 
 
 -(void)saveColorsToDefaults{
-    
-    
-
     const CGFloat  *components2 = CGColorGetComponents(self.blueExtract.CGColor);
     const CGFloat  *components3 = CGColorGetComponents(self.redExtract.CGColor);
     const CGFloat  *components4 = CGColorGetComponents(self.lineExtract.CGColor);
@@ -144,7 +139,6 @@
     const CGFloat  *components6 = CGColorGetComponents(self.penExtract.CGColor);
 
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    
     
     [prefs setFloat:components2[0]  forKey:@"cr2"];
     [prefs setFloat:components2[1]  forKey:@"cg2"];
@@ -172,9 +166,6 @@
     [prefs setFloat:components6[3]  forKey:@"ca6"];
     
     [prefs synchronize];
-    NSLog(@"I just saved colors");
-    
-    
 }
 
 -(void)LoadColorsAtStart
@@ -288,11 +279,31 @@ return YES;
     self.btn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
 }
 
+
+- (void)addLineSeparator:(CGFloat)x1 y1:(CGFloat)y1 x2:(CGFloat)x2 y2:(CGFloat)y2 {
+    CAShapeLayer *line = [CAShapeLayer layer];
+    UIBezierPath *linePath=[UIBezierPath bezierPath];
+    [linePath moveToPoint:CGPointMake(x1, y1)];
+    [linePath addLineToPoint:CGPointMake(x2 ,y2)];
+    line.path=linePath.CGPath;
+    line.fillColor =nil;
+    line.opacity = 0.5;
+    line.lineWidth = 1;
+    line.strokeColor = [UIColor grayColor].CGColor;
+    [self.imageToolbar1.layer addSublayer:line];
+   
+}
 - (void)setupBottomToolBar {
-    self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
+    //self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
+  
+    
+    self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x , self.view.frame.origin.y + self.view.frame.size.height - 110, self.view.frame.size.width, 110);
+   
+  
     self.imageToolbar1.alpha = 1.0f;
-    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
-    [self.imageToolbar1.layer setCornerRadius:15.0f];
+   [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+ //   self.imageToolbar1.backgroundColor = [UIColor colorNamed:@"bar"];
+   // [self.imageToolbar1.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageToolbar1.layer.shadowOffset = CGSizeMake(0,0);
@@ -300,37 +311,25 @@ return YES;
     self.imageToolbar1.layer.shadowOpacity = 0.2f;
     self.imageToolbar1.layer.masksToBounds = NO;
     self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
+    
+    //[self addLineSeparator:self.imageToolbar1.frame.origin.x y1:self.imageToolbar1.frame.origin.y + 100 x2:self.imageToolbar1.frame.size.width y2:self.imageToolbar1.frame.origin.y + 100];
+    [self addLineSeparator:0 y1:80 x2:self.imageToolbar1.frame.size.width y2:80];
 }
 
 
--(void)viewDidLoad{
-    
-    
-    
-    textSelected = NO; // UITextView from drawing view is not selected
-    [self LoadColorsAtStart];
-    [self setupButtons];
-    [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-    self.drawingView.viewControllerName = @"left";
-    [self setupBottomToolBar];
-    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
-    self.navigationController.interactivePopGestureRecognizer.enabled=NO;
+- (void)addImagesForScreensPreviousVersions {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
+    if(((![appDelegate.globalDate isEqualToString:@"new_version"])&&(![self.appVersion isEqualToString:@"version22"]))||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
     {
         [self.NewImageView setImage:[UIImage imageNamed:@"View_lefthead_created.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"View_lefthead_created_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"View_lefthead_created_tr.png"]];
     }
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    
     if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"new_version"]))
     {
-        
-        //[self.NewImageView setImage:[UIImage imageNamed:@"iphone7plus.png"]];
         [self.NewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
@@ -352,10 +351,7 @@ return YES;
         [self.middleImg setImage:[UIImage imageNamed:@"x_left_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"x_left_tr.png"]];
     }
-    
     /*----------------------MEN HEADS------------------------------*/
-    
-    
     if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"men_heads"]))
     {
         
@@ -382,37 +378,95 @@ return YES;
         [self.previewImageView setImage:[UIImage imageNamed:@"men-left-11-tr.png"]];
     }
     
+    if ([self.appVersion isEqualToString:@"version22"]){
+     
+        
+        CGFloat screenWidth =[UIScreen mainScreen].bounds.size.width;
+        
+        CGRect drawingRect = CGRectMake(0,0,500,500 * 1.3);
+        
+        self.viewForImg.bounds = drawingRect;
+        self.viewForImg.center = self.view.center;
+        self.viewForImg.contentMode = UIViewContentModeScaleAspectFit;
+        
+//        self.drawingView.bounds = drawingRect;
+//        self.drawingView.center = self.view.center;
+//        self.previewImageView.bounds = self.drawingView.bounds;
+//        self.previewImageView.center = self.view.center;
+        self.NewImageView.hidden = YES;
+        self.middleImg.hidden = YES;
+        //self.drawingView.backgroundColor = [UIColor colorNamed:@"bar"];
+        self.previewImageView.image = [UIImage imageNamed:@"lefthead"];
+        self.previewImageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.viewForImg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+//        if (IDIOM != IPAD){
+//            [self zoomInViewAtLoad];
+//        }
+    }
+}
+
+
+-(void)zoomInViewAtLoad{
+    scrollView.zoomScale = 1.255;
+    CGSize boundsSize = scrollView.bounds.size;
+//    boundsSize.width = boundsSize.width - 200;
+//    boundsSize.height = boundsSize.height - 200;
+    CGRect imageViewFrame = self.viewForImg.frame;
     
-    [self adGridToImgView];
+    // centre horizontally
+    if (imageViewFrame.size.width < boundsSize.width) {
+        imageViewFrame.origin.x = (boundsSize.width - imageViewFrame.size.width) / 2;
+    } else {
+        imageViewFrame.origin.x = 0;
+    }
     
+    // centre vertically
+//    if (imageViewFrame.size.height < boundsSize.height && self.viewForImg) {
+//        imageViewFrame.origin.y = (boundsSize.height - imageViewFrame.size.height) / 2;
+//    } else {
+        imageViewFrame.origin.y = ([UIApplication sharedApplication].statusBarFrame.size.height +
+                                   (self.navigationController.navigationBar.frame.size.height ?: 0.0));
+//    }
+    self.viewForImg.frame = imageViewFrame;
+    
+}
+
+//- (NSString *) appVersion
+//{
+//    return [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+//}
+
+-(void)viewDidLoad{
+    
+    NSLog(@"App version is %@", self.appVersion);
+    
+    textSelected = NO; // UITextView from drawing view is not selected
+    [self LoadColorsAtStart];
+    [self setupButtons];
+    [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
+    self.drawingView.viewControllerName = @"left";
+    [self setupBottomToolBar];
+    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+    self.navigationController.interactivePopGestureRecognizer.enabled=NO;
+//    [self addImagesForScreensPreviousVersions];
+
+
     self.navigationItem.title=self.stringFromVC;
-    
-    //  [self.navigationController.navigationBar
-    //    setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
-    
-    
-    
-    
     [self.toolbar setClipsToBounds:YES];
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    
     self.view.backgroundColor = mycolor2;
-    
     self.drawingView.delegate = self;
-    
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
-    
     lineButton.selected = YES;
-    
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText=0;
     
     [self.btn setEnabled:NO];
     [self.btn setHidden:YES];
-    
-    
+
     self.drawingView.type = JVDrawingTypeLine;
     self.drawingView.bufferType = JVDrawingTypeLine;
     self.drawingView.previousType = lineButton;
@@ -503,6 +557,12 @@ return YES;
     
     
     [self setupNavigationBarItems];
+    
+    
+    [self addImagesForScreensPreviousVersions];
+    [self adGridToImgView];
+
+
 }
 - (void)setupNavigationBarItems {
     UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -555,8 +615,9 @@ return YES;
                                                    handler:^(UIAlertAction *action){
                                                        //add code to make something happen once tapped
                                                    }];
-//    [button setValue:[[UIImage systemImageNamed:@"trash"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
-
+    [button2 setValue:[[UIImage systemImageNamed:@"trash"]
+                       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
     [alertVC addAction:button];
     [alertVC addAction:button2];
     [alertVC addAction:button3];
@@ -584,7 +645,7 @@ return YES;
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     [self.drawingView updateZoomFactor:scrollView.zoomScale];
-
+    NSLog(@"Zoom factor = %f", scrollView.zoomScale);
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.viewForImg.frame ;
     
@@ -1411,11 +1472,56 @@ return YES;
 
 
 
+-(void)screentShot{
+    UIGraphicsBeginImageContextWithOptions(self.viewForImg.bounds.size, NO, [UIScreen mainScreen].scale);
+
+      // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
+
+     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
+
+       UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+       UIGraphicsEndImageContext();
+    
+    filenamethumb1 = self.labelDrawController.text;
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: @"thumb1"];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: @".png"];
+    NSLog(@"РезультатDrawViewCtrl thumb 1 : %@.",filenamethumb1);
+    
+   NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:filenamethumb1];
+    thumbdata = UIImagePNGRepresentation(newImage);
+    [thumbdata writeToFile:thumbpath atomically:YES];
+
+    
+    
+    
+    ///------------Save big-size Image------------------------------------///////
+    
+    
+    filenamebig1 = self.labelDrawController.text;
+    filenamebig1 = [filenamebig1 mutableCopy];
+    [filenamebig1 appendString: @"big1"];
+    filenamebig1 = [filenamebig1 mutableCopy];
+    [filenamebig1 appendString: @".png"];
+    
+
+    NSLog(@"Результат збереження великоиі картинки: %@.",filenamebig1);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString* path = [documentsDirectory stringByAppendingPathComponent:filenamebig1];
+    data = UIImagePNGRepresentation(self.NewImageView.image);
+    [data writeToFile:path atomically:YES];
+    
+    
+}
+
+
 
 - (void)saveImageRetina{
-   
-     
-    
     NSLog(@"DEALLOC 1");
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.checkHead1=1;
@@ -1496,7 +1602,9 @@ return YES;
     if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale < 2.0))
     {*/
-        [self saveImageRetina];
+      //  [self saveImageRetina];
+    
+    [self screentShot];
             // non-Retina display
       // [self saveImage];
 
@@ -1584,7 +1692,7 @@ return YES;
     self.imagethumb5 = tempimage5;
 
     [self.drawcontrollerdelegate passItemBack:self didFinishWithItem1:self.imagethumb1
-                           didFinishWithItem2:self.imagethumb2 didFinishWithItem3:self.imagethumb3 didFinishWithItem4:self.imagethumb4 didFinishWithItem5:self.imagethumb5];
+                           didFinishWithItem2:self.imagethumb2 didFinishWithItem3:self.imagethumb3 didFinishWithItem4:self.imagethumb4 didFinishWithItem5:self.imagethumb5 version:self.appVersion];
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.currentView = @"none";
@@ -1943,8 +2051,8 @@ self.previewImageView.layer.sublayers = nil;
 -(void)adGridToImgView{
     
     NSLog(@"ADD GRID TO VIEW");
-    self.numberOfRows = self.view.frame.size.height/12;
-    self.numberOfColumns=self.view.frame.size.width/12;
+    self.numberOfRows = self.viewForImg.frame.size.height/12;
+    self.numberOfColumns = self.viewForImg.frame.size.width/12;
     
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -1959,7 +2067,7 @@ self.previewImageView.layer.sublayers = nil;
     // ---------------------------
     
     // calculate column width
-    CGFloat columnWidth = self.view.frame.size.width / (self.numberOfColumns + 1.0);
+    CGFloat columnWidth = self.viewForImg.frame.size.width / (self.numberOfColumns + 1.0);
     
     for(int i = 1; i <= self.numberOfColumns; i++)
     {
@@ -1968,37 +2076,25 @@ self.previewImageView.layer.sublayers = nil;
         
         startPoint.x = columnWidth * i;
         startPoint.y = 0.0f;
-        
         endPoint.x = startPoint.x;
-        endPoint.y = self.view.frame.size.height;
-        
-        //CGFloat dashes[] = {1.5,12};
-        
-        
+        endPoint.y = self.viewForImg.frame.size.height;
         UIBezierPath *path2 = [UIBezierPath bezierPath];
         
         [path2 moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
         [path2 addLineToPoint:CGPointMake(endPoint.x, endPoint.y)];
-        
         CAShapeLayer *shapeLayer2 = [CAShapeLayer layer];
         shapeLayer2.path = [path2 CGPath];
-        
-            shapeLayer2.strokeColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.2].CGColor;
-        
+        shapeLayer2.strokeColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.2].CGColor;
         shapeLayer2.lineWidth = 0.25;
         shapeLayer2.fillColor = [[UIColor clearColor] CGColor];
-        
-        [self.previewImageView.layer addSublayer:shapeLayer2];
+        [self.viewForImg.layer addSublayer:shapeLayer2];
 
     }
-    
     // ---------------------------
     // Drawing row lines
     // ---------------------------
-    
-    
     // calclulate row height
-    CGFloat rowHeight = self.view.frame.size.height / (self.numberOfRows + 1.0);
+    CGFloat rowHeight = self.viewForImg.frame.size.height / (self.numberOfRows + 1.0);
     
     for(int j = 1; j <= self.numberOfRows; j++)
     {
@@ -2007,31 +2103,20 @@ self.previewImageView.layer.sublayers = nil;
         
         startPoint.x = 0.0f;
         startPoint.y = rowHeight * j;
-        
-        endPoint.x = self.view.frame.size.width;
+        endPoint.x = self.viewForImg.frame.size.width;
         endPoint.y = startPoint.y;
-    
-    
+
     UIBezierPath *path1 = [UIBezierPath bezierPath];
-    
     [path1 moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
     [path1 addLineToPoint:CGPointMake(endPoint.x, endPoint.y)];
-    
-        CAShapeLayer *shapeLayer1 = [CAShapeLayer layer];
+    CAShapeLayer *shapeLayer1 = [CAShapeLayer layer];
     shapeLayer1.path = [path1 CGPath];
-        
     shapeLayer1.strokeColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.2].CGColor;
-            
-      
     shapeLayer1.lineWidth = 0.25;
-
     shapeLayer1.fillColor = [[UIColor clearColor] CGColor];
-    
-    [self.previewImageView.layer addSublayer:shapeLayer1];
+    [self.viewForImg.layer addSublayer:shapeLayer1];
     }
-    /*----------------------MEN HEADS END------------------------------*/
-
-    
+  
 }
 -(void)makeButtonSelected {
     for(int i=0; i< buttons.count; i++) {
@@ -2048,8 +2133,10 @@ self.previewImageView.layer.sublayers = nil;
     contentTextView = nil;
 }
 -(void)showTextColorsAndSize:(UIColor*)color{
-    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color];
-    contentTextView.center = self.imageToolbar1.center;
+    CGRect rect = CGRectMake(self.imageToolbar1.bounds.origin.x, self.imageToolbar1.bounds.origin.y, self.imageToolbar1.bounds.size.width, 60);
+    contentTextView = [[ColorViewController alloc] initWithFrame:rect isSelected:YES color:color];
+    CGPoint cntr = CGPointMake(self.imageToolbar1.center.x, self.imageToolbar1.center.y - 15);
+    contentTextView.center = cntr;
     //contentTextView.currentPenColor = color;
     textSetterState = YES;
     contentTextView.delegate = self;

@@ -79,13 +79,14 @@
     
     //Data base methods
    self.databaseName = @"Technique.db";
-    
     NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDir = [documentPaths objectAtIndex:0];
+    NSLog(@"docs",documentPaths);
+
     
     self.databasePath = [documentDir stringByAppendingPathComponent:self.databaseName];
     
-    [self createAndCheckDatabase];
+   [self createAndCheckDatabase];
     
    
     
@@ -164,7 +165,7 @@
 -(void) createAndCheckDatabase
 
 {
-    
+    NSLog(@"createAndcheckDataBase");
     BOOL success;
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -176,7 +177,11 @@
     NSError *err = nil;
     success = [fileManager copyItemAtPath:databasePathFromApp toPath:databasePath error:&err];
     
+    
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
 }
+
+
 
 /*
 -(void) createAndCheckDatabase

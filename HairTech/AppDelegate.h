@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 #import "MyCustomLayout.h"
+#import "FMDBDataAccess.h"
+#import "FMDatabaseAdditions.h"
+
 @class MyViewController;
 
 @protocol MyViewControllerDelegate <NSObject>

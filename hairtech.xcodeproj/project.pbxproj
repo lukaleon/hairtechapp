@@ -19,10 +19,6 @@
 		4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4043E2DC28E57D9F00BF9FF8 /* LayersData.m */; };
 		4043E2DF28E587F100BF9FF8 /* layersdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2DE28E587F100BF9FF8 /* layersdata.json */; };
 		407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */; };
-		4071B5DE28DA088A00CCC9C3 /* lineNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5DA28DA088A00CCC9C3 /* lineNew.png */; };
-		4071B5DF28DA088A00CCC9C3 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5DB28DA088A00CCC9C3 /* pencil.png */; };
-		4071B5E028DA088A00CCC9C3 /* lineNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5DC28DA088A00CCC9C3 /* lineNew_white.png */; };
-		4071B5E128DA088A00CCC9C3 /* pencil_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5DD28DA088A00CCC9C3 /* pencil_white.png */; };
 		4071B5E428DA0BAE00CCC9C3 /* dashNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5E228DA0BAE00CCC9C3 /* dashNew.png */; };
 		4071B5E528DA0BAE00CCC9C3 /* dashNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5E328DA0BAE00CCC9C3 /* dashNew_white.png */; };
 		4071B5EA28DA0FB400CCC9C3 /* curveNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5E628DA0FB400CCC9C3 /* curveNew.png */; };
@@ -38,6 +34,14 @@
 		407FB90228F17FA000371E24 /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90028F17FA000371E24 /* undoNew.png */; };
 		407FB90328F17FA000371E24 /* redoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90128F17FA000371E24 /* redoNew.png */; };
 		407FB90728F185ED00371E24 /* dots.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90628F185ED00371E24 /* dots.png */; };
+		407FB90928F1A00B00371E24 /* hairtech_logo.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90828F1A00B00371E24 /* hairtech_logo.PNG */; };
+		407FB91128F1A9D100371E24 /* trash.svg in Resources */ = {isa = PBXBuildFile; fileRef = 407FB91028F1A9D100371E24 /* trash.svg */; };
+		407FB91528F8944A00371E24 /* lineNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB91328F8944A00371E24 /* lineNew.png */; };
+		407FB91728F894A900371E24 /* lineNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB91628F894A900371E24 /* lineNew_white.png */; };
+		407FB91A28F8955500371E24 /* pencil_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB91828F8955500371E24 /* pencil_white.png */; };
+		407FB91B28F8955500371E24 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB91928F8955500371E24 /* pencil.png */; };
+		407FB92128FE99C300371E24 /* NewEntryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407FB92028FE99C300371E24 /* NewEntryController.m */; };
+		407FB92428FEABCA00371E24 /* NewDrawController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407FB92328FEABCA00371E24 /* NewDrawController.m */; };
 		40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB525328B8FF62001B97B6 /* CircleLayer.m */; };
 		40BC7FA428E58EAE00F7364A /* book.json in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FA328E58EAE00F7364A /* book.json */; };
 		40BC7FA828E7112A00F7364A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40BC7FA728E7112A00F7364A /* ViewController.m */; };
@@ -406,10 +410,6 @@
 		4043E2E328E5887B00BF9FF8 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lastPoint.png; sourceTree = "<group>"; };
 		407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVDrawingLayer.m; sourceTree = "<group>"; };
 		407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVDrawingLayer.h; sourceTree = "<group>"; };
-		4071B5DA28DA088A00CCC9C3 /* lineNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineNew.png; sourceTree = "<group>"; };
-		4071B5DB28DA088A00CCC9C3 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = "../../../../../Downloads/New Butons/pencil.png"; sourceTree = "<group>"; };
-		4071B5DC28DA088A00CCC9C3 /* lineNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineNew_white.png; sourceTree = "<group>"; };
-		4071B5DD28DA088A00CCC9C3 /* pencil_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil_white.png; sourceTree = "<group>"; };
 		4071B5E228DA0BAE00CCC9C3 /* dashNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dashNew.png; sourceTree = "<group>"; };
 		4071B5E328DA0BAE00CCC9C3 /* dashNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dashNew_white.png; sourceTree = "<group>"; };
 		4071B5E628DA0FB400CCC9C3 /* curveNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = curveNew.png; sourceTree = "<group>"; };
@@ -427,6 +427,16 @@
 		407FB90028F17FA000371E24 /* undoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undoNew.png; sourceTree = "<group>"; };
 		407FB90128F17FA000371E24 /* redoNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redoNew.png; sourceTree = "<group>"; };
 		407FB90628F185ED00371E24 /* dots.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dots.png; sourceTree = "<group>"; };
+		407FB90828F1A00B00371E24 /* hairtech_logo.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hairtech_logo.PNG; sourceTree = "<group>"; };
+		407FB91028F1A9D100371E24 /* trash.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trash.svg; sourceTree = "<group>"; };
+		407FB91328F8944A00371E24 /* lineNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineNew.png; sourceTree = "<group>"; };
+		407FB91628F894A900371E24 /* lineNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineNew_white.png; sourceTree = "<group>"; };
+		407FB91828F8955500371E24 /* pencil_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil_white.png; sourceTree = "<group>"; };
+		407FB91928F8955500371E24 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = ../../../../../Downloads/pencil.png; sourceTree = "<group>"; };
+		407FB91F28FE99C300371E24 /* NewEntryController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewEntryController.h; sourceTree = "<group>"; };
+		407FB92028FE99C300371E24 /* NewEntryController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewEntryController.m; sourceTree = "<group>"; };
+		407FB92228FEABCA00371E24 /* NewDrawController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewDrawController.h; sourceTree = "<group>"; };
+		407FB92328FEABCA00371E24 /* NewDrawController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewDrawController.m; sourceTree = "<group>"; };
 		40AB525228B8FF62001B97B6 /* CircleLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleLayer.h; sourceTree = "<group>"; };
 		40AB525328B8FF62001B97B6 /* CircleLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleLayer.m; sourceTree = "<group>"; };
 		40BC7FA328E58EAE00F7364A /* book.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = book.json; sourceTree = "<group>"; };
@@ -979,6 +989,8 @@
 		4071B5C728D9F15F00CCC9C3 /* New Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				407FB91028F1A9D100371E24 /* trash.svg */,
+				407FB90828F1A00B00371E24 /* hairtech_logo.PNG */,
 				407FB90628F185ED00371E24 /* dots.png */,
 				407FB90128F17FA000371E24 /* redoNew.png */,
 				407FB90028F17FA000371E24 /* undoNew.png */,
@@ -1001,12 +1013,12 @@
 				4071B5E728DA0FB400CCC9C3 /* curveDashNew.png */,
 				4071B5E828DA0FB400CCC9C3 /* curveNew_white.png */,
 				4071B5E628DA0FB400CCC9C3 /* curveNew.png */,
+				407FB91628F894A900371E24 /* lineNew_white.png */,
+				407FB91328F8944A00371E24 /* lineNew.png */,
 				4071B5E328DA0BAE00CCC9C3 /* dashNew_white.png */,
 				4071B5E228DA0BAE00CCC9C3 /* dashNew.png */,
-				4071B5DC28DA088A00CCC9C3 /* lineNew_white.png */,
-				4071B5DA28DA088A00CCC9C3 /* lineNew.png */,
-				4071B5DD28DA088A00CCC9C3 /* pencil_white.png */,
-				4071B5DB28DA088A00CCC9C3 /* pencil.png */,
+				407FB91928F8955500371E24 /* pencil.png */,
+				407FB91828F8955500371E24 /* pencil_white.png */,
 			);
 			path = "New Buttons";
 			sourceTree = "<group>";
@@ -1020,6 +1032,17 @@
 				407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */,
 			);
 			path = Slider;
+			sourceTree = "<group>";
+		};
+		407FB91E28FE998900371E24 /* New Version */ = {
+			isa = PBXGroup;
+			children = (
+				407FB91F28FE99C300371E24 /* NewEntryController.h */,
+				407FB92028FE99C300371E24 /* NewEntryController.m */,
+				407FB92228FEABCA00371E24 /* NewDrawController.h */,
+				407FB92328FEABCA00371E24 /* NewDrawController.m */,
+			);
+			name = "New Version";
 			sourceTree = "<group>";
 		};
 		40BC7FC628EF79F300F7364A /* InfoViewController */ = {
@@ -1662,14 +1685,15 @@
 		CEB7E7531649A62A0099C14C /* HairTech */ = {
 			isa = PBXGroup;
 			children = (
+				407FB91E28FE998900371E24 /* New Version */,
 				B4F25E722142F916003091C2 /* Magnify */,
 				B41A9F0A213E3E6E00B53A11 /* Haptic Helper */,
 				B4C144D2213D02D200E6E32E /* New Group2 */,
 				B4FA974016679A8F00F36E34 /* HairTech.entitlements */,
 				B4175F7B1BC68A90006860E0 /* Flurry.h */,
 				B43F7C64182A25670066523B /* Defines.h */,
-				B4F2EC7B16EAA00100FE6C85 /* AppDelegate.m */,
 				CEB7E75C1649A62A0099C14C /* AppDelegate.h */,
+				B4F2EC7B16EAA00100FE6C85 /* AppDelegate.m */,
 				CE0BD3FF1654EF300078EE94 /* EntryViewController.h */,
 				CE0BD4001654EF300078EE94 /* EntryViewController.m */,
 				B44DDD3A165E5096005BC877 /* MainStoryboard.storyboard */,
@@ -1789,6 +1813,7 @@
 				B4631D1518115CC400468AC8 /* facebook.png in Resources */,
 				B42AC0E220AA2045004E8988 /* back_7p.png in Resources */,
 				B46C61C420C71C5F0053DC14 /* left_7p_tr.png in Resources */,
+				407FB91A28F8955500371E24 /* pencil_white.png in Resources */,
 				B4EB2B86237414D900F149C6 /* men-ipad-top.png in Resources */,
 				B4EB2BC92374150A00F149C6 /* men-iphone7-back-tr.png in Resources */,
 				B44DDD3C165E5096005BC877 /* MainStoryboard.storyboard in Resources */,
@@ -1829,6 +1854,7 @@
 				B434128E16E61E41003FAFA7 /* popoverArrowUp@2x.png in Resources */,
 				407FB90228F17FA000371E24 /* undoNew.png in Resources */,
 				B434128F16E61E41003FAFA7 /* popoverArrowUpSimple.png in Resources */,
+				407FB91128F1A9D100371E24 /* trash.svg in Resources */,
 				B46561A520BD6D6400BF5BB9 /* Default.png in Resources */,
 				B434129016E61E41003FAFA7 /* popoverBg.png in Resources */,
 				B4CFBB8420C520A4007F4CCE /* btn_backhead_x.png in Resources */,
@@ -1839,7 +1865,6 @@
 				B4CFBB6920C32700007F4CCE /* x_top_tr.png in Resources */,
 				B434129116E61E41003FAFA7 /* popoverBg@2x.png in Resources */,
 				B434129216E61E41003FAFA7 /* popoverBgSimple.png in Resources */,
-				4071B5DE28DA088A00CCC9C3 /* lineNew.png in Resources */,
 				B434129316E61E41003FAFA7 /* README in Resources */,
 				B4D094AF16F5F0840083868B /* uiimage_background.png in Resources */,
 				B4594D7416F60DD20032ACA7 /* Back_Head_Proba_Transp.png in Resources */,
@@ -1882,6 +1907,7 @@
 				B46493EF17026D1600A5CDF6 /* eraser_selected.png in Resources */,
 				40BC7FA428E58EAE00F7364A /* book.json in Resources */,
 				B4EB2BC72374150A00F149C6 /* men-iphone7-left.png in Resources */,
+				407FB91528F8944A00371E24 /* lineNew.png in Resources */,
 				B4EB2BC82374150A00F149C6 /* men-iphone7-back.png in Resources */,
 				B46493FC17026F1100A5CDF6 /* instruments_bar.png in Resources */,
 				4071B5EB28DA0FB400CCC9C3 /* curveDashNew.png in Resources */,
@@ -1903,6 +1929,7 @@
 				B4A5FF30170338CC00135CA2 /* btn_tophead.png in Resources */,
 				B462E488238B2C6D00359D50 /* female-sel.png in Resources */,
 				B4A5FF31170338CC00135CA2 /* uiimage_cell.png in Resources */,
+				407FB91B28F8955500371E24 /* pencil.png in Resources */,
 				B48F3E6217120464006DE532 /* View_backHead_created_transp.png in Resources */,
 				B4EB2BA3237414ED00F149C6 /* men-back-11.png in Resources */,
 				B43B185617F466E7006C9052 /* gear.png in Resources */,
@@ -1918,7 +1945,6 @@
 				B43B185717F466E7006C9052 /* globe.png in Resources */,
 				B484771617F56E2C00323085 /* aboutus2.png in Resources */,
 				40FAF8DE28049148004DA2BA /* width3.png in Resources */,
-				4071B5DF28DA088A00CCC9C3 /* pencil.png in Resources */,
 				B4EB2B84237414D900F149C6 /* men-ipad-left-sm.png in Resources */,
 				B48F3E6A17120464006DE532 /* View_tophead_created_trans.png in Resources */,
 				B49F548721CEABCF00810981 /* text_tool_selected.png in Resources */,
@@ -1981,6 +2007,7 @@
 				40BC7FC228EF746600F7364A /* info.png in Resources */,
 				40FAF8E028049148004DA2BA /* width2.png in Resources */,
 				B462E486238B2C6D00359D50 /* male-sel.png in Resources */,
+				407FB90928F1A00B00371E24 /* hairtech_logo.PNG in Resources */,
 				B42AC0C320AA14D9004E8988 /* ipad_full.png in Resources */,
 				B4EB2BA9237414ED00F149C6 /* men-front-11.png in Resources */,
 				B484771217F5655B00323085 /* aboutus.png in Resources */,
@@ -2013,7 +2040,6 @@
 				B4A9C0B2177993DB003043B2 /* textView.png in Resources */,
 				B49F548621CEABCF00810981 /* text_tool.png in Resources */,
 				B4A9C0B41779950A003043B2 /* textView_new.png in Resources */,
-				4071B5E128DA088A00CCC9C3 /* pencil_white.png in Resources */,
 				B4A9C0B617799728003043B2 /* textview_white.png in Resources */,
 				B401CA0D1B049C7200596292 /* Technique.db in Resources */,
 				B4EB2BC62374150A00F149C6 /* men-iphone7-top.png in Resources */,
@@ -2033,7 +2059,6 @@
 				B43B185517F466E7006C9052 /* burger.png in Resources */,
 				B47059EF1779D42A0093C781 /* toolbar.png in Resources */,
 				B47059F11779D5320093C781 /* viewcontroller_background@2x~ipad.png in Resources */,
-				4071B5E028DA088A00CCC9C3 /* lineNew_white.png in Resources */,
 				B42DB26321C45B38003B3733 /* brush.png in Resources */,
 				B42AC0D120AA1758004E8988 /* ipad_left_sm.png in Resources */,
 				B47059F81779DEA20093C781 /* Done_button@2x~ipad.png in Resources */,
@@ -2055,6 +2080,7 @@
 				B49DABA2177A3E1400BD5AF4 /* text_selected@2x.png in Resources */,
 				B494D8E82179C3ED00F81552 /* btn_cell_menu_fl.png in Resources */,
 				B49DABA3177A3E1400BD5AF4 /* text_selected.png in Resources */,
+				407FB91728F894A900371E24 /* lineNew_white.png in Resources */,
 				B4EB2B83237414D900F149C6 /* men-ipad-left-tr.png in Resources */,
 				B4CFBB7120C32700007F4CCE /* x_back_tr.png in Resources */,
 				B42AC0B720AA12BB004E8988 /* ipad_top.png in Resources */,
@@ -2110,6 +2136,7 @@
 				B401CA021B04796E00596292 /* FMResultSet.m in Sources */,
 				CE856FF6164D3F8300EE21B4 /* DrawViewController.m in Sources */,
 				B4C144DF213D02FC00E6E32E /* AMPopTip.m in Sources */,
+				407FB92128FE99C300371E24 /* NewEntryController.m in Sources */,
 				B45D56BD1806130900A25626 /* SpringboardLayoutAttributes.m in Sources */,
 				B401CA041B04796E00596292 /* FMDatabaseAdditions.m in Sources */,
 				B419661717F9CCC8003E9159 /* UIView+REFrostedViewController.m in Sources */,
@@ -2132,6 +2159,7 @@
 				B4ADB97516A035EF009ED1A9 /* TopHeadViewController.m in Sources */,
 				B401CA031B04796E00596292 /* FMDatabaseQueue.m in Sources */,
 				B4C144DC213D02FC00E6E32E /* AMPopTip+Animation.m in Sources */,
+				407FB92428FEABCA00371E24 /* NewDrawController.m in Sources */,
 				B401CA0B1B04798D00596292 /* FMDBDataAccess.m in Sources */,
 				B419661617F9CCC8003E9159 /* UIImage+REFrostedViewController.m in Sources */,
 				B4F25E752142F929003091C2 /* CHMagnifierView.m in Sources */,
