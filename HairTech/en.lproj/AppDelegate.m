@@ -50,8 +50,7 @@
     
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     ViewController *controller = (ViewController *)navigationController.topViewController;
-    
-
+    navigationController.navigationBar.tintColor = [UIColor colorNamed:@"deepblue"];
 
    //[Flurry setCrashReportingEnabled:YES];
     //note: iOS only allows one crash reporting tool per app; if using another, set to: NO

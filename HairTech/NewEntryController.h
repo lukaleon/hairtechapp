@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *imageTop;
 @property (weak, nonatomic) IBOutlet UIImageView *imageFront;
 @property (weak, nonatomic) IBOutlet UIImageView *imageBack;
+
 @end
 
 NS_ASSUME_NONNULL_END

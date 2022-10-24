@@ -20,11 +20,23 @@ NSString *kEntryViewControllerID = @"EntryViewController";    // view controller
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
 NSString *nameOfTechniqueforControllers;
 
-#define ACTIVE_DISTANCE 200
-#define ZOOM_FACTOR 0.3
+#define TRANSFORM_CELL_VALUE CGAffineTransformMakeScale(0.8, 0.8)
+#define ANIMATION_SPEED 0.2
+
+
 
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
+
+#define colorCombination1 [UIColor colorNamed:@"blue"];
+#define colorCombination2 [UIColor colorNamed:@"blue"];
+#define colorCombination3 [UIColor colorNamed:@"blue"];
+#define colorCombination4 [UIColor colorNamed:@"blue"];
+#define colorCombination5 [UIColor colorNamed:@"blue"];
+#define colorCombination6 [UIColor colorNamed:@"blue"];
+
+
+
 
 @interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIGestureRecognizerDelegate,UICollectionViewDelegateFlowLayout>
 {
@@ -235,26 +247,35 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [button setBackgroundColor:[UIColor whiteColor]];
     button.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
                               self.view.frame.origin.y + self.view.frame.size.height - 84, 50 , 50);
-    button.layer.cornerRadius = 25;
-    button.layer.masksToBounds = YES;
+    button.layer.masksToBounds = NO;
     button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
     button.layer.borderWidth = 0.0f;
+    button.layer.cornerRadius = 25;
+    [button.layer setShadowOffset:CGSizeMake(1, 3)];
+    [button.layer setShadowColor:[[UIColor colorNamed:@"orange"] CGColor]];
+    [button.layer setShadowRadius:4.0f];
+    [button.layer setShadowOpacity:0.6];
+    
     [self.view addSubview:button];
 }
 
 -(void)viewDidLoad
 {
-   
+    self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor colorNamed:@"bar2"];
+        appearance.backgroundColor = [UIColor colorNamed:@"blue"];
         appearance.shadowColor =  [UIColor clearColor];
+        appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"deepblue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:18]};
        // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = self.navigationController.navigationBar.standardAppearance;
         [self.navigationController prefersStatusBarHidden];
-        
+        [self.navigationController.navigationBar.layer setShadowOffset:CGSizeMake(0, 2)];
+        [self.navigationController.navigationBar.layer setShadowColor:[[UIColor colorNamed:@"deepblue"] CGColor]];
+        [self.navigationController.navigationBar.layer setShadowRadius:2.0f];
+        [self.navigationController.navigationBar.layer setShadowOpacity:0.2];
        
 
     }
@@ -276,10 +297,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     
-   UIColor *barTextColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1];
-   [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:barTextColor];
-
-    self.navigationItem.title = @"My Library";
+    
+    self.navigationItem.title = @"Collection";
+    
     UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [leftCustomButton addTarget:self
                          action:@selector(openInfoController)
@@ -287,17 +307,24 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [leftCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
     [leftCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
 
-    [leftCustomButton setImage:[UIImage imageNamed:@"info.png"] forState:UIControlStateNormal];
+    [leftCustomButton setImage:[UIImage imageNamed:@"info_b.png"] forState:UIControlStateNormal];
     UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
     self.navigationItem.leftBarButtonItems = @[leftButtonItem];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     // Bottom Border
     [super viewDidLoad];
+
     if ( IDIOM != IPAD ) {
-        
         [self.sidemenuButton setAlpha:0];
+//        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
+//        layout.sectionInset = UIEdgeInsetsMake(0, (self.view.frame.size.width - (self.view.frame.size.width / 100) * 80)/2 , 0, 0);
+//        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+//        layout.minimumLineSpacing = self.view.frame.size.width - (self.view.frame.size.width / 100) * 80;
+        
     }
+    
+    
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
 
     self.techniques = [[NSMutableArray alloc] init];
@@ -306,9 +333,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.menuViewController = [[DEMOMenuViewController alloc] init];
     self.menuViewController.ViewController = self;
     [self.toolbar_view setClipsToBounds:YES];
-    UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    self.view.backgroundColor = mycolor2;
-    self.toolbar_view.backgroundColor = mycolor2;
+//    self.toolbar_view.backgroundColor = mycolor2;
     
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
@@ -317,8 +342,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     tap=NO;
     [self populateCustomers];
     [self addNewTechniqueButton];
+    
 
-    }
+    
+}
+
+
 
 
 /************************ NEW CODE ******************************/
@@ -326,28 +355,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     CGSize  newsize;
     newsize = CGSizeMake(CGRectGetWidth(self.view.frame), (CGRectGetHeight(self.view.frame)));
-  
-    if ( IDIOM == IPAD ) {
-        
+   if ( IDIOM == IPAD ) {
         newsize.width = 246;
         newsize.height = 380;
         return newsize;
-        
-        
-    } else
-    {
-        
-      
+   } else
+   {
         newsize.width = ((self.view.frame.size.width / 100) * 80);
-    newsize.height = ((self.view.frame.size.height / 100) * 80);
-        NSLog(@"I'm genering new cell size!!!!!" );
-        
-           return newsize;
-       
+        newsize.height = ((self.view.frame.size.height / 100) * 80);
+        return newsize;
     }
-    
-    
- 
 }
 -(void)changeTechniqueName{
 
@@ -495,18 +512,14 @@ Technique *technique = [self.techniques objectAtIndex:index];
     
     
    
-   Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
- 
+    Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
     [cell hideBar];
-    
     UISwipeGestureRecognizer* gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userDidSwipe:)];
     [gestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [cell addGestureRecognizer:gestureRecognizer];
     
-    
-    
     UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-    cell.contentView.backgroundColor =  fillColor;
+    cell.contentView.backgroundColor =  [UIColor whiteColor];
     [cell.contentView.layer setCornerRadius:15.0f];
     cell.clipsToBounds = YES;
     
@@ -519,7 +532,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     cell.layer.masksToBounds = NO;
     cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
-    //cell.labelOne.text = technique.techniquename;
     cell.dateLabel.text = technique.techniquename;
 
     NSMutableString *filenamethumb = @"%@/";
@@ -553,9 +565,16 @@ Technique *technique = [self.techniques objectAtIndex:index];
          CGRect screenRect = [[UIScreen mainScreen] bounds];
          CGFloat screenWidth = screenRect.size.width;
          CGFloat screenHeight = screenRect.size.height;
-         [cell.image setFrame:CGRectMake(0, 0, (screenWidth*80)/100, (screenHeight*80)/100)];
+         //[cell.image setFrame:CGRectMake(0, 0, (screenWidth*90)/100, (screenHeight*80)/100)];
+         cell.image.frame = CGRectMake(0, 0, cell.frame.size.width , cell.frame.size.height);
+
          [cell.contentView.layer setCornerRadius:15.0f];
         }
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
+    tapGestureRecognizer.numberOfTapsRequired = 1;
+    [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
+    cell.dateLabel.userInteractionEnabled = YES;
     
     return cell;
 }
@@ -673,7 +692,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
         
         Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
         UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-        cell.contentView.backgroundColor =  fillColor;
+       // cell.contentView.backgroundColor =  [UIColor colorNamed:@"w"];
         cell.contentView.layer.cornerRadius = 15.0f;
         [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
         [self.navigationController pushViewController: entryVC animated:YES];
@@ -692,8 +711,11 @@ Technique *technique = [self.techniques objectAtIndex:index];
     {
        MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
         mysubview.delegate = self;
-        [self presentViewController:mysubview animated:YES completion:nil];
-       // [Flurry logEvent:@"New_Technique_Gonna_Be_Created"];
+       // [self presentViewController:mysubview animated:YES completion:nil];
+        mysubview.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self.navigationController presentViewController:mysubview animated:YES completion:nil];
+        
+        
  
     }
 #pragma mark -passItemBack Method
@@ -846,7 +868,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
    
     Cell *cell = [self.collectionView cellForItemAtIndexPath:self.tappedCellPath];
     UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-    cell.contentView.backgroundColor =  fillColor;
+    cell.contentView.backgroundColor =  [UIColor colorNamed:@"blue"];
     [cell.layer setBorderColor:fillColor.CGColor];
     [cell.contentView.layer setCornerRadius:15.0f];
     [cell.layer setBorderWidth:1.0f];
@@ -913,7 +935,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
        MyCustomLayout *layout = (MyCustomLayout *)self.collectionView.collectionViewLayout;
        [layout invalidateLayout];
  
-        self.navigationItem.title=@"My Library";
+        self.navigationItem.title=@"Collection";
     [self.addTechnique setEnabled:YES];
    }
     }
@@ -935,7 +957,7 @@ Technique *technique = [self.techniques objectAtIndex:index];
 
         [self.collectionView removeGestureRecognizer:tapRecognizer];
         
-        self.navigationItem.title=@"My Library";
+        self.navigationItem.title=@"Collection";
        [self.editButtonOutlet setEnabled:NO];
         [self.addTechnique setEnabled:YES];
         tap = NO;
@@ -1126,20 +1148,10 @@ Technique *technique = [self.techniques objectAtIndex:index];
         renameIndexPath = index;
 
         Technique *tech = [self.techniques objectAtIndex:index];
-        
-        
-        
-        
-        
-        
-        
        // Technique *tech = [self.techniques objectAtIndex:[indexPath row]];
-    HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename Technique" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" delegate:self];
+        HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename diagram" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" okBtnColor:[UIColor colorNamed:@"orange"] delegate:self];
     
-    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] titleColor: [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000] buttonViewColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] buttonBGColor:[UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000] buttonTextColor: [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000]];
-    
-    [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
-    
+    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"grey"] titleColor: [UIColor colorNamed:@"deepblue"] buttonViewColor:[UIColor colorNamed:@"grey"] buttonBGColor:[UIColor colorNamed:@"grey"] buttonTextColor: [UIColor colorNamed:@"deepblue"]];
     [hmPopUp showInView:self.view];
     [hmPopUp setTextFieldText:tech.techniquename];
         

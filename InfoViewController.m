@@ -12,7 +12,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     self.navigationItem.title = @"App Info";
     self.shareBtn.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
 }
