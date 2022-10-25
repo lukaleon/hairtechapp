@@ -15,12 +15,13 @@
 #import "FMDBDataAccess.h"
 #import "HMPopUpView.h"
 #import "Cell.h"
+#import "InfoViewController.h"
+#import "NewEntryController.h"
 
 @class EntryViewController;
+@class NewEntryController;
 @class ViewControllerDelegate;
 @class ViewController;
-
-
 
 @protocol ViewControllerDelegate <NSObject>
 -(void)changeImageAlphaBack;
@@ -40,6 +41,7 @@
 
 
 }
+
 
 
 @property (weak, nonatomic) IBOutlet UIButton *sidemenuButton;

@@ -1,3 +1,49 @@
+#import "MyCustomLayout.h"
+
+@implementation MyCustomLayout
+- (void)awakeFromNib
+{
+    self.itemSize = CGSizeMake(75.0, 75.0);
+    self.minimumInteritemSpacing = 10.0;
+    self.minimumLineSpacing = 10.0;
+    self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.sectionInset = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0);
+}
+
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
+{
+    CGFloat offsetAdjustment = MAXFLOAT;
+    CGFloat horizontalOffset = proposedContentOffset.x + 5;
+
+    CGRect targetRect = CGRectMake(proposedContentOffset.x, 0, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height);
+
+    NSArray *array = [super layoutAttributesForElementsInRect:targetRect];
+
+    for (UICollectionViewLayoutAttributes *layoutAttributes in array) {
+        CGFloat itemOffset = layoutAttributes.frame.origin.x;
+        if (ABS(itemOffset - horizontalOffset) < ABS(offsetAdjustment)) {
+            offsetAdjustment = itemOffset - horizontalOffset;
+        }
+    }
+
+    return CGPointMake(proposedContentOffset.x + offsetAdjustment, proposedContentOffset.y);
+}
+//
+//
+//
+//@implementation MyCustomLayout
+//-(void)prepareLayout
+//    {
+//    [super prepareLayout];
+//
+//    self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+//
+//    self.minimumInteritemSpacing = 0;
+//    self.minimumLineSpacing = 0;
+//    self.itemSize = CGSizeMake(110,130);
+//    self.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//    }
+
 /*
 #import "MyCustomLayout.h"
 #import "ViewController.h"

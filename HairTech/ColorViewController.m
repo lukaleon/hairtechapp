@@ -336,7 +336,8 @@ else {
     [linePath addLineToPoint:CGPointMake(x2/2 ,y2)];
     line.path=linePath.CGPath;
     line.fillColor =nil;
-    line.opacity = 0.2;
+    line.opacity = 0.4;
+    line.lineWidth = 1.0;
     line.strokeColor = [UIColor grayColor].CGColor;
                      
     [self addSubview:self.rectView];
@@ -406,6 +407,10 @@ else {
 -(void)buttonPushed:(id)sender{
     ColorButton *btn = (ColorButton *)sender;
     if (!_isTextSelected){
+        for(int i=0; i< self.buttonCollection.count; i++) {
+            [[self.buttonCollection objectAtIndex:i] setSelected:NO];
+            [line removeFromSuperlayer];
+        }
         [delegate colorPopoverControllerDidSelectColor:btn.hexColor];
         [self indicateSelctedButton:btn];
     } else {

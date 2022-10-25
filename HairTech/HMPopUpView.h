@@ -164,6 +164,7 @@ typedef NS_ENUM(NSInteger, HMPopUpDismissType) {
 - (id)initWithTitle:(NSString *)title
       okButtonTitle:(NSString *)okBtnTtl
   cancelButtonTitle:(NSString *)cnclBtnTtl
+okBtnColor:(UIColor*)clr
            delegate:(id<HMPopUpViewDelegate>)delegate;
 
 /**

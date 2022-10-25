@@ -30,21 +30,26 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        
     }
     return self;
 }
 
--(id)initWithTitle:(NSString *)title okButtonTitle:(NSString *)okBtnTtl cancelButtonTitle:(NSString *)cnclBtnTtl delegate:(id<HMPopUpViewDelegate>)delegate {
+-(id)initWithTitle:(NSString *)title okButtonTitle:(NSString *)okBtnTtl cancelButtonTitle:(NSString *)cnclBtnTtl okBtnColor:(UIColor*)clr delegate:(id<HMPopUpViewDelegate>)delegate {
     
-    self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    CGRect rect = CGRectMake([[UIScreen mainScreen] bounds].origin.x, [[UIScreen mainScreen] bounds].origin.y - 50, [[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height);
+    
+    
+    self = [super initWithFrame:rect];
     
     if (self) {
         _hmDelegate = delegate;
         
         self.backgroundColor = [UIColor clearColor];
         HUD = [[UIView alloc] initWithFrame:self.bounds];
-        HUD.backgroundColor = [UIColor colorWithRed:0.900 green:0.900 blue:0.900 alpha:1.000];
-        HUD.alpha = .7;
+        HUD.backgroundColor = [UIColor grayColor];
+        HUD.alpha = 0.7;
         [self addSubview:HUD];
         
         //Creating the view which contains all UI components
@@ -63,27 +68,32 @@
         
         //Separator View creation
         separatorView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, cvFrame.origin.y + 45, cvFrame.size.width, 1)];
-        separatorView.backgroundColor = [UIColor clearColor];
+        separatorView.backgroundColor = [UIColor colorNamed:@"deepblue"];
+        separatorView.alpha = 0.3;
         [containerView addSubview:separatorView];
         
         //Title label
         lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 20, cvFrame.origin.y + 15, cvFrame.size.width - 40, 22)];
         lblTitle.numberOfLines = 1;
         lblTitle.text = title;
-        lblTitle.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
+        lblTitle.textColor =[UIColor colorNamed:@"deepblue"];
         lblTitle.textAlignment = NSTextAlignmentCenter;
-        lblTitle.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
+        lblTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:18];
         [containerView addSubview:lblTitle];
         
         //TextField for user inputs
         txtField = [[UITextField alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 40, cvFrame.origin.y + 70, cvFrame.size.width - 80, 30)];
         txtField.textAlignment = NSTextAlignmentCenter;
-        txtField.backgroundColor = [UIColor colorWithRed:0.723 green:0.718 blue:0.742 alpha:0.4];
+        txtField.backgroundColor = [UIColor colorWithRed:0.623 green:0.618 blue:0.642 alpha:0.4];
+        txtField.borderStyle = UITextBorderStyleRoundedRect;
+       // txtField.layer.borderColor = [UIColor colorNamed:@"orange"].CGColor;
+       // txtField.layer.borderWidth=1.0;
+
         txtField.layer.cornerRadius = 3;
         txtField.clipsToBounds = YES;
-        txtField.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
+        txtField.textColor =  [UIColor colorNamed:@"deepblue"];
         txtField.tintColor = [UIColor blackColor];
-        txtField.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
+        txtField.font = [UIFont fontWithName:@"AvenirNext-Regular" size:14];
         txtField.delegate = self;
         [containerView addSubview:txtField];
         
@@ -95,9 +105,11 @@
         //Action button creation
         btnOk = [[UIButton alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 115, cvFrame.size.width / 2 - 1, 39)];
         [btnOk setTitle:okBtnTtl forState:UIControlStateNormal];
-        btnOk.backgroundColor = [UIColor blackColor];
-        btnOk.titleLabel.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
-        btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
+        [btnOk setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
+
+        btnOk.backgroundColor = [UIColor colorNamed:@"grey"];
+        btnOk.titleLabel.textColor =clr;
+        btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         btnOk.enabled = NO;
         btnOk.alpha = 1;
         [containerView addSubview:btnOk];
@@ -105,14 +117,17 @@
         
         btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(btnOk.frame.origin.x + btnOk.frame.size.width + 1, cvFrame.origin.y + 115, cvFrame.size.width / 2, 39)];
         [btnCancel setTitle:cnclBtnTtl forState:UIControlStateNormal];
-        btnCancel.backgroundColor = [UIColor blackColor];
-        btnCancel.titleLabel.textColor = [UIColor colorWithRed:64.0/255.0 green:64.0/255.0 blue:64.0/255.0 alpha:1.000];
-        btnCancel.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15];
+        
+        [btnCancel setTitleColor:[UIColor colorNamed:@"deepblue"] forState:UIControlStateNormal];
+
+        btnCancel.backgroundColor = [UIColor colorNamed:@"grey"];
+        btnCancel.titleLabel.textColor = [UIColor colorNamed:@"deepblue"];
+        btnCancel.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         [containerView addSubview:btnCancel];
         [btnCancel addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
         
         middleView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, separatorView.frame.origin.y + separatorView.frame.size.height, cvFrame.size.width, btnOk.frame.origin.y)];
-        middleView.backgroundColor = [UIColor colorWithRed:210.0/255.0 green:210.0/255.0 blue:210.0/255.0 alpha:1.000];
+        middleView.backgroundColor = [UIColor colorNamed:@"grey"];
         [containerView insertSubview:middleView belowSubview:txtField];
         
         presentDuration = DEFAULT_PRESENTATION_ANIMATION_DURATION;
@@ -140,17 +155,13 @@
     containerView.backgroundColor = BGColor;
     lblTitle.textColor = ttlColor;
     buttonView.backgroundColor = btnViewColor;
-    
-    btnOk.backgroundColor = btnBGColor;
-    btnCancel.backgroundColor = btnBGColor;
-    
-    // btnOk.titleLabel.textColor = btnTxtColor;
-    // btnCancel.titleLabel.textColor = btnTxtColor;
-    
-  //  [btnOk setTitleColor:ttlColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
-   // [btnCancel setTitleColor:ttlColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
- //   btnCancel.titleLabel.textColor = ttlColor;//[UIColor colorWithRed:0.64 green:0.64 blue:0.64 alpha:1.000];
-//    [btnOk.titleLabel setTextColor:btnTxtColor];
+   // btnOk.backgroundColor = btnBGColor;
+   // btnCancel.backgroundColor = btnBGColor;
+   // [btnOk setTitleColor: [UIColor colorNamed:@"orange"] forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
+   // btnOk.titleLabel.textColor = [UIColor colorNamed:@"orange"];
+
+//    [btnCancel setTitleColor:ttlColor forState:UIControlStateNormal | UIControlStateHighlighted | UIControlStateSelected];
+//   btnCancel.titleLabel.textColor = ttlColor;//[UIColor colorWithRed:0.64 green:0.64 blue:0.64 alpha:1.000];
     
 }
 
@@ -223,7 +234,7 @@
 
 -(void)setOkButtonTextColor:(UIColor *)okButtonTextColor{
     
-    btnOk.titleLabel.textColor = okButtonTextColor;
+    btnOk.titleLabel.textColor = [UIColor colorNamed:@"orange"];
     
 }
 
@@ -260,7 +271,7 @@
     if([self.hmDelegate checkEnteredName:txtField.text])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!"
-                                                        message:@"The technique with such name exists"
+                                                        message:@"The diagram with this name exists"
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles: nil];

@@ -11,6 +11,7 @@
 #import "FMResultSet.h" 
 #import "Utility.h" 
 #import "Technique.h"
+#import "FMDatabaseAdditions.h"
 
 @interface FMDBDataAccess : NSObject
 {
@@ -23,5 +24,6 @@
 -(BOOL) insertCustomer:(Technique *) customer;
 -(BOOL) deleteCustomer:(Technique *) customer;
 -(BOOL) updateCustomer:(Technique *) customer;
+//-(void) insertColumn:(Technique *) customer;
 
 @end

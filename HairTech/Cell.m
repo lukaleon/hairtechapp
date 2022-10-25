@@ -106,22 +106,23 @@ static UIImage *deleteButtonImg;
 }
 - (IBAction)showEditMenu:(id)sender {
 
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"hideAllBars"
-     object:self];
-
-    
-    tapCount=tapCount+1;
-
-    if(tapCount % 2 ==0){
-        [self showBar];
-    }
-    else{
-       [self hideBar];
-        tapCount=1;
-
-    }
-    
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"hideAllBars"
+//     object:self];
+//
+//
+//    tapCount=tapCount+1;
+//
+//    if(tapCount % 2 ==0){
+//        [self showBar];
+//    }
+//    else{
+//       [self hideBar];
+//        tapCount=1;
+//
+//    }
+//
+    [self deletePressed];
     
 }
 - (IBAction)renamePressed:(id)sender {
@@ -132,8 +133,9 @@ static UIImage *deleteButtonImg;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showPop"
      object:self];
+    
 }
-- (IBAction)deletePressed:(id)sender {
+- (void)deletePressed{
     
    // [self hideBar];
    
@@ -145,43 +147,53 @@ static UIImage *deleteButtonImg;
      object:self];
 }
 -(void)showBar{
-    [self.menuBar setBackgroundColor:[UIColor whiteColor]];
-    [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
-    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
-    [self.deleteBtn setBackgroundColor:[UIColor whiteColor]];
-    [self.deleteBtn.layer setCornerRadius:15.0];
-    [self.renameBtn.layer setCornerRadius:15.0];
-    [self.menuBarExpanded.layer setCornerRadius:15.0];
-    [self.menuBar.layer setCornerRadius:15.0];
+     [self.menuBar setBackgroundColor:[UIColor whiteColor]];
+     [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
+    
+    [self.menuBarExpanded.layer setShadowOffset:CGSizeMake(0, 2)];
+    [self.menuBarExpanded.layer setShadowColor:[[UIColor blackColor] CGColor]];
+    [self.menuBarExpanded.layer setShadowRadius:8.0f];
+    [self.menuBarExpanded.layer setShadowOpacity:0.2];
+    //    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
+//    [self.deleteBtn setBackgroundColor:[UIColor whiteColor]];
+//    [self.deleteBtn.layer setCornerRadius:15.0];
+//    [self.renameBtn.layer setCornerRadius:15.0];
+  //  [self.menuBarExpanded.layer setCornerRadius:15.0];
+ //   [self.menuBar.layer setCornerRadius:15.0];
 
     self.renameBtn.enabled=YES;
     self.deleteBtn.enabled =YES;
     
     [UIView animateWithDuration:0.2
                      animations:^{
-                         self.renameBtn.frame = CGRectMake(self.menuBarExpanded.frame.origin.x,
-                                                           (self.menuBarExpanded.frame.origin.y+self.menuBarExpanded.frame.size.height),self.menuBarExpanded.frame.size.width/2,self.menuBarExpanded.frame.size.height );
+                         self.renameBtn.frame = CGRectMake(self.menuBarExpanded.frame.origin.x + 20,
+                                                           (self.menuBarExpanded.frame.origin.y+self.menuBarExpanded.frame.size.height), 120, 40);
                          
                          self.deleteBtn.frame = CGRectMake(self.menuBarExpanded.frame.size.width/2,
-                                                           (self.menuBarExpanded.frame.origin.y+self.menuBarExpanded.frame.size.height),self.menuBarExpanded.frame.size.width/2,self.menuBarExpanded.frame.size.height );
+                                                           (self.menuBarExpanded.frame.origin.y+self.menuBarExpanded.frame.size.height),120,40);
                          self.menuBarExpanded.frame =CGRectMake(self.menuBarExpanded.frame.origin.x,(self.menuBarExpanded.frame.origin.y+self.menuBarExpanded.frame.size.height),self.menuBarExpanded.frame.size.width,self.menuBarExpanded.frame.size.height );
                          
                      }];
     
   //  [self.cell_menu_btn setBackgroundImage:[UIImage imageNamed:@"btn_cell_menu.png"] forState:UIControlStateNormal];
-    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
-    [self.cell_menu_btn.layer setCornerRadius:15.0];
+//    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
+//    [self.cell_menu_btn.layer setCornerRadius:15.0];
     
 }
 -(void)hideBar{
-    [self.menuBar setBackgroundColor:[UIColor whiteColor]];
-    [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
-    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
-    [self.deleteBtn setBackgroundColor:[UIColor whiteColor]];
-    [self.deleteBtn.layer setCornerRadius:15.0];
-    [self.renameBtn.layer setCornerRadius:15.0];
-    [self.menuBarExpanded.layer setCornerRadius:15.0];
-    [self.menuBar.layer setCornerRadius:15.0];
+//    [self.menuBar setBackgroundColor:[UIColor whiteColor]];
+//    [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
+//    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
+//    [self.deleteBtn setBackgroundColor:[UIColor whiteColor]];
+//    [self.deleteBtn.layer setCornerRadius:15.0];
+//    [self.renameBtn.layer setCornerRadius:15.0];
+    [self.menuBarExpanded.layer setShadowOffset:CGSizeMake(0, 0)];
+    [self.menuBarExpanded.layer setShadowColor:[[UIColor clearColor] CGColor]];
+    [self.menuBarExpanded.layer setShadowRadius:0.0f];
+    [self.menuBarExpanded.layer setShadowOpacity:0.0];
+    
+    //[self.menuBarExpanded.layer setCornerRadius:15.0];
+   // [self.menuBar.layer setCornerRadius:15.0];
     self.renameBtn.enabled=NO;
     self.deleteBtn.enabled =NO;
     
@@ -197,8 +209,8 @@ static UIImage *deleteButtonImg;
                      }];
     
     //[self.cell_menu_btn setBackgroundImage:[UIImage imageNamed:@"btn_cell_menu_fl.png"] forState:UIControlStateNormal];
-    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
-    [self.cell_menu_btn.layer setCornerRadius:15.0];
+//    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
+//    [self.cell_menu_btn.layer setCornerRadius:15.0];
 
 }
 
