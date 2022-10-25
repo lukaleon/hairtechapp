@@ -7,6 +7,7 @@
 #import "CircleLayer.h"
 #import "TextRect.h"
 #import "SPUserResizableView.h"
+#import "LayersData.h"
 
 
 #define ACEDrawingViewVersion   1.0.0
@@ -37,6 +38,7 @@ typedef enum {
     CGFloat screenHeight;
     
     CGPoint pointOfStart;
+    BOOL pointConnected;
     BOOL performedX;
     BOOL performedY;
     BOOL performed45;
@@ -100,6 +102,12 @@ typedef enum {
     int cycle;
 
 }
+@property (strong, nonatomic) NSMutableArray<LayersData *> *layers;
+
+@property (nonatomic, strong) NSDictionary * layersDict;
+@property (nonatomic, strong) NSMutableArray * arrayOfLayersForJSON;
+@property (nonatomic, strong) NSMutableArray * fetchedLayersFromJSON;
+
 @property CGFloat textViewFontSize;
 -(void)enableGestures;
 -(void)disableGestures;
@@ -146,10 +154,6 @@ typedef enum {
 
 
 
-//End of declaration of properties for drawing UIBezierPath Shapes
-
-
-
 -(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString*)techniqueName;
 
 
@@ -158,9 +162,6 @@ typedef enum {
 @property (nonatomic, strong) NSString *viewControllerName;
 
 @property (nonatomic, strong) UIBezierPath *tapTarget;
-
-
-
 
 @property  UIImageView *dragger;
 @property (nonatomic, assign) int numberOfColumns;
@@ -193,28 +194,11 @@ typedef enum {
 @property (nonatomic,assign) CGPoint pc;
 @property (nonatomic,assign) CGPoint pd;
 
-
-
-
-
-
-////////////
 @property (nonatomic, assign) ACEDrawingToolType drawTool;
 @property (nonatomic, assign) id<ACEDrawingViewDelegate> delegate;
-
-- (void)reloadDataInRect:(CGRect)rect;
-
-
 @property (nonatomic, strong) UIImageView *eraserPointer;
-
 @property  BOOL *editModeCanceled;
-
-
 -(void)hidePoints;
-
-
-
-
 @property (nonatomic, strong) NSMutableArray *pointsCoord;
 @property (nonatomic, strong) UILabel *pointsLabel;
 
@@ -287,6 +271,7 @@ typedef enum {
 
 
 -(void)removeCirclesOnZoomDelegate;
+-(void)bringArrowsToFront;
 
 
 
@@ -308,6 +293,9 @@ double dist2(CGPoint a, CGPoint b);
 -(void)selectPreviousTool:(id)sender;
 -(void)selectTextTool:(id)sender textColor:(UIColor*)color fontSize:(CGFloat)fontSZ isSelected:(BOOL)isSelected;
 -(void)removeTextSettings;
+-(void)disableZoomWhenTouchesMoved;
+-(void)enableZoomWhenTouchesMoved;
+
 
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;

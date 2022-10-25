@@ -106,10 +106,90 @@ UIColor* tempColor;
 //    }
 //    return self;
 //}
-- (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+
+#pragma mark Initializattion
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+
+        //  [self configure];
+        
+    }
+    return self;
+}
+
+- (void)loadDataFromJsonOnStart {
+    [self fetchData]; //fetching data from json file
+   
+    for(LayersData * layerData in self.arrayOfLayersForJSON){
+        NSLog(@"COLOR LOADED FROM ARRAY %@", layerData.color);
+    
+        if (JVDrawingTypeText != [layerData.type integerValue]){
+            self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:layerData.startPoint endPoint:layerData.endPoint type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color controlPoint:layerData.controlPoint grafittiPoints:layerData.grafittiPoints];
+            if(JVDrawingTypeGraffiti == [layerData.type integerValue] ){
+                for(int i = 0; i < layerData.grafittiPoints.count;i++){
+                    [self.drawingLayer movePathWithEndPoint:CGPointFromString([layerData.grafittiPoints objectAtIndex:i])];
+                }
+                
+            } if (JVDrawingTypeCurvedLine == [layerData.type integerValue] ||JVDrawingTypeCurvedDashLine == [layerData.type integerValue] ){
+                
+                [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
+                [self.drawingLayer moveCurvedLinePathWithStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint isSelected:YES];
+            }
+            else {
+                [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
+            }
+        } else {
+            
+                CGRect rect = CGRectMake(layerData.startPoint.x, layerData.startPoint.y, layerData.width, layerData.height);
+                self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:layerData.startPoint
+                                                                            frame:rect
+                                                                             text:layerData.text
+                                                                             type:[layerData.type integerValue]
+                                                                        lineWidth:layerData.lineWidth
+                                                                        lineColor:layerData.color
+                                                                         fontSize:layerData.fontSize
+                                                                       isSelected:NO];
+        }
+        if(layerData.endPoint.x != 0 && layerData.endPoint.y !=0){
+            [self.layer addSublayer:self.drawingLayer];
+            [self.layerArray addObject:self.drawingLayer];
+            NSLog(@"layerArray   %lu", self.layerArray.count );
+        }
+    }
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
 
-    
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        
+        self.userInteractionEnabled = YES;
+        self.layerArray = [[NSMutableArray alloc] init];
+        self.type = JVDrawingTypeLine;
+        pan=NO;
+        touchesForUpdate = 0;
+        [self configure];
+        drawingLayer = [CALayer layer];
+        [self.layer addSublayer:drawingLayer];
+        
+        arrayOfLastPoints = [[NSArray alloc]init];
+        self.zoomFactor = 1;
+        self.layersDict = [[NSMutableDictionary alloc]init];
+        self.arrayOfLayersForJSON = [NSMutableArray array];
+        arrayOfPoints = [NSMutableArray array];
+
+        
+      [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
+       [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
+
+    }
+    return self;
+}
+- (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
     CGFloat xDist = (endPoint.x - startPoint.x);
     CGFloat yDist = (endPoint.y - startPoint.y);
     return sqrt((xDist * xDist) + (yDist * yDist));
@@ -123,13 +203,17 @@ UIColor* tempColor;
         self.selectedLayer = nil;
         self.drawingLayer = nil;
         [self updateAllPoints];
+   
+        [self storeDataInJson];
+        [self fetchData];
+ //   NSLog(@"layers count  after revoke %lu", self.arrayOfLayersForJSON.count );
+   // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
+
 }
 #pragma mark Touches Methods
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.eraserSelected || self.type == JVDrawingTypeText ){
-        return;
-    }
+   
     unsigned long count = [[event allTouches] count];
     if (count > 1) {
         return; // return amount of fingers touched right now
@@ -137,6 +221,9 @@ UIColor* tempColor;
     NSLog(@"touches began");
     self.isFirstTouch = YES;
     self.isMoveLayer = NO;
+    if (self.eraserSelected || self.type == JVDrawingTypeText ){
+        return;
+    }
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
     startOfLine = currentPoint;
@@ -189,6 +276,7 @@ UIColor* tempColor;
                                                                       type:self.type
                                                                  lineWidth:self.lineWidth
                                                                  lineColor:self.lineColor];
+             [self.delegate disableZoomWhenTouchesMoved];
             [self.layer addSublayer:self.drawingLayer];
              }
     } else {
@@ -212,7 +300,7 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-                        if (self.magnifierView.hidden == NO && count ==1){
+                        if (self.magnifierView.hidden == NO){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
@@ -225,7 +313,7 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
-                        if (self.magnifierView.hidden == NO && count ==1){
+                        if (self.magnifierView.hidden == NO ){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
@@ -238,14 +326,14 @@ UIColor* tempColor;
                 
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
-                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self autoPosition:&currentPoint basePoint:bufferEndPoint];
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
 //                        bufferStartPoint = currentPoint;
 //                        bufferEndPoint = self.selectedLayer.endPointToConnect;
 
-                        if (self.magnifierView.hidden == NO && count ==1){
+                        if (self.magnifierView.hidden == NO){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
@@ -258,11 +346,11 @@ UIColor* tempColor;
                         break;
                     case JVDrawingTouchEnd:
                         NSLog(@"MOVING END POINT");
-                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self autoPosition:&currentPoint basePoint:bufferStartPoint];
+                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
-                        if (self.magnifierView.hidden == NO && count ==1){
+                        if (self.magnifierView.hidden == NO){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
@@ -273,11 +361,13 @@ UIColor* tempColor;
             }
         } else {
             NSLog(@"end of creation of line");
-            [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
-            [self autoPosition:&currentPoint basePoint:self.firstTouch];
+            if(self.drawingLayer.type != JVDrawingTypeGraffiti){
+                [self autoPosition:&currentPoint basePoint:self.firstTouch];
+                [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+            }
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             self.lastTouch = currentPoint;
-            if (self.magnifierView.hidden == NO && count == 1){
+            if (self.magnifierView.hidden == NO){
                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
             
             }
@@ -290,48 +380,43 @@ UIColor* tempColor;
 
 }
 
-
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    unsigned long count = [[event allTouches] count];
-    if (count > 1) {
-        return; // return amount of fingers touched right now
-    }
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
       //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
+        [self storeDataInJson];
+        [self fetchData];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
-
-//        for (NSString * cgpointVal in arrayOfPoints)
-//        {
-//            CGPoint pointObj = CGPointFromString(cgpointVal);
-//            [self alocatePointAtView:self.layer pointFromArray:pointObj];
-//        }
-        
         NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
+        [self.delegate enableZoomWhenTouchesMoved];
 
         if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
             [self selectLayer:[self.layerArray lastObject]];
         }
-       // [self.drawingLayer addToTrack];
+        [self.drawingLayer addToTrack];
+
     } else {
         if (self.isMoveLayer) {
             [self updateAllPoints];
-            NSLog(@"touches ended after moving");
+            [self storeDataInJson];
+
+          [self.selectedLayer addToTrack];
         }
         if (self.isFirstTouch) {
+             if(self.eraserSelected == NO){
             BOOL layerHasBeenPicked = NO;
             UITouch *touch = [touches anyObject];
             CGPoint currentPoint = [touch locationInView:self];
             for (JVDrawingLayer *layer in self.layerArray) {
                 if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
-                   [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
+                    [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                     layerHasBeenPicked = YES;
                     if (layer == self.selectedLayer && !menuVisible) {
-                        // the layer is already selectedl; show the menu
+                        // the layer is already selected; show the menu
                         [self showMenu];
                     } else {
                         // clear the selection
@@ -353,8 +438,31 @@ UIColor* tempColor;
                 [self hideMenu];
             }
             //       self.drawingLayerSelectedBlock(self.selectedLayer);
+            
+        }else if(self.eraserSelected == YES) {
+            NSLog(@"trying to delete line");
+
+            UITouch *touch = [touches anyObject];
+            CGPoint currentPoint = [touch locationInView:self];
+            for (JVDrawingLayer *layer in self.layerArray) {
+                if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
+                    [layer caculateLocationWithPoint:currentPoint];
+                    self.selectedLayer = layer;
+                    self.selectedLayer.isSelected = YES;
+                    [self revoke];
+                    break;
+                }
+            }
+            
+        }
         }
     }
+}
+
+- (void)setEraserSelected:(BOOL)eraserSelected
+{
+     _eraserSelected = eraserSelected;
+    NSLog(@"BOOL in eraser %s", _eraserSelected ? "true" : "false");
 }
 
 #pragma mark Points Detection
@@ -376,7 +484,6 @@ UIColor* tempColor;
             if ( keyOfPointWithMinDistance < distance) {
                 keyOfPointWithMinDistance = distance;
                 nearestPointToTouchedPoint = discoveryPoint;
-              //  [HapticHelper generateFeedback:FeedbackType_Impact_Light];
                 *previousPoint = nearestPointToTouchedPoint;
             }
             index++;
@@ -397,8 +504,10 @@ UIColor* tempColor;
     for (JVDrawingLayer *layer in self.layerArray) {
         CGPoint start = [layer getStartPointOfLayer:layer];
         CGPoint end = [layer getEndPointOfLayer:layer];
-        [arrayOfPoints addObject:NSStringFromCGPoint(start)];
-        [arrayOfPoints addObject:NSStringFromCGPoint(end)];
+        if(layer.type != JVDrawingTypeText){
+            [arrayOfPoints addObject:NSStringFromCGPoint(start)];
+            [arrayOfPoints addObject:NSStringFromCGPoint(end)];
+        }
         NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
     }
 }
@@ -430,7 +539,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer2];
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
-    else if (JVDrawingTypeText == self.type){
+     else if (JVDrawingTypeText == self.type){
         self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
@@ -442,7 +551,7 @@ UIColor* tempColor;
                              font:layer.fontSize];
         [self.delegate selectTextTool:self.textTypesSender textColor:layer.lineColor_ fontSize:layer.fontSize isSelected:textViewSelected];
         [self revoke];
-    } else {
+    } else if (JVDrawingTypeArrow == self.type || JVDrawingTypeLine == self.type || JVDrawingTypeDashedLine == self.type) {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
         self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
         [layer addSublayer:self.circleLayer1];
@@ -713,46 +822,56 @@ UIColor* tempColor;
 
     }
 }
--(void)hideMenuForTextView{
+- (void)hideAndCreateTextLayer {
+    [self.textViewNew resignFirstResponder];
+    self.textViewNew.userInteractionEnabled = NO;
+    [currentlyEditingView hideEditingHandles];
+    [self.userResizableView removeFromSuperview];
     
-    if (menuForTextView.isMenuVisible) {
-        [menuForTextView setMenuVisible:NO animated:YES];
-        }
+    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self.window];
     
-    else if (self.textViewNew.isFirstResponder == YES){
-        [self.textViewNew resignFirstResponder];
-        [self hideTextViewFrame];
-        [currentlyEditingView showEditingHandles];    }
-    else if ([self.userResizableView.subviews containsObject:self.textViewNew]){
-        [self.textViewNew resignFirstResponder];
-        self.textViewNew.userInteractionEnabled = NO;
-        [currentlyEditingView hideEditingHandles];
-        [self.userResizableView removeFromSuperview];
+    CGRect rect = CGRectMake(origin.x,
+                             origin.y,
+                             self.textViewNew.bounds.size.width,
+                             self.textViewNew.bounds.size.height);
+    if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
         
-        CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self.window];
-     
-        CGRect rect = CGRectMake(origin.x,
-                                 origin.y,
-                                 self.textViewNew.bounds.size.width,
-                                 self.textViewNew.bounds.size.height);
-        if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
-
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
                                                                      text:self.textViewNew.text
                                                                      type:self.type
                                                                 lineWidth:self.lineWidth
                                                                 lineColor:self.textViewNew.textColor
-                                                                fontSize:self.textViewFontSize
-                                                                isSelected:NO ];
+                                                                 fontSize:self.textViewFontSize
+                                                               isSelected:NO ];
         NSLog(@"Creting new layer from textView");
-
+        
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
+        [self storeDataInJson];
+        [self fetchData];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate removeTextSettings];
     }
+}
+
+-(void)hideMenuForTextView{
+    
+//    if (menuForTextView.isMenuVisible) {
+//        [menuForTextView setMenuVisible:NO animated:YES];
+////        [self hideAndCreateTextLayer];
+//
+//    }
+     if (self.textViewNew.isFirstResponder == YES || menuForTextView.isMenuVisible){
+        [menuForTextView setMenuVisible:NO animated:YES];
+
+        [self.textViewNew resignFirstResponder];
+        [self hideTextViewFrame];
+        [currentlyEditingView showEditingHandles];    }
+    
+    if ([self.userResizableView.subviews containsObject:self.textViewNew]){
+        [self hideAndCreateTextLayer];
         textViewSelected = NO;
         [self.delegate selectPreviousTool:self.previousType];
     }
@@ -784,6 +903,7 @@ UIColor* tempColor;
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
+
     }
     textViewSelected = NO;
 
@@ -799,48 +919,14 @@ UIColor* tempColor;
     menuVisible = NO;
     
 }
-#pragma mark Initializattion
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
 
-        //  [self configure];
-        
-    }
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        
-        self.userInteractionEnabled = YES;
-        self.layerArray = [[NSMutableArray alloc] init];
-        self.type = JVDrawingTypeLine;        
-        pan=NO;
-        touchesForUpdate = 0;
-        [self configure];
-        drawingLayer = [CALayer layer];
-        [self.layer addSublayer:drawingLayer];
-        
-        
-        arrayOfLastPoints = [[NSArray alloc]init];
-        self.zoomFactor = 1;
-
-        
-    }
-    return self;
-}
 -(void)getViewControllerId:(NSString*)nameOfView nameOfTechnique:(NSString *)techniqueName{
     
-    arrayOfPoints = [[NSMutableArray alloc]init];
+    //arrayOfPoints = [[NSMutableArray alloc]init];
     NSLog(@"NAME OF CURRENT TECHNIQUE %@", techniqueName);
     currentTechniqueName = techniqueName;
     viewName = nameOfView;
-    arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
+   // arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
     
 //    for (NSString * cgpointVal in arrayOfPoints)
 //    {
@@ -1486,51 +1572,6 @@ UIColor* tempColor;
 
 #endif
 
-
-#pragma mark - Pixel Color
-/*- (UIColor *)colorAtPixel:(CGPoint)point {
- // Cancel if point is outside image coordinates
- if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.frame.size.width, self.frame.size.height), point)) {
- return nil;
- }
- 
- 
- // Create a 1x1 pixel byte array and bitmap context to draw the pixel into.
- // Reference: http://stackoverflow.com/questions/1042830/retrieving-a-pixel-alpha-value-for-a-uiimage
- NSInteger pointX = trunc(point.x);
- NSInteger pointY = trunc(point.y);
- CGImageRef cgImage = [self.delegate imageFromDrawView].CGImage;
- NSUInteger width = CGImageGetWidth(cgImage);
- NSUInteger height = CGImageGetHeight(cgImage);
- CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
- int bytesPerPixel = 4;
- int bytesPerRow = bytesPerPixel * 1;
- NSUInteger bitsPerComponent = 8;
- unsigned char pixelData[4] = { 0, 0, 0, 0 };
- CGContextRef context = CGBitmapContextCreate(pixelData,
- 1,
- 1,
- bitsPerComponent,
- bytesPerRow,
- colorSpace,
- kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
- CGColorSpaceRelease(colorSpace);
- CGContextSetBlendMode(context, kCGBlendModeCopy);
- 
- // Draw the pixel we are interested in onto the bitmap context
- CGContextTranslateCTM(context, -pointX, -pointY);
- CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height), cgImage);
- CGContextRelease(context);
- 
- // Convert color values [0..255] to floats [0.0..1.0]
- CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
- CGFloat green = (CGFloat)pixelData[1] / 255.0f;
- CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
- CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
- return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
- }
- */
-
 - (NSString *)hexStringFromColorNEW:(UIColor *)color {
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     
@@ -1546,33 +1587,6 @@ UIColor* tempColor;
 
 
 #pragma mark - Sublayers Managment
-
-/*
- - (void)addShapeWhenDrawing
- {
- //  CGRect maxBounds = CGRectInset(self.bounds, 10.0f, 10.0f);
- //Shape *newShape = [Shape randomShapeInBounds:maxBounds];
- 
- CAShapeLayer *line = [CAShapeLayer layer];
- linePath=[UIBezierPath bezierPath];
- [linePath moveToPoint: self.firstTouch];
- [linePath addLineToPoint:self.lastTouch];
- 
- // [line setPath:[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(self.firstTouch.x-5,self.firstTouch.y-5, 10, 10)] CGPath]];
- 
- line.path=linePath.CGPath;
- line.fillColor = nil;
- line.lineWidth = 4.0;
- //line.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:8],[NSNumber numberWithInt:8], nil];
- 
- line.opacity = 1.0;
- line.strokeColor = [UIColor redColor].CGColor;
- line.accessibilityPath = linePath;
- [drawingLayer addSublayer:line];
- 
- }
- */
-
 
 -(void)savePointsToDefaults:(NSString*)name techniqueName:(NSString*)techName
 {
@@ -1675,5 +1689,228 @@ UIColor* tempColor;
             performedY = true;
         }
     }else{performedY = false;}
+}
+- (void)writeStringToFile:(NSMutableArray*)arr {
+    NSError * error;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"layersdata.json"];
+    NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
+    [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
+    NSLog(documentsDirectory);
+
+    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
+        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
+    }
+
+}
+
+- (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
+    NSMutableArray * stringArray = [self converGraffitiPointsToString:layer];
+    NSString *fontSizeStr = [[NSNumber numberWithFloat:layer.fontSize] stringValue];
+    NSString *widthStr = [[NSNumber numberWithFloat:layer.lineWidth_] stringValue];
+    NSString *textWidth = [[NSNumber numberWithFloat:layer.width] stringValue];
+    NSString *textHeight = [[NSNumber numberWithFloat:layer.height] stringValue];
+    NSString *colorStr = [[CIColor colorWithCGColor:[layer.lineColor_ CGColor]] stringRepresentation];
+
+    NSLog(@"color string saving %@",colorStr);
+    
+    NSMutableDictionary *dictOfLayers = [NSMutableDictionary dictionary];
+    NSMutableDictionary *layerProperties = [NSMutableDictionary dictionary];
+    NSMutableDictionary *arrayOfPoint = [NSMutableDictionary dictionary];
+    [arrayOfPoint setObject: stringArray forKey:@"points"];
+    if (layer.type !=JVDrawingTypeGraffiti){
+        layerProperties[@"startPoint"] = NSStringFromCGPoint(layer.startPoint);
+        layerProperties[@"endPoint"] = NSStringFromCGPoint(layer.endPoint);
+    }else{
+        layerProperties[@"pointArray"] = arrayOfPoint;
+        layerProperties[@"startPoint"] = NSStringFromCGPoint([layer.pointArray[0] CGPointValue]);
+        layerProperties[@"endPoint"] = NSStringFromCGPoint([[layer.pointArray lastObject] CGPointValue]);
+    }
+    layerProperties[@"text"] = layer.text;
+    layerProperties[@"height"] =  textHeight;
+    layerProperties[@"width"] = textWidth;
+    layerProperties[@"controlPoint"] = NSStringFromCGPoint(layer.controlPointOfCurve);
+    layerProperties[@"fontSize"] = fontSizeStr;
+    layerProperties[@"lineWidth"] = widthStr;
+    layerProperties[@"lineColor"] = colorStr;
+    layerProperties[@"isSelected"] = @(layer.isSelected);
+    layerProperties[@"type"] = @(layer.type);
+    dictOfLayers[@"layerproperties"] = layerProperties;
+    dictOfLayers[@"id"] = [layer description];
+    
+    [self.arrayOfLayersForJSON addObject:dictOfLayers];
+    NSLog(@"NUMBER OF OBJECTS in LAYERS DICT %lu", (unsigned long)self.arrayOfLayersForJSON.count );
+    return self.arrayOfLayersForJSON;
+}
+
+- (void)storeDataInJson {
+    [self.arrayOfLayersForJSON removeAllObjects];
+    for (JVDrawingLayer *layer in self.layerArray) {
+        [self writeStringToFile:[self addLayerInfoToDict:layer]];
+    }
+    if(self.layerArray.count == 0){
+        [self writeStringToFile:[self removeObjectFromJSON]];
+    }
+}
+- (NSMutableArray *)converGraffitiPointsToString:(JVDrawingLayer *)layer {
+    NSMutableArray * stringArray = [[NSMutableArray alloc]init];
+    for (int j = 0; j<layer.pointArray.count; j++) {
+        NSString * resultString = NSStringFromCGPoint([[layer.pointArray objectAtIndex:j] CGPointValue]);
+        [stringArray addObject:resultString];
+    }
+    
+    
+    return stringArray;
+}
+
+-(void)fetchData{
+    
+    /* LOCAL FETCHING*/
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:@"layersdata.json"];
+    //NSLog(@"filepath %@", filePath);
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    NSError *err;
+    if (err){
+        NSLog(@"Failed to serialize into JSON: %@", err);
+        return;
+    }
+    
+    NSMutableDictionary * props = [NSMutableDictionary dictionary];
+    NSMutableDictionary * array = [NSMutableDictionary dictionary];
+
+    for (NSDictionary *dictOfLayers in json) {
+        NSString *name = dictOfLayers[@"id"];
+        props = [dictOfLayers objectForKey:@"layerproperties"];
+        array = [props objectForKey:@"pointArray"];
+        
+        NSString *lineWidth = props[@"lineWidth"];
+        NSString *lineColor = props[@"lineColor"];
+        NSString *startPoint = props[@"startPoint"];
+        NSString *endPoint = props[@"endPoint"];
+        NSString *layerType = props[@"type"];
+        NSString *fontSize = props[@"fontSize"];
+        NSString *controlPoint = props[@"controlPoint"];
+        NSString *textWidth = props[@"width"];
+        NSString *textHeight = props[@"height"];
+        NSString *text = props[@"text"];
+        NSArray *grPoints = array[@"points"];
+
+        LayersData *layers = LayersData.new;
+        layers.startPoint = CGPointFromString(startPoint);
+        layers.endPoint = CGPointFromString(endPoint);
+        layers.lineWidth = [lineWidth floatValue];
+       
+        layers.color = [self getColorFromString:lineColor];
+        layers.type = layerType;
+        layers.fontSize = [fontSize floatValue];
+        layers.controlPoint = CGPointFromString(controlPoint);
+        layers.layerID = name;
+        layers.height = [textHeight floatValue];
+        layers.width = [textWidth floatValue];
+        layers.text = text;
+        layers.grafittiPoints = grPoints;
+        NSLog(@"array of points %lu", grPoints.count);
+
+        [self.arrayOfLayersForJSON addObject:layers];
+        
+    }
+}
+
+-(UIColor*)getColorFromString:(NSString*)colorString{
+    NSArray *parts = [colorString componentsSeparatedByString:@" "];
+    UIColor *colorFromString = [UIColor colorWithRed:[parts[0] floatValue]
+                                               green:[parts[1] floatValue]
+                                                blue:[parts[2] floatValue]
+                                               alpha:[parts[3] floatValue]];
+    NSLog(@"COLOR COLOR %@", colorFromString);
+    return colorFromString;
+}
+
+
+-(NSMutableArray*)removeObjectFromJSON {
+    [self.arrayOfLayersForJSON removeAllObjects];
+    return self.arrayOfLayersForJSON;
+}
+
+#pragma mark BringArrowsToFront
+-(void)bringArrowsToFront{
+    
+    for(JVDrawingLayer * layer in self.layerArray){
+        if(layer.type == JVDrawingTypeArrow){
+            [self.layer insertSublayer:layer above:[self.layerArray lastObject]];
+        }
+    }
+}
+
+
+
+- (void)fetchCoursesUsingJSON {
+    NSLog(@"Fetching Courses");
+//
+    
+    NSString* filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString* fileName = @"layersdata.json";
+        NSString* fileAtPath = [filePath stringByAppendingPathComponent:fileName];
+    
+    NSString *urlString = @"https://hairtechapp.com";
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    [[NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        NSLog(@"Finished fetching courses....");
+        
+        NSError *err;
+        NSArray *courseJSON = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+        if (err){
+            NSLog(@"Failed to serialize into JSON: %@", err);
+            return;
+        }
+        
+        NSMutableDictionary * props = [NSMutableDictionary dictionary];
+        NSMutableDictionary * array = [NSMutableDictionary dictionary];
+        
+        for (NSDictionary *dictOfLayers in courseJSON) {
+            NSString *name = dictOfLayers[@"id"];
+            props = [dictOfLayers objectForKey:@"layerproperties"];
+            array = [props objectForKey:@"pointArray"];
+            
+            NSString *lineWidth = props[@"lineWidth"];
+            NSString *lineColor = props[@"lineColor"];
+            NSString *startPoint = props[@"startPoint"];
+            NSString *endPoint = props[@"endPoint"];
+            NSString *layerType = props[@"type"];
+            NSString *fontSize = props[@"fontSize"];
+            NSString *controlPoint = props[@"controlPoint"];
+            NSString *textWidth = props[@"width"];
+            NSString *textHeight = props[@"height"];
+            NSString *text = props[@"text"];
+            NSArray *grPoints = array[@"points"];
+            
+            LayersData *layers = LayersData.new;
+            layers.startPoint = CGPointFromString(startPoint);
+            layers.endPoint = CGPointFromString(endPoint);
+            layers.lineWidth = [lineWidth floatValue];
+            
+            layers.color = [self getColorFromString:lineColor];
+            layers.type = layerType;
+            layers.fontSize = [fontSize floatValue];
+            layers.controlPoint = CGPointFromString(controlPoint);
+            layers.layerID = name;
+            layers.height = [textHeight floatValue];
+            layers.width = [textWidth floatValue];
+            layers.text = text;
+            layers.grafittiPoints = grPoints;
+            NSLog(@"array of points %lu", grPoints.count);
+            
+            [self.arrayOfLayersForJSON addObject:layers];
+        }
+            
+        }] resume];
+    
 }
 @end
