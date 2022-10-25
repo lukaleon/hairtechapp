@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NewDrawController : UIViewController{
     IBOutlet UIScrollView *scrollView;
+    NSMutableArray * arrayOfGrids;
+    UIButton * grid;
 
 }
 @property (nonatomic, assign) NSString * labelText;

@@ -99,7 +99,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9wR-M1-SHA">
-                                <rect key="frame" x="114" y="410" width="89" height="30"/>
+                                <rect key="frame" x="220" y="410" width="89" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
                                 <size key="titleShadowOffset" width="1" height="1"/>
@@ -108,18 +108,6 @@
                                 </state>
                                 <connections>
                                     <action selector="cancelSubview:" destination="xnh-0w-pdC" eventType="touchUpInside" id="Sjs-85-x1b"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEa-j1-WZY">
-                                <rect key="frame" x="226" y="410" width="88" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
-                                <size key="titleShadowOffset" width="1" height="1"/>
-                                <state key="normal" title="Ok">
-                                    <color key="titleColor" name="deepblue"/>
-                                </state>
-                                <connections>
-                                    <action selector="closeSubView:" destination="xnh-0w-pdC" eventType="touchUpInside" id="BVD-6V-TSY"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="and enter diagram name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="67E-Pq-ESa">
@@ -152,6 +140,18 @@
                                 <state key="selected" backgroundImage="female-sel.png"/>
                                 <connections>
                                     <action selector="MF_selected:" destination="xnh-0w-pdC" eventType="touchUpInside" id="GO2-oE-Kv5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEa-j1-WZY">
+                                <rect key="frame" x="117" y="410" width="88" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" title="Ok">
+                                    <color key="titleColor" name="orange"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeSubView:" destination="xnh-0w-pdC" eventType="touchUpInside" id="BVD-6V-TSY"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -742,11 +742,11 @@
                                 <rect key="frame" x="-3" y="61" width="433" height="871"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="grey"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="xUo-g8-Vbk">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="12" id="xUo-g8-Vbk">
                                     <size key="itemSize" width="246" height="380"/>
                                     <size key="headerReferenceSize" width="0.0" height="10"/>
                                     <size key="footerReferenceSize" width="50" height="50"/>
-                                    <inset key="sectionInset" minX="10" minY="15" maxX="10" maxY="20"/>
+                                    <inset key="sectionInset" minX="12" minY="15" maxX="12" maxY="20"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="cellID" id="7DT-Vp-VQc" customClass="Cell">

@@ -356,8 +356,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     CGSize  newsize;
     newsize = CGSizeMake(CGRectGetWidth(self.view.frame), (CGRectGetHeight(self.view.frame)));
    if ( IDIOM == IPAD ) {
-        newsize.width = 246;
-        newsize.height = 380;
+//        newsize.width = 246;
+//        newsize.height = 380;
+       newsize.width = 240;
+       newsize.height = 360;
         return newsize;
    } else
    {
@@ -942,13 +944,13 @@ Technique *technique = [self.techniques objectAtIndex:index];
 
 -(void)checkArrayCount
 {
-    NSLog(@"Array count  = %d", arrayOfTechnique.count);
+    NSLog(@"Array count  = %lu", arrayOfTechnique.count);
 
     
     if (arrayOfTechnique.count==0)
     {
 
-        NSLog(@"Array count  = %d", arrayOfTechnique.count);
+        NSLog(@"Array count  = %lu", arrayOfTechnique.count);
         
         isDeletionModeActive = NO;
         MyCustomLayout *layout = (MyCustomLayout *)self.collectionView.collectionViewLayout;
