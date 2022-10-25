@@ -54,7 +54,7 @@
     FrontHeadViewController*frontController;
     BackHeadViewController*backController;
 }
-
+@property (nonatomic, assign) NSString * appVersion;
 //@property (nonatomic,retain)UIImageView * pictureToMove;
 //- (IBAction)CopyHeads:(id)sender;
 

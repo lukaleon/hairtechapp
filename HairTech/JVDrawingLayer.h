@@ -16,7 +16,6 @@ typedef NS_ENUM(NSInteger, JVDrawingType) {
     JVDrawingTypeDashedLine,
     JVDrawingTypeGraffiti,
     JVDrawingTypeText,
-    
 };
 
 typedef NS_ENUM(NSInteger, JVDrawingTouch) {
@@ -27,8 +26,9 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 @interface JVDrawingLayer : CAShapeLayer{
     
-   
+
 }
+
 @property (nonatomic, assign) NSMutableArray * arrayOfLayerPoints;
 @property (nonatomic, assign) CGPoint startPointToConnect;
 @property (nonatomic, assign) CGPoint endPointToConnect;
@@ -38,18 +38,23 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, assign) CGPoint midP;
 @property (nonatomic, assign) NSString *text;
 
-
-
-
 @property (nonatomic, assign) CGPoint startPmoving;
 @property (nonatomic, assign) CGPoint endPmoving;
 @property (nonatomic, assign) CGPoint midPmoving;
 
+@property (nonatomic, assign) CGPoint startPoint;
+@property (nonatomic, assign) CGPoint endPoint;
+@property (nonatomic, assign) CGPoint controlPointOfCurve;
 @property (nonatomic, assign) BOOL isSelected;
 @property (nonatomic, assign) JVDrawingType type;
 @property (nonatomic, assign) CGFloat lineWidth_;
-@property (nonatomic, assign) UIColor * lineColor_;
+@property (nonatomic, strong) UIColor * lineColor_;
 @property (nonatomic, assign) CGFloat fontSize;
+@property (nonatomic, strong) NSMutableArray *pointArray;
+@property (nonatomic, assign) CGFloat width;
+@property (nonatomic, assign) CGFloat height;
+
+
 
 @property (nonatomic, assign) BOOL isVisible;
 @property (nonatomic, strong) NSMutableArray *arrayOfCircles;
@@ -68,14 +73,13 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize  isSelected:(BOOL)isSelected ;
 
-- (NSInteger)caculateLocationWithPoint:(CGPoint)point;
++ (JVDrawingLayer *)createAllLayersAtStart:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color controlPoint:(CGPoint)controlPoint grafittiPoints:(NSArray*)grafittiPoints;
 
+- (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 - (void)movePathWithStartPoint:(CGPoint)startPoint;
 - (void)movePathWithEndPoint:(CGPoint)EndPoint;
 - (void)movePathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint;
 - (void)moveControlPointWithPreviousPoint:(CGPoint)currentPoint;
-
-
 - (void)movePathWithStartPoint:(CGPoint)startPoint isSelected:(BOOL)isSelected;
 - (void)movePathWithEndPoint:(CGPoint)EndPoint isSelected:(BOOL)isSelected;
 - (void)movePathWithPreviousPoint:(CGPoint)previousPoint
@@ -84,14 +88,15 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 - (void)moveTextWithStartPoint:(CGPoint)startPoint ofRect:(CGRect)rect;
 - (void)moveTextWithEndPoint:(CGPoint)startPoint;
-
-
 - (void)moveGrafiitiPathPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint;
-
 - (void)addToTrack;
 - (BOOL)revokeUntilHidden;
-
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path;
 - (BOOL)isPoint:(CGPoint)p  ofPath:(CGPathRef)path;
+- (NSMutableDictionary*)addLayerInfoToDict;
+- (void)moveCurvedLinePathWithStartPoint:(CGPoint)startPoint
+                                endPoint:(CGPoint)endPoint
+                                midPoint:(CGPoint)midPt
+                              isSelected:(BOOL)isSelected;
 
 @end

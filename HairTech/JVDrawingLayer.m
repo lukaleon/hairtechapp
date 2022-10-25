@@ -12,18 +12,20 @@
 
 
 #define JVDRAWINGPATHWIDTH 2
-#define JVDRAWINGBUFFER 12
+#define JVDRAWINGBUFFER 16
 #define JVDRAWINGORIGINCOLOR [UIColor blackColor].CGColor
 #define JVDRAWINGSELECTEDCOLOR [UIColor redColor].CGColor
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
 
 @interface JVDrawingLayer ()
-@property (nonatomic, assign) CGPoint startPoint;
-@property (nonatomic, assign) CGPoint endPoint;
-@property (nonatomic, assign) CGPoint controlPointOfCurve;
-@property (nonatomic, strong) NSMutableArray *pointArray;
+//@property (nonatomic, assign) CGPoint startPoint;
+//@property (nonatomic, assign) CGPoint endPoint;
+//@property (nonatomic, assign) CGPoint controlPointOfCurve;
+//@property (nonatomic, strong) NSMutableArray *pointArray;
 @property (nonatomic, strong) NSMutableArray *trackArray;
+
+
 @property (nonatomic, assign) BOOL editedLine;
 //@property (nonatomic, assign) NSString * text;
 
@@ -159,6 +161,8 @@
     [layer.arrayOfLayerPoints addObject:NSStringFromCGPoint(layer.startPointToConnect)];
     layer.startPoint = startPoint;
     layer.type = type;
+    layer.lineWidth_ = line_Width;
+    layer.lineColor_ = line_Color;
     layer.lineWidth = line_Width;
     layer.strokeColor = layer.fillColor = line_Color.CGColor;
     if (JVDrawingTypeGraffiti == type) {
@@ -178,7 +182,6 @@
         layer.startPoint = startPoint;
         layer.strokeColor = line_Color.CGColor;
         layer.fillColor = [UIColor clearColor].CGColor;
-        
     }
     if (JVDrawingTypeCurvedDashLine == type) {
         layer.startPoint = startPoint;
@@ -192,20 +195,24 @@
 
 }
 -(CGPoint)getStartPointOfLayer:(JVDrawingLayer *)layer{
-    return self.startPoint;
+    return layer.startPoint;
 }
 -(CGPoint)getEndPointOfLayer:(JVDrawingLayer *)layer{
-    return  self.endPoint;
+    return  layer.endPoint;
 }
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize isSelected:(BOOL)isSelected{
     JVDrawingLayer *layer = [[[self class] alloc] init];
-    layer.startPoint = startPoint;
+    //layer.startPoint = startPoint;
+    layer.startPoint = frame.origin;
+    layer.endPoint = frame.origin;
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
     layer.lineColor_ = line_Color;
     layer.fontSize = fontSize;
+    layer.width = frame.size.width;
+    layer.height = frame.size.height;
     CGRect rect;
     rect = CGRectMake(frame.origin.x - 9 , frame.origin.y - 9 , frame.size.width, frame.size.height);
     UIBezierPath *path = [UIBezierPath bezierPath];
@@ -240,7 +247,6 @@
     }
     layer.path = path.CGPath;
     [layer addSublayer:textLayer];
-
     return layer;
 }
 
@@ -302,6 +308,7 @@
 }
 
 - (void)movePathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type isSelected:(BOOL)isSelected {
+    
     self.startPoint = startPoint;
     self.endPoint = endPoint;
     self.isSelected = isSelected;
@@ -396,17 +403,6 @@
     return YES;
 }
 
-//-(void)moveTextWithStartPoint:(CGPoint)startPoint ofRect:(CGRect)rect{
-//    NSLog(@"Move text");
-//
-//    CGRect txtRect = CGRectMake(startPoint.x, startPoint.y, rect.size.width, rect.size.height);
-//    UIBezierPath *textRect=[UIBezierPath bezierPath];
-//    textRect = [UIBezierPath bezierPathWithRect:txtRect];
-//    self.path = textRect.CGPath;
-//
-//
-//}
-
 - (void)moveArrowPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected {
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:startPoint];
@@ -434,7 +430,6 @@
                                 midPoint:(CGPoint)midPt
                               isSelected:(BOOL)isSelected {
     NSLog(@"isSelected %d", isSelected);
-
     if (isSelected) {
 
         self.path = [self editCurvedLineWithStartPoint:startPoint endPoint:endPoint midPoint:midPt length:0].CGPath;
@@ -511,7 +506,6 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     self.editedLine = YES;
     return path;
 }
-
 - (UIBezierPath *)createArrowWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
     
     NSLog(@"Drawing arrow");
@@ -600,4 +594,44 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     return angle;
 }
 
+
++ (JVDrawingLayer *)createAllLayersAtStart:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color controlPoint:(CGPoint)controlPoint grafittiPoints:(NSArray *)grafittiPoints{
+    JVDrawingLayer *layer = [[[self class] alloc] init];
+    layer.startPoint = startPoint;
+    layer.type = type;
+    layer.lineWidth_ = line_Width;
+    layer.lineColor_ = line_Color;
+    layer.lineWidth = line_Width;
+    layer.strokeColor = layer.fillColor = line_Color.CGColor;
+    if (JVDrawingTypeGraffiti == type) {
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        path.lineJoinStyle = kCGLineJoinRound;
+        path.flatness = 0.1;
+        [path moveToPoint:startPoint];
+        layer.path = path.CGPath;
+        layer.pointArray = [NSMutableArray arrayWithObject:[NSValue valueWithCGPoint:startPoint]];
+    }
+    if (JVDrawingTypeDashedLine == type) {
+        [layer setLineDashPattern:
+         [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
+          [NSNumber numberWithInt:2+layer.lineWidth],nil]];
+    }
+    if (JVDrawingTypeCurvedLine == type) {
+        CGPoint ctr = CGPointMake(300, 200 );
+        layer.startPoint = startPoint;
+        layer.strokeColor = line_Color.CGColor;
+        layer.fillColor = [UIColor clearColor].CGColor;
+        [layer editCurvedLineWithStartPoint:startPoint endPoint:endPoint midPoint:ctr length:0];
+    }
+    if (JVDrawingTypeCurvedDashLine == type) {
+        layer.startPoint = startPoint;
+        layer.strokeColor = line_Color.CGColor;
+        layer.fillColor = [UIColor clearColor].CGColor;
+        [layer setLineDashPattern:
+        [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
+        [NSNumber numberWithInt:2+layer.lineWidth],nil]];
+    }
+    return layer;
+
+}
 @end

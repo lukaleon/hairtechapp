@@ -95,9 +95,8 @@
     [self.colorBar4 setTextColor:self.lineExtract];
     [self.colorBar5 setTextColor:self.penExtract];
     
-    
-    
-    NSLog(@"I have extracted colors");
+    self.textExtract = [self extractRGBforTextNew:[GzColors colorFromHex:@"0xFF292F40"]];
+    self.fontSizeVC = 15;
     
 }
 
@@ -142,9 +141,6 @@
     longpresslinebtn .minimumPressDuration = 0.2;
     
     [lineButton addGestureRecognizer:longpresslinebtn];
-    
-
-    //////////----------------------------------
     longpresspenbtn = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHandlerPen:)];
     longpresspenbtn .minimumPressDuration = 0.2;
     
@@ -334,29 +330,13 @@ return YES;
        
     [self adGridToImgView];
 
-    
-    
-   //[KGStatusBar showWithStatus:@""];
     self.navigationItem.title=self.stringFromVC;
-    
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor clearColor]}];
-    
-    
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(setColorButtonTapped:)];
-    
-    UIBarButtonItem *resetButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(reset:)];
-    
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:resetButton, actionButton, nil]];
-
-    
     [self.toolbar setClipsToBounds:YES];
-    
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    
     self.view.backgroundColor = mycolor2;
     self.drawingView.delegate = self;
-  
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
 
@@ -442,9 +422,71 @@ return YES;
     };
     
     buttons = @[blackbtn, penbtn, redbtn, lineButton,bluebtn,textbtn,eraserbtn];
+    [self setupNavigationBarItems];
+}
+- (void)setupNavigationBarItems {
+    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [undo addTarget:self
+             action:@selector(undo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [redo addTarget:self
+             action:@selector(redo)
+   forControlEvents:UIControlEventTouchUpInside];
+    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
+    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
+    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
+    
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [more addTarget:self
+             action:@selector(presentAlertView)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    [more setImage:[UIImage systemImageNamed:@"ellipsis"] forState:UIControlStateNormal];
+    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+    
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+}
+-(void)presentAlertView{
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Alert Title" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Presenting the great... StackOverFlow!"];
+//    [hogan addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:30.0] range:NSMakeRange(24, 11)];
+//    [alertVC setValue:hogan forKey:@"attributedTitle"];
+    UIAlertAction *button = [UIAlertAction actionWithTitle:@"Share"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action){
+                                                   [self openShareMenu];
+                                                   }];
+    UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear"
+                                                     style:UIAlertActionStyleDestructive
+                                                   handler:^(UIAlertAction *action){
+                                                    [self clearPage];
+                                                   }];
+    UIAlertAction *button3 = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *action){
+                                                       //add code to make something happen once tapped
+                                                   }];
+    [button setValue:[[UIImage imageNamed:@"image.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+
+    [button2 setValue:[[UIImage systemImageNamed:@"trash"]
+                       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [alertVC addAction:button];
+    [alertVC addAction:button2];
+    [alertVC addAction:button3];
+
+    [self presentViewController:alertVC animated:YES completion:nil];
 
 }
-
 
 
 
@@ -553,95 +595,46 @@ return YES;
 	return YES;
 }
 - (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
-    NSLog(@"Longpress PEN");
-    [self saveColorsToDefaults];
-    [self pencilPressed:[self.view viewWithTag:5]];
-
-    
-    penbtn.selected = YES;
-    blackbtn.selected=NO;
-    bluebtn.selected=NO;
-    redbtn.selected=NO;
-    eraserbtn.selected=NO;
-    lineButton.selected=NO;
-    
-
-    [longpresspenbtn setDelaysTouchesBegan:YES];
-    
-    
-    if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
-    {
-        
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
-        contentViewController.delegate = self;
-        contentViewController.currentPenColor = self.penExtract;
-
-        self.popoverController5 = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
-        self.popoverController5.delegate = self;
-        [self.popoverController5 presentPopoverFromRect:CGRectMake(penbtn.frame.origin.x,penbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-    }
-    else if
-        (gestureRecognizer.state==UIGestureRecognizerStateEnded)
-    {
-        
-    }
-    penbtn.selected = YES;
-    
-
-    
+        [self saveColorsToDefaults];
+        [self pencilPressed:[self.view viewWithTag:5]];
+        penbtn.selected = YES;
+        blackbtn.selected=NO;
+        bluebtn.selected=NO;
+        redbtn.selected=NO;
+        eraserbtn.selected=NO;
+        lineButton.selected=NO;
+        [longpresspenbtn setDelaysTouchesBegan:YES];
+        if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
+        {
+            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.penExtract];
+            contentViewController.delegate = self;
+            contentViewController.currentPenColor = self.penExtract;
+            self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+            self.popoverController.delegate = self;
+            [self.popoverController presentPopoverFromRect:CGRectMake(penbtn.frame.origin.x,penbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        }
+        penbtn.selected = YES;
 }
-
-
-
 - (void)longPressHandler:(UILongPressGestureRecognizer *)gestureRecognizer {
-    NSLog(@"Long press");
-    
     [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:0]];
-
-    
-    penbtn.selected = NO;
-    blackbtn.selected=YES;
-    bluebtn.selected=NO;
-    redbtn.selected=NO;
-    eraserbtn.selected=NO;
-    lineButton.selected=NO;
-
-    longpressblackbtn .minimumPressDuration = 0.2;
-    
+    lineButton.selected = NO;
+    longpressblackbtn.minimumPressDuration = 0.2;
     [longpressblackbtn setDelaysTouchesBegan:YES];
-    
-    
-    
-    
-    if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blackExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blackExtract;
+        self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+        self.popoverController.delegate = self;
+        [self.popoverController presentPopoverFromRect:CGRectMake(blackbtn.frame.origin.x,blackbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 
-        self.popoverController5 = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
-        self.popoverController5.delegate = self;
-        
-        
-        [self.popoverController5 presentPopoverFromRect:CGRectMake(blackbtn.frame.origin.x,blackbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
-    else
-    {
-        
-        
-    }
-    blackbtn.selected=YES;
-
-    
 }
 - (void)longPressHandlerBlue:(UILongPressGestureRecognizer *)gestureRecognizer {
-    NSLog(@"Long press");
-    
     [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:1]];
-
     penbtn.selected = NO;
     blackbtn.selected=NO;
     bluebtn.selected=YES;
@@ -650,108 +643,65 @@ return YES;
     lineButton.selected=NO;
     longpressbluebtn .minimumPressDuration = 0.2;
     [longpressbluebtn setDelaysTouchesBegan:YES];
-
-    
-    if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
-        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blueExtract];        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blueExtract;
 
-        self.popoverController5 = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
-        self.popoverController5.delegate = self;
-        
-        
-        [self.popoverController5 presentPopoverFromRect:CGRectMake(bluebtn.frame.origin.x,bluebtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+        self.popoverController.delegate = self;
+        [self.popoverController presentPopoverFromRect:CGRectMake(bluebtn.frame.origin.x,bluebtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
-    
-    
-    
     bluebtn.selected=YES;
-
-    
 }
 - (void)longPressHandlerRed:(UILongPressGestureRecognizer *)gestureRecognizer {
     [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:2]];
-
-    NSLog(@"Long press");
     penbtn.selected = NO;
     blackbtn.selected=NO;
     bluebtn.selected=NO;
     redbtn.selected=YES;
     eraserbtn.selected=NO;
     lineButton.selected=NO;
-
     longpressredbtn .minimumPressDuration = 0.2;
-    //longpressbluebtn .minimumPressDuration = 0.2;
-    
     [longpressredbtn setDelaysTouchesBegan:YES];
-    if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.redExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.redExtract;
-
-        self.popoverController5 = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
-        self.popoverController5.delegate = self;
-        
-        
-        [self.popoverController5 presentPopoverFromRect:CGRectMake(redbtn.frame.origin.x,redbtn.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-        
+        self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+        self.popoverController.delegate = self;
+        [self.popoverController presentPopoverFromRect:CGRectMake(redbtn.frame.origin.x,redbtn.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
-    
     redbtn.selected=YES;
-
-    
 }
 
 - (void)longPressHandlerLine:(UILongPressGestureRecognizer *)gestureRecognizer {
-    NSLog(@"Long press");
-    
     [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:3]];
-
     if(self.popTipLine){
-        
         [self.popTipLine hide];
-        
-        
     }
-    
     penbtn.selected = NO;
-    
     blackbtn.selected=NO;
     bluebtn.selected=NO;
     redbtn.selected=NO;
     eraserbtn.selected=NO;
     lineButton.selected=YES;
-
     longpresslinebtn .minimumPressDuration = 0.2;
     [longpresslinebtn setDelaysTouchesBegan:YES];
-    
-    
-    if (gestureRecognizer.state==UIGestureRecognizerStateBegan)
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        
-        ColorViewController *contentViewController = [[ColorViewController alloc] init];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.lineExtract];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.lineExtract;
-
-        self.popoverController5 = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
-        self.popoverController5.delegate = self;
-        
-        
-        [self.popoverController5 presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+        self.popoverController.delegate = self;
+        [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
-    
     lineButton.selected=YES;
-
 }
-
-
 -(void)extractRGBforPen:(UIColor*)tempcolor
 {
     
@@ -838,185 +788,140 @@ return YES;
     opacity=1.0;
     brush_line=3.0;
     NSLog(@"Color was extracted");
+}
+-(void)extractRGBforText:(UIColor*)tempcolor
+{
+    redtemp4 = 0.0; greentemp4= 0.0; bluetemp4 = 0.0; alphatemp4 = 1.0;
     
+    [tempcolor getRed:&redtemp4 green:&greentemp4 blue:&bluetemp4 alpha:&alphatemp4];
+    self.textExtract=tempcolor;
+    red_line =redtemp4;
+    green_line=greentemp4;
+    blue_line=bluetemp4;
+    alpha_line=1.0;
+    opacity=1.0;
+    brush_line=3.0;
+}
+-(UIColor*)extractRGBforTextNew:(UIColor*)tempcolor
+{
+    redtemp4 = 0.0; greentemp4= 0.0; bluetemp4 = 0.0; alphatemp4 = 1.0;
     
+    [tempcolor getRed:&redtemp4 green:&greentemp4 blue:&bluetemp4 alpha:&alphatemp4];
+  //  self.textExtract=tempcolor;
+    red_line =redtemp4;
+    green_line=greentemp4;
+    blue_line=bluetemp4;
+    alpha_line=1.0;
+    opacity=1.0;
+    brush_line=3.0;
+    return tempcolor;
 }
 -(void) colorPopoverControllerDidSelectColor:(NSString *)hexColor {
     if(penbtn.selected==YES){
-        
-        
         [self extractRGBforPen:[GzColors colorFromHex:hexColor]];
-        
         self.drawingView.drawTool = ACEDrawingToolTypePen;
         self.drawingView.lineColor = self.penExtract;
-        
         [self.colorBar5 setTextColor:self.penExtract];
         self.penbtn.backgroundColor = self.penExtract;
-        
-       
         blackbtn.backgroundColor = btnColor;
         bluebtn.backgroundColor = btnColor;
         redbtn.backgroundColor = btnColor;
         lineButton.backgroundColor = btnColor;
-        
-        
-        //  blackbtn.layer.borderColor = [[GzColors colorFromHex:hexColor]CGColor];
-        
-        //    [self.drawcontrollerRightdelegate selectedBtn:hexColor];
-        
         [self.view setNeedsDisplay];
-        
         [penbtn addGestureRecognizer:longpresspenbtn];
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        
-        [self.popoverController5 dismissPopoverAnimated:YES];
-        self.popoverController5 = nil;
-        
-        
-       // [self.drawcontrollerdelegate selectedBtn:hexColor];
-        
-        
-        
+        [self.popoverController dismissPopoverAnimated:YES];
+        self.popoverController = nil;
     }
     
     
     if(    blackbtn.selected==YES){
         [self extractRGBforBlack:[GzColors colorFromHex:hexColor]];
-        
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        // if(curveToggleIsOn){
-            
-            self.drawingView.drawTool = ACEDrawingToolTypeCurve;
-            self.drawingView.lineColor = self.blackExtract;
-            self.blackbtn.backgroundColor = self.blackExtract;
-          //  [blackbtn setImage: [UIImage imageNamed:@"curve_solid.png"] forState:UIControlStateSelected];
-            
-            
-    
-            
-      //      appDelegate.dashedCurve = YES;
-      //  }
-        //else{
-            self.drawingView.drawTool = ACEDrawingToolTypeCurve;
-            self.drawingView.lineColor = self.blackExtract;
-            self.blackbtn.backgroundColor = self.blackExtract;
-            
-         //   [blackbtn setImage: [UIImage imageNamed:@"curve_dash.png"] forState:UIControlStateSelected];
-            
-       //  appDelegate.dashedCurve = NO;
-      //  }
-       // curveToggleIsOn = !curveToggleIsOn;
-       // [self.blackbtn setImage:[UIImage imageNamed:curveToggleIsOn ? @"curveNew.png" :@"curveDashNew.png"] forState:UIControlStateSelected];
-        
-      //  [self.colorBar1 setTextColor:self.blackExtract];
+        self.drawingView.drawTool = ACEDrawingToolTypeCurve;
+        self.drawingView.lineColor = self.blackExtract;
+        self.blackbtn.backgroundColor = self.blackExtract;
+        self.drawingView.drawTool = ACEDrawingToolTypeCurve;
+        self.drawingView.lineColor = self.blackExtract;
+        self.blackbtn.backgroundColor = self.blackExtract;
         self.penbtn.backgroundColor = btnColor;
         bluebtn.backgroundColor = btnColor;
         redbtn.backgroundColor = btnColor;
         lineButton.backgroundColor = btnColor;
-        
-        
         [self.view setNeedsDisplay];
-
         [penbtn addGestureRecognizer:longpresspenbtn];
-        
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        
-        
-        [self.popoverController5 dismissPopoverAnimated:YES];
-        self.popoverController5 = nil;
+        [self.popoverController dismissPopoverAnimated:YES];
+        self.popoverController = nil;
     }
     
-    
-    if(bluebtn.selected==YES){
+    if (bluebtn.selected==YES){
         [self extractRGBforBlue:[GzColors colorFromHex:hexColor]];
         self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
-        
         self.drawingView.lineColor = self.blueExtract;
-        
         [self.colorBar2 setTextColor:self.blueExtract];
-        
          self.bluebtn.backgroundColor = self.blueExtract;
         blackbtn.backgroundColor = btnColor;
         self.penbtn.backgroundColor = btnColor;
         redbtn.backgroundColor = btnColor;
         lineButton.backgroundColor = btnColor;
-        
         [self.view setNeedsDisplay];
-        
         [penbtn addGestureRecognizer:longpresspenbtn];
-        
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        [self.popoverController5 dismissPopoverAnimated:YES];
-        self.popoverController5 = nil;
+        [self.popoverController dismissPopoverAnimated:YES];
+        self.popoverController = nil;
     }
     
     if(redbtn.selected==YES){
         [self extractRGBforRed:[GzColors colorFromHex:hexColor]];
         self.drawingView.drawTool = ACEDrawingToolTypeArrow;
-        
         self.drawingView.lineColor = self.redExtract;
-        
         [self.colorBar3 setTextColor:self.redExtract];
          self.redbtn.backgroundColor = self.redExtract;
-        
         bluebtn.backgroundColor = btnColor;
         blackbtn.backgroundColor = btnColor;
         penbtn.backgroundColor = btnColor;
         lineButton.backgroundColor =btnColor;
         [self.view setNeedsDisplay];
-        
         [penbtn addGestureRecognizer:longpresspenbtn];
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        [self.popoverController5 dismissPopoverAnimated:YES];
-        self.popoverController5 = nil;
+        [self.popoverController dismissPopoverAnimated:YES];
+        self.popoverController = nil;
     }
     if(lineButton.selected==YES){
         [self extractRGBforLine:[GzColors colorFromHex:hexColor]];
         self.drawingView.drawTool = ACEDrawingToolTypeLine;
-        
         self.drawingView.lineColor = self.lineExtract;
-        
         [self.colorBar4 setTextColor:self.lineExtract];
          self.lineButton.backgroundColor = self.lineExtract;
-        
         bluebtn.backgroundColor = btnColor;
         blackbtn.backgroundColor = btnColor;
         penbtn.backgroundColor = btnColor;
         redbtn.backgroundColor = btnColor;
-        
         [self.view setNeedsDisplay];
-        
         [penbtn addGestureRecognizer:longpresspenbtn];
-        
         [blackbtn addGestureRecognizer:longpressblackbtn];
         [bluebtn addGestureRecognizer:longpressbluebtn];
         [redbtn addGestureRecognizer:longpressredbtn];
         [lineButton addGestureRecognizer:longpresslinebtn];
-        
-        [self.popoverController5 dismissPopoverAnimated:YES];
-        self.popoverController5 = nil;
+        [self.popoverController dismissPopoverAnimated:YES];
+        self.popoverController = nil;
     }
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    self.popoverController5 = nil;
+    self.popoverController = nil;
     [penbtn addGestureRecognizer:longpresspenbtn];
 
     [blackbtn addGestureRecognizer:longpressblackbtn];
@@ -1067,9 +972,40 @@ return YES;
     textSelected = NO;
     [self pencilPressed:sender];
 }
--(void)selectTextTool:(id)sender isSelected:(BOOL)isSelected{
+- (void)selectTextTool:(id)sender passColor:(UIColor*)color {
+    curveToggleIsOn = nil;
+    dashLineCount = 0;
+    penbtn.selected = NO;
+    blackbtn.selected=NO;
+    bluebtn.selected=NO;
+    redbtn.selected=NO;
+    eraserbtn.selected=NO;
+    lineButton.selected=NO;
+    textbtn.selected = YES;
+    self.drawingView.eraserSelected = NO;
+    [self makeButtonSelected];
+    
+    [self.drawingView enableGestures];
+    self.drawingView.type = JVDrawingTypeText;
+    self.drawingView.bufferType = JVDrawingTypeText;
+    self.drawingView.lineColor = self.textExtract;
+    self.drawingView.textTypesSender = sender;
+    self.drawingView.textViewNew.delegate = self;
+    [self showTextColorsAndSize:color];
+    
+}
+-(void)selectTextTool:(id)sender textColor:(UIColor*)color fontSize:(CGFloat)fontSz isSelected:(BOOL)isSelected{
+    [self selectTextTool:sender passColor:color];
     textSelected = isSelected;
-    [self pencilPressed:sender];
+    contentTextView.fontSizee = fontSz;
+    self.drawingView.textViewFontSize = fontSz;
+    [contentTextView setFontSizee:fontSz];
+    [contentViewController setCurrentTextColorForIndicator:color];
+}
+-(void)addTextFromTextSettings{
+    NSLog(@"add text");
+    textSelected = NO;
+    [self pencilPressed:[self.view viewWithTag:4]];
 }
  - (IBAction)pencilPressed:(id)sender {
      
@@ -1175,10 +1111,9 @@ return YES;
              eraserbtn.selected=NO;
              lineButton.selected=YES;
              textbtn.selected = NO;
-             redbtn.backgroundColor = self.redExtract;
              self.drawingView.eraserSelected = NO;
-             
              lineButton.backgroundColor = self.lineExtract;
+             
              [self makeButtonSelected];
              [self.drawingView disableGestures];
              self.drawingView.type = JVDrawingTypeLine;
@@ -1191,6 +1126,7 @@ return YES;
              
              break;
          case 4:
+
              curveToggleIsOn = nil;
              dashLineCount = 0;
              penbtn.selected = NO;
@@ -1206,18 +1142,21 @@ return YES;
              [self.drawingView enableGestures];
              self.drawingView.type = JVDrawingTypeText;
              self.drawingView.bufferType = JVDrawingTypeText;
-             self.drawingView.lineColor = [UIColor blackColor];
+             self.drawingView.lineColor = self.textExtract;
              self.drawingView.textTypesSender = sender; //Should be saved to user defaults
- //            [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,
- //                                              self.drawingView.bounds.origin.y,
- //                                              self.drawingView.bounds.size.width,
- //                                              self.drawingView.bounds.size.height) animated:YES];
+             
              CGRect gripFrame = CGRectMake(0, 0, 70, 38);
              if (!textSelected){
-          //   [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" ];
+                 [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:self.textExtract font:self.fontSizeVC];
+                 [contentTextView setFontSizee:self.fontSizeVC];
+                 self.drawingView.textViewFontSize = self.fontSizeVC;
              }
+             
              self.drawingView.textViewNew.delegate = self;
-            // [self setButtonUNVisibleTextPressed];
+             if (contentTextView == nil){
+                 [self showTextColorsAndSize:self.textExtract]; //??????????? atttention
+                 [contentTextView setFontSizee:self.fontSizeVC];
+             }
              break;
          case 5:
              curveToggleIsOn = nil;
@@ -1303,6 +1242,14 @@ return YES;
     else{
         actionSheet5 = nil;
     }
+}
+-(void)clearPage{
+    [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
+    // Do the delete
+    self.NewImageView.image = nil;
+    [self.drawingView clear];
+    self.drawingView.backgroundColor =[UIColor clearColor];
+    [self updateButtonStatus];
 }
 
 - (void)saveImage{
@@ -1567,14 +1514,13 @@ return YES;
     self.redoBut.enabled = [self.drawingView canRedo];
 }
 
-- (IBAction)UndoButton:(id)sender {
-    
+-(void)undo{
+    NSLog(@"undo");
     [self.drawingView undoLatestStep];
     [self updateButtonStatus];
 }
-
-- (IBAction)RedoButton:(id)sender {
-    
+-(void)redo{
+    NSLog(@"redo");
     [self.drawingView redoLatestStep];
     [self updateButtonStatus];
 }
@@ -1594,7 +1540,7 @@ self.previewImageView.layer.sublayers = nil;
     //[Flurry logEvent:@"Caprure_For_Mail"];
        [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
 
         UIGraphicsBeginImageContext(self.view.frame.size);
@@ -1602,13 +1548,13 @@ self.previewImageView.layer.sublayers = nil;
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
 
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
@@ -1616,7 +1562,7 @@ self.previewImageView.layer.sublayers = nil;
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1627,33 +1573,29 @@ self.previewImageView.layer.sublayers = nil;
 
 -(UIImage*)captureRetinaScreenForMail
 {
-
-       // self.previewImageView.layer.sublayers = nil;
-
-        [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
-    
-    //[Flurry logEvent:@"Caprure_Retina_For_Mail"];
+    [self.drawingView bringArrowsToFront];
+    [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage*img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        self.showBar;
+        [self showBar];
         [self adGridToImgView];
         return img;
 
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.hideBar;
+        [self hideBar];
         self.previewImageView.layer.sublayers = nil;
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        self.showBar;
+        [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];
         return img;
@@ -1661,64 +1603,24 @@ self.previewImageView.layer.sublayers = nil;
     }
     
 }
-- (IBAction)setColorButtonTapped:(id)sender{
-    
-    // if(self.drawingView.editMode ==YES)
-    // {
-    //   [self performSelector:@selector(buttonTouched:)];
-    
-    // }
+- (void)openShareMenu{
+  
     NSString *textToShare;
-    
-    
     textToShare = [NSString stringWithFormat:@"HAIRTECH - HEAD SHEETS"];
-    // NSString *        textToShare2 = [NSString stringWithFormat:@"fb://profile/230787750393258"];
-    
     UIImage *imageToShare;
-  /*  if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        imageToShare =  [self captureRetinaScreenForMail];
-    }
-    else
-    {
-        imageToShare = [self captureScreenForMail];
-    }*/
     imageToShare =  [self captureRetinaScreenForMail];
-   // NSArray *itemsToShare = @[textToShare, imageToShare];
-    
     NSMutableArray *itemsToShare = [NSMutableArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
-    /*
-    self.listPopoverdraw1 = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-    self.listPopoverdraw1.delegate = self;
-    
-    [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    */
-    
-    
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        // code here
-        
-        
         self.listPopoverdraw1 = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
         self.listPopoverdraw1.delegate = self;
-        
         [self.listPopoverdraw1 presentPopoverFromRect:CGRectMake(685,60,10,1) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-        
-        
     }
-    
-    
-    
-    
-    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        // code here
-        
+       
         activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-        //activityViewController.preferredContentSize = CGSizeMake(400, 400);
         
         [self presentViewController:activityViewController animated: YES completion: nil];
         
@@ -2221,5 +2123,49 @@ self.previewImageView.layer.sublayers = nil;
         }
     }
 }
+-(void)removeTextSettings{
+    NSLog(@"remove text settings");
+    [contentTextView removeFromSuperview];
+    contentTextView = nil;
+}
+-(void)showTextColorsAndSize:(UIColor*)color{
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color];
+    contentTextView.center = self.imageToolbar1.center;
+    //contentTextView.currentPenColor = color;
+    textSetterState = YES;
+    contentTextView.delegate = self;
+    [self.view addSubview:contentTextView];
+}
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
+;
+}
 
+- (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
+    NSLog(@"selected color for text");
+    [self extractRGBforText:[GzColors colorFromHex:hexColor]];
+    self.drawingView.lineColor = self.textExtract;
+    self.textbtn.backgroundColor = self.textExtract;
+    self.drawingView.textViewNew.textColor = self.textExtract;
+}
+
+- (void)textSettingsDidSelectFontSize:(CGFloat)fontSize
+{
+    self.drawingView.textViewFontSize = fontSize;
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = -0.20;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+    NSDictionary *attrsDictionary =
+    @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:fontSize],
+     NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.drawingView.textViewNew.textColor};
+    self.drawingView.textViewNew.attributedText = [[NSAttributedString alloc] initWithString:self.drawingView.textViewNew.text attributes:attrsDictionary];
+    [self textViewDidChange:self.drawingView.textViewNew];
+    }
+-(void)disableZoomWhenTouchesMoved{
+    scrollView.pinchGestureRecognizer.enabled = NO;
+}
+-(void)enableZoomWhenTouchesMoved{
+    scrollView.pinchGestureRecognizer.enabled = YES;
+}
 @end

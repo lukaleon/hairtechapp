@@ -70,6 +70,9 @@
     
     [self.textField becomeFirstResponder];
     self.textField.delegate = self;
+    UIColor *color = [UIColor colorNamed:@"deepblue"];
+      self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"diagram name" attributes:@{NSForegroundColorAttributeName: color}];
+    
     arrayOfTechnique = [[NSMutableArray alloc]init];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.OkButtonInSubView=0;
@@ -494,8 +497,8 @@
     
     Technique *technique = [[Technique alloc] init];
     technique.techniquename = self.textField.text;
-    //technique.date = self.textField.text;
-    technique.date = appDelegate.globalDate;
+    //technique.date = appDelegate.globalDate; // in previous versions before 6.0.1
+    technique.date = @"version22"; // newest version
     technique.techniqueimage=foothumb_0;
     technique.techniqueimagethumb1=foothumb_1;
     technique.techniqueimagethumb2=foothumb_2;
@@ -517,7 +520,6 @@
         [Utility showAlert:@"Error" message:@"Validation Failed!"];
         return;
     }
-    
     [self.delegate MySubViewController:self didAddCustomer:technique];
     
     

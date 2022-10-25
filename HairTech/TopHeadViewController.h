@@ -121,20 +121,21 @@
     NSArray *buttons;
     BOOL textSelected;
     BOOL curveToggleIsOn;
+    ColorViewController *contentTextView;
+    ColorViewController *contentViewController;
+    BOOL textSetterState;
 
 
 }
+@property (nonatomic, assign) NSString * appVersion;
+@property CGFloat fontSizeVC;
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;
-
 @property (nonatomic, strong) AMPopTip *popTipLine;
 @property (nonatomic, strong) AMPopTip *popTipCurve;
-
 @property (nonatomic,assign) IBOutlet UIButton *btn;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverBtn2;
-
 @property (weak, nonatomic) IBOutlet UIView *viewForImg;
-
 -(IBAction)buttonTouched:(id)sender;
 @property (nonatomic, retain) UIPopoverController *listPopoverdraw1;
 //@property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverBtn;
@@ -163,7 +164,7 @@
 @property (weak, nonatomic) IBOutlet UILabel * colorBar4;
 @property (weak,nonatomic) IBOutlet UIImageView * toolbarImg;
 
-@property (nonatomic, strong) WEPopoverController *popoverController3;
+@property (nonatomic, strong) WEPopoverController *popoverController;
 
 @property (weak,nonatomic)UIImage *imagethumb1;
 @property (weak,nonatomic)UIImage *imagethumb2;
@@ -262,6 +263,8 @@
 @property UIColor* redExtract;
 @property UIColor* lineExtract;
 @property UIColor* penExtract;
+@property UIColor* textExtract;
+
 
 
 @property CGFloat red_pen;

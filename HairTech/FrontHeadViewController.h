@@ -127,15 +127,17 @@ int dashLineCount;
     NSArray *buttons;
     BOOL textSelected;
     BOOL curveToggleIsOn;
+    ColorViewController *contentTextView;
+    ColorViewController *contentViewController;
+    BOOL textSetterState;
 
 }
-
+@property (nonatomic, assign) NSString * appVersion;
+@property CGFloat fontSizeVC;
 @property (nonatomic, assign) int numberOfColumns;
 @property (nonatomic, assign) int numberOfRows;
-
 @property (nonatomic, strong) AMPopTip *popTipLine;
 @property (nonatomic, strong) AMPopTip *popTipCurve;
-
 @property (nonatomic,assign) IBOutlet UIButton *btn;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverBtn3;
 
@@ -145,15 +147,10 @@ int dashLineCount;
 @property (nonatomic, retain) UIPopoverController *listPopoverdraw1;
 //@property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverBtn;
 - (IBAction)setColorButtonTapped:(id)sender;
-
 @property (weak,nonatomic)UIImage *screenshotdraw1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIImageView *imageToolbar1;
-
-
-
 @property (nonatomic, weak) IBOutlet ACEDrawingView *drawingView;
 @property (nonatomic, weak) IBOutlet UIImageView *previewImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *NewImageView;
@@ -162,7 +159,6 @@ int dashLineCount;
 
 @property (weak, nonatomic) IBOutlet UIButton *redoBut;
 
-
 @property (weak, nonatomic) IBOutlet UILabel * colorBar1;
 @property (weak, nonatomic) IBOutlet UILabel * colorBar2;
 @property (weak, nonatomic) IBOutlet UILabel * colorBar3;
@@ -170,7 +166,7 @@ int dashLineCount;
 
 @property (weak,nonatomic) IBOutlet UIImageView * toolbarImg;
 
-@property (nonatomic, strong) WEPopoverController *popoverController4;
+@property (nonatomic, strong) WEPopoverController *popoverController;
 
 
 @property (weak,nonatomic)UIImage *imagethumb1;
@@ -201,16 +197,11 @@ int dashLineCount;
 @property (weak, nonatomic) IBOutlet UIButton *lineButton;
 @property (weak, nonatomic) IBOutlet UIButton *textbtn;
 
-
 - (IBAction)UndoButton:(id)sender;
-
 - (IBAction)RedoButton:(id)sender;
-
 - (IBAction)pencilPressed:(id)sender;
 - (IBAction)eraserPressed:(id)sender;
-
 - (IBAction)reset:(id)sender;
-
 
 @property CGFloat brush;
 @property CGFloat opacity;
@@ -224,13 +215,11 @@ int dashLineCount;
 @property CGFloat brush_blue;
 @property CGFloat alpha_blue;
 
-
 @property CGFloat red_red;
 @property CGFloat green_red;
 @property CGFloat blue_red;
 @property CGFloat brush_red;
 @property CGFloat alpha_red;
-
 
 @property CGFloat red_line;
 @property CGFloat green_line;
@@ -263,7 +252,7 @@ int dashLineCount;
 @property UIColor* redExtract;
 @property UIColor* lineExtract;
 @property UIColor* penExtract;
-
+@property UIColor* textExtract;
 
 @property CGFloat red_pen;
 @property CGFloat green_pen;

@@ -99,7 +99,7 @@ CGPoint location;
 }
 
 -(void)viewDidLoad{
-
+    NSLog(@"APP VERSION%@", self.appVersion);
     CGRect screenRect = [[UIScreen mainScreen] nativeBounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
@@ -118,7 +118,7 @@ CGPoint location;
    
    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetina) name:UIApplicationWillTerminateNotification object:nil];
    [self.toolbar setClipsToBounds:YES];
-    
+   
   // [KGStatusBar dismiss];
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -323,6 +323,7 @@ CGPoint location;
     self.navigationItem.title = self.stringFromTextfield;
     // [super viewWillAppear:animated];
     
+    
     }
    }
 /*
@@ -390,16 +391,13 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     self.sendImagenameToControllers = appDelegate.myGlobalName;
    
     dcController.stringForLabel = self.sendImagenameToControllers;
-    
-    NSLog(@"StringForLabelAtDrawController====",dcController.stringForLabel);
-    
-   // [Flurry logEvent:@"Draw_View_Opened"];
-
-
+    dcController.appVersion = self.appVersion;
     [self.navigationController pushViewController:dcController animated:YES];
     dcController.drawcontrollerdelegate = self;
    
     appDelegate.currentView = @"drawView";
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
     
     
 }
@@ -415,7 +413,8 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     self.sendImagenameToControllers = appDelegate.myGlobalName;
     
     dcControllerRight.stringForLabel = self.sendImagenameToControllers;
-    
+    dcControllerRight.appVersion = self.appVersion;
+
     
   //  [Flurry logEvent:@"Top_View_Opened"];
     
@@ -429,6 +428,7 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     topController = [self.storyboard instantiateViewControllerWithIdentifier:@"topView"];
     
     topController.stringFromVC=self.navigationItem.title;
+    topController.appVersion = self.appVersion;
 
     
     ////------Send imagename to DrawViewController -----------///////////
@@ -451,6 +451,8 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     frontController = [self.storyboard instantiateViewControllerWithIdentifier:@"frontView"];
     
     frontController.stringFromVC=self.navigationItem.title;
+    frontController.appVersion = self.appVersion;
+
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.checkHead2!=1){
         appDelegate.checkHead2=0;
@@ -472,6 +474,8 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     backController = [self.storyboard instantiateViewControllerWithIdentifier:@"backView"];
     
     backController.stringFromVC=self.navigationItem.title;
+    backController.appVersion = self.appVersion;
+
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(appDelegate.checkHead2!=1){
         appDelegate.checkHead2=0;
@@ -682,7 +686,7 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     }*/
     [self.label setHidden:NO];
     [self.labelHairTech setHidden:NO];
-    self.showBar;
+    [self showBar];
 }
 
 
@@ -864,26 +868,40 @@ if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
 }
 
 
--(void) passItemBack:(DrawViewController *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5
+-(void) passItemBack:(DrawViewController *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5 version:(NSString*)version
 {
-    if ((screenWidth == 414)&&(screenHeight==736))
-    {
+    self.appVersion = version;
+    
+    if(![version isEqualToString:@"version22"]){
+        if ((screenWidth == 414)&&(screenHeight==736))
+        {
+            self.buttonTopHead.frame = CGRectMake((screenRect.size.width/2)-84, (screenRect.size.height/2)-120, 165, 275);
+            
+            self.button.frame = CGRectMake(0, 64, 165, 275);
+            self.buttonRightHead.frame = CGRectMake(screenRect.size.width-165, 64, 165, 275);
+            self.buttonFrontHead.frame = CGRectMake(0, screenRect.size.height-265, 165, 275);
+            self.buttonBackHead.frame = CGRectMake(screenRect.size.width-165, screenRect.size.height-265, 165, 275);
+        }
+    } else {
+        CGFloat halfWidth = self.view.frame.size.width / 2;
+        
         self.buttonTopHead.frame = CGRectMake((screenRect.size.width/2)-84, (screenRect.size.height/2)-120, 165, 275);
         
-        self.button.frame = CGRectMake(0, 64, 165, 275);
-        self.buttonRightHead.frame = CGRectMake(screenRect.size.width-165, 64, 165, 275);
+        self.button.frame = CGRectMake(self.view.frame.origin.x, 64, halfWidth, halfWidth * 1.3);
+        self.buttonRightHead.frame = CGRectMake(self.view.center.x, 64, self.view.center.x * 2, halfWidth * 1.3);
         self.buttonFrontHead.frame = CGRectMake(0, screenRect.size.height-265, 165, 275);
         self.buttonBackHead.frame = CGRectMake(screenRect.size.width-165, screenRect.size.height-265, 165, 275);
     }
-
-    NSLog(@"I Was called from drawiewcontroller");
-    [self.button setBackgroundImage:item1 forState:UIControlStateNormal];
-    [self.buttonRightHead setBackgroundImage:item2 forState:UIControlStateNormal];
-    [self.buttonTopHead setBackgroundImage:item3 forState:UIControlStateNormal];
-    [self.buttonFrontHead setBackgroundImage:item4 forState:UIControlStateNormal];
-    [self.buttonBackHead setBackgroundImage:item5 forState:UIControlStateNormal];
-
-    [self.navigationController popToViewController:self animated:YES];
+        
+        NSLog(@"I Was called from drawiewcontroller");
+        [self.button setBackgroundImage:item1 forState:UIControlStateNormal];
+        [self.buttonRightHead setBackgroundImage:item2 forState:UIControlStateNormal];
+        [self.buttonTopHead setBackgroundImage:item3 forState:UIControlStateNormal];
+        [self.buttonFrontHead setBackgroundImage:item4 forState:UIControlStateNormal];
+        [self.buttonBackHead setBackgroundImage:item5 forState:UIControlStateNormal];
+        
+        [self.navigationController popToViewController:self animated:YES];
+ 
     
 }
 -(void) passItemBackFromRight:(DrawViewControllerRight *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5
