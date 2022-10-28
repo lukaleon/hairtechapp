@@ -974,7 +974,7 @@ UIColor* tempColor;
     
     [self LoadColorsAtStart];
     self.lineColor = tempColor;
-    self.backgroundColor = [UIColor clearColor];
+   // self.backgroundColor = [UIColor clearColor];
     self.pointsCoord = [NSMutableArray array];
     self.arrayOfTextViews = [NSMutableArray array];
     
@@ -1476,9 +1476,20 @@ UIColor* tempColor;
 }
 #pragma mark - Clear Screen
 
+-(void)removeAllDrawings{
+    [self hideMenu];
+    for (CAShapeLayer * layer in self.layerArray) {
+        [layer performSelector:@selector(removeFromSuperlayer)];
+    }
+    [self.layerArray removeAllObjects];
+    self.selectedLayer.isSelected = NO;
+    self.selectedLayer = nil;
+    self.drawingLayer = nil;
+    [self updateAllPoints];
+    [self storeDataInJson];
+    [self fetchData];}
 - (void)clear
 {
-
     [self.bufferArray removeAllObjects];
     [self.bufferOfPoints removeAllObjects];
     [self.pathArray removeAllObjects];

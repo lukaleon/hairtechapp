@@ -248,7 +248,7 @@ typedef enum {
 -(void)addTextViewToMiddle;
 // erase all
 - (void)clear;
-
+-(void)removeAllDrawings;
 // undo / redo
 - (BOOL)canUndo;
 - (void)undoLatestStep;
