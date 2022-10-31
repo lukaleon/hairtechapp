@@ -11,9 +11,19 @@
 #import "WEPopoverController.h"
 #import "ColorViewController.h"
 #import "AMPopTip.h"
-
+#import "NewEntryController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@class NewDrawController;
+@protocol NewDrawControllerDelegate<NSObject>
+-(void)imageForButton:(UIImage*)imageForButton;
+-(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item;
+-(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item;
+-(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item;
+-(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item;
+-(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item;
+
+@end
 
 @interface NewDrawController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate , UIScrollViewDelegate, UITextViewDelegate>
 {
@@ -37,8 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL curveToggleIsOn;
     BOOL textSelected;
     BOOL textSetterState;
-
-
 }
 @property (nonatomic, assign) NSString * labelText;
 @property (nonatomic, assign) NSString * imgName;
@@ -54,18 +62,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *lineTool;
 @property (weak, nonatomic) IBOutlet UIButton *eraserTool;
 @property (weak, nonatomic) IBOutlet UIButton *textTool;
+@property CGFloat fontSizeVC;
 
 - (IBAction)pencilPressed:(id)sender;
 - (IBAction)eraserPressed:(id)sender;
 
-
 @property (nonatomic, strong) AMPopTip *popTipLine;
 @property (nonatomic, strong) AMPopTip *popTipCurve;
 @property (nonatomic, strong) WEPopoverController *popoverController;
-
-@property CGFloat fontSizeVC;
-
-
+@property (weak, nonatomic) id<NewDrawControllerDelegate>delegate;
 @end
 
 NS_ASSUME_NONNULL_END

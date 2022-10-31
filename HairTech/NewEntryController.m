@@ -13,18 +13,16 @@
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
-
-
 @implementation NewEntryController
 
 -(void)viewDidAppear:(BOOL)animated{
     
     [self captureScreenRetina];
-
+    
 }
--(void)viewDidLoad{
+-(void)viewDidLoad{    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-   UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareButton;
     
     UITapGestureRecognizer * tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
@@ -41,7 +39,8 @@
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
     NewDrawController *newDrawVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewDrawController"];
-
+    newDrawVC.delegate = self;
+    
     switch (myViewTag) {
         case 1:
             newDrawVC.imgName = @"lefthead";
@@ -62,9 +61,9 @@
             break;
     }
     [self.navigationController pushViewController: newDrawVC animated:YES];
-
-
-    }
+    
+    
+}
 
 
 
@@ -74,31 +73,31 @@
     UIImage *imageToShare;
     if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale == 2.0)) {
-     //  imageToShare =  [self captureRetinaScreenForMail];
+        //  imageToShare =  [self captureRetinaScreenForMail];
     }
     else
     {
-      //imageToShare = [self captureScreenForMail];
+        //imageToShare = [self captureScreenForMail];
     }
-     NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
+    NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
     
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
     
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-    UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-    listPopover.delegate = self;
-    [listPopover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+        listPopover.delegate = self;
+        [listPopover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     }
-if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-
-    activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-    [self presentViewController:activityViewController animated: YES completion: nil];
-    UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
-    popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
-    popoverPresentationController.sourceView = self.view;
-    popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
-}
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+        
+        activityViewController.modalPresentationStyle = UIModalPresentationPopover;
+        [self presentViewController:activityViewController animated: YES completion: nil];
+        UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
+        popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+        popoverPresentationController.sourceView = self.view;
+        popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
+    }
 }
 
 
@@ -118,7 +117,7 @@ if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
     [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-   NSData * data = UIImagePNGRepresentation(image);
+    NSData * data = UIImagePNGRepresentation(image);
     [data writeToFile:path atomically:YES];
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
@@ -143,5 +142,30 @@ if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     [thumbdata writeToFile:thumbpath atomically:YES];
 }
+//
+//-(void)setImageForButton:(UIImage*)img{
+//    NSLog(@"EntryView setting img");
+//    self.imageLeft.image = img;
+//}
 
+-(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item{
+//    self.imageLeft.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.imageLeft.image = item;
+}
+-(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item{
+//    self.imageRight.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.imageRight.image = item;
+}
+-(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item{
+//    self.imageTop.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.imageTop.image = item;
+}
+-(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item{
+//    self.imageFront.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.imageFront.image = item;
+}
+-(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item{
+//    self.imageBack.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.imageBack.image = item;
+}
 @end

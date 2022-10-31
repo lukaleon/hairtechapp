@@ -13,13 +13,13 @@
 @implementation NewDrawController
 
 
-
+//@synthesize delegate;
 
 
 
 -(void)viewDidLoad{
+    textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
-    
     self.drawingView.delegate = self;
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
@@ -60,10 +60,15 @@
 //    lineColor = [UIColor blueColor];
 //    textColor = [UIColor blackColor];
     self.fontSizeVC = 15;
+    
+    if([self loadGridAppearanceToDefaults]){
+        [self performSelector:@selector(showOrHideGrid)];
+    }
     }
 - (void)viewWillDisappear:(BOOL)animated{
     [self saveColorsToDefaults];
     [self removeGrid];
+    [self screentShot:self.imgName];
 }
 
 - (void)setupScrollView {
@@ -141,6 +146,7 @@
     }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    [self.drawingView updateZoomFactor:scrollView.zoomScale];
 
     CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
       CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
@@ -323,13 +329,26 @@
     if(arrayOfGrids.count == 0){
         [grid setTintColor:[UIColor colorNamed:@"orange"]];
         [self addGrid];
+        [self saveGridAppearanceToDefaults:YES];
     } else {
-        [self removeGrid];
         [grid setTintColor:[UIColor colorNamed:@"deepblue"]];
+        [self removeGrid];
+        [self saveGridAppearanceToDefaults:NO];
     }
     
 }
 
+-(void)saveGridAppearanceToDefaults:(BOOL)isVisible{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:isVisible  forKey:@"grid"];
+    [prefs synchronize];
+}
+-(BOOL)loadGridAppearanceToDefaults{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    BOOL isVisible = [prefs boolForKey:@"grid"];
+    [prefs synchronize];
+    return  isVisible;
+}
 
 -(void)saveColorsToDefaults{
     const CGFloat  *components2 = CGColorGetComponents(dashColor.CGColor);
@@ -441,6 +460,8 @@ return YES;
 //        return  NO;
 //    }
 //}
+
+#pragma mark Long Press Gestures
 - (void)longPressPenTool:(UILongPressGestureRecognizer *)gestureRecognizer {
         [self saveColorsToDefaults];
         [self pencilPressed:[self.view viewWithTag:5]];
@@ -522,6 +543,8 @@ return YES;
         [self.popoverController presentPopoverFromRect:CGRectMake(self.lineTool.frame.origin.x,self.lineTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
 }
+#pragma mark Color Extraction
+
 -(void)extractRGBforPen:(UIColor*)tempcolor
 {
     CGFloat redtemp = 0.0;
@@ -661,7 +684,13 @@ return YES;
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     
-    self.popoverController = nil;
+    popoverController = nil;
+    [self.penTool addGestureRecognizer:longpressPenTool];
+    [self.curveTool addGestureRecognizer:longpressCurveTool];
+    [self.dashTool addGestureRecognizer:longpressDashTool];
+    [self.arrowTool addGestureRecognizer:longpressArrowTool];
+    [self.lineTool addGestureRecognizer:longpressLineTool];
+    
 }
 -(void) sliderDidSelectWidth:(CGFloat)lineWidth {
     
@@ -893,7 +922,7 @@ return YES;
         }
     }
 }
-
+#pragma mark TextView Operations
 -(void)removeTextSettings{
     NSLog(@"remove text settings");
     [contentTextView removeFromSuperview];
@@ -940,4 +969,68 @@ return YES;
     scrollView.pinchGestureRecognizer.enabled = YES;
 
 }
+
+-(void)screentShot:(NSString*)headtype{
+    
+    NSLog(@"screenshot");
+    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, NO, [UIScreen mainScreen].scale);
+    // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
+    [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    if([headtype isEqualToString:@"lefthead"]){
+        [self.delegate passItemBackLeft:self imageForButton:newImage];
+    }
+    if([headtype isEqualToString:@"righthead"]){
+        [self.delegate passItemBackRight:self imageForButton:newImage];
+    }
+    if([headtype isEqualToString:@"tophead"]){
+        [self.delegate passItemBackTop:self imageForButton:newImage];
+    }
+    if([headtype isEqualToString:@"fronthead"]){
+        [self.delegate passItemBackFront:self imageForButton:newImage];
+    }
+    if([headtype isEqualToString:@"backhead"]){
+        [self.delegate passItemBackBack:self imageForButton:newImage];
+    }
+
+    
+//    filenamethumb1 = self.labelDrawController.text;
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: @"thumb1"];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: @".png"];
+//    NSLog(@"РезультатDrawViewCtrl thumb 1 : %@.",filenamethumb1);
+//    
+//   NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+//    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:filenamethumb1];
+//    thumbdata = UIImagePNGRepresentation(newImage);
+//    [thumbdata writeToFile:thumbpath atomically:YES];
+//
+//
+//
+//
+//    ///------------Save big-size Image------------------------------------///////
+//
+//
+//    filenamebig1 = self.labelDrawController.text;
+//    filenamebig1 = [filenamebig1 mutableCopy];
+//    [filenamebig1 appendString: @"big1"];
+//    filenamebig1 = [filenamebig1 mutableCopy];
+//    [filenamebig1 appendString: @".png"];
+//
+//
+//    NSLog(@"Результат збереження великоиі картинки: %@.",filenamebig1);
+//
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString* path = [documentsDirectory stringByAppendingPathComponent:filenamebig1];
+//    data = UIImagePNGRepresentation(self.NewImageView.image);
+//    [data writeToFile:path atomically:YES];
+//
+    
+}
+
 @end

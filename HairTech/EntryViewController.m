@@ -867,7 +867,6 @@ if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
     //[self labelPositionLeft];
 }
 
-
 -(void) passItemBack:(DrawViewController *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5 version:(NSString*)version
 {
     self.appVersion = version;

@@ -9,8 +9,6 @@
 #import "ViewController.h"
 #import "NewDrawController.h"
 
-@class NewDrawController;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NewEntryController : UIViewController

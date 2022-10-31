@@ -1519,8 +1519,6 @@ return YES;
     
 }
 
-
-
 - (void)saveImageRetina{
     NSLog(@"DEALLOC 1");
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1794,7 +1792,6 @@ self.previewImageView.layer.sublayers = nil;
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
         [self showBar];
         NSLog(@"Captured screen");
         [self adGridToImgView];

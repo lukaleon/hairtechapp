@@ -166,6 +166,8 @@ UIColor* tempColor;
     self = [super initWithCoder:aDecoder];
     if (self) {
         
+        NSLog(@"frame width %f frame height %f",self.frame.size.width, self.frame.size.height);
+
         self.userInteractionEnabled = YES;
         self.layerArray = [[NSMutableArray alloc] init];
         self.type = JVDrawingTypeLine;
@@ -242,13 +244,13 @@ UIColor* tempColor;
 
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-   
+    
     NSLog(@"touches moved drawing");
-
+    
     if (self.eraserSelected || self.type == JVDrawingTypeText ){
         return;
     }
-
+    
     unsigned long count = [[event allTouches] count];
     if (count > 1) {
         return; // return amount of fingers touched right now
@@ -258,6 +260,9 @@ UIColor* tempColor;
     CGPoint previousPoint = [touch previousLocationInView:self];
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
+//    if (currentPoint.x > self.frame.size.width || currentPoint.x < 0 || currentPoint.y < 0 || currentPoint.y > self.frame.size.height){
+//        return;
+//    }
 
     if (self.isFirstTouch) {
 
@@ -749,7 +754,7 @@ UIColor* tempColor;
     gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuOnTextView:)];
     [self.userResizableView addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.numberOfTapsRequired = 1;
-    gestureRecognizer.cancelsTouchesInView = NO;
+    //gestureRecognizer.cancelsTouchesInView = NO;
    //[gestureRecognizer setDelegate:self];
     
     gestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenuForTextView)];
@@ -771,7 +776,7 @@ UIColor* tempColor;
     gestureRecognizer.enabled = YES;
     gestureRecognizer2.enabled = YES;
 }
-- (void)showMenuOnTextView:(UIGestureRecognizer*)sender {
+- (void)showMenuOnTextView:(UITapGestureRecognizer*)sender {
         NSLog(@"Show menu from textview");
         CGRect rectOfMenu = CGRectMake(self.userResizableView.frame.origin.x +
                                       (self.userResizableView.frame.size.width / 2),
@@ -785,7 +790,6 @@ UIColor* tempColor;
             menuForTextView.menuItems = @[
                 [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)]];
             [menuForTextView showMenuFromView:self rect:rectOfMenu];
-
         } else {
             
             menuForTextView = [UIMenuController sharedMenuController];
@@ -885,11 +889,12 @@ UIColor* tempColor;
     self.textViewNew.userInteractionEnabled = NO;
     [currentlyEditingView hideEditingHandles];
     [self.userResizableView removeFromSuperview];
-    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self];
+    CGPoint origin = [self.textViewNew convertPoint:CGPointMake(self.textViewNew.frame.origin.x, self.textViewNew.frame.origin.y)  toView:self.window];
     CGRect rect = CGRectMake(origin.x,
                              origin.y,
                              self.textViewNew.bounds.size.width,
                              self.textViewNew.bounds.size.height);
+    
     if([[self.textViewNew.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
         self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:origin
                                                                     frame:rect
