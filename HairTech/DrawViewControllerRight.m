@@ -72,6 +72,8 @@ NSString * tempColorString;
 
     // self.mainImage.image = tempimage;
     self.NewImageView.image = tempimage;
+    self.NewImageView.alpha = 1;
+
 
 }
 -(void)viewWillDisappear:(BOOL)animated
@@ -133,7 +135,7 @@ NSString * tempColorString;
 -(void)viewWillAppear:(BOOL)animated
 {
 
-        [self loadMainImage];
+       // [self loadMainImage];
        self.labelDrawController.text = self.stringForLabel;
     
     
@@ -278,7 +280,6 @@ return YES;
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
     
-   
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
     appDelegate.currentViewName = @"right";
@@ -354,11 +355,10 @@ return YES;
             [self.middleImg setImage:[UIImage imageNamed:@"men-right-11-tr.png"]];
             [self.previewImageView setImage:[UIImage imageNamed:@"men-right-11-tr.png"]];
         }
-        /*----------------------MEN HEADS END------------------------------*/
+    //[self adGridToImgView];
+    
+    [self loadMainImage];
 
-    [self adGridToImgView];
-    
-    
     self.navigationItem.title=self.stringFromVC;
     
     [self.navigationController.navigationBar
@@ -1370,30 +1370,22 @@ return YES;
     
 }
 
-
 - (void)saveImage{
     
-
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.checkHead1=1;
     
+    NSLog(@"IM SAVING NORMAL IMAGES");
+
+    //   if (mainImage != nil)
+    //  {
+    //*save mainImage full-size
     UIGraphicsBeginImageContext(self.drawingView.frame.size);
     [self.NewImageView.image drawInRect:CGRectMake(0, 0, self.drawingView.frame.size.width, self.NewImageView.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
     [self.drawingView.image drawInRect:CGRectMake(0, 0, self.drawingView.frame.size.width, self.drawingView.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
     
     [self.middleImg.image drawInRect:CGRectMake(0, 0, self.middleImg.frame.size.width, self.middleImg.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
-    
     self.NewImageView.image = UIGraphicsGetImageFromCurrentImageContext();
-   // [self.NewImageView performSelectorInBackground:@selector(setImage:) withObject:UIGraphicsGetImageFromCurrentImageContext()];
-
-    
     // self.middleImg.image = nil;
     UIGraphicsEndImageContext();
-    
-    
-    
-    
-    
     
     
     CGSize newSize = CGSizeMake(256, 334);
@@ -1409,7 +1401,7 @@ return YES;
     [filenamethumb2 appendString: @"thumb2"];
     filenamethumb2 = [filenamethumb2 mutableCopy];
     [filenamethumb2 appendString: @".png"];
-    NSLog(@"Результат: %@.",filenamethumb2);
+    NSLog(@"Результат  thumb3 from saveImage: %@.",filenamethumb2);
     
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
@@ -1435,6 +1427,8 @@ return YES;
     [data writeToFile:path atomically:YES];
     
 }
+
+
 - (void)saveImageRetina{
       NSLog(@"DEALLOC 2");
     
@@ -1500,26 +1494,19 @@ return YES;
     NSLog(@"SAVEANDCLOSE----FUNC");
     [self saveColorsToDefaults];
     
-   /* if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale >= 2.0)) {
         [self saveImageRetina];
         // Retina display
     }
     if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale < 2.0))
-    {*/
-    
-    
-    
-    [self screentShot];
-       // [self saveImageRetina];
-    
+    {
+    [self saveImageRetina];
 
-
-    // non-Retina display
-       // [self saveImage];
-        
-   // }
+//     non-Retina display
+        [self saveImage];
+    }
     [self delegateImagesToEntryView];
 }
 
@@ -1605,9 +1592,6 @@ return YES;
    
     [self.drawcontrollerRightdelegate passItemBackFromRight:self didFinishWithItem1:self.imagethumb1
                            didFinishWithItem2:self.imagethumb2 didFinishWithItem3:self.imagethumb3 didFinishWithItem4:self.imagethumb4 didFinishWithItem5:self.imagethumb5];
-    
-    
-    
 }
 
 - (void)updateButtonStatus

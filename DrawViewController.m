@@ -103,6 +103,8 @@
 -(void)loadMainImage
 {
     
+
+
     NSMutableString *filenamethumb = @"%@/";
     NSMutableString *prefix = self.stringForLabel;
     filenamethumb = [filenamethumb mutableCopy];
@@ -118,14 +120,12 @@
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     
  //  UIImage *tempimage = [UIImage initWithContentsOfFile:filePath];
-    // UIImage *tempimage = [UIImage imageWithContentsOfFile:filePath];
     NSData *data1 = [NSData dataWithContentsOfFile:filePath];
     UIImage *tempimage = [UIImage imageWithData:data1];
     self.NewImageView.image = tempimage;
-    
-  //self.NewImageView.alpha = 1;
+   self.NewImageView.alpha = 1;
    // [self.drawingView getScreenShot:tempimage];
-    tempimage = nil;
+   // tempimage = nil;
 
 
 }
@@ -320,24 +320,37 @@ return YES;
 - (void)addImagesForScreensPreviousVersions {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    if(((![appDelegate.globalDate isEqualToString:@"new_version"])&&(![self.appVersion isEqualToString:@"version22"]))||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
+    
+    //appDelegate.currentViewName = @"left";
+   
+    
+    if((![appDelegate.globalDate isEqualToString:@"new_version"])||(![appDelegate.globalDate isEqualToString:@"men_heads"]))
     {
         [self.NewImageView setImage:[UIImage imageNamed:@"View_lefthead_created.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"View_lefthead_created_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"View_lefthead_created_tr.png"]];
+        
+        
+
     }
+    
+    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"new_version"]))
-    {
-        [self.NewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
+    
+        if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"new_version"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"new_version"]))
+        {
+        
+        //[self.NewImageView setImage:[UIImage imageNamed:@"iphone7plus.png"]];
+            [self.NewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"left_7p_tr.png"]];
     }
     
     if (((screenHeight==1024)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
-        ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
-        ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"new_version"])){
+       ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"new_version"])||
+       ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"new_version"])){
         
         [self.NewImageView setImage:[UIImage imageNamed:@"ipad_left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"ipad_left_tr.png"]];
@@ -351,19 +364,22 @@ return YES;
         [self.middleImg setImage:[UIImage imageNamed:@"x_left_tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"x_left_tr.png"]];
     }
+    
     /*----------------------MEN HEADS------------------------------*/
-    if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"men_heads"]))
-    {
+    
+    
+     if (((screenHeight==736)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==568)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||((screenHeight==667)&&[appDelegate.globalDate isEqualToString:@"men_heads"]))
+        {
         
         //[self.NewImageView setImage:[UIImage imageNamed:@"iphone7plus.png"]];
-        [self.NewImageView setImage:[UIImage imageNamed:@"men-iphone7-left.png"]];
+[self.NewImageView setImage:[UIImage imageNamed:@"men-iphone7-left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"men-iphone7-left-tr.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"men-iphone7-left-tr.png"]];
     }
     
     if (((screenHeight==1024)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
-        ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
-        ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"men_heads"])){
+       ((screenHeight==1366)&&[appDelegate.globalDate isEqualToString:@"men_heads"])||
+       ((screenHeight==834)&&[appDelegate.globalDate isEqualToString:@"men_heads"])){
         
         [self.NewImageView setImage:[UIImage imageNamed:@"men-ipad-left.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"men-ipad-left-tr.png"]];
@@ -378,32 +394,6 @@ return YES;
         [self.previewImageView setImage:[UIImage imageNamed:@"men-left-11-tr.png"]];
     }
     
-    if ([self.appVersion isEqualToString:@"version22"]){
-     
-        
-        CGFloat screenWidth =[UIScreen mainScreen].bounds.size.width;
-        
-        CGRect drawingRect = CGRectMake(0,0,500,500 * 1.3);
-        
-        self.viewForImg.bounds = drawingRect;
-        self.viewForImg.center = self.view.center;
-        self.viewForImg.contentMode = UIViewContentModeScaleAspectFit;
-        
-//        self.drawingView.bounds = drawingRect;
-//        self.drawingView.center = self.view.center;
-//        self.previewImageView.bounds = self.drawingView.bounds;
-//        self.previewImageView.center = self.view.center;
-        self.NewImageView.hidden = YES;
-        self.middleImg.hidden = YES;
-        //self.drawingView.backgroundColor = [UIColor colorNamed:@"bar"];
-        self.previewImageView.image = [UIImage imageNamed:@"lefthead"];
-        self.previewImageView.contentMode = UIViewContentModeScaleAspectFit;
-        self.viewForImg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-//        if (IDIOM != IPAD){
-//            [self zoomInViewAtLoad];
-//        }
-    }
 }
 
 
@@ -439,8 +429,8 @@ return YES;
 
 -(void)viewDidLoad{
     
+    self.drawingView.userInteractionEnabled = NO;
     NSLog(@"App version is %@", self.appVersion);
-    
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
     [self setupButtons];
@@ -449,13 +439,17 @@ return YES;
     [self setupBottomToolBar];
     [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
-//    [self addImagesForScreensPreviousVersions];
+    [self addImagesForScreensPreviousVersions];
+    [self loadMainImage];
+
+    
 
 
     self.navigationItem.title=self.stringFromVC;
     [self.toolbar setClipsToBounds:YES];
     UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
     self.view.backgroundColor = mycolor2;
+ 
     self.drawingView.delegate = self;
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
@@ -559,8 +553,8 @@ return YES;
     [self setupNavigationBarItems];
     
     
-    [self addImagesForScreensPreviousVersions];
-    [self adGridToImgView];
+   // [self addImagesForScreensPreviousVersions];
+   // [self adGridToImgView];
 
 
 }
@@ -722,7 +716,6 @@ return YES;
     
     appDelegate.currentViewName = @"left";
 
-    [self loadMainImage];
  
     NSLog(@"DRAWCONTROLLER VIEWWILLAPEAR");
 
@@ -1374,7 +1367,6 @@ return YES;
 }
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-       
         [scrollView zoomToRect:CGRectMake(self.drawingView.bounds.origin.x,self.drawingView.bounds.origin.y,self.drawingView.bounds.size.width,self.drawingView.bounds.size.height) animated:YES];
         // Do the delete
         self.NewImageView.image = nil;
@@ -1600,9 +1592,9 @@ return YES;
     if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
         ([UIScreen mainScreen].scale < 2.0))
     {*/
-      //  [self saveImageRetina];
+        [self saveImageRetina];
     
-    [self screentShot];
+  //  [self screentShot];
             // non-Retina display
       // [self saveImage];
 

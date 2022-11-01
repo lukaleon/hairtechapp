@@ -166,8 +166,9 @@ UIColor* tempColor;
     self = [super initWithCoder:aDecoder];
     if (self) {
         
-        NSLog(@"frame width %f frame height %f",self.frame.size.width, self.frame.size.height);
-
+        CGRect rect = CGRectMake(self.frame.origin.x, self.frame.origin.y, 1024, 1332);
+        NSLog(@"Drawingview frame width %f frame height %f",self.frame.size.width, self.frame.size.height);
+        self.frame = rect;
         self.userInteractionEnabled = YES;
         self.layerArray = [[NSMutableArray alloc] init];
         self.type = JVDrawingTypeLine;
@@ -397,7 +398,6 @@ UIColor* tempColor;
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
-        [self.delegate enableZoomWhenTouchesMoved];
 
         if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
             [self selectLayer:[self.layerArray lastObject]];
@@ -462,6 +462,8 @@ UIColor* tempColor;
         }
         }
     }
+    [self.delegate enableZoomWhenTouchesMoved];
+
 }
 
 - (void)setEraserSelected:(BOOL)eraserSelected
@@ -979,7 +981,7 @@ UIColor* tempColor;
     
     [self LoadColorsAtStart];
     self.lineColor = tempColor;
-   // self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = [UIColor clearColor];
     self.pointsCoord = [NSMutableArray array];
     self.arrayOfTextViews = [NSMutableArray array];
     
@@ -1492,7 +1494,14 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData];}
+    [self fetchData];
+}
+-(void)removeDrawingsForClosing{
+    [self hideMenu];
+    for (CAShapeLayer * layer in self.layerArray) {
+        [layer performSelector:@selector(removeFromSuperlayer)];
+    }
+}
 - (void)clear
 {
     [self.bufferArray removeAllObjects];

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
+		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
 		401E398929013F840098ECC9 /* info_b.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398829013F840098ECC9 /* info_b.png */; };
 		401E398E29014F5D0098ECC9 /* newtechnique.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398C29014F5D0098ECC9 /* newtechnique.png */; };
@@ -315,7 +316,6 @@
 		B4D627C616FBA70000B36555 /* btn_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D627C516FBA70000B36555 /* btn_black.png */; };
 		B4D627C816FBA95100B36555 /* btn_greeny.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D627C716FBA95100B36555 /* btn_greeny.png */; };
 		B4D627CA16FBAD1400B36555 /* entryheadsSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D627C916FBAD1400B36555 /* entryheadsSmall.png */; };
-		B4D82DB2165D78C70069D457 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = B4D82DB1165D78C70069D457 /* DrawViewControllerRight.m */; };
 		B4DCA2AF21C3A45F001BE392 /* btn_apply.png in Resources */ = {isa = PBXBuildFile; fileRef = B4DCA2AE21C3A45E001BE392 /* btn_apply.png */; };
 		B4E2BD88171EFDF5009FE701 /* undo_btn@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E2BD86171EFDF5009FE701 /* undo_btn@2x~ipad.png */; };
 		B4E2BD89171EFDF5009FE701 /* redo_btn@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E2BD87171EFDF5009FE701 /* redo_btn@2x~ipad.png */; };
@@ -393,6 +393,8 @@
 
 /* Begin PBXFileReference section */
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
+		40163804291104A000C9D9C4 /* DrawViewControllerRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewControllerRight.h; sourceTree = "<group>"; };
+		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
 		40179E0128C6734C0090CB0C /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
 		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 		401E398829013F840098ECC9 /* info_b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_b.png; sourceTree = "<group>"; };
@@ -781,8 +783,6 @@
 		B4D627C516FBA70000B36555 /* btn_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_black.png; sourceTree = "<group>"; };
 		B4D627C716FBA95100B36555 /* btn_greeny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_greeny.png; sourceTree = "<group>"; };
 		B4D627C916FBAD1400B36555 /* entryheadsSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entryheadsSmall.png; sourceTree = "<group>"; };
-		B4D82DAE165D77B80069D457 /* DrawViewControllerRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewControllerRight.h; sourceTree = SOURCE_ROOT; };
-		B4D82DB1165D78C70069D457 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = SOURCE_ROOT; };
 		B4DCA2AE21C3A45E001BE392 /* btn_apply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_apply.png; sourceTree = "<group>"; };
 		B4E05CBA16EC68BB00A0FD65 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		B4E2BD86171EFDF5009FE701 /* undo_btn@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "undo_btn@2x~ipad.png"; sourceTree = "<group>"; };
@@ -899,8 +899,8 @@
 			children = (
 				CE856FF4164D3F8300EE21B4 /* DrawViewController.h */,
 				CE856FF5164D3F8300EE21B4 /* DrawViewController.m */,
-				B4D82DAE165D77B80069D457 /* DrawViewControllerRight.h */,
-				B4D82DB1165D78C70069D457 /* DrawViewControllerRight.m */,
+				40163804291104A000C9D9C4 /* DrawViewControllerRight.h */,
+				40163805291104A000C9D9C4 /* DrawViewControllerRight.m */,
 				B4ADB97316A035EF009ED1A9 /* TopHeadViewController.h */,
 				B4ADB97416A035EF009ED1A9 /* TopHeadViewController.m */,
 				B4A1618016D8082D008B7FB2 /* FrontHeadViewController.h */,
@@ -2147,7 +2147,6 @@
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
-				B4D82DB2165D78C70069D457 /* DrawViewControllerRight.m in Sources */,
 				B4FA974D16680C4100F36E34 /* Cell.m in Sources */,
 				B4FA975016680CDB00F36E34 /* CellBackground.m in Sources */,
 				B4FA975616681A2500F36E34 /* CollectionViewBackground.m in Sources */,
@@ -2172,6 +2171,7 @@
 				40DC4707284A143900509D4D /* Ruler.m in Sources */,
 				407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */,
 				407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */,
+				40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */,
 				B4F48D3E16D82A530053D2D5 /* BackHeadViewController.m in Sources */,
 				B4B64DD116DE3BA800FC54B7 /* HelpViewController.m in Sources */,
 				B4C144DE213D02FC00E6E32E /* AMPopTip+Entrance.m in Sources */,

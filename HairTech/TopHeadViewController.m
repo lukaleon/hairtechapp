@@ -233,11 +233,7 @@ return YES;
         [self.NewImageView setImage:[UIImage imageNamed:@"View_Tophead_created.png"]];
         [self.middleImg setImage:[UIImage imageNamed:@"View_tophead_created_trans.png"]];
         [self.previewImageView setImage:[UIImage imageNamed:@"View_tophead_created_trans.png"]];
-        
-        
     }
-    
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;

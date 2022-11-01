@@ -1502,7 +1502,6 @@ return YES;
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     //UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
     UIImage *tempimage = [UIImage imageWithContentsOfFile:filePath];
-
     self.NewImageView.image = tempimage;
     
 }

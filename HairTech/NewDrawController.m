@@ -8,7 +8,9 @@
 
 #import "NewDrawController.h"
 #define btnColor  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0]
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewDrawController
 
@@ -16,25 +18,35 @@
 //@synthesize delegate;
 
 
-
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+        self.drawingView.drawingLayerSelectedBlock = ^(BOOL isSelected){
+        };
+    
+        // Custom initialization
+    }
+    return self;
+}
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
+    [self setupScrollView];
     self.drawingView.delegate = self;
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
-    
     [self LoadColorsAtStart];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     self.drawingView.viewControllerName = @"left";
     [self setupNavigationBarItems];
     [self.img setImage:[UIImage imageNamed:self.imgName]];
-    [self setupScrollView];
-    
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
-   /* Setup toolBar and toolButoons */
-    
+  
+    /* Setup toolBar and toolButoons */
     toolButtons = @[self.penTool, self.curveTool, self.dashTool, self.arrowTool,self.lineTool,self.eraserTool,self.textTool];
     [self setupBottomToolBar];
     [self setupToolButtonsAppeatance];
@@ -45,10 +57,8 @@
     self.drawingView.previousType = self.lineTool;
     self.drawingView.lineColor = lineColor;
     self.drawingView.lineWidth = [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-
-    
+   
     /*setup Pop Tip */
-    
     [self setupPopTips];
     [self setupLongPressGestures];
 
@@ -60,22 +70,36 @@
 //    lineColor = [UIColor blueColor];
 //    textColor = [UIColor blackColor];
     self.fontSizeVC = 15;
-    
+    }
+
+- (void)viewDidAppear:(BOOL)animated{
     if([self loadGridAppearanceToDefaults]){
+        NSLog(@"IMG frame width %f frame height %f",self.img.frame.size.width, self.img.frame.size.height);
         [self performSelector:@selector(showOrHideGrid)];
     }
-    }
+    [super viewDidAppear:YES];
+
+   
+}
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
     [self saveColorsToDefaults];
     [self removeGrid];
+    [self.drawingView removeCircles]; //remove control circles when selected
+    [self.drawingView hideAndCreateTextLayer]; //create text layer when closing window
     [self screentShot:self.imgName];
+    [self clearPageForClosing];
 }
+
 
 - (void)setupScrollView {
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.5;
     scrollView.maximumZoomScale = 5.0;
+    scrollView.contentSize = self.drawingView.frame.size;
+
     scrollView.panGestureRecognizer.minimumNumberOfTouches = 2;
+    NSLog(@"Scroll View frame width %f frame height %f",scrollView.frame.size.width, scrollView.frame.size.height);
 }
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];
@@ -147,10 +171,8 @@
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     [self.drawingView updateZoomFactor:scrollView.zoomScale];
-
     CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
       CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
-
       scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
 }
 
@@ -220,7 +242,7 @@
     UIAlertAction *button = [UIAlertAction actionWithTitle:@"Share"
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction *action){
-                                                   [self openShareMenu];
+                                                   [self share];
                                                    }];
     UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear Page"
                                                      style:UIAlertActionStyleDestructive
@@ -253,24 +275,25 @@
 {
     return UIModalPresentationNone;
 }
--(void)openShareMenu{
-    NSLog(@"Open Share Menu");
-}
+
 -(void)clearPage{
     [self.drawingView removeAllDrawings];
+}
+-(void)clearPageForClosing{
+    [self.drawingView removeDrawingsForClosing];
 }
 
 -(void)addGrid{
         NSLog(@"ADD GRID TO VIEW");
-        int numberOfRows = self.img.frame.size.height/12;
-        int numberOfColumns = self.img.frame.size.width/12;
+        int numberOfRows = self.img.bounds.size.height/12;
+        int numberOfColumns = self.img.bounds.size.width/12;
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetLineWidth(context, 0.25);
         CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.2].CGColor);
         
         // Drawing column lines
 
-        CGFloat columnWidth = self.img.frame.size.width / (numberOfColumns + 1.0);
+        CGFloat columnWidth = self.img.bounds.size.width / (numberOfColumns + 1.0);
         for(int i = 1; i <= numberOfColumns; i++)
         {
             CGPoint startPoint;
@@ -279,7 +302,7 @@
             startPoint.x = columnWidth * i;
             startPoint.y = 0.0f;
             endPoint.x = startPoint.x;
-            endPoint.y = self.img.frame.size.height;
+            endPoint.y = self.img.bounds.size.height;
             UIBezierPath *path2 = [UIBezierPath bezierPath];
             
             [path2 moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
@@ -295,7 +318,7 @@
         }
         // Drawing row lines
         // calclulate row height
-        CGFloat rowHeight = self.img.frame.size.height / (numberOfRows + 1.0);
+        CGFloat rowHeight = self.img.bounds.size.height / (numberOfRows + 1.0);
         for(int j = 1; j <= numberOfRows; j++)
         {
             CGPoint startPoint;
@@ -303,7 +326,7 @@
             
             startPoint.x = 0.0f;
             startPoint.y = rowHeight * j;
-            endPoint.x = self.img.frame.size.width;
+            endPoint.x = self.img.bounds.size.width;
             endPoint.y = startPoint.y;
 
         UIBezierPath *path1 = [UIBezierPath bezierPath];
@@ -850,7 +873,7 @@ return YES;
             
             break;
         case 4:
-            
+            [self.drawingView removeCircles];
             curveToggleIsOn = nil;
            // dashLineCount = 0;
             [self makeButtonDeselected];
@@ -970,7 +993,7 @@ return YES;
 
 }
 
--(void)screentShot:(NSString*)headtype{
+-(UIImage*)screentShot:(NSString*)headtype{
     
     NSLog(@"screenshot");
     UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, NO, [UIScreen mainScreen].scale);
@@ -995,7 +1018,7 @@ return YES;
         [self.delegate passItemBackBack:self imageForButton:newImage];
     }
 
-    
+    return newImage;
 //    filenamethumb1 = self.labelDrawController.text;
 //    filenamethumb1 = [filenamethumb1 mutableCopy];
 //    [filenamethumb1 appendString: @"thumb1"];
@@ -1032,5 +1055,42 @@ return YES;
 //
     
 }
+
+-(UIImage*)screenShotForSharing{
+    NSLog(@"screenshot");
+    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, NO, [UIScreen mainScreen].scale);
+    // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
+    [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+- (void)share{
+    NSString *textToShare;
+    textToShare = [NSString stringWithFormat:@""];
+    UIImage *imageToShare;
+    imageToShare = [self screenShotForSharing];
+    NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
+    
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
+    
+    activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
+    if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
+        UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+        listPopover.delegate = self;
+        [listPopover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+        
+        activityViewController.modalPresentationStyle = UIModalPresentationPopover;
+        [self presentViewController:activityViewController animated: YES completion: nil];
+        UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
+        popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+        popoverPresentationController.sourceView = self.view;
+        popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
+    }
+}
+
+
 
 @end

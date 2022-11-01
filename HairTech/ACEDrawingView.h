@@ -249,6 +249,9 @@ typedef enum {
 // erase all
 - (void)clear;
 -(void)removeAllDrawings;
+-(void)removeDrawingsForClosing;
+- (void)hideAndCreateTextLayer;
+
 // undo / redo
 - (BOOL)canUndo;
 - (void)undoLatestStep;
