@@ -7,15 +7,15 @@
 //
 
 #import "NewDrawController.h"
+#define IDIOM    UI_USER_INTERFACE_IDIOM()
+#define IPAD     UIUserInterfaceIdiomPad
+
 #define btnColor  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewDrawController
-
-
-//@synthesize delegate;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,26 +30,25 @@
     }
     return self;
 }
+
+
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
     [self setupScrollView];
-    self.drawingView.delegate = self;
-    self.drawingView.editMode = NO;
-    self.drawingView.editModeforText = NO;
-    self.drawingView.touchForText = 0;
+    [self setupDrawingView];
     [self LoadColorsAtStart];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     self.drawingView.viewControllerName = @"left";
     [self setupNavigationBarItems];
-    [self.img setImage:[UIImage imageNamed:self.imgName]];
+    [self.img setImage:[UIImage imageNamed:self.headtype]];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
   
     /* Setup toolBar and toolButoons */
     toolButtons = @[self.penTool, self.curveTool, self.dashTool, self.arrowTool,self.lineTool,self.eraserTool,self.textTool];
     [self setupBottomToolBar];
-    [self setupToolButtonsAppeatance];
+    [self setupToolButtonsAppearance];
     self.lineTool.selected = YES;
     self.lineTool.backgroundColor = lineColor;
     self.drawingView.type = JVDrawingTypeLine;
@@ -70,29 +69,25 @@
 //    lineColor = [UIColor blueColor];
 //    textColor = [UIColor blackColor];
     self.fontSizeVC = 15;
-    }
-
-- (void)viewDidAppear:(BOOL)animated{
     if([self loadGridAppearanceToDefaults]){
         NSLog(@"IMG frame width %f frame height %f",self.img.frame.size.width, self.img.frame.size.height);
         [self performSelector:@selector(showOrHideGrid)];
     }
-    [super viewDidAppear:YES];
+    }
 
-   
-}
 - (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:YES];
+    [super viewWillDisappear:NO];
     [self saveColorsToDefaults];
     [self removeGrid];
     [self.drawingView removeCircles]; //remove control circles when selected
     [self.drawingView hideAndCreateTextLayer]; //create text layer when closing window
-    [self screentShot:self.imgName];
+    [self screentShot:self.headtype];
     [self clearPageForClosing];
 }
 
-
 - (void)setupScrollView {
+    CGRect newFrame = CGRectMake(0, 80, self.view.frame.size.width, self.view.frame.size.height - 170);
+    scrollView.frame = newFrame;
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.5;
     scrollView.maximumZoomScale = 5.0;
@@ -100,6 +95,20 @@
 
     scrollView.panGestureRecognizer.minimumNumberOfTouches = 2;
     NSLog(@"Scroll View frame width %f frame height %f",scrollView.frame.size.width, scrollView.frame.size.height);
+}
+- (void)setupDrawingView {
+    CGFloat newHeightIdx = (self.view.frame.size.height - self.drawingView.frame.size.height) / 4;
+    CGPoint newCenter = CGPointMake(scrollView.center.x, scrollView.center.y - newHeightIdx);
+    CGFloat zoomIdx = self.view.frame.size.height / self.drawingView.frame.size.height;
+    NSLog(@"zoooooooom %f", zoomIdx);
+    self.drawingView.center = newCenter;
+    self.drawingView.delegate = self;
+    self.drawingView.editMode = NO;
+    self.drawingView.editModeforText = NO;
+    self.drawingView.touchForText = 0;
+    [self.drawingView loadJSONData];
+   // [scrollView setZoomScale:zoomIdx animated:YES];
+
 }
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];
@@ -154,7 +163,7 @@
     self.toolbar.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.toolbar.bounds cornerRadius:self.toolbar.layer.cornerRadius].CGPath;
 }
 
--(void)setupToolButtonsAppeatance{
+-(void)setupToolButtonsAppearance{
     for(int i=0; i< toolButtons.count; i++) {
         if(![[toolButtons objectAtIndex:i] isSelected]){
             UIButton *btn = [toolButtons objectAtIndex:i];
@@ -164,16 +173,71 @@
     }
 }
 
-
 -(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view{
    // [self.drawingView updateZoomFactor:scrollView.zoomScale];
     }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//    if ( IDIOM == IPAD){
+//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
+//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
+//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
+//    } else {
+//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.65, 0.0);
+//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.30, 0.0);
+//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
+//    }
+    
+    CGSize boundsSize = scrollView.bounds.size;
+    CGRect imageViewFrame = self.drawingView.frame ;
+
+    // centre horizontally
+    if (imageViewFrame.size.width < boundsSize.width) {
+        imageViewFrame.origin.x = (boundsSize.width - imageViewFrame.size.width) / 2;
+    } else {
+        imageViewFrame.origin.x = 0;
+    }
+
+    // centre vertically
+    if (imageViewFrame.size.height < boundsSize.height && self.drawingView) {
+        imageViewFrame.origin.y = (boundsSize.height - imageViewFrame.size.height) / 2;
+    } else {
+        imageViewFrame.origin.y = 0;
+    }
+    self.drawingView.frame = imageViewFrame;
+
+}
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     [self.drawingView updateZoomFactor:scrollView.zoomScale];
-    CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
-      CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
-      scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
+//    if ( IDIOM == IPAD){
+//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
+//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
+//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
+//    } else {
+//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.65, 0.0);
+//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.30, 0.0);
+//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
+//    }
+//
+    CGSize boundsSize = scrollView.bounds.size;
+    CGRect imageViewFrame = self.drawingView.frame ;
+
+    // centre horizontally
+    if (imageViewFrame.size.width < boundsSize.width) {
+        imageViewFrame.origin.x = (boundsSize.width - imageViewFrame.size.width) / 2;
+    } else {
+        imageViewFrame.origin.x = 0;
+    }
+
+    // centre vertically
+    if (imageViewFrame.size.height < boundsSize.height && self.drawingView) {
+        imageViewFrame.origin.y = (boundsSize.height - imageViewFrame.size.height) / 2;
+    } else {
+        imageViewFrame.origin.y = 0;
+    }
+    self.drawingView.frame = imageViewFrame;
+
+
 }
 
 
@@ -187,7 +251,7 @@
 
 - (void)setupNavigationBarItems {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
+   
     grid = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [grid addTarget:self
              action:@selector(showOrHideGrid)
@@ -915,7 +979,6 @@ return YES;
             
             break;
     }
-    
 }
 
 - (IBAction)eraserPressed:(id)sender {
@@ -952,7 +1015,6 @@ return YES;
     contentTextView = nil;
 }
 
-
 -(void)showTextColorsAndSize:(UIColor*)color{
     contentTextView = [[ColorViewController alloc] initWithFrame:self.toolbar.bounds isSelected:YES color:color];
     contentTextView.center = self.toolbar.center;
@@ -961,8 +1023,6 @@ return YES;
     contentTextView.delegate = self;
     [self.view addSubview:contentTextView];
 }
-
-
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");
@@ -985,75 +1045,61 @@ return YES;
     [self textViewDidChange:self.drawingView.textViewNew];
     }
 -(void)disableZoomWhenTouchesMoved{
-    scrollView.pinchGestureRecognizer.enabled = NO;
-    
+    scrollView.pinchGestureRecognizer.enabled = NO;    
 }
 -(void)enableZoomWhenTouchesMoved{
     scrollView.pinchGestureRecognizer.enabled = YES;
-
 }
 
--(UIImage*)screentShot:(NSString*)headtype{
-    
-    NSLog(@"screenshot");
+- (UIImage *)getImageOfScreen:(NSString*)headtype {
+    self.drawingView.backgroundColor = [UIColor clearColor];
+
     UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, NO, [UIScreen mainScreen].scale);
     // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+   // self.drawingView.backgroundColor = [UIColor whiteColor];
+
     
+    NSMutableString * fileToSave = self.techniqueName;
+    fileToSave = [fileToSave mutableCopy];
+    [fileToSave appendString: headtype];
+    fileToSave = [fileToSave mutableCopy];
+    [fileToSave appendString: @".png"];
+    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];
+    NSData * thumbdata = UIImagePNGRepresentation(newImage);
+    [thumbdata writeToFile:thumbpath atomically:YES];
+    return newImage;
+}
+
+-(UIImage*)screentShot:(NSString*)headtype{
+    
+    NSLog(@"screenshot");
+    UIImage * newImage;
     if([headtype isEqualToString:@"lefthead"]){
+        newImage = [self getImageOfScreen:@"thumb1"];
         [self.delegate passItemBackLeft:self imageForButton:newImage];
     }
     if([headtype isEqualToString:@"righthead"]){
+        newImage = [self getImageOfScreen:@"thumb2"];
         [self.delegate passItemBackRight:self imageForButton:newImage];
     }
     if([headtype isEqualToString:@"tophead"]){
+        newImage = [self getImageOfScreen:@"thumb3"];
         [self.delegate passItemBackTop:self imageForButton:newImage];
     }
     if([headtype isEqualToString:@"fronthead"]){
+        newImage = [self getImageOfScreen:@"thumb4"];
         [self.delegate passItemBackFront:self imageForButton:newImage];
     }
     if([headtype isEqualToString:@"backhead"]){
+        newImage = [self getImageOfScreen:@"thumb5"];
         [self.delegate passItemBackBack:self imageForButton:newImage];
     }
-
     return newImage;
-//    filenamethumb1 = self.labelDrawController.text;
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: @"thumb1"];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: @".png"];
-//    NSLog(@"РезультатDrawViewCtrl thumb 1 : %@.",filenamethumb1);
-//    
-//   NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-//    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-//    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:filenamethumb1];
-//    thumbdata = UIImagePNGRepresentation(newImage);
-//    [thumbdata writeToFile:thumbpath atomically:YES];
-//
-//
-//
-//
-//    ///------------Save big-size Image------------------------------------///////
-//
-//
-//    filenamebig1 = self.labelDrawController.text;
-//    filenamebig1 = [filenamebig1 mutableCopy];
-//    [filenamebig1 appendString: @"big1"];
-//    filenamebig1 = [filenamebig1 mutableCopy];
-//    [filenamebig1 appendString: @".png"];
-//
-//
-//    NSLog(@"Результат збереження великоиі картинки: %@.",filenamebig1);
-//
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString* path = [documentsDirectory stringByAppendingPathComponent:filenamebig1];
-//    data = UIImagePNGRepresentation(self.NewImageView.image);
-//    [data writeToFile:path atomically:YES];
-//
-    
 }
 
 -(UIImage*)screenShotForSharing{

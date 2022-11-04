@@ -99,7 +99,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9wR-M1-SHA">
-                                <rect key="frame" x="219" y="410" width="89" height="30"/>
+                                <rect key="frame" x="218" y="410" width="89" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
                                 <size key="titleShadowOffset" width="1" height="1"/>
@@ -111,7 +111,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="and enter diagram name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="67E-Pq-ESa">
-                                <rect key="frame" x="100" y="297" width="225" height="35"/>
+                                <rect key="frame" x="98" y="297" width="225" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="30"/>
                                 <color key="textColor" name="deepblue"/>
@@ -143,7 +143,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEa-j1-WZY">
-                                <rect key="frame" x="117" y="410" width="88" height="30"/>
+                                <rect key="frame" x="115" y="410" width="88" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
                                 <size key="titleShadowOffset" width="1" height="1"/>
@@ -217,7 +217,7 @@
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="63" maxX="0.0" maxY="-63"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agy-A5-OQl">
-                                <rect key="frame" x="272" y="621" width="145" height="304"/>
+                                <rect key="frame" x="271" y="621" width="143" height="304"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -233,7 +233,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="150" verticalCompressionResistancePriority="150" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aoh-r4-I8p">
-                                <rect key="frame" x="10" y="621" width="142" height="304"/>
+                                <rect key="frame" x="10" y="621" width="140" height="304"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
@@ -251,7 +251,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9H-vv-4dk">
-                                <rect key="frame" x="140" y="341" width="145" height="304"/>
+                                <rect key="frame" x="138" y="341" width="145" height="304"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="63" maxX="0.0" maxY="-63"/>
@@ -268,7 +268,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7g4-wB-BmC">
-                                <rect key="frame" x="274" y="65" width="144" height="299"/>
+                                <rect key="frame" x="273" y="65" width="145" height="299"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="63" maxX="0.0" maxY="-63"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -284,7 +284,7 @@
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yHg-8k-Egs">
-                                <rect key="frame" x="141" y="20" width="142" height="21"/>
+                                <rect key="frame" x="139" y="20" width="142" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                 <color key="textColor" white="0.43744297450000003" alpha="1" colorSpace="calibratedWhite"/>
@@ -293,7 +293,7 @@
                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fa1-ih-KRn">
-                                <rect key="frame" x="65" y="27" width="297" height="30"/>
+                                <rect key="frame" x="63" y="27" width="297" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -301,7 +301,7 @@
                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y3E-ds-yQx">
-                                <rect key="frame" x="11" y="65" width="141" height="299"/>
+                                <rect key="frame" x="11" y="65" width="139" height="299"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="63" maxX="0.0" maxY="-63"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -429,7 +429,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qqk-jX-bJZ">
-                                <rect key="frame" x="189" y="846" width="50" height="52"/>
+                                <rect key="frame" x="187" y="846" width="50" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -447,10 +447,11 @@
                             <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WgF-dD-q7b">
                                 <rect key="frame" x="0.0" y="886" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8vH-Gj-DmS">
-                                <rect key="frame" x="38" y="842" width="40" height="40"/>
+                                <rect key="frame" x="36" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -466,7 +467,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xq-8e-GN9">
-                                <rect key="frame" x="92" y="842" width="40" height="40"/>
+                                <rect key="frame" x="90" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -482,7 +483,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUR-if-Ogp">
-                                <rect key="frame" x="144" y="842" width="40" height="40"/>
+                                <rect key="frame" x="142" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -500,7 +501,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0u-wF-dpp">
-                                <rect key="frame" x="196" y="842" width="40" height="40"/>
+                                <rect key="frame" x="195" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -518,7 +519,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BYG-4x-eaN">
-                                <rect key="frame" x="248" y="842" width="40" height="40"/>
+                                <rect key="frame" x="246" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -535,7 +536,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHc-NF-1Tt">
-                                <rect key="frame" x="300" y="842" width="40" height="40"/>
+                                <rect key="frame" x="299" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -552,7 +553,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Pz-YP-ZTj">
-                                <rect key="frame" x="152" y="921" width="28" height="5"/>
+                                <rect key="frame" x="150" y="921" width="28" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
@@ -562,7 +563,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VNM-89-r0S">
-                                <rect key="frame" x="203" y="921" width="25" height="5"/>
+                                <rect key="frame" x="201" y="921" width="25" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
@@ -572,7 +573,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yay-tt-SdV">
-                                <rect key="frame" x="254" y="921" width="26" height="5"/>
+                                <rect key="frame" x="253" y="921" width="26" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
@@ -582,7 +583,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="292-gV-NMr">
-                                <rect key="frame" x="305" y="921" width="26" height="5"/>
+                                <rect key="frame" x="303" y="921" width="26" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
@@ -592,7 +593,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hto-tt-hcr">
-                                <rect key="frame" x="99" y="921" width="26" height="5"/>
+                                <rect key="frame" x="97" y="921" width="26" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
@@ -622,7 +623,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ede-I9-X7L">
-                                <rect key="frame" x="352" y="842" width="40" height="40"/>
+                                <rect key="frame" x="350" y="842" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -773,7 +774,7 @@
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
                                                 <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e0U-ST-qwv">
-                                                    <rect key="frame" x="122" y="0.0" width="122" height="40"/>
+                                                    <rect key="frame" x="122" y="0.0" width="123" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <color key="tintColor" red="0.41513098669999998" green="0.539167438" blue="0.66666668650000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" title="Delete">
@@ -828,6 +829,10 @@
                                                         <action selector="showEditMenu:" destination="7DT-Vp-VQc" eventType="touchUpInside" id="Ytn-Jr-YZe"/>
                                                     </connections>
                                                 </button>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="new_icon_round" translatesAutoresizingMaskIntoConstraints="NO" id="Dwc-vx-mbm">
+                                                    <rect key="frame" x="17" y="39" width="32" height="12"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -906,36 +911,36 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0fT-Ds-rNo">
-                                <rect key="frame" x="-2" y="19" width="430" height="912"/>
+                                <rect key="frame" x="-4" y="19" width="430" height="912"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aTk-lr-cj6">
-                                <rect key="frame" x="-1" y="-1" width="432" height="926"/>
+                                <rect key="frame" x="-3" y="-1" width="433" height="926"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lWZ-q7-PcF">
-                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                         <subviews>
                                             <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_Tophead_created.png" translatesAutoresizingMaskIntoConstraints="NO" id="3K9-Wz-8ns" userLabel="mainImage">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                             </imageView>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hR1-sI-SlE" customClass="ACEDrawingView">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_tophead_created_trans.png" translatesAutoresizingMaskIntoConstraints="NO" id="iZZ-Vo-cnb" userLabel="tempImage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cl7-g0-zTc" userLabel="tempDrawImage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -950,7 +955,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dBp-nR-mfJ">
-                                <rect key="frame" x="64" y="869" width="39" height="40"/>
+                                <rect key="frame" x="63" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -967,7 +972,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13C-4e-co3">
-                                <rect key="frame" x="117" y="869" width="39" height="40"/>
+                                <rect key="frame" x="116" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -984,7 +989,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sHi-Eq-dmS">
-                                <rect key="frame" x="167" y="869" width="41" height="40"/>
+                                <rect key="frame" x="166" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1002,7 +1007,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="anW-wS-nVW">
-                                <rect key="frame" x="222" y="869" width="40" height="40"/>
+                                <rect key="frame" x="221" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1020,7 +1025,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9LR-HY-6u1">
-                                <rect key="frame" x="274" y="869" width="40" height="40"/>
+                                <rect key="frame" x="273" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1037,7 +1042,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6r1-5H-hUM">
-                                <rect key="frame" x="374" y="869" width="41" height="41"/>
+                                <rect key="frame" x="372" y="869" width="41" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1054,7 +1059,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ixK-Xj-Ppc">
-                                <rect key="frame" x="325" y="869" width="41" height="40"/>
+                                <rect key="frame" x="324" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="textNew_white.png">
@@ -1090,7 +1095,7 @@
                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4b-lc-Prd">
-                                <rect key="frame" x="151" y="920" width="25" height="6"/>
+                                <rect key="frame" x="150" y="920" width="25" height="6"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1099,7 +1104,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Hp-OC-Wgf">
-                                <rect key="frame" x="203" y="920" width="28" height="6"/>
+                                <rect key="frame" x="201" y="920" width="28" height="6"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1108,7 +1113,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cIf-JG-VJs">
-                                <rect key="frame" x="253" y="920" width="25" height="6"/>
+                                <rect key="frame" x="252" y="920" width="25" height="6"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1117,7 +1122,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gth-9I-CHr">
-                                <rect key="frame" x="305" y="920" width="26" height="6"/>
+                                <rect key="frame" x="304" y="920" width="26" height="6"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1126,7 +1131,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5XX-gA-Ofe">
-                                <rect key="frame" x="101" y="920" width="26" height="6"/>
+                                <rect key="frame" x="99" y="920" width="26" height="6"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1167,7 +1172,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rg-F1-ZgD">
-                                <rect key="frame" x="189" y="847" width="50" height="50"/>
+                                <rect key="frame" x="187" y="847" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Button" image="btn_apply.png">
@@ -1292,36 +1297,36 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pon-R3-a3q">
-                                <rect key="frame" x="-2" y="63" width="432" height="871"/>
+                                <rect key="frame" x="-4" y="63" width="433" height="871"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Adw-b9-PKb">
-                                <rect key="frame" x="-1" y="0.0" width="432" height="926"/>
+                                <rect key="frame" x="-3" y="0.0" width="433" height="926"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uz6-tQ-rVV">
-                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                         <subviews>
                                             <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_right_created.png" translatesAutoresizingMaskIntoConstraints="NO" id="0vF-uW-lS1" userLabel="mainImage">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                             </imageView>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SWh-8D-xIE" customClass="ACEDrawingView">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_right_created_tr.png" translatesAutoresizingMaskIntoConstraints="NO" id="jEf-PK-8XA" userLabel="tempImage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KGz-2x-LB0" userLabel="tempDrawImage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1336,7 +1341,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLc-UR-fy2">
-                                <rect key="frame" x="64" y="869" width="39" height="40"/>
+                                <rect key="frame" x="63" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="penNew_White.png">
@@ -1352,7 +1357,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pDe-NX-Vvf">
-                                <rect key="frame" x="117" y="869" width="39" height="40"/>
+                                <rect key="frame" x="116" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1370,7 +1375,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eew-SQ-mHc">
-                                <rect key="frame" x="167" y="869" width="41" height="40"/>
+                                <rect key="frame" x="166" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1388,7 +1393,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OWm-cP-v5I">
-                                <rect key="frame" x="222" y="869" width="41" height="40"/>
+                                <rect key="frame" x="220" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1406,7 +1411,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="neM-7e-DUt">
-                                <rect key="frame" x="274" y="869" width="40" height="40"/>
+                                <rect key="frame" x="273" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1423,7 +1428,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YzE-BU-sOu">
-                                <rect key="frame" x="326" y="869" width="39" height="40"/>
+                                <rect key="frame" x="325" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="textNew_white.png">
@@ -1439,7 +1444,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gre-qW-NCQ">
-                                <rect key="frame" x="151" y="919" width="25" height="7"/>
+                                <rect key="frame" x="150" y="919" width="25" height="7"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1457,7 +1462,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ux3-9m-RLR">
-                                <rect key="frame" x="257" y="919" width="26" height="7"/>
+                                <rect key="frame" x="255" y="919" width="26" height="7"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1466,7 +1471,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Y4-dp-Hid">
-                                <rect key="frame" x="306" y="919" width="27" height="7"/>
+                                <rect key="frame" x="304" y="919" width="27" height="7"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1475,7 +1480,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDq-Fl-jYr">
-                                <rect key="frame" x="98" y="919" width="27" height="7"/>
+                                <rect key="frame" x="97" y="919" width="27" height="7"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1536,7 +1541,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qDN-hG-cdz">
-                                <rect key="frame" x="188" y="847" width="48" height="50"/>
+                                <rect key="frame" x="187" y="847" width="48" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Done" image="btn_apply.png">
@@ -1551,7 +1556,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ou-4a-7u2">
-                                <rect key="frame" x="380" y="869" width="40" height="40"/>
+                                <rect key="frame" x="378" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1625,7 +1630,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pZd-oo-431">
-                                <rect key="frame" x="-1" y="63" width="430" height="872"/>
+                                <rect key="frame" x="-3" y="63" width="431" height="872"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1658,7 +1663,7 @@
                                                         <color key="tintColor" red="0.21289995312690735" green="0.51224100589752197" blue="0.75000882148742676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1673,7 +1678,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YU6-ik-VoY">
-                                <rect key="frame" x="63" y="869" width="41" height="40"/>
+                                <rect key="frame" x="62" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="penNew_White.png">
@@ -1688,7 +1693,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1bA-Uj-eCo">
-                                <rect key="frame" x="117" y="869" width="40" height="40"/>
+                                <rect key="frame" x="115" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1705,7 +1710,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bal-6r-JvS">
-                                <rect key="frame" x="168" y="869" width="40" height="40"/>
+                                <rect key="frame" x="166" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1723,7 +1728,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izg-fn-1st">
-                                <rect key="frame" x="222" y="869" width="41" height="40"/>
+                                <rect key="frame" x="220" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -1741,7 +1746,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWU-5F-8zj">
-                                <rect key="frame" x="274" y="869" width="41" height="40"/>
+                                <rect key="frame" x="272" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1758,7 +1763,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j85-DE-6z7">
-                                <rect key="frame" x="380" y="869" width="40" height="40"/>
+                                <rect key="frame" x="378" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1774,7 +1779,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Usv-w0-8PP">
-                                <rect key="frame" x="326" y="869" width="40" height="40"/>
+                                <rect key="frame" x="325" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="textNew_white.png">
@@ -1789,7 +1794,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ag5-0s-0Xc">
-                                <rect key="frame" x="152" y="921" width="28" height="5"/>
+                                <rect key="frame" x="150" y="921" width="28" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1798,7 +1803,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rjo-z8-rva">
-                                <rect key="frame" x="203" y="921" width="25" height="5"/>
+                                <rect key="frame" x="201" y="921" width="25" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1807,7 +1812,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t69-sh-tmY">
-                                <rect key="frame" x="254" y="921" width="27" height="5"/>
+                                <rect key="frame" x="253" y="921" width="27" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1816,7 +1821,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JaP-fA-Nda">
-                                <rect key="frame" x="307" y="921" width="25" height="5"/>
+                                <rect key="frame" x="305" y="921" width="25" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1825,7 +1830,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2H-VA-cYe">
-                                <rect key="frame" x="99" y="921" width="26" height="5"/>
+                                <rect key="frame" x="97" y="921" width="26" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -1886,7 +1891,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uc3-81-j1D">
-                                <rect key="frame" x="189" y="856" width="49" height="51"/>
+                                <rect key="frame" x="188" y="856" width="49" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Button" image="btn_apply.png">
@@ -1956,36 +1961,36 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NdB-i8-itU">
-                                <rect key="frame" x="-1" y="63" width="432" height="873"/>
+                                <rect key="frame" x="-3" y="63" width="433" height="873"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57d-iw-y6T">
-                                <rect key="frame" x="-1" y="-1" width="432" height="926"/>
+                                <rect key="frame" x="-3" y="-1" width="433" height="926"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WKy-2p-ScV">
-                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                         <subviews>
                                             <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_backHead_created.png" translatesAutoresizingMaskIntoConstraints="NO" id="7z3-BM-5Sg" userLabel="NewImageView">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                             </imageView>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Qx-im-C3V" customClass="ACEDrawingView">
-                                                <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_backHead_created_transp.png" translatesAutoresizingMaskIntoConstraints="NO" id="9BP-f7-LfF" userLabel="MiddleImg">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                     <imageView contentMode="scaleToFill" fixedFrame="YES" image="View_backHead_created_transp.png" translatesAutoresizingMaskIntoConstraints="NO" id="wxU-JC-sMP" userLabel="PreviousInage">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="926"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="433" height="926"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2000,7 +2005,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHT-dy-eJF">
-                                <rect key="frame" x="64" y="869" width="39" height="40"/>
+                                <rect key="frame" x="63" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="penNew_White.png">
@@ -2015,7 +2020,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mdx-2K-tna">
-                                <rect key="frame" x="117" y="869" width="39" height="40"/>
+                                <rect key="frame" x="116" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2032,7 +2037,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FNR-Xp-Dx5">
-                                <rect key="frame" x="169" y="869" width="39" height="40"/>
+                                <rect key="frame" x="167" y="869" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -2050,7 +2055,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3j-W8-zkG">
-                                <rect key="frame" x="222" y="869" width="40" height="40"/>
+                                <rect key="frame" x="221" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -2068,7 +2073,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="emf-j8-OPG">
-                                <rect key="frame" x="274" y="869" width="40" height="40"/>
+                                <rect key="frame" x="273" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2085,7 +2090,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3k-nv-u6E">
-                                <rect key="frame" x="380" y="869" width="40" height="40"/>
+                                <rect key="frame" x="378" y="869" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2101,7 +2106,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzC-Sb-fvB">
-                                <rect key="frame" x="325" y="869" width="41" height="40"/>
+                                <rect key="frame" x="324" y="869" width="41" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="textNew_white.png">
@@ -2116,7 +2121,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m6A-Kb-cQN">
-                                <rect key="frame" x="151" y="921" width="25" height="4"/>
+                                <rect key="frame" x="150" y="921" width="25" height="4"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -2125,7 +2130,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gKu-4n-Cze">
-                                <rect key="frame" x="204" y="921" width="26" height="4"/>
+                                <rect key="frame" x="202" y="921" width="26" height="4"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -2134,7 +2139,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ogk-wZ-9jZ">
-                                <rect key="frame" x="257" y="921" width="25" height="4"/>
+                                <rect key="frame" x="255" y="921" width="25" height="4"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -2143,7 +2148,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iy4-WZ-gxm">
-                                <rect key="frame" x="306" y="921" width="27" height="4"/>
+                                <rect key="frame" x="304" y="921" width="27" height="4"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -2152,7 +2157,7 @@
                                 <size key="shadowOffset" width="1" height="0.0"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wYO-6s-NFd">
-                                <rect key="frame" x="98" y="921" width="27" height="4"/>
+                                <rect key="frame" x="97" y="921" width="27" height="4"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="49"/>
                                 <color key="textColor" systemColor="darkTextColor"/>
@@ -2213,7 +2218,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q5w-fP-PVL">
-                                <rect key="frame" x="189" y="856" width="49" height="52"/>
+                                <rect key="frame" x="187" y="856" width="49" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Button" image="btn_apply.png">
@@ -2297,6 +2302,7 @@
                         <subviews>
                             <imageView clipsSubviews="YES" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="righthead_s" translatesAutoresizingMaskIntoConstraints="NO" id="T31-gU-41Z">
                                 <rect key="frame" x="193.66666666666663" y="59" width="236.33333333333337" height="308.66666666666669"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" red="0.55426232990000002" green="0.46059204929999997" blue="0.55702593540000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="T31-gU-41Z" secondAttribute="height" multiplier="4:5.16" constant="-2.8914728682170221" id="OPs-bu-Rna"/>
@@ -2318,12 +2324,14 @@
                             </imageView>
                             <imageView clipsSubviews="YES" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lefthead_s" translatesAutoresizingMaskIntoConstraints="NO" id="2lm-xV-P5o" userLabel="ImageLeft">
                                 <rect key="frame" x="0.0" y="59" width="236.66666666666666" height="308.66666666666669"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="2lm-xV-P5o" secondAttribute="height" multiplier="4:5.16" constant="-2.8914728682170221" id="YVe-QN-aui"/>
                                 </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" tag="3" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="tophead_s" translatesAutoresizingMaskIntoConstraints="NO" id="DPi-1N-KS6">
-                                <rect key="frame" x="280.5" y="384.5" width="463" height="602"/>
+                            <imageView clipsSubviews="YES" tag="3" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tophead_s" translatesAutoresizingMaskIntoConstraints="NO" id="DPi-1N-KS6">
+                                <rect key="frame" x="96.666666666666671" y="324" width="236.66666666666663" height="309"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="DPi-1N-KS6" secondAttribute="height" multiplier="4:5.16" constant="-2.8914728682170221" id="vbK-ez-xph"/>
                                 </constraints>
@@ -2377,53 +2385,37 @@
                 <viewController storyboardIdentifier="NewDrawController" id="kcl-fS-dS1" customClass="NewDrawController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4YL-Ox-Pb0">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k83-6m-MlC">
-                                <rect key="frame" x="-1033" y="57" width="2500" height="3251.6666666666665"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k83-6m-MlC">
+                                <rect key="frame" x="0.0" y="59" width="430" height="782"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="scd-TC-4DB" customClass="ACEDrawingView">
-                                        <rect key="frame" x="0.0" y="0.0" width="2500" height="3251.6666666666665"/>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="scd-TC-4DB" customClass="ACEDrawingView">
+                                        <rect key="frame" x="0.0" y="32" width="430" height="559"/>
+                                        <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Jga-qd-WVk">
-                                                <rect key="frame" x="0.0" y="0.0" width="2500" height="3251.6666666666665"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="Jga-qd-WVk" secondAttribute="height" multiplier="256:333" id="jg4-J4-tGc"/>
-                                                </constraints>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jga-qd-WVk">
+                                                <rect key="frame" x="0.0" y="0.0" width="430" height="559"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                             </imageView>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstItem="Jga-qd-WVk" firstAttribute="height" secondItem="scd-TC-4DB" secondAttribute="height" id="13X-ao-UdZ"/>
-                                            <constraint firstItem="Jga-qd-WVk" firstAttribute="top" secondItem="scd-TC-4DB" secondAttribute="top" id="Lgi-0j-yHF"/>
-                                            <constraint firstItem="Jga-qd-WVk" firstAttribute="leading" secondItem="scd-TC-4DB" secondAttribute="leading" id="MUN-Od-5L4"/>
-                                            <constraint firstItem="Jga-qd-WVk" firstAttribute="centerX" secondItem="scd-TC-4DB" secondAttribute="centerX" id="Yrp-pe-6Gb"/>
-                                            <constraint firstAttribute="trailing" secondItem="Jga-qd-WVk" secondAttribute="trailing" id="alc-5b-QJZ"/>
-                                            <constraint firstAttribute="bottom" secondItem="Jga-qd-WVk" secondAttribute="bottom" id="lDZ-Qj-NDQ"/>
-                                            <constraint firstItem="Jga-qd-WVk" firstAttribute="centerY" secondItem="scd-TC-4DB" secondAttribute="centerY" id="sXp-bR-jJN"/>
-                                        </constraints>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="scd-TC-4DB" firstAttribute="centerY" secondItem="k83-6m-MlC" secondAttribute="centerY" id="2tq-nO-eHN"/>
-                                    <constraint firstItem="scd-TC-4DB" firstAttribute="centerX" secondItem="k83-6m-MlC" secondAttribute="centerX" id="3gm-Ih-zSz"/>
-                                    <constraint firstItem="scd-TC-4DB" firstAttribute="top" secondItem="k83-6m-MlC" secondAttribute="top" id="XKf-bD-gyP"/>
-                                    <constraint firstAttribute="trailing" secondItem="scd-TC-4DB" secondAttribute="trailing" id="dGu-z9-V3q"/>
-                                    <constraint firstItem="scd-TC-4DB" firstAttribute="leading" secondItem="k83-6m-MlC" secondAttribute="leading" id="jIJ-Og-P8P"/>
-                                    <constraint firstAttribute="bottom" secondItem="scd-TC-4DB" secondAttribute="bottom" id="jX1-sH-wab"/>
-                                </constraints>
                                 <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                 <connections>
                                     <outlet property="delegate" destination="kcl-fS-dS1" id="pIJ-wa-E5W"/>
                                 </connections>
                             </scrollView>
                             <imageView alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gCk-C9-Vka">
-                                <rect key="frame" x="0.0" y="865" width="430" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <rect key="frame" x="0.0" y="1302" width="430" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                             </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHB-dm-vmq">
-                                <rect key="frame" x="38" y="860" width="40" height="40"/>
+                                <rect key="frame" x="36" y="860" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" name="addButton"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2440,7 +2432,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ft-6T-eXK">
-                                <rect key="frame" x="92" y="860" width="39" height="40"/>
+                                <rect key="frame" x="90" y="860" width="39" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2457,7 +2449,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ffb-RR-cDY">
-                                <rect key="frame" x="144" y="860" width="40" height="40"/>
+                                <rect key="frame" x="142" y="860" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -2474,26 +2466,8 @@
                                     <action selector="pencilPressed:" destination="kcl-fS-dS1" eventType="touchUpInside" id="AqD-cX-erp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ROO-Xi-uVp">
-                                <rect key="frame" x="196" y="860" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <accessibility key="accessibilityConfiguration" label=""/>
-                                <gestureRecognizers/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" image="pencil_white.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <state key="selected" image="pencil.png"/>
-                                <state key="highlighted">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="pencilPressed:" destination="kcl-fS-dS1" eventType="touchUpInside" id="Nbg-7m-jhN"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QOu-3i-WQM">
-                                <rect key="frame" x="248" y="860" width="40" height="40"/>
+                                <rect key="frame" x="246" y="860" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2510,7 +2484,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2sF-KK-3kw">
-                                <rect key="frame" x="300" y="860" width="40" height="40"/>
+                                <rect key="frame" x="298" y="860" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
                                 <gestureRecognizers/>
@@ -2527,7 +2501,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5r6-wu-Sv2">
-                                <rect key="frame" x="352" y="860" width="40" height="40"/>
+                                <rect key="frame" x="350" y="860" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2540,15 +2514,27 @@
                                     <action selector="pencilPressed:" destination="kcl-fS-dS1" eventType="touchUpInside" id="HiN-Ow-bPQ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ROO-Xi-uVp">
+                                <rect key="frame" x="195" y="860" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <accessibility key="accessibilityConfiguration" label=""/>
+                                <gestureRecognizers/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="pencil_white.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <state key="selected" image="pencil.png"/>
+                                <state key="highlighted">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="pencilPressed:" destination="kcl-fS-dS1" eventType="touchUpInside" id="Nbg-7m-jhN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="neu-0T-cn9"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="k83-6m-MlC" firstAttribute="top" secondItem="neu-0T-cn9" secondAttribute="top" constant="-2" id="48X-60-kJd"/>
-                            <constraint firstItem="k83-6m-MlC" firstAttribute="centerX" secondItem="4YL-Ox-Pb0" secondAttribute="centerX" constant="2.0000000000001137" id="XEm-OM-xXR"/>
-                            <constraint firstItem="k83-6m-MlC" firstAttribute="width" secondItem="4YL-Ox-Pb0" secondAttribute="height" multiplier="512:683" id="c4Q-V2-FFB"/>
-                            <constraint firstItem="neu-0T-cn9" firstAttribute="bottom" secondItem="k83-6m-MlC" secondAttribute="bottom" constant="-8" id="riI-wE-Bxv"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="arrowTool" destination="ROO-Xi-uVp" id="Lg9-Ws-tx0"/>
@@ -2566,7 +2552,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eJN-MU-PG9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-71.162790697674424" y="118.45493562231761"/>
+            <point key="canvasLocation" x="-76.744186046511629" y="115.87982832618026"/>
         </scene>
     </scenes>
     <color key="tintColor" name="orange"/>
@@ -2606,6 +2592,7 @@
         <image name="lineNew_white.png" width="40" height="40"/>
         <image name="male-def.png" width="228" height="296"/>
         <image name="male-sel.png" width="228" height="296"/>
+        <image name="new_icon_round" width="96" height="36"/>
         <image name="penNew_White.png" width="40" height="40"/>
         <image name="pencil.png" width="40" height="40"/>
         <image name="pencil_white.png" width="40" height="40"/>

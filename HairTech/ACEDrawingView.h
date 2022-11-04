@@ -102,6 +102,7 @@ typedef enum {
     int cycle;
 
 }
+@property BOOL newAppVersion;
 @property (strong, nonatomic) NSMutableArray<LayersData *> *layers;
 
 @property (nonatomic, strong) NSDictionary * layersDict;
@@ -275,9 +276,7 @@ typedef enum {
 
 -(void)removeCirclesOnZoomDelegate;
 -(void)bringArrowsToFront;
-
-
-
+-(void)loadJSONData;
 @end
 
 #pragma mark -
@@ -298,7 +297,6 @@ double dist2(CGPoint a, CGPoint b);
 -(void)removeTextSettings;
 -(void)disableZoomWhenTouchesMoved;
 -(void)enableZoomWhenTouchesMoved;
-
 
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;

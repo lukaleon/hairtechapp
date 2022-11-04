@@ -108,13 +108,12 @@ UIColor* tempColor;
 //}
 
 #pragma mark Initializattion
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame 
 {
     self = [super initWithFrame:frame];
     if (self) {
 
-        //  [self configure];
-        
+      
     }
     return self;
 }
@@ -166,9 +165,7 @@ UIColor* tempColor;
     self = [super initWithCoder:aDecoder];
     if (self) {
         
-        CGRect rect = CGRectMake(self.frame.origin.x, self.frame.origin.y, 1024, 1332);
         NSLog(@"Drawingview frame width %f frame height %f",self.frame.size.width, self.frame.size.height);
-        self.frame = rect;
         self.userInteractionEnabled = YES;
         self.layerArray = [[NSMutableArray alloc] init];
         self.type = JVDrawingTypeLine;
@@ -183,13 +180,19 @@ UIColor* tempColor;
         self.layersDict = [[NSMutableDictionary alloc]init];
         self.arrayOfLayersForJSON = [NSMutableArray array];
         arrayOfPoints = [NSMutableArray array];
+        //NSLog(@"BOOL in setter %s", self.newAppVersion ? "true" : "false");
 
-        
-      [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
-       [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
+       // [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
+//        [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
 
     }
     return self;
+}
+
+-(void)loadJSONData{
+    self.backgroundColor = [UIColor whiteColor];
+    [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
+    [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
 }
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
@@ -216,7 +219,6 @@ UIColor* tempColor;
 #pragma mark Touches Methods
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-   
     unsigned long count = [[event allTouches] count];
     if (count > 1) {
         return; // return amount of fingers touched right now
@@ -274,6 +276,7 @@ UIColor* tempColor;
                 self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             }
          else {
+              [self.delegate disableZoomWhenTouchesMoved];
              self.selectedLayer.isSelected = NO;
              [self removeCircles];
              [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
@@ -282,7 +285,7 @@ UIColor* tempColor;
                                                                       type:self.type
                                                                  lineWidth:self.lineWidth
                                                                  lineColor:self.lineColor];
-             [self.delegate disableZoomWhenTouchesMoved];
+            // [self.delegate disableZoomWhenTouchesMoved];
             [self.layer addSublayer:self.drawingLayer];
              }
     } else {
@@ -375,7 +378,6 @@ UIColor* tempColor;
             self.lastTouch = currentPoint;
             if (self.magnifierView.hidden == NO){
                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
-            
             }
         }
     }
@@ -463,7 +465,6 @@ UIColor* tempColor;
         }
     }
     [self.delegate enableZoomWhenTouchesMoved];
-
 }
 
 - (void)setEraserSelected:(BOOL)eraserSelected
@@ -981,7 +982,6 @@ UIColor* tempColor;
     
     [self LoadColorsAtStart];
     self.lineColor = tempColor;
-    self.backgroundColor = [UIColor clearColor];
     self.pointsCoord = [NSMutableArray array];
     self.arrayOfTextViews = [NSMutableArray array];
     

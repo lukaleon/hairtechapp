@@ -59,15 +59,7 @@
 
 -(void)viewDidLoad
 {
-    
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    
-   /* [self.view setFrame:CGRectMake(23, 50, self.view.frame.size.width/2, self.view.frame.size.height/2)];*/
-    
-   
-    
-    
     [self.textField becomeFirstResponder];
     self.textField.delegate = self;
     UIColor *color = [UIColor colorNamed:@"deepblue"];
@@ -80,65 +72,38 @@
     [self.imageOfheads.layer setShadowColor:[[UIColor darkGrayColor] CGColor]];
     [self.imageOfheads.layer setShadowRadius:8.0f];
     [self.imageOfheads.layer setShadowOpacity:0.9];
-    
-    
-    /*CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    CGFloat screenHeight = screenRect.size.height;
-    
-    if ((screenWidth == 320)&&(screenHeight==568))
-    {
-        self.labelLong.font = 
-        
-    }
-    */
-    
-    
-    
 }
 
 - (IBAction)MF_selected:(id)sender{
     
     UIButton * PressedButton = (UIButton*)sender;
-    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        
     switch(PressedButton.tag)
     {
-        
-         
         case 0:
-            appDelegate.globalDate = @"men_heads";
+            appDelegate.globalDate = @"men22";
+            self.maleOrFemale = @"men22";
             self.female_btn.selected=NO;
             self.male_btn.selected=YES;
-            
             break;
-    
         case 1:
-            appDelegate.globalDate = @"new_version";
+            appDelegate.globalDate = @"version22";
+            self.maleOrFemale = @"version22";
             self.male_btn.selected=NO;
             self.female_btn.selected=YES;
+
             break;
-        
     }
 }
-
-
-
 -(void)viewDidDisappear:(BOOL)animated
 {
-    
-    
-    
     NSLog(@"View did Dissapear name == : %@.",foothumb1);
-    if(pressedOkButton==YES)
+    if(pressedOkButton == YES)
     {
         [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
         [self.delegate  openEntry];
         NSLog(@"GOING TO OPEN OPENENTRY");
     }
- 
-
 }
 
 
@@ -155,7 +120,6 @@
     NSString *specialCharacterString = @"!~`@#$%^&*+();:={}[],<>?\\/\"\'";
     NSCharacterSet *specialCharacterSet = [NSCharacterSet
                                            characterSetWithCharactersInString:specialCharacterString];
-
     if ([string.lowercaseString rangeOfCharacterFromSet:specialCharacterSet].length) {
         NSLog(@"contains special characters");
         return YES;
@@ -229,32 +193,18 @@
     NSError *error = nil;
     
     if ([filemgr fileExistsAtPath: [documentsDir stringByAppendingPathComponent:fileName] ] == YES) {
-        
         NSLog (@"File exists, done");
-        
     } else {
-        
         NSLog (@"File not found, copying next.");
-        
         if([filemgr copyItemAtPath:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] toPath:[documentsDir stringByAppendingPathComponent:fileName] error:&error]){
-            
             NSLog(@"File successfully copied to:%@",documentsDir);
-            
         } else {
-            
             NSLog(@"Error description - %@ \n", [error localizedDescription]);
             NSLog(@"Error reason - %@", [error localizedFailureReason]);
-            
         }
-        
     }
-    
- 
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
-
-    //self.textField.keyboardType=UIKeyboardTypeASCIICapable;
-
 }
 -(void)changeFileName:(NSString *)filename to:(NSString*)newFileName
 {
@@ -286,97 +236,32 @@
 
 -(void)closeSubViewManually
 {
-
     pressedOkButton=YES;
-    
-   [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
-    
-   
-    
-    /*
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
-    NSString *foofile = [documentsPath stringByAppendingPathComponent:foothumb1];
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
-    */
-    
+    [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    
-    
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-       ViewController *viewcontroller = [[ViewController alloc]init];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    ViewController *viewcontroller = [[ViewController alloc]init];
     viewcontroller.label.text=self.textField.text;
-
     viewcontroller.delegate1=self;
-
-        appDelegate.NameForTechnique=self.textField.text;
-    
+    appDelegate.NameForTechnique=self.textField.text;
     [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
-
-
-    if(((screenHeight == 736)||(screenHeight == 667)||(screenHeight == 568))&&[appDelegate.globalDate isEqualToString:@"new_version"])
-    {
-        NSLog(@"I'AM using 7plus files");
-        [self copyIphone7Files];
+    
+    if([appDelegate.globalDate isEqualToString:@"version22"]){
+                [self copyXFiles];
     }
-    
-    if (((screenHeight==1024)||(screenHeight==1366)||(screenHeight==834))&&([appDelegate.globalDate isEqualToString:@"new_version"]))
-    {
-        NSLog(@"I'AM using iPad files");
-        [self copyIPadFiles];
-    }
-    
-    if((screenHeight == 812)&&[appDelegate.globalDate isEqualToString:@"new_version"]){
-        
-        NSLog(@"I'AM using iPhone XXXX files");
-        [self copyXFiles];
-        
-    }
-    
-    
-  /*  if (![appDelegate.globalDate isEqualToString:@"new_version"]&&[appDelegate.globalDate isEqualToString:@"men_heads"]){
-        
-        [self copyAndRenameRetinaFiles];
-        
-    }*/
-    
     /*-----------------MEN_HEADS-----------------------*/
-    
-    
-    if(((screenHeight == 736)||(screenHeight == 667)||(screenHeight == 568))&&([appDelegate.globalDate isEqualToString:@"men_heads"]))
-    {
-        NSLog(@"I'AM using 7plus MEN");
-        [self copyIphone7FilesMEN];
-    }
-    
-    if (((screenHeight==1024)||(screenHeight==1366)||(screenHeight==834))&&([appDelegate.globalDate isEqualToString:@"men_heads"]))
-       {
-           NSLog(@"I'AM using iPad MEN");
-           [self copyIPadFilesMEN];
-       }
-    if((screenHeight == 812)&&[appDelegate.globalDate isEqualToString:@"men_heads"]){
-           
-           NSLog(@"I'AM using iPhone XXXX files");
+    if([appDelegate.globalDate isEqualToString:@"men22"]){
            [self copyXFilesMEN];
-           
        }
-    
-    
     
     appDelegate.checkwindow = 1;
     appDelegate.checkEntrywindow = 1;
     appDelegate.OkButtonInSubView = 1;
     appDelegate.checkvalue=0;
     
-    NSLog(@"AppDelegate Checkwindow = %d",appDelegate.checkwindow);
-    
-    
-   // [self.delegate saveData:self.textField.text];
-    
     self.convertedLabel =self.textField.text;
-    
-    //NSLog(@"Name for technique in SAVE DATA METHOD = %@",self.convertedLabel);
     
     NSMutableString *bfcol =@"Entry";
     foothumb_0 =self.convertedLabel;
@@ -385,8 +270,6 @@
     foothumb_0= [foothumb_0 mutableCopy];
     [foothumb_0 appendString:@".png"];
     NSLog(@"Результат in vc: %@.",foothumb_0);
-    
-    
     
     /////-----------Name for  thumbimage1 ---------------//////////
     
@@ -491,15 +374,11 @@
     [foobig5 appendString:@".png"];
     NSLog(@"Результат: %@.",foobig5);
     
-    
-
-    
-    
     Technique *technique = [[Technique alloc] init];
     technique.techniquename = self.textField.text;
-    //technique.date = appDelegate.globalDate; // in previous versions before 6.0.1
-    technique.date = @"version22"; // newest version
-    technique.techniqueimage=foothumb_0;
+    NSLog(@"MALEFEMALE %@ ", self.maleOrFemale);
+    technique.date = self.maleOrFemale; // newest version
+    technique.techniqueimage = foothumb_0;
     technique.techniqueimagethumb1=foothumb_1;
     technique.techniqueimagethumb2=foothumb_2;
     technique.techniqueimagethumb3=foothumb_3;
@@ -511,28 +390,17 @@
     technique.techniqueimagebig4=foobig4;
     technique.techniqueimagebig5=foobig5;
 
-   
-    //appDelegate.globalDate =technique.date;
-    
-    
     if(![self validate:technique])
     {
         [Utility showAlert:@"Error" message:@"Validation Failed!"];
         return;
     }
     [self.delegate MySubViewController:self didAddCustomer:technique];
-    
-    
     NSLog(@"JUST ADDED NEW TECHNIQUE");
-     NSLog(@"JUST ADDED NEW TECHNIQUE = %@", technique.techniquename);
+    NSLog(@"JUST ADDED NEW TECHNIQUE = %@", technique.techniquename);
     [self.delegate  reloadMyCollection];
-    
-   
-    
     pressedCancelButton=NO;
-    
-[self dismissViewControllerAnimated:YES completion:nil];
-  
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(BOOL) validate:(Technique *)c
@@ -541,7 +409,6 @@
     {
         return NO;
     }
-    
     return YES;
 }
 
@@ -753,18 +620,13 @@
 -(BOOL)checkButtonSelected{
     
     BOOL buttonSelected;
-    
     if(!(self.female_btn.state == UIControlStateSelected)&&(!(self.male_btn.state == UIControlStateSelected))){
-        
         buttonSelected = false;
     }
     else {
         buttonSelected = true;
     }
-    
     return buttonSelected;
-
-    
 }
 
 - (IBAction)cancelSubview:(id)sender
@@ -774,161 +636,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
-
-
-
-
-
-
 ///////////////////////*************************************************/////////////////////////
-
-
-
--(void)copyIphone7Files
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"uiimage_cell_7p.png"];
-    [self copyFileFromBundleToDocs:@"btn_lefthead_7p.png"];
-    [self copyFileFromBundleToDocs:@"btn_righthead_7p.png"];
-    [self copyFileFromBundleToDocs:@"btn_tophead_7p.png"];
-    [self copyFileFromBundleToDocs:@"btn_backhead_7p.png"];
-    [self copyFileFromBundleToDocs:@"btn_fronthead_7p.png"];
-    
-    [self changeFileName:@"uiimage_cell_7p.png" to:foothumbCell];
-    [self changeFileName:@"btn_lefthead_7p.png" to:foothumb1];
-    [self changeFileName:@"btn_righthead_7p.png" to:foothumb2];
-    [self changeFileName:@"btn_tophead_7p.png" to:foothumb3];
-    [self changeFileName:@"btn_fronthead_7p.png" to:foothumb4];
-    [self changeFileName:@"btn_backhead_7p.png" to:foothumb5];
-    
-}
-
-
--(void)copyIPadFiles
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"ipad_full.png"];
-    [self copyFileFromBundleToDocs:@"ipad_left_sm.png"];
-    [self copyFileFromBundleToDocs:@"ipad_right_sm.png"];
-    [self copyFileFromBundleToDocs:@"ipad_top_sm.png"];
-    [self copyFileFromBundleToDocs:@"ipad_back_sm.png"];
-    [self copyFileFromBundleToDocs:@"ipad_front_sm.png"];
-    
-    [self changeFileName:@"ipad_full.png" to:foothumbCell];
-    [self changeFileName:@"ipad_left_sm.png" to:foothumb1];
-    [self changeFileName:@"ipad_right_sm.png" to:foothumb2];
-    [self changeFileName:@"ipad_top_sm.png" to:foothumb3];
-    [self changeFileName:@"ipad_front_sm.png" to:foothumb4];
-    [self changeFileName:@"ipad_back_sm.png" to:foothumb5];
-    
-}
-
-
-
 
 -(void)copyXFiles
 {
@@ -1001,154 +709,6 @@
     
 }
 /*--------------------------MEN_HEADS-------------------------*/
-
-
-
--(void)copyIphone7FilesMEN
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"men-iphone7-full.png"];
-    [self copyFileFromBundleToDocs:@"men-iphone7-left-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-iphone7-right-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-iphone7-top-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-iphone7-back-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-iphone7-front-sm.png"];
-    
-    [self changeFileName:@"men-iphone7-full.png" to:foothumbCell];
-    [self changeFileName:@"men-iphone7-left-sm.png" to:foothumb1];
-    [self changeFileName:@"men-iphone7-right-sm.png" to:foothumb2];
-    [self changeFileName:@"men-iphone7-top-sm.png" to:foothumb3];
-    [self changeFileName:@"men-iphone7-front-sm.png" to:foothumb4];
-    [self changeFileName:@"men-iphone7-back-sm.png" to:foothumb5];
-    
-}
-
-
--(void)copyIPadFilesMEN
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"men-ipad-full.png"];
-    [self copyFileFromBundleToDocs:@"men-ipad-left-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-ipad-right-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-ipad-top-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-ipad-back-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-ipad-front-sm.png"];
-    
-    [self changeFileName:@"men-ipad-full.png" to:foothumbCell];
-    [self changeFileName:@"men-ipad-left-sm.png" to:foothumb1];
-    [self changeFileName:@"men-ipad-right-sm.png" to:foothumb2];
-    [self changeFileName:@"men-ipad-top-sm.png" to:foothumb3];
-    [self changeFileName:@"men-ipad-front-sm.png" to:foothumb4];
-    [self changeFileName:@"men-ipad-back-sm.png" to:foothumb5];
-    
-}
-
-
-
 
 -(void)copyXFilesMEN
 {

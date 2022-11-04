@@ -7,6 +7,9 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define btnColor  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0]
 
+#define IDIOM    UI_USER_INTERFACE_IDIOM()
+#define IPAD     UIUserInterfaceIdiomPad
+
 
 @implementation TopHeadViewController
 
@@ -195,6 +198,14 @@ return YES;
     self.btn.layer.shadowOpacity = 0.5;
     self.btn.layer.shadowRadius = 2;
     self.btn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    redbtn.alpha = 0.0;
+    lineButton.alpha = 0.0;
+    bluebtn.alpha = 0.0;
+    penbtn.alpha = 0.0;
+    blackbtn.alpha = 0.0;
+    textbtn.alpha = 0.0;
+    eraserbtn.alpha = 0.0;
+
 }
 
 
@@ -211,10 +222,13 @@ return YES;
     self.imageToolbar1.layer.shadowOpacity = 0.2f;
     self.imageToolbar1.layer.masksToBounds = NO;
     self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
+    [self addInfoButtonOnToolbar];
+
 }
 
 - (void)viewDidLoad
 {
+    self.drawingView.userInteractionEnabled = NO;
     textSelected = NO;
     [self LoadColorsAtStart];
     [self setupButtons];
@@ -295,7 +309,7 @@ return YES;
         
         
         
-    [self adGridToImgView];
+//    [self adGridToImgView];
 
         
         
@@ -448,35 +462,37 @@ return YES;
     [self setupNavigationBarItems];
 }
 - (void)setupNavigationBarItems {
-    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [undo addTarget:self
-             action:@selector(undo)
-   forControlEvents:UIControlEventTouchUpInside];
-    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
-    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
-    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
-    
-    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [redo addTarget:self
-             action:@selector(redo)
-   forControlEvents:UIControlEventTouchUpInside];
-    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
-    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
-    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
-    
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [more addTarget:self
-             action:@selector(presentAlertView)
-   forControlEvents:UIControlEventTouchUpInside];
-    [more.widthAnchor constraintEqualToConstant:30].active = YES;
-    [more.heightAnchor constraintEqualToConstant:30].active = YES;
-    [more setImage:[UIImage systemImageNamed:@"ellipsis"] forState:UIControlStateNormal];
-    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
-    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
-    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    
-    
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+//    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [undo addTarget:self
+//             action:@selector(undo)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
+//
+//    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [redo addTarget:self
+//             action:@selector(redo)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
+//
+//    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [more addTarget:self
+//             action:@selector(presentAlertView)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [more setImage:[UIImage systemImageNamed:@"ellipsis"] forState:UIControlStateNormal];
+//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+//    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+//    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+//
+//
+//    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(openShareMenu)];
+    self.navigationItem.rightBarButtonItem = shareButton;
 }
 -(void)presentAlertView{
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Alert Title" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -1575,7 +1591,7 @@ self.previewImageView.layer.sublayers = nil;
         
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
@@ -1589,10 +1605,10 @@ self.previewImageView.layer.sublayers = nil;
         
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
     }
-   [self adGridToImgView];
+//   [self adGridToImgView];
 
 }
 
@@ -1610,7 +1626,7 @@ self.previewImageView.layer.sublayers = nil;
         UIImage*img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         [self showBar];
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
 
     }
@@ -1624,7 +1640,7 @@ self.previewImageView.layer.sublayers = nil;
         
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
 
     }
@@ -2209,5 +2225,69 @@ self.previewImageView.layer.sublayers = nil;
 }
 -(void)enableZoomWhenTouchesMoved{
     scrollView.pinchGestureRecognizer.enabled = YES;
+}
+
+- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX width:(CGFloat)btnWidth yAxe:(CGFloat)yAxe
+{
+    SEL selectorNew = NSSelectorFromString(selector);
+     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self
+               action:selectorNew
+     forControlEvents:UIControlEventTouchUpInside];
+    //button.backgroundColor = [UIColor orangeColor];
+    button.adjustsImageWhenHighlighted = NO;
+    UIImage *img = [UIImage imageNamed:imgName];
+    [button setImage:img forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
+    [button setTintColor:[UIColor lightGrayColor]];
+    [button setBackgroundColor:[UIColor whiteColor]];
+    button.frame = CGRectMake(startX, 0 + yAxe, btnWidth, btnWidth);
+    button.layer.cornerRadius = btnWidth / 2;
+    button.layer.masksToBounds = YES;
+    button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
+    button.layer.borderWidth = 0.0f;
+    return button;
+}
+-(UILabel*)addInfoLabel:(NSString*)string startX:(CGFloat)startX font:(CGFloat)fntSize width:(CGFloat)width{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, width,50)];
+    CGPoint newCenter = CGPointMake(startX + 5 , self.imageToolbar1.frame.size.height / 2);
+    label.center = newCenter;
+    label.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fntSize];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor lightGrayColor];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.text = string;
+    return label;
+}
+
+-(void)addInfoButtonOnToolbar{
+    CGRect sizeRect = [UIScreen mainScreen].bounds;
+    CGFloat screenPartitionIdx;
+    CGFloat originOfLabel;
+    CGFloat fntSize;
+    CGFloat width;
+    CGFloat iPadDist;
+    if (IDIOM == IPAD){
+        fntSize = 16;
+        width = 335;
+        iPadDist = 30;
+        
+    } else {
+        fntSize = 14;
+        width = 300;
+        iPadDist = 27;
+    }
+    originOfLabel = sizeRect.size.width / 2;
+    self.infoLabel = [self addInfoLabel:@"Editing is disabled. You are in the view mode." startX:originOfLabel font:fntSize width:width];
+    [self.imageToolbar1 addSubview:self.infoLabel];
+    
+    self.infoBtn =  [self fontButton:@"showInfoWindow:" imageName1:@"info_icon_new.png" imageName2:@"info_icon_new.png" startX:self.infoLabel.frame.origin.x - iPadDist width: 22 yAxe:15];
+   [self.imageToolbar1 addSubview:self.infoBtn];
+    
+}
+-(void)showInfoWindow:(UIButton*)button{
+    NSLog(@"Showing info window");
 }
 @end

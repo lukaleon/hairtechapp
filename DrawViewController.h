@@ -158,6 +158,11 @@
     BOOL textSetterState;
 
 }
+
+@property(nonatomic, strong)  IBOutlet UIButton * infoBtn;
+@property(nonatomic, strong)  IBOutlet UILabel * infoLabel;
+
+
 @property (nonatomic, assign) NSString * appVersion;
 
 @property CGFloat fontSizeVC;

@@ -37,6 +37,8 @@
     ViewController *viewcontroller;
     
 }
+
+@property (assign, nonatomic) NSString * maleOrFemale;
 @property (nonatomic,strong) Technique *techniqueAdd;
 
 @property (nonatomic,strong) Technique *techniqueToEdit;

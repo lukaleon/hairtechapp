@@ -10,7 +10,6 @@
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
-		401E398929013F840098ECC9 /* info_b.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398829013F840098ECC9 /* info_b.png */; };
 		401E398E29014F5D0098ECC9 /* newtechnique.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398C29014F5D0098ECC9 /* newtechnique.png */; };
 		401E398F29014F5D0098ECC9 /* newtechnique_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398D29014F5D0098ECC9 /* newtechnique_h.png */; };
 		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
@@ -397,7 +396,6 @@
 		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
 		40179E0128C6734C0090CB0C /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
 		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
-		401E398829013F840098ECC9 /* info_b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_b.png; sourceTree = "<group>"; };
 		401E398C29014F5D0098ECC9 /* newtechnique.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newtechnique.png; sourceTree = "<group>"; };
 		401E398D29014F5D0098ECC9 /* newtechnique_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newtechnique_h.png; sourceTree = "<group>"; };
 		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
@@ -993,7 +991,6 @@
 			children = (
 				401E398D29014F5D0098ECC9 /* newtechnique_h.png */,
 				401E398C29014F5D0098ECC9 /* newtechnique.png */,
-				401E398829013F840098ECC9 /* info_b.png */,
 				407FB91028F1A9D100371E24 /* trash.svg */,
 				407FB90828F1A00B00371E24 /* hairtech_logo.PNG */,
 				407FB90628F185ED00371E24 /* dots.png */,
@@ -1056,6 +1053,37 @@
 			);
 			name = InfoViewController;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		40C35FEF2913EF3C005C22E6 /* AddNewTechnique */ = {
+			isa = PBXGroup;
+			children = (
+				B4A3D38223799F3300D5D369 /* MySubView.h */,
+				B4A3D38123799F3200D5D369 /* MySubView.m */,
+			);
+			name = AddNewTechnique;
+			sourceTree = "<group>";
+		};
+		40C35FF02913EFA2005C22E6 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				B4175F7B1BC68A90006860E0 /* Flurry.h */,
+				B43F7C64182A25670066523B /* Defines.h */,
+				CEB7E75C1649A62A0099C14C /* AppDelegate.h */,
+				B4F2EC7B16EAA00100FE6C85 /* AppDelegate.m */,
+				B43A5654167A6A3000D886C1 /* LoadingViewController.h */,
+				B43A5655167A6A3000D886C1 /* LoadingViewController.m */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		40C35FF12913EFB8005C22E6 /* EntryView */ = {
+			isa = PBXGroup;
+			children = (
+				CE0BD3FF1654EF300078EE94 /* EntryViewController.h */,
+				CE0BD4001654EF300078EE94 /* EntryViewController.m */,
+			);
+			name = EntryView;
 			sourceTree = "<group>";
 		};
 		B401C9F51B04795000596292 /* DB */ = {
@@ -1392,7 +1420,7 @@
 			name = "Version 1.2";
 			sourceTree = "<group>";
 		};
-		B4C144D2213D02D200E6E32E /* New Group2 */ = {
+		B4C144D2213D02D200E6E32E /* PopTipController */ = {
 			isa = PBXGroup;
 			children = (
 				B4C144D4213D02FB00E6E32E /* AMPopTip.h */,
@@ -1405,7 +1433,7 @@
 				B4C144D9213D02FB00E6E32E /* AMPopTip+Entrance.m */,
 				B4C144DA213D02FC00E6E32E /* AMPopTipDefaults.h */,
 			);
-			path = "New Group2";
+			path = PopTipController;
 			sourceTree = "<group>";
 		};
 		B4C701C6206061A2004F68C5 /* Screens */ = {
@@ -1688,32 +1716,25 @@
 		CEB7E7531649A62A0099C14C /* HairTech */ = {
 			isa = PBXGroup;
 			children = (
-				407FB91E28FE998900371E24 /* New Version */,
+				B4FA974016679A8F00F36E34 /* HairTech.entitlements */,
+				B44DDD3A165E5096005BC877 /* MainStoryboard.storyboard */,
+				40C35FF02913EFA2005C22E6 /* Other */,
 				B4F25E722142F916003091C2 /* Magnify */,
 				B41A9F0A213E3E6E00B53A11 /* Haptic Helper */,
-				B4C144D2213D02D200E6E32E /* New Group2 */,
-				B4FA974016679A8F00F36E34 /* HairTech.entitlements */,
-				B4175F7B1BC68A90006860E0 /* Flurry.h */,
-				B43F7C64182A25670066523B /* Defines.h */,
-				CEB7E75C1649A62A0099C14C /* AppDelegate.h */,
-				B4F2EC7B16EAA00100FE6C85 /* AppDelegate.m */,
-				CE0BD3FF1654EF300078EE94 /* EntryViewController.h */,
-				CE0BD4001654EF300078EE94 /* EntryViewController.m */,
-				B44DDD3A165E5096005BC877 /* MainStoryboard.storyboard */,
-				B43A5654167A6A3000D886C1 /* LoadingViewController.h */,
-				B43A5655167A6A3000D886C1 /* LoadingViewController.m */,
-				B4A3D38223799F3300D5D369 /* MySubView.h */,
-				B4A3D38123799F3200D5D369 /* MySubView.m */,
+				B4C144D2213D02D200E6E32E /* PopTipController */,
 				407D4B6D2750032300BA0474 /* Slider */,
 				B429A75121CEEE3500F56F09 /* TextView_Pinch */,
 				B435FD341BC6B42F00DF3678 /* Edit Name */,
 				40BC7FC628EF79F300F7364A /* InfoViewController */,
-				B4FA974916680C1900F36E34 /* CollectionView */,
 				B401C9F51B04795000596292 /* DB */,
 				B4682CA81AFF4F8000FA2A5D /* MyTheme */,
 				B43B184817F46346006C9052 /* SideBar */,
 				B449C8F61781607F003219BB /* PopoverForRating */,
 				B4B64DCA16DE3AC500FC54B7 /* Help View */,
+				407FB91E28FE998900371E24 /* New Version */,
+				40C35FF12913EFB8005C22E6 /* EntryView */,
+				40C35FEF2913EF3C005C22E6 /* AddNewTechnique */,
+				B4FA974916680C1900F36E34 /* CollectionView */,
 				B434126716E61DF9003FAFA7 /* Color Popover */,
 				B4D82DA9165D762B0069D457 /* DrawControllers */,
 				CEB7E7541649A62A0099C14C /* Supporting Files */,
@@ -1983,7 +2004,6 @@
 				B4EB2B81237414D900F149C6 /* men-ipad-top-tr.png in Resources */,
 				B4127B77171362DD00CB4530 /* uiimage_background@2x.png in Resources */,
 				B4CFBB6A20C32700007F4CCE /* x_right.png in Resources */,
-				401E398929013F840098ECC9 /* info_b.png in Resources */,
 				B4C9F8D81716B9BB00A9CC0E /* arrow_default@2x.png in Resources */,
 				B4C9F8D91716B9BB00A9CC0E /* arrow_selected@2x.png in Resources */,
 				4071B5F428DA1AC300CCC9C3 /* textNew_white.png in Resources */,
@@ -2270,7 +2290,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -2316,7 +2336,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";

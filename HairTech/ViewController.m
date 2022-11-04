@@ -425,9 +425,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.NameForTechnique);
     
-   
     __block NSUInteger index = NSUIntegerMax;
-    
     [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
         if([technique.techniquename isEqualToString:appDelegate.NameForTechnique])
         {
@@ -435,27 +433,31 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             *stop = YES;
         }
     }];
-    
-Technique *technique = [self.techniques objectAtIndex:index];
-    
-    //Technique *technique = [self.techniques objectAtIndex:indexpathtemp.row];
 
-    NSLog(@"INDEX_FOR_ITEM = %d",index);
-    NSLog(@"INDEX_FOR_ITEM_WITH_ROW= %d",indexpathtemp.row);
-                                  
-    
-
+    Technique *technique = [self.techniques objectAtIndex:index];
     indexpathtemp=NULL;
+    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     
-      EntryViewController *entryViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
-    entryViewController.appVersion = technique.date;
-
-    appDelegate.myGlobalName = technique.techniquename;
-    self.sendImagenameToControllers = technique.techniquename;
-    entryViewController.stringFromTextfield = self.sendImagenameToControllers;
-    NSLog(@"AppDelegate MYGlobalName = %@",technique.techniquename);
-    entryViewController.delegate1=self;
-    [self.navigationController pushViewController: entryViewController animated:YES];
+//    if(![technique.date isEqualToString:@"version22"]){
+//        entryViewController.appVersion = technique.date;
+//        appDelegate.myGlobalName = technique.techniquename;
+//        self.sendImagenameToControllers = technique.techniquename;
+//        entryViewController.stringFromTextfield = self.sendImagenameToControllers;
+//        entryViewController.delegate1=self;
+//        [self.navigationController pushViewController: entryViewController animated:YES];
+//    }     if([technique.date isEqualToString:@"version22"]){
+//
+//        newEntryVC.imageL = [UIImage imageNamed:@"lefthead_s"];
+//        newEntryVC.imageR = [UIImage imageNamed:@"righthead_s"];
+//        newEntryVC.imageT = [UIImage imageNamed:@"tophead_s"];
+//        newEntryVC.imageF = [UIImage imageNamed:@"fronthead_s"];
+//        newEntryVC.imageB = [UIImage imageNamed:@"backhead_s"];
+    NSLog(@"technique type %@", technique.date);
+        newEntryVC.isFirstTime = YES;
+        newEntryVC.navigationItem.title = technique.techniquename;
+        newEntryVC.techniqueName = technique.techniquename;
+        newEntryVC.techniqueType = technique.date;
+        [self.navigationController pushViewController: newEntryVC animated:YES];
 }
 
 #pragma mark -Create or Open Database
@@ -624,8 +626,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     [filenamethumb2 appendString: prefix2];
     
     
-    NSLog(@"Результат: %@.",filenamethumb1);
-    NSLog(@"Результат: %@.",filenamethumb2);
     NSArray *sysPaths2 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory2 = [sysPaths2 objectAtIndex:0];
     NSString *filePath2 = [NSString stringWithFormat:filenamethumb2, docDirectory2];
@@ -637,22 +637,17 @@ Technique *technique = [self.techniques objectAtIndex:index];
     NSMutableString *prefix3= technique.techniqueimagethumb3;
     filenamethumb3 = [filenamethumb3 mutableCopy];
     [filenamethumb3 appendString: prefix3];
-    
-    NSLog(@"Результат: %@.",filenamethumb1);
-    NSLog(@"Результат: %@.",filenamethumb2);
+
     NSArray *sysPaths3 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory3 = [sysPaths3 objectAtIndex:0];
     NSString *filePath3 = [NSString stringWithFormat:filenamethumb3, docDirectory3];
     UIImage *tempimage3 = [[UIImage alloc] initWithContentsOfFile:filePath3];
     
-    /////---------Delegate image to EntryViewController buttonFrontHead---------/////////
     NSMutableString *filenamethumb4 = @"%@/";
     NSMutableString *prefix4= technique.techniqueimagethumb4;
     filenamethumb4 = [filenamethumb4 mutableCopy];
     [filenamethumb4 appendString: prefix4];
     
-    NSLog(@"Результат: %@.",filenamethumb1);
-    NSLog(@"Результат: %@.",filenamethumb2);
     NSArray *sysPaths4 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory4 = [sysPaths4 objectAtIndex:0];
     NSString *filePath4 = [NSString stringWithFormat:filenamethumb4, docDirectory4];
@@ -664,8 +659,6 @@ Technique *technique = [self.techniques objectAtIndex:index];
     filenamethumb5 = [filenamethumb5 mutableCopy];
     [filenamethumb5 appendString: prefix5];
     
-    NSLog(@"Результат: %@.",filenamethumb1);
-    NSLog(@"Результат: %@.",filenamethumb2);
     NSArray *sysPaths5 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory5 = [sysPaths5 objectAtIndex:0];
     NSString *filePath5 = [NSString stringWithFormat:filenamethumb5, docDirectory5];
@@ -677,7 +670,8 @@ Technique *technique = [self.techniques objectAtIndex:index];
     self.image4 = tempimage4;
     self.image5 = tempimage5;
     
-    if(![technique.date isEqualToString:@"version22"]){
+    NSLog(@"technique name version %@", technique.date);
+    if(![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
         
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         appDelegate.myGlobalName = technique.techniquename;
@@ -698,15 +692,20 @@ Technique *technique = [self.techniques objectAtIndex:index];
         cell.contentView.layer.cornerRadius = 15.0f;
         [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
         [self.navigationController pushViewController: entryVC animated:YES];
-    } else
-    {
-        newEntryVC.navigationItem.title = technique.techniquename;
-        [self.navigationController pushViewController: newEntryVC animated:YES];
-
     }
-    
-    
-    
+    if([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
+        newEntryVC.isFirstTime = NO;
+        newEntryVC.navigationItem.title = technique.techniquename;
+        newEntryVC.techniqueName = technique.techniquename;
+        newEntryVC.techniqueType = technique.date;
+        newEntryVC.imageL = self.image1;
+        newEntryVC.imageR = self.image2;
+        newEntryVC.imageT = self.image3;
+        newEntryVC.imageF = self.image4;
+        newEntryVC.imageB = self.image5;
+      
+        [self.navigationController pushViewController: newEntryVC animated:YES];
+    }
     }
 
 -(void)openSubView:(id)sender

@@ -22,7 +22,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *imageTop;
 @property (weak, nonatomic) IBOutlet UIImageView *imageFront;
 @property (weak, nonatomic) IBOutlet UIImageView *imageBack;
+@property (assign, nonatomic) NSString * techniqueName;
+@property (assign, nonatomic) NSString * techniqueType;
+@property (weak, nonatomic)  UIImage *imageL;
+@property (weak, nonatomic)  UIImage *imageR;
+@property (weak, nonatomic)  UIImage *imageT;
+@property (weak, nonatomic)  UIImage *imageF;
+@property (weak, nonatomic)  UIImage *imageB;
+@property BOOL isFirstTime;
 
+
+-(void)setImagesForLeft:(UIImage*)left rigth:(UIImage*)right top:(UIImage*) front:(UIImage*)front back:(UIImage*)back;
 @end
 
 NS_ASSUME_NONNULL_END

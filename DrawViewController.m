@@ -102,9 +102,6 @@
 
 -(void)loadMainImage
 {
-    
-
-
     NSMutableString *filenamethumb = @"%@/";
     NSMutableString *prefix = self.stringForLabel;
     filenamethumb = [filenamethumb mutableCopy];
@@ -126,8 +123,6 @@
    self.NewImageView.alpha = 1;
    // [self.drawingView getScreenShot:tempimage];
    // tempimage = nil;
-
-
 }
 
 
@@ -277,6 +272,15 @@ return YES;
     self.btn.layer.shadowOpacity = 0.5;
     self.btn.layer.shadowRadius = 2;
     self.btn.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+
+    redbtn.alpha = 0.0;
+    lineButton.alpha = 0.0;
+    bluebtn.alpha = 0.0;
+    penbtn.alpha = 0.0;
+    blackbtn.alpha = 0.0;
+    textbtn.alpha = 0.0;
+    eraserbtn.alpha = 0.0;
+    
 }
 
 
@@ -294,26 +298,19 @@ return YES;
    
 }
 - (void)setupBottomToolBar {
-    //self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
-  
-    
-    self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x , self.view.frame.origin.y + self.view.frame.size.height - 110, self.view.frame.size.width, 110);
-   
-  
-    self.imageToolbar1.alpha = 1.0f;
-   [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
- //   self.imageToolbar1.backgroundColor = [UIColor colorNamed:@"bar"];
-   // [self.imageToolbar1.layer setCornerRadius:15.0f];
-    [super viewDidLoad];
-    self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.imageToolbar1.layer.shadowOffset = CGSizeMake(0,0);
-    self.imageToolbar1.layer.shadowRadius = 8.0f;
-    self.imageToolbar1.layer.shadowOpacity = 0.2f;
-    self.imageToolbar1.layer.masksToBounds = NO;
-    self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
-    
-    //[self addLineSeparator:self.imageToolbar1.frame.origin.x y1:self.imageToolbar1.frame.origin.y + 100 x2:self.imageToolbar1.frame.size.width y2:self.imageToolbar1.frame.origin.y + 100];
-    [self addLineSeparator:0 y1:80 x2:self.imageToolbar1.frame.size.width y2:80];
+        self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
+        self.imageToolbar1.alpha = 1.0f;
+        [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+        [self.imageToolbar1.layer setCornerRadius:15.0f];
+        [super viewDidLoad];
+        self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.imageToolbar1.layer.shadowOffset = CGSizeMake(0,0);
+        self.imageToolbar1.layer.shadowRadius = 8.0f;
+        self.imageToolbar1.layer.shadowOpacity = 0.2f;
+        self.imageToolbar1.layer.masksToBounds = NO;
+        self.imageToolbar1.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.imageToolbar1.bounds cornerRadius:self.imageToolbar1.layer.cornerRadius].CGPath;
+        [self addInfoButtonOnToolbar];
+
 }
 
 
@@ -430,13 +427,14 @@ return YES;
 -(void)viewDidLoad{
     
     self.drawingView.userInteractionEnabled = NO;
-    NSLog(@"App version is %@", self.appVersion);
+    
+    //NSLog(@"App version is %@", self.appVersion);
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
-    [self setupButtons];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     self.drawingView.viewControllerName = @"left";
     [self setupBottomToolBar];
+    [self setupButtons];
     [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     [self addImagesForScreensPreviousVersions];
@@ -559,35 +557,38 @@ return YES;
 
 }
 - (void)setupNavigationBarItems {
-    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [undo addTarget:self
-             action:@selector(undo)
-   forControlEvents:UIControlEventTouchUpInside];
-    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
-    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
-    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
-    
-    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [redo addTarget:self
-             action:@selector(redo)
-   forControlEvents:UIControlEventTouchUpInside];
-    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
-    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
-    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
-    
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [more addTarget:self
-             action:@selector(presentAlertView)
-   forControlEvents:UIControlEventTouchUpInside];
-    [more.widthAnchor constraintEqualToConstant:30].active = YES;
-    [more.heightAnchor constraintEqualToConstant:30].active = YES;
-    [more setImage:[UIImage imageNamed:@"dots.png"] forState:UIControlStateNormal];
-    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
-    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
-    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    
-    
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, nil];
+//    UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [undo addTarget:self
+//             action:@selector(undo)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [undo.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [undo.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
+//
+//    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [redo addTarget:self
+//             action:@selector(redo)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [redo.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [redo.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
+//
+//    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    [more addTarget:self
+//             action:@selector(presentAlertView)
+//   forControlEvents:UIControlEventTouchUpInside];
+//    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+//    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+//    [more setImage:[UIImage imageNamed:@"share.png"] forState:UIControlStateNormal];
+//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+//    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+//    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+//
+//
+//    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn,  nil];
+//
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(openShareMenu)];
+    self.navigationItem.rightBarButtonItem = shareButton;
 }
 -(void)presentAlertView{
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Action" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -617,6 +618,7 @@ return YES;
     [alertVC addAction:button3];
 
     [self presentViewController:alertVC animated:YES completion:nil];
+    
 
 }
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
@@ -707,37 +709,19 @@ return YES;
 [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
 }
 
-
-
 -(void)viewWillAppear:(BOOL)animated
 {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
-    
     appDelegate.currentViewName = @"left";
-
- 
-    NSLog(@"DRAWCONTROLLER VIEWWILLAPEAR");
-
     [super viewWillAppear:YES];
-
-    
-    
    // [self loadMainImage];
-  
     self.labelDrawController.text = self.stringForLabel;
-    
-    NSLog(@"The LabelDrawController = %@",self.stringForLabel);
-    
-     dashLineCount=0;
+     dashLineCount = 0;
 }
 
 
 - (void)viewDidUnload
 {
-
-    
-    
     [self setMainImage:nil];
     [self setTempDrawImage:nil];
     [self setMiddleImg:nil];
@@ -1736,7 +1720,7 @@ self.previewImageView.layer.sublayers = nil;
         
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+      //  [self adGridToImgView];
         return img;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
@@ -1750,10 +1734,10 @@ self.previewImageView.layer.sublayers = nil;
         
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+        //[self adGridToImgView];
         return img;
     }
-   [self adGridToImgView];
+//   [self adGridToImgView];
 
 }
 
@@ -1773,7 +1757,7 @@ self.previewImageView.layer.sublayers = nil;
         UIImage*img = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         [self showBar];
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
 
     }
@@ -1786,7 +1770,7 @@ self.previewImageView.layer.sublayers = nil;
         UIGraphicsEndImageContext();
         [self showBar];
         NSLog(@"Captured screen");
-        [self adGridToImgView];
+//        [self adGridToImgView];
         return img;
 
     }
@@ -2206,4 +2190,69 @@ self.previewImageView.layer.sublayers = nil;
 }
 */
 
+
+
+- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX width:(CGFloat)btnWidth yAxe:(CGFloat)yAxe
+{
+    SEL selectorNew = NSSelectorFromString(selector);
+     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self
+               action:selectorNew
+     forControlEvents:UIControlEventTouchUpInside];
+    //button.backgroundColor = [UIColor orangeColor];
+    button.adjustsImageWhenHighlighted = NO;
+    UIImage *img = [UIImage imageNamed:imgName];
+    [button setImage:img forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
+    [button setTintColor:[UIColor lightGrayColor]];
+    [button setBackgroundColor:[UIColor whiteColor]];
+    button.frame = CGRectMake(startX , 0 + yAxe, btnWidth, btnWidth);
+    button.layer.cornerRadius = btnWidth / 2;
+    button.layer.masksToBounds = YES;
+    button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
+    button.layer.borderWidth = 0.0f;
+    return button;
+}
+-(UILabel*)addInfoLabel:(NSString*)string startX:(CGFloat)startX font:(CGFloat)fntSize width:(CGFloat)width{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, width,50)];
+    CGPoint newCenter = CGPointMake(startX + 5 , self.imageToolbar1.frame.size.height / 2);
+    label.center = newCenter;
+    label.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fntSize];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor lightGrayColor];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.text = string;
+    return label;
+}
+
+-(void)addInfoButtonOnToolbar{
+    CGRect sizeRect = [UIScreen mainScreen].bounds;
+    CGFloat screenPartitionIdx;
+    CGFloat originOfLabel;
+    CGFloat fntSize;
+    CGFloat width;
+    CGFloat iPadDist;
+    if (IDIOM == IPAD){
+        fntSize = 16;
+        width = 335;
+        iPadDist = 30;
+        
+    } else {
+        fntSize = 14;
+        width = 300;
+        iPadDist = 27;
+    }
+    originOfLabel = sizeRect.size.width / 2;
+    self.infoLabel = [self addInfoLabel:@"Editing is disabled. You are in the view mode." startX:originOfLabel font:fntSize width:width];
+    [self.imageToolbar1 addSubview:self.infoLabel];
+    
+    self.infoBtn =  [self fontButton:@"showInfoWindow:" imageName1:@"info_icon_new.png" imageName2:@"info_icon_new.png" startX:self.infoLabel.frame.origin.x - iPadDist width: 22 yAxe:15];
+   [self.imageToolbar1 addSubview:self.infoBtn];
+    
+}
+-(void)showInfoWindow:(UIButton*)button{
+    NSLog(@"Showing info window");
+}
 @end

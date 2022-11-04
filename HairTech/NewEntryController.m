@@ -14,13 +14,14 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewEntryController
-
+@synthesize techniqueName;
 -(void)viewDidAppear:(BOOL)animated{
     
     [self captureScreenRetina];
     
 }
--(void)viewDidLoad{    
+-(void)viewDidLoad{
+    NSLog(@"technique name %@", self.techniqueName);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareButton;
@@ -35,34 +36,92 @@
     [self.imageTop addGestureRecognizer:tapTop];
     [self.imageFront addGestureRecognizer:tapFront];
     [self.imageBack addGestureRecognizer:tapBack];
+    
+    if (!self.isFirstTime){
+        self.imageLeft.image = self.imageL;
+        self.imageRight.image = self.imageR;
+        self.imageTop.image = self.imageT;
+        self.imageFront.image = self.imageF;
+        self.imageBack.image = self.imageB;
+    }
+    if (self.isFirstTime && [self.techniqueType isEqualToString:@"version22"]){
+        self.imageLeft.image = [UIImage imageNamed:@"lefthead_s"];
+        self.imageRight.image =  [UIImage imageNamed:@"righthead_s"];
+        self.imageTop.image =  [UIImage imageNamed:@"tophead_s"];
+        self.imageFront.image =  [UIImage imageNamed:@"fronthead_s"];
+        self.imageBack.image =[UIImage imageNamed:@"fbackhead_s"];
+    }
+    if (self.isFirstTime && [self.techniqueType isEqualToString:@"men22"]){
+        self.imageLeft.image = [UIImage imageNamed:@"backhead_s"];
+        self.imageRight.image =  [UIImage imageNamed:@"backhead_s"];
+        self.imageTop.image =  [UIImage imageNamed:@"backhead_s"];
+        self.imageFront.image =  [UIImage imageNamed:@"backhead_s"];
+        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
+    }
+    
+//    self.imageLeft.image = self.imageL;
+//    self.imageRight.image = self.imageR;
+//    self.imageTop.image = self.imageT;
+//    self.imageFront.image = self.imageF;
+//    self.imageBack.image = self.imageB;
 }
+
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+   // self.imageLeft.image = [self loadImages:@"thumb1"];
+//    self.imageRight.image = [self loadImages:@"thumb2"];
+//    self.imageTop.image = [self loadImages:@"thumb3"];
+//    self.imageFront.image = [self loadImages:@"thumb4"];
+//    self.imageBack.image = [self loadImages:@"thumb5"];
+}
+
+-(UIImage*)loadImages:(NSString*)headtype
+{
+    NSMutableString *filenamethumb;
+    [filenamethumb isEqualToString: @"%@/"];
+    NSMutableString *prefix;
+    [prefix isEqualToString:techniqueName];
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: prefix];
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: @"headtype"];
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: @".png"];
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
+        NSData *data1 = [NSData dataWithContentsOfFile:filePath];
+    UIImage *tempimage = [UIImage imageWithData:data1];
+    return tempimage;
+}
+
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
     NewDrawController *newDrawVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewDrawController"];
     newDrawVC.delegate = self;
-    
+    newDrawVC.techniqueName = self.techniqueName;
     switch (myViewTag) {
         case 1:
-            newDrawVC.imgName = @"lefthead";
+            newDrawVC.headtype = @"lefthead";
             break;
         case 2:
-            newDrawVC.imgName = @"righthead";
+            newDrawVC.headtype = @"righthead";
             break;
         case 3:
-            newDrawVC.imgName = @"tophead";
+            newDrawVC.headtype = @"tophead";
             break;
         case 4:
-            newDrawVC.imgName = @"fronthead";
+            newDrawVC.headtype = @"fronthead";
             break;
         case 5:
-            newDrawVC.imgName = @"backhead";
+            newDrawVC.headtype = @"backhead";
             break;
         default:
             break;
     }
     [self.navigationController pushViewController: newDrawVC animated:YES];
-    
-    
 }
 
 
