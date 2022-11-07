@@ -8,8 +8,8 @@
 
 #import "MySubView.h"
 #import <QuartzCore/QuartzCore.h>
-//#import "ViewController.h"
 #import "AppDelegate.h"
+#import "NameViewController.h"
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -59,6 +59,7 @@
 
 -(void)viewDidLoad
 {
+   
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.textField becomeFirstResponder];
     self.textField.delegate = self;
@@ -72,8 +73,27 @@
     [self.imageOfheads.layer setShadowColor:[[UIColor darkGrayColor] CGColor]];
     [self.imageOfheads.layer setShadowRadius:8.0f];
     [self.imageOfheads.layer setShadowOpacity:0.9];
+    
+    [self setCloseButton];
+}
+-(void)setCloseButton{
+    UIButton *rightCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [rightCustomButton addTarget:self
+                         action:@selector(closeView)
+               forControlEvents:UIControlEventTouchUpInside];
+    [rightCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
+    [rightCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
+
+    [rightCustomButton setImage:[UIImage imageNamed:@"Close.png"] forState:UIControlStateNormal];
+    UIBarButtonItem * rightButtonItem =[[UIBarButtonItem alloc] initWithCustomView:rightCustomButton];
+    self.navigationItem.rightBarButtonItems = @[rightButtonItem];
+
 }
 
+-(void)closeView{
+    pressedOk = NO;
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
 - (IBAction)MF_selected:(id)sender{
     
     UIButton * PressedButton = (UIButton*)sender;
@@ -98,14 +118,21 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     NSLog(@"View did Dissapear name == : %@.",foothumb1);
-    if(pressedOkButton == YES)
+   // if(pressedOkButton == YES)
+    if(pressedOk)
     {
-        [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
-        [self.delegate  openEntry];
-        NSLog(@"GOING TO OPEN OPENENTRY");
-    }
-}
 
+        [self.delegate passItemBack:self didFinishWithItem:self.textField.text];        
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"openEntry"
+         object:self];
+//        [self.navigationController popToRootViewControllerAnimated:YES];
+
+      //  [self.delegate openEntry];
+     
+    }
+    
+}
 
 - (BOOL)disablesAutomaticKeyboardDismissal {
     return NO;
@@ -236,7 +263,9 @@
 
 -(void)closeSubViewManually
 {
+    
     pressedOkButton=YES;
+    pressedOk = YES;
     [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
@@ -245,7 +274,7 @@
     ViewController *viewcontroller = [[ViewController alloc]init];
     viewcontroller.label.text=self.textField.text;
     viewcontroller.delegate1=self;
-    appDelegate.NameForTechnique=self.textField.text;
+    appDelegate.NameForTechnique = self.textField.text;
     [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
     
     if([appDelegate.globalDate isEqualToString:@"version22"]){
@@ -395,10 +424,20 @@
         [Utility showAlert:@"Error" message:@"Validation Failed!"];
         return;
     }
-    [self.delegate MySubViewController:self didAddCustomer:technique];
-    NSLog(@"JUST ADDED NEW TECHNIQUE");
-    NSLog(@"JUST ADDED NEW TECHNIQUE = %@", technique.techniquename);
-    [self.delegate  reloadMyCollection];
+   // [self.delegate MySubViewController:self didAddCustomer:technique];
+    
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    [db insertCustomer:technique];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"populate"
+     object:self];
+    
+   
+    
+   // [self.delegate  reloadMyCollection];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"reloadCollection"
+     object:self];
     pressedCancelButton=NO;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -558,6 +597,9 @@
 
 
 #pragma mark -Close SubView methods
+
+
+
 - (IBAction)closeSubView:(id)sender {
     
     
@@ -615,6 +657,11 @@
     
     
 
+    NSLog(@"close close");
+   // UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:];
+    //NameViewController * nameVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NameViewController"];
+    //[self.navigationController pushViewController:nameVC animated:YES];
+
 }
 
 -(BOOL)checkButtonSelected{
@@ -631,8 +678,8 @@
 
 - (IBAction)cancelSubview:(id)sender
 {
-    
-    pressedCancelButton=YES;
+    pressedOk = NO;
+    pressedCancelButton = YES;
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }

@@ -51,6 +51,7 @@ UIImageView *transparentImage;
 -(void)hideBar;
 
 @property (weak, nonatomic) NSIndexPath *indexOfCell;
+@property (weak, nonatomic) IBOutlet UIImageView *iconTag;
 
 @end
 

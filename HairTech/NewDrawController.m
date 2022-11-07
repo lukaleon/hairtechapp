@@ -107,8 +107,7 @@
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
     [self.drawingView loadJSONData];
-   // [scrollView setZoomScale:zoomIdx animated:YES];
-
+    [scrollView setZoomScale:zoomIdx animated:YES];
 }
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];

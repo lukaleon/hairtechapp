@@ -93,7 +93,7 @@
         txtField.clipsToBounds = YES;
         txtField.textColor =  [UIColor colorNamed:@"deepblue"];
         txtField.tintColor = [UIColor blackColor];
-        txtField.font = [UIFont fontWithName:@"AvenirNext-Regular" size:14];
+        txtField.font = [UIFont fontWithName:@"AvenirNext-Medium" size:13];
         txtField.delegate = self;
         [containerView addSubview:txtField];
         

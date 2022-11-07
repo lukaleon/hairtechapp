@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "MyCustomLayout.h"
 #import "HapticHelper.h"
+#import "NameViewController.h"
 //#import "Flurry.h"
 
 NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -321,7 +322,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 //        layout.sectionInset = UIEdgeInsetsMake(0, (self.view.frame.size.width - (self.view.frame.size.width / 100) * 80)/2 , 0, 0);
 //        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 //        layout.minimumLineSpacing = self.view.frame.size.width - (self.view.frame.size.width / 100) * 80;
+     
         
+    
     }
     
     
@@ -343,7 +346,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self populateCustomers];
     [self addNewTechniqueButton];
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(openEntry)
+                                                 name:@"openEntry"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadMyCollection)
+                                                 name:@"reloadCollection"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(populateAndReload)
+                                                 name:@"populate"
+                                               object:nil];
+    
+    
+    
     
 }
 
@@ -393,16 +410,20 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [db insertCustomer:technique];
     [self populateCustomers];
     [self.collectionView reloadData];
-
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     appDelegate.globalIndex = [self.techniques indexOfObject:technique];
-    
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)populateAndReload{
+    NSLog(@"xxx PopulateAndReload");
+    [self populateCustomers];
+    [self.collectionView reloadData];
+    
+
+
+}
 -(void)viewDidDisappear{
 }
 
@@ -423,8 +444,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)openEntry
 {
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.NameForTechnique);
     
+    NSLog(@"xxx OPEN ENTRY VIEW CONTROLLER %lu", (unsigned long)self.techniques.count);
+
     __block NSUInteger index = NSUIntegerMax;
     [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
         if([technique.techniquename isEqualToString:appDelegate.NameForTechnique])
@@ -435,9 +457,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }];
 
     Technique *technique = [self.techniques objectAtIndex:index];
-    indexpathtemp=NULL;
+    indexpathtemp = NULL;
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     
+          
 //    if(![technique.date isEqualToString:@"version22"]){
 //        entryViewController.appVersion = technique.date;
 //        appDelegate.myGlobalName = technique.techniquename;
@@ -452,11 +475,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 //        newEntryVC.imageT = [UIImage imageNamed:@"tophead_s"];
 //        newEntryVC.imageF = [UIImage imageNamed:@"fronthead_s"];
 //        newEntryVC.imageB = [UIImage imageNamed:@"backhead_s"];
+          
     NSLog(@"technique type %@", technique.date);
         newEntryVC.isFirstTime = YES;
         newEntryVC.navigationItem.title = technique.techniquename;
         newEntryVC.techniqueName = technique.techniquename;
         newEntryVC.techniqueType = technique.date;
+    
         [self.navigationController pushViewController: newEntryVC animated:YES];
 }
 
@@ -513,9 +538,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
-    
-    
-   
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
     [cell hideBar];
     UISwipeGestureRecognizer* gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userDidSwipe:)];
@@ -547,10 +569,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     filenamethumb = [filenamethumb mutableCopy];
     [filenamethumb appendString: @".png"];
    
-    if ([technique.techniquename isEqualToString:tempstring]){
+    if ([technique.techniquename isEqualToString:@"BB"]){
         indexpathtemp = indexPath;
     }
-
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSLog(@"",docDirectory);
@@ -579,7 +600,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
     cell.dateLabel.userInteractionEnabled = YES;
-    
+    if ([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
+        cell.iconTag.alpha = 1;
+    }
+    else {
+        cell.iconTag.alpha = 0;
+    }
     return cell;
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -710,19 +736,37 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)openSubView:(id)sender
     {
-       MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
-        mysubview.delegate = self;
-       // [self presentViewController:mysubview animated:YES completion:nil];
-        mysubview.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self.navigationController presentViewController:mysubview animated:YES completion:nil];
+//       MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
+//        mysubview.delegate = self;
+//       // [self presentViewController:mysubview animated:YES completion:nil];
+//        mysubview.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+//        mysubview.modalPresentationStyle = UIModalPresentationFullScreen;
+//        [self.navigationController presentViewController:mysubview animated:YES completion:nil];
         
+        /* version 2022
+        MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
+        mysubview.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        mysubview.modalPresentationStyle = UIModalPresentationFullScreen;
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:mysubview];
+        [self presentViewController:nc animated:YES completion:nil];
+*/
+        
+        MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
+        mysubview.delegate = self;
+        NameViewController *nameView  = [self.storyboard instantiateViewControllerWithIdentifier:@"NameViewController"];
+        nameView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        nameView.modalPresentationStyle = UIModalPresentationFullScreen;
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:nameView];
+        [self presentViewController:nc animated:YES completion:nil];
+
         
  
     }
 #pragma mark -passItemBack Method
 
 -(void) passItemBack:(MySubView *)controller didFinishWithItem:(NSString*)item{
-   tempstring=item;
+   tempstring = item;
+   NSLog(@"text From subView %@", item);
 }
 
 #pragma mark -Save and Reload methods
@@ -845,6 +889,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 - (void)reloadMyCollection
 {
+    NSLog(@"xxx Reload My Collection ");
+
 [[self collectionView ] reloadData];
 }
 

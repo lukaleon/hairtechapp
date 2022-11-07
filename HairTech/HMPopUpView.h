@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, HMPopUpDismissType) {
 -(void)renameTechniqueDelegate:(NSString*)txtField;
 
 
-- (void) popUpView:(HMPopUpView *)view accepted:(BOOL)accept inputText:(NSString *)text;
+-(void)popUpView:(HMPopUpView *)view accepted:(BOOL)accept inputText:(NSString *)text;
 -(void)changeTechniqueName;
 -(BOOL)checkEnteredName:(NSString*)txtField;
 

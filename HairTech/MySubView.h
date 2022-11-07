@@ -24,13 +24,14 @@
 - (void)reloadMyCollection;
 -(void)openEntry;
 -(void)refreshVC;
+
 @end
 
 @interface MySubView :  UIViewController <UITextFieldDelegate>
 
-
 {
     BOOL edit;
+    BOOL pressedOk;
     
     NSString *nameForExistFile;
     NSMutableString *exfoothumb;
