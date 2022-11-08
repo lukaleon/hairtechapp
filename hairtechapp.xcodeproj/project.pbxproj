@@ -54,6 +54,11 @@
 		40BC7FD528F0254F00F7364A /* eraserNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD328F0254F00F7364A /* eraserNew.png */; };
 		40BC7FD628F0254F00F7364A /* eraserNew_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD428F0254F00F7364A /* eraserNew_sel.png */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
+		40F46AE0291A6B2700E7FC77 /* backhead_s.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F46ADF291A6B2700E7FC77 /* backhead_s.pdf */; };
+		40F46AE6291A6B3900E7FC77 /* righthead_s.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F46AE1291A6B3900E7FC77 /* righthead_s.pdf */; };
+		40F46AE7291A6B3900E7FC77 /* tophead_s.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F46AE2291A6B3900E7FC77 /* tophead_s.pdf */; };
+		40F46AE8291A6B3900E7FC77 /* lefthead_s.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F46AE3291A6B3900E7FC77 /* lefthead_s.pdf */; };
+		40F46AEA291A6B3900E7FC77 /* fronthead_s.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40F46AE5291A6B3900E7FC77 /* fronthead_s.pdf */; };
 		40FAF8DD28049148004DA2BA /* width1.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D828049148004DA2BA /* width1.png */; };
 		40FAF8DE28049148004DA2BA /* width3.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D928049148004DA2BA /* width3.png */; };
 		40FAF8DF28049148004DA2BA /* width4.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8DA28049148004DA2BA /* width4.png */; };
@@ -455,6 +460,11 @@
 		40BC7FD428F0254F00F7364A /* eraserNew_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eraserNew_sel.png; path = "../../../../../Downloads/Untitled-2 2/eraserNew_sel.png"; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
+		40F46ADF291A6B2700E7FC77 /* backhead_s.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = backhead_s.pdf; sourceTree = "<group>"; };
+		40F46AE1291A6B3900E7FC77 /* righthead_s.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = righthead_s.pdf; sourceTree = "<group>"; };
+		40F46AE2291A6B3900E7FC77 /* tophead_s.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = tophead_s.pdf; sourceTree = "<group>"; };
+		40F46AE3291A6B3900E7FC77 /* lefthead_s.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = lefthead_s.pdf; sourceTree = "<group>"; };
+		40F46AE5291A6B3900E7FC77 /* fronthead_s.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = fronthead_s.pdf; sourceTree = "<group>"; };
 		40FAF8D828049148004DA2BA /* width1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width1.png; sourceTree = "<group>"; };
 		40FAF8D928049148004DA2BA /* width3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width3.png; sourceTree = "<group>"; };
 		40FAF8DA28049148004DA2BA /* width4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width4.png; sourceTree = "<group>"; };
@@ -1087,6 +1097,18 @@
 				CE0BD4001654EF300078EE94 /* EntryViewController.m */,
 			);
 			name = EntryView;
+			sourceTree = "<group>";
+		};
+		40F46ADE291A6AAB00E7FC77 /* head 22 */ = {
+			isa = PBXGroup;
+			children = (
+				40F46AE5291A6B3900E7FC77 /* fronthead_s.pdf */,
+				40F46AE3291A6B3900E7FC77 /* lefthead_s.pdf */,
+				40F46AE1291A6B3900E7FC77 /* righthead_s.pdf */,
+				40F46AE2291A6B3900E7FC77 /* tophead_s.pdf */,
+				40F46ADF291A6B2700E7FC77 /* backhead_s.pdf */,
+			);
+			name = "head 22";
 			sourceTree = "<group>";
 		};
 		B401C9F51B04795000596292 /* DB */ = {
@@ -1750,6 +1772,7 @@
 		CEB7E7541649A62A0099C14C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				40F46ADE291A6AAB00E7FC77 /* head 22 */,
 				4071B5C728D9F15F00CCC9C3 /* New Buttons */,
 				4043E2E028E5886700BF9FF8 /* buttons_other */,
 				B4C701C6206061A2004F68C5 /* Screens */,
@@ -1843,6 +1866,7 @@
 				B42AC0E220AA2045004E8988 /* back_7p.png in Resources */,
 				B46C61C420C71C5F0053DC14 /* left_7p_tr.png in Resources */,
 				407FB91A28F8955500371E24 /* pencil_white.png in Resources */,
+				40F46AEA291A6B3900E7FC77 /* fronthead_s.pdf in Resources */,
 				B4EB2B86237414D900F149C6 /* men-ipad-top.png in Resources */,
 				B4EB2BC92374150A00F149C6 /* men-iphone7-back-tr.png in Resources */,
 				B44DDD3C165E5096005BC877 /* MainStoryboard.storyboard in Resources */,
@@ -1912,6 +1936,7 @@
 				B4908BD216FA768000E092CE /* intro_background.png in Resources */,
 				B42DB26F21C46539003B3733 /* eraser_new_selected.png in Resources */,
 				B4908BD716FA88A000E092CE /* witget2.png in Resources */,
+				40F46AE8291A6B3900E7FC77 /* lefthead_s.pdf in Resources */,
 				40BC7FD528F0254F00F7364A /* eraserNew.png in Resources */,
 				B4D627C416FB9F7E00B36555 /* subview_panel.png in Resources */,
 				4071B5F128DA172100CCC9C3 /* penNew_White.png in Resources */,
@@ -1920,6 +1945,7 @@
 				B4EB2BA4237414ED00F149C6 /* men-top-11-sm.png in Resources */,
 				B4D627C616FBA70000B36555 /* btn_black.png in Resources */,
 				B4D627C816FBA95100B36555 /* btn_greeny.png in Resources */,
+				40F46AE6291A6B3900E7FC77 /* righthead_s.pdf in Resources */,
 				B4D627CA16FBAD1400B36555 /* entryheadsSmall.png in Resources */,
 				B47F96F516FCF93800FB471C /* toolbarDrawController.png in Resources */,
 				B459C67416FDB1C300E51D34 /* btn_home2.png in Resources */,
@@ -1983,6 +2009,7 @@
 				B46561A720BD6D6400BF5BB9 /* Default@2x.png in Resources */,
 				B4EB2B88237414D900F149C6 /* men-ipad-left.png in Resources */,
 				B42AC0BE20AA1397004E8988 /* ipad_left_tr.png in Resources */,
+				40F46AE7291A6B3900E7FC77 /* tophead_s.pdf in Resources */,
 				B48F3E761712076C006DE532 /* View_backHead_created_transp@2x~ipad.png in Resources */,
 				B48F3E771712076C006DE532 /* View_backHead_created@2x~ipad.png in Resources */,
 				B4EB2BC02374150A00F149C6 /* men-iphone7-right-tr.png in Resources */,
@@ -2111,6 +2138,7 @@
 				B49DABA3177A3E1400BD5AF4 /* text_selected.png in Resources */,
 				407FB91728F894A900371E24 /* lineNew_white.png in Resources */,
 				B4EB2B83237414D900F149C6 /* men-ipad-left-tr.png in Resources */,
+				40F46AE0291A6B2700E7FC77 /* backhead_s.pdf in Resources */,
 				B4CFBB7120C32700007F4CCE /* x_back_tr.png in Resources */,
 				B42AC0B720AA12BB004E8988 /* ipad_top.png in Resources */,
 				4071B5F528DA1AC300CCC9C3 /* textNew.png in Resources */,

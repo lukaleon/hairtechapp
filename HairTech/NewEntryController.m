@@ -49,7 +49,7 @@
         self.imageRight.image =  [UIImage imageNamed:@"righthead_s"];
         self.imageTop.image =  [UIImage imageNamed:@"tophead_s"];
         self.imageFront.image =  [UIImage imageNamed:@"fronthead_s"];
-        self.imageBack.image =[UIImage imageNamed:@"fbackhead_s"];
+        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
     }
     if (self.isFirstTime && [self.techniqueType isEqualToString:@"men22"]){
         self.imageLeft.image = [UIImage imageNamed:@"backhead_s"];

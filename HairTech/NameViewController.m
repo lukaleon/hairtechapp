@@ -33,15 +33,15 @@
     self.progressBar.layer.cornerRadius = 2;
     self.continue_btn.layer.cornerRadius = 22;
    // [self.continue_btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    self.continue_btn.alpha = 0.8;
+    self.continue_btn.alpha = 0.6;
     self.continue_btn.enabled = NO;
 
     
 }
 - (IBAction)Continue:(id)sender {
     
-  //   UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:];
      MySubView * mySubView = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
+    mySubView.maleOrFemale = self.genderType;
      [self.navigationController pushViewController:mySubView animated:YES];
 }
 
@@ -71,6 +71,7 @@
             self.continue_btn.alpha = 1.0;
             [self dropShadow:pressedButton];
             [self removeShadow:self.male_btn];
+            self.genderType = @"version22";
             break;
         case 2:
             self.fem_btn.selected = NO;
@@ -79,6 +80,7 @@
             self.continue_btn.alpha = 1.0;
             [self dropShadow:pressedButton];
             [self removeShadow:self.fem_btn];
+            self.genderType = @"male22";
             break;
     }
 }

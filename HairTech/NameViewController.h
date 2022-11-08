@@ -13,14 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-@interface  NameViewController : UIViewController
-
+@interface  NameViewController : UIViewController{
+}
+@property NSString * genderType;
 @property (weak, nonatomic) IBOutlet UIButton *continue_btn;
 @property (weak, nonatomic) IBOutlet UIButton *fem_btn;
 @property (weak, nonatomic) IBOutlet UIButton *male_btn;
 - (IBAction)headPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *progressBar;
+
 
 @end
 

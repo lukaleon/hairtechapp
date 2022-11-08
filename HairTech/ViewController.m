@@ -481,7 +481,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         newEntryVC.navigationItem.title = technique.techniquename;
         newEntryVC.techniqueName = technique.techniquename;
         newEntryVC.techniqueType = technique.date;
-    
         [self.navigationController pushViewController: newEntryVC animated:YES];
 }
 
@@ -500,38 +499,23 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     if(arrayOfTechnique.count==0)
     {
-        
-
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:0 forKey:@"Array"];
         [defaults synchronize];
-        
-        
     }
     else
     {
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:1 forKey:@"Array"];
         [defaults synchronize];
     }
-    
-
-    
-    
    return [self.techniques count];
 }
 
 -(void)updateCollectionView{
-    
-    
 }
-
-
 - (void)userDidSwipe:(UIGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        //handle the gesture appropriately
-        
         NSLog(@"Gesture Swipe Handled");
     }
 }

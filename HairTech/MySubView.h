@@ -66,6 +66,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *female_btn;
 - (IBAction)MF_selected:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIButton *doneBtn;
 
+@property (weak, nonatomic) IBOutlet UIImageView *progressBar;
 
 @end

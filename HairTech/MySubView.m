@@ -61,8 +61,7 @@
 {
    
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.textField becomeFirstResponder];
-    self.textField.delegate = self;
+  
     UIColor *color = [UIColor colorNamed:@"deepblue"];
       self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"diagram name" attributes:@{NSForegroundColorAttributeName: color}];
     
@@ -75,7 +74,26 @@
     [self.imageOfheads.layer setShadowOpacity:0.9];
     
     [self setCloseButton];
+    [self setAppearanceOfElements];
 }
+
+-(void)setAppearanceOfElements{
+    self.progressBar.layer.cornerRadius = 2;
+    self.doneBtn.layer.cornerRadius = 22;
+  
+    //self.doneBtn.alpha = 0.6;
+   // self.doneBtn.enabled = NO;
+
+    
+}
+-(void)viewDidAppear:(BOOL)animated{
+    self.textField.delegate = self;
+    [self.textField becomeFirstResponder];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSLog(@"Male female %@", self.maleOrFemale);
+    appDelegate.globalDate = self.maleOrFemale;
+}
+
 -(void)setCloseButton{
     UIButton *rightCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [rightCustomButton addTarget:self
@@ -94,7 +112,7 @@
     pressedOk = NO;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
-- (IBAction)MF_selected:(id)sender{
+/*- (IBAction)MF_selected:(id)sender{
     
     UIButton * PressedButton = (UIButton*)sender;
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -114,19 +132,17 @@
 
             break;
     }
-}
+}*/
 -(void)viewDidDisappear:(BOOL)animated
 {
-    NSLog(@"View did Dissapear name == : %@.",foothumb1);
    // if(pressedOkButton == YES)
-    if(pressedOk)
     {
 
-        [self.delegate passItemBack:self didFinishWithItem:self.textField.text];        
-        [[NSNotificationCenter defaultCenter]
+       // [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
+      /*  [[NSNotificationCenter defaultCenter]
          postNotificationName:@"openEntry"
          object:self];
-//        [self.navigationController popToRootViewControllerAnimated:YES];
+//        [self.navigationController popToRootViewControllerAnimated:YES];*/
 
       //  [self.delegate openEntry];
      
@@ -424,22 +440,23 @@
         [Utility showAlert:@"Error" message:@"Validation Failed!"];
         return;
     }
-   // [self.delegate MySubViewController:self didAddCustomer:technique];
     
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db insertCustomer:technique];
+  
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"populate"
      object:self];
-    
    
-    
-   // [self.delegate  reloadMyCollection];
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"reloadCollection"
      object:self];
-    pressedCancelButton=NO;
+    
     [self dismissViewControllerAnimated:YES completion:nil];
+
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"openEntry"
+     object:self];
 }
 
 -(BOOL) validate:(Technique *)c
@@ -627,20 +644,7 @@
         [self checkNameLength];
     }
     
-    if(![self checkButtonSelected])
-       {
-           UIAlertView *alert3 = [[UIAlertView alloc] initWithTitle:@"Warning!"
-                                                           message:@"Please, select male or female heads!"
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"OK"
-                                                 otherButtonTitles: nil];
-           [alert3 show];
-           [self checkButtonSelected];
-       }
-    
-    
-    
-    if(![self checkEnteredName]&&(![self checkNameLength])&&[self checkButtonSelected]&&![self checkNameForSpecialSymbols]){
+    if(![self checkEnteredName]&&(![self checkNameLength])&&![self checkNameForSpecialSymbols]){
        [self closeSubViewManually];
     }
     
@@ -662,18 +666,6 @@
     //NameViewController * nameVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NameViewController"];
     //[self.navigationController pushViewController:nameVC animated:YES];
 
-}
-
--(BOOL)checkButtonSelected{
-    
-    BOOL buttonSelected;
-    if(!(self.female_btn.state == UIControlStateSelected)&&(!(self.male_btn.state == UIControlStateSelected))){
-        buttonSelected = false;
-    }
-    else {
-        buttonSelected = true;
-    }
-    return buttonSelected;
 }
 
 - (IBAction)cancelSubview:(id)sender
@@ -741,18 +733,18 @@
     
     
     [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
-    [self copyFileFromBundleToDocs:@"btn_lefthead_x.png"];
-    [self copyFileFromBundleToDocs:@"btn_righthead_x.png"];
-    [self copyFileFromBundleToDocs:@"btn_tophead_x.png"];
-    [self copyFileFromBundleToDocs:@"btn_backhead_x.png"];
-    [self copyFileFromBundleToDocs:@"btn_fronthead_x.png"];
+    [self copyFileFromBundleToDocs:@"lefthead_s.pdf"];
+    [self copyFileFromBundleToDocs:@"righthead_s.pdf"];
+    [self copyFileFromBundleToDocs:@"tophead_s.pdf"];
+    [self copyFileFromBundleToDocs:@"backhead_s.pdf"];
+    [self copyFileFromBundleToDocs:@"fronthead_s.pdf"];
     
     [self changeFileName:@"uiimage_cell_x.png" to:foothumbCell];
-    [self changeFileName:@"btn_lefthead_x.png" to:foothumb1];
-    [self changeFileName:@"btn_righthead_x.png" to:foothumb2];
-    [self changeFileName:@"btn_tophead_x.png" to:foothumb3];
-    [self changeFileName:@"btn_fronthead_x.png" to:foothumb4];
-    [self changeFileName:@"btn_backhead_x.png" to:foothumb5];
+    [self changeFileName:@"lefthead_s.pdf" to:foothumb1];
+    [self changeFileName:@"righthead_s.pdf" to:foothumb2];
+    [self changeFileName:@"tophead_s.pdf" to:foothumb3];
+    [self changeFileName:@"fronthead_s.pdf" to:foothumb4];
+    [self changeFileName:@"backhead_s.pdf" to:foothumb5];
     
 }
 /*--------------------------MEN_HEADS-------------------------*/
@@ -827,8 +819,5 @@
     [self changeFileName:@"men-back-11-sm.png" to:foothumb5];
     
 }
-
-
-
 
 @end
