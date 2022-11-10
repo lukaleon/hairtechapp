@@ -247,17 +247,45 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [button setImage:[UIImage imageNamed:@"newtechnique_h.png"] forState:UIControlStateHighlighted];
     [button setBackgroundColor:[UIColor whiteColor]];
     button.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
-                              self.view.frame.origin.y + self.view.frame.size.height - 84, 50 , 50);
+                              self.view.frame.origin.y + self.view.frame.size.height - 100, 50 , 50);
     button.layer.masksToBounds = NO;
     button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
     button.layer.borderWidth = 0.0f;
     button.layer.cornerRadius = 25;
-    [button.layer setShadowOffset:CGSizeMake(1, 3)];
-    [button.layer setShadowColor:[[UIColor colorNamed:@"orange"] CGColor]];
-    [button.layer setShadowRadius:4.0f];
-    [button.layer setShadowOpacity:0.6];
+//    [button.layer setShadowOffset:CGSizeMake(1, 3)];
+//    [button.layer setShadowColor:[[UIColor colorNamed:@"orange"] CGColor]];
+//    [button.layer setShadowRadius:4.0f];
+//    [button.layer setShadowOpacity:0.6];
     
     [self.view addSubview:button];
+}
+
+- (void)setupNavigationBar {
+    UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [leftCustomButton addTarget:self
+                         action:@selector(openInfoController)
+               forControlEvents:UIControlEventTouchUpInside];
+    [leftCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
+    [leftCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
+    
+    [leftCustomButton setImage:[UIImage imageNamed:@"info_b.png"] forState:UIControlStateNormal];
+    UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
+    self.navigationItem.leftBarButtonItems = @[leftButtonItem];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    
+    UIButton *sort = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [sort addTarget:self
+             action:@selector(presentAlertView)
+   forControlEvents:UIControlEventTouchUpInside];
+    [sort.widthAnchor constraintEqualToConstant:30].active = YES;
+    [sort.heightAnchor constraintEqualToConstant:30].active = YES;
+    [sort setImage:[UIImage imageNamed:@"sort.png"] forState:UIControlStateNormal];
+    [sort setTintColor:[UIColor colorNamed:@"deepblue"]];
+    
+    
+    UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithCustomView:sort];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:sortBtn, nil];
 }
 
 -(void)viewDidLoad
@@ -301,17 +329,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     self.navigationItem.title = @"Collection";
     
-    UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [leftCustomButton addTarget:self
-                         action:@selector(openInfoController)
-               forControlEvents:UIControlEventTouchUpInside];
-    [leftCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
-    [leftCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
-
-    [leftCustomButton setImage:[UIImage imageNamed:@"info_b.png"] forState:UIControlStateNormal];
-    UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
-    self.navigationItem.leftBarButtonItems = @[leftButtonItem];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self setupNavigationBar];
     
     // Bottom Border
     [super viewDidLoad];
@@ -332,6 +350,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     self.techniques = [[NSMutableArray alloc] init];
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+   // [db insertColumnTime];  INSERT INTO TABLE COLUMN 
     self.techniques = [db getCustomers];
     self.menuViewController = [[DEMOMenuViewController alloc] init];
     self.menuViewController.ViewController = self;
@@ -381,7 +400,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    } else
    {
         newsize.width = ((self.view.frame.size.width / 100) * 80);
-        newsize.height = ((self.view.frame.size.height / 100) * 80);
+        newsize.height = ((self.view.frame.size.height / 100) * 68);
+       
         return newsize;
     }
 }
@@ -441,6 +461,87 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.menuViewController.ViewController = nil;
 }
 
+-(void)fetchImages:(NSUInteger)idx{
+    
+    Technique *technique = [self.techniques objectAtIndex:idx];
+    NSMutableString *filenamethumb1 = @"%@/";
+    NSMutableString *prefix= technique.techniqueimagethumb1;
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: prefix];
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
+    UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
+    
+    /////---------Delegate image to EntryViewController button2 ---------/////////
+    NSMutableString *filenamethumb2 = @"%@/";
+    NSMutableString *prefix2= technique.techniqueimagethumb2;
+    filenamethumb2 = [filenamethumb2 mutableCopy];
+    [filenamethumb2 appendString: prefix2];
+    
+    
+    NSArray *sysPaths2 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory2 = [sysPaths2 objectAtIndex:0];
+    NSString *filePath2 = [NSString stringWithFormat:filenamethumb2, docDirectory2];
+    UIImage *tempimage2 = [[UIImage alloc] initWithContentsOfFile:filePath2];
+    
+    NSLog(@"DOCDIRECTORY %@.",docDirectory2);
+    
+    NSMutableString *filenamethumb3 = @"%@/";
+    NSMutableString *prefix3= technique.techniqueimagethumb3;
+    filenamethumb3 = [filenamethumb3 mutableCopy];
+    [filenamethumb3 appendString: prefix3];
+
+    NSArray *sysPaths3 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory3 = [sysPaths3 objectAtIndex:0];
+    NSString *filePath3 = [NSString stringWithFormat:filenamethumb3, docDirectory3];
+    UIImage *tempimage3 = [[UIImage alloc] initWithContentsOfFile:filePath3];
+    
+    NSMutableString *filenamethumb4 = @"%@/";
+    NSMutableString *prefix4= technique.techniqueimagethumb4;
+    filenamethumb4 = [filenamethumb4 mutableCopy];
+    [filenamethumb4 appendString: prefix4];
+    
+    NSArray *sysPaths4 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory4 = [sysPaths4 objectAtIndex:0];
+    NSString *filePath4 = [NSString stringWithFormat:filenamethumb4, docDirectory4];
+    UIImage *tempimage4 = [[UIImage alloc] initWithContentsOfFile:filePath4];
+    
+    /////---------Delegate image to EntryViewController buttonBackHead---------/////////
+    NSMutableString *filenamethumb5 = @"%@/";
+    NSMutableString *prefix5= technique.techniqueimagethumb5;
+    filenamethumb5 = [filenamethumb5 mutableCopy];
+    [filenamethumb5 appendString: prefix5];
+    
+    NSArray *sysPaths5 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory5 = [sysPaths5 objectAtIndex:0];
+    NSString *filePath5 = [NSString stringWithFormat:filenamethumb5, docDirectory5];
+    UIImage *tempimage5 = [[UIImage alloc] initWithContentsOfFile:filePath5];
+    
+    self.image1 = tempimage;
+    self.image2 = tempimage2;
+    self.image3 = tempimage3;
+    self.image4 = tempimage4;
+    self.image5 = tempimage5;
+   
+}
+
+-(UIImage*)fetchedImage:(NSUInteger)idx headName:(NSString*)name{
+    //Technique *technique = [self.techniques objectAtIndex:idx];
+    NSMutableString *filenamethumb1 = @"%@/";
+    NSMutableString *prefix = name;
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: prefix];
+    
+    NSArray *sysPaths5 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory5 = [sysPaths5 objectAtIndex:0];
+    NSString *filePath5 = [NSString stringWithFormat:filenamethumb1, docDirectory5];
+    UIImage *tempimage5 = [[UIImage alloc] initWithContentsOfFile:filePath5];
+    NSLog(@"IMG NAME %@", filenamethumb1);
+    return tempimage5;
+}
+
 -(void)openEntry
 {
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -458,6 +559,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     Technique *technique = [self.techniques objectAtIndex:index];
     indexpathtemp = NULL;
+ //   [self fetchImages:index];
+    
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     
           
@@ -469,19 +572,19 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 //        entryViewController.delegate1=self;
 //        [self.navigationController pushViewController: entryViewController animated:YES];
 //    }     if([technique.date isEqualToString:@"version22"]){
-//
-//        newEntryVC.imageL = [UIImage imageNamed:@"lefthead_s"];
-//        newEntryVC.imageR = [UIImage imageNamed:@"righthead_s"];
-//        newEntryVC.imageT = [UIImage imageNamed:@"tophead_s"];
-//        newEntryVC.imageF = [UIImage imageNamed:@"fronthead_s"];
-//        newEntryVC.imageB = [UIImage imageNamed:@"backhead_s"];
+
+//    newEntryVC.imageL = [self fetchedImage:index headName:technique.techniqueimagethumb1];
+//    newEntryVC.imageR = [self fetchedImage:index headName:technique.techniqueimagethumb2];
+//    newEntryVC.imageT = [self fetchedImage:index headName:technique.techniqueimagethumb3];
+//    newEntryVC.imageF = [self fetchedImage:index headName:technique.techniqueimagethumb4];
+//    newEntryVC.imageB = [self fetchedImage:index headName:technique.techniqueimagethumb5];
           
     NSLog(@"technique type %@", technique.date);
-        newEntryVC.isFirstTime = YES;
-        newEntryVC.navigationItem.title = technique.techniquename;
-        newEntryVC.techniqueName = technique.techniquename;
-        newEntryVC.techniqueType = technique.date;
-        [self.navigationController pushViewController: newEntryVC animated:YES];
+    newEntryVC.isFirstTime = YES;
+    newEntryVC.navigationItem.title = technique.techniquename;
+    newEntryVC.techniqueName = technique.techniquename;
+    newEntryVC.techniqueType = technique.date;
+    [self.navigationController pushViewController:newEntryVC animated:YES];
 }
 
 #pragma mark -Create or Open Database
@@ -553,8 +656,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     filenamethumb = [filenamethumb mutableCopy];
     [filenamethumb appendString: @".png"];
    
-    if ([technique.techniquename isEqualToString:@"BB"]){
-        indexpathtemp = indexPath;
+  //  if ([technique.techniquename isEqualToString:@"BB"]){
+    
+    if ([technique.techniquename isEqualToString:tempstring]){
+    indexpathtemp = indexPath;
     }
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
@@ -584,6 +689,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
     cell.dateLabel.userInteractionEnabled = YES;
+    
     if ([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
         cell.iconTag.alpha = 1;
     }
@@ -689,7 +795,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         appDelegate.globalDate = technique.date;
         entryVC.stringFromTextfield = self.sendImagenameToControllers;
         
-        entryVC.entryImage1= self.image1;
+        entryVC.entryImage1 = self.image1;
         entryVC.entryImage2 = self.image2;
         entryVC.entryImage3 = self.image3;
         entryVC.entryImage4 = self.image4;
@@ -704,6 +810,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self.navigationController pushViewController: entryVC animated:YES];
     }
     if([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
+        NSLog(@"FILENAME %@",filenamethumb1);
         newEntryVC.isFirstTime = NO;
         newEntryVC.navigationItem.title = technique.techniquename;
         newEntryVC.techniqueName = technique.techniquename;
@@ -1223,13 +1330,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db deleteCustomer:technique];
     [self populateCustomers];
-    
-    
-    
-   
-   
-    
-    
     NSLog(@"techme %@", technique.techniqueimagethumb1);
 
     NSMutableString *bfcol0 =@"Entry";

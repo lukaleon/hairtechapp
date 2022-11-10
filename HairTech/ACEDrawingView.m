@@ -916,6 +916,13 @@ UIColor* tempColor;
     textViewSelected = NO;
 
 }
+-(void)removeTextViewFrame{
+    if ([self.userResizableView.subviews containsObject:self.textViewNew]){
+        [self hideAndCreateTextLayer];
+        
+    }
+
+}
 
 - (CGFloat)getTextViewHeight{
     return self.textViewNew.contentSize.height + 20;

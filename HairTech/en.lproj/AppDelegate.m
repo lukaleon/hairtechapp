@@ -179,6 +179,27 @@
     
     
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    
+    
+    
+//
+//    BOOL success;
+//    FMDatabase *db = [FMDatabase databaseWithPath:databasePath];
+//    if (![db open])
+//    {
+//        NSLog(@"open failed");
+//        return;
+//    }
+//    if (![db columnExists:@"placeName" inTableWithName:@"MYPLACES"])
+//    {
+//        success = [db executeUpdate:@"ALTER TABLE MYPLACES ADD COLUMN placeName TEXT"];
+//        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
+//    }
+//    NSString *insertSQL = @"INSERT INTO  MYPLACES  (placeID, placeName)  VALUES (?, ?)";
+//    success = [db executeUpdate:insertSQL, placeIDValue, placeNameValue];
+//    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
+//    [db close];
+//
 }
 
 

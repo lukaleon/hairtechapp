@@ -64,6 +64,7 @@
   
     UIColor *color = [UIColor colorNamed:@"deepblue"];
       self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"diagram name" attributes:@{NSForegroundColorAttributeName: color}];
+    self.textField.layer.cornerRadius = 8;
     
     arrayOfTechnique = [[NSMutableArray alloc]init];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -179,7 +180,6 @@
     [foothumb1 appendString:bfcol1];
     foothumb1= [foothumb1 mutableCopy];
     [foothumb1 appendString:@".png"];
-    NSLog(@"Результат in textfield: %@.",foothumb1);
     
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
     NSString *foofile = [documentsPath stringByAppendingPathComponent:foothumb1];
@@ -470,149 +470,6 @@
 
 
 
--(void)copyAndRenameFiles
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"uiimage_cell.png"];
-    [self copyFileFromBundleToDocs:@"btn_lefthead.png"];
-    [self copyFileFromBundleToDocs:@"btn_righthead.png"];
-    [self copyFileFromBundleToDocs:@"btn_tophead.png"];
-    [self copyFileFromBundleToDocs:@"btn_backhead.png"];
-    [self copyFileFromBundleToDocs:@"btn_fronthead.png"];
-    
-    [self changeFileName:@"uiimage_cell.png" to:foothumbCell];
-    [self changeFileName:@"btn_lefthead.png" to:foothumb1];
-    [self changeFileName:@"btn_righthead.png" to:foothumb2];
-    [self changeFileName:@"btn_tophead.png" to:foothumb3];
-    [self changeFileName:@"btn_fronthead.png" to:foothumb4];
-    [self changeFileName:@"btn_backhead.png" to:foothumb5];
-
-}
-
--(void)copyAndRenameRetinaFiles
-{
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
-    
-    [self copyFileFromBundleToDocs:@"uiimage_cell@2x.png"];
-    [self copyFileFromBundleToDocs:@"btn_lefthead@2x.png"];
-    [self copyFileFromBundleToDocs:@"btn_righthead@2x.png"];
-    [self copyFileFromBundleToDocs:@"btn_tophead@2x.png"];
-    [self copyFileFromBundleToDocs:@"btn_backhead@2x.png"];
-    [self copyFileFromBundleToDocs:@"btn_fronthead@2x.png"];
-    
-    [self changeFileName:@"uiimage_cell@2x.png" to:foothumbCell];
-    [self changeFileName:@"btn_lefthead@2x.png" to:foothumb1];
-    [self changeFileName:@"btn_righthead@2x.png" to:foothumb2];
-    [self changeFileName:@"btn_tophead@2x.png" to:foothumb3];
-    [self changeFileName:@"btn_fronthead@2x.png" to:foothumb4];
-    [self changeFileName:@"btn_backhead@2x.png" to:foothumb5];
-    
-}
-
-
 #pragma mark -Close SubView methods
 
 
@@ -687,8 +544,6 @@
     [foothumbCell appendString:@".png"];
     NSLog(@"Результат: %@.",foothumbCell);
     
-    
-    
     NSMutableString *bfcol1 =@"thumb1";
     foothumb1 =self.textField.text;
     foothumb1 = [self.textField.text mutableCopy];
@@ -706,10 +561,10 @@
     NSLog(@"Результат: %@.",foothumb2);
     
     NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
+    foothumb3 = self.textField.text;
     foothumb3 = [self.textField.text mutableCopy];
     [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
+    foothumb3 = [foothumb3 mutableCopy];
     [foothumb3 appendString:@".png"];
     NSLog(@"Результат: %@.",foothumb3);
     
@@ -721,30 +576,27 @@
     [foothumb4 appendString:@".png"];
     NSLog(@"Результат: %@.",foothumb4);
     
-    
     NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
+    foothumb5 = self.textField.text;
     foothumb5 = [self.textField.text mutableCopy];
     [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
+    foothumb5 = [foothumb5 mutableCopy];
     [foothumb5 appendString:@".png"];
     NSLog(@"Результат: %@.",foothumb5);
     
-    
-    
     [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
-    [self copyFileFromBundleToDocs:@"lefthead_s.pdf"];
-    [self copyFileFromBundleToDocs:@"righthead_s.pdf"];
-    [self copyFileFromBundleToDocs:@"tophead_s.pdf"];
-    [self copyFileFromBundleToDocs:@"backhead_s.pdf"];
-    [self copyFileFromBundleToDocs:@"fronthead_s.pdf"];
+    [self copyFileFromBundleToDocs:@"lefthead_s.png"];
+    [self copyFileFromBundleToDocs:@"righthead_s.png"];
+    [self copyFileFromBundleToDocs:@"tophead_s.png"];
+    [self copyFileFromBundleToDocs:@"backhead_s.png"];
+    [self copyFileFromBundleToDocs:@"fronthead_s.png"];
     
     [self changeFileName:@"uiimage_cell_x.png" to:foothumbCell];
-    [self changeFileName:@"lefthead_s.pdf" to:foothumb1];
-    [self changeFileName:@"righthead_s.pdf" to:foothumb2];
-    [self changeFileName:@"tophead_s.pdf" to:foothumb3];
-    [self changeFileName:@"fronthead_s.pdf" to:foothumb4];
-    [self changeFileName:@"backhead_s.pdf" to:foothumb5];
+    [self changeFileName:@"lefthead_s.png" to:foothumb1];
+    [self changeFileName:@"righthead_s.png" to:foothumb2];
+    [self changeFileName:@"tophead_s.png" to:foothumb3];
+    [self changeFileName:@"fronthead_s.png" to:foothumb4];
+    [self changeFileName:@"backhead_s.png" to:foothumb5];
     
 }
 /*--------------------------MEN_HEADS-------------------------*/
@@ -805,19 +657,18 @@
     
     
     [self copyFileFromBundleToDocs:@"men-full-11.png"];
-    [self copyFileFromBundleToDocs:@"men-left-11-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-right-11-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-top-11-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-back-11-sm.png"];
-    [self copyFileFromBundleToDocs:@"men-front-11-sm.png"];
+    [self copyFileFromBundleToDocs:@"lefthead_ms.png"];
+    [self copyFileFromBundleToDocs:@"righthead_ms.png"];
+    [self copyFileFromBundleToDocs:@"tophead_ms.png"];
+    [self copyFileFromBundleToDocs:@"backhead_ms.png"];
+    [self copyFileFromBundleToDocs:@"fronthead_ms.png"];
     
     [self changeFileName:@"men-full-11.png" to:foothumbCell];
-    [self changeFileName:@"men-left-11-sm.png" to:foothumb1];
-    [self changeFileName:@"men-right-11-sm.png" to:foothumb2];
-    [self changeFileName:@"men-top-11-sm.png" to:foothumb3];
-    [self changeFileName:@"men-front-11-sm.png" to:foothumb4];
-    [self changeFileName:@"men-back-11-sm.png" to:foothumb5];
-    
+    [self changeFileName:@"lefthead_ms.png" to:foothumb1];
+    [self changeFileName:@"righthead_ms.png" to:foothumb2];
+    [self changeFileName:@"tophead_ms.png" to:foothumb3];
+    [self changeFileName:@"fronthead_ms.png" to:foothumb4];
+    [self changeFileName:@"backhead_ms.png" to:foothumb5];
 }
 
 @end

@@ -80,7 +80,7 @@
     [self saveColorsToDefaults];
     [self removeGrid];
     [self.drawingView removeCircles]; //remove control circles when selected
-    [self.drawingView hideAndCreateTextLayer]; //create text layer when closing window
+    [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     [self clearPageForClosing];
 }
@@ -91,14 +91,14 @@
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.5;
     scrollView.maximumZoomScale = 5.0;
-    scrollView.contentSize = self.drawingView.frame.size;
+   // scrollView.contentSize = self.drawingView.frame.size;
 
     scrollView.panGestureRecognizer.minimumNumberOfTouches = 2;
     NSLog(@"Scroll View frame width %f frame height %f",scrollView.frame.size.width, scrollView.frame.size.height);
 }
 - (void)setupDrawingView {
     CGFloat newHeightIdx = (self.view.frame.size.height - self.drawingView.frame.size.height) / 4;
-    CGPoint newCenter = CGPointMake(scrollView.center.x, scrollView.center.y - newHeightIdx);
+    CGPoint newCenter = CGPointMake(self.view.center.x, scrollView.center.y - newHeightIdx);
     CGFloat zoomIdx = self.view.frame.size.height / self.drawingView.frame.size.height;
     NSLog(@"zoooooooom %f", zoomIdx);
     self.drawingView.center = newCenter;
@@ -106,8 +106,8 @@
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
-    [self.drawingView loadJSONData];
-   // [scrollView setZoomScale:zoomIdx animated:YES];
+   // [self.drawingView loadJSONData];
+    //[scrollView setZoomScale:zoomIdx animated:YES];
 }
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];
@@ -1066,6 +1066,8 @@ return YES;
     [fileToSave appendString: headtype];
     fileToSave = [fileToSave mutableCopy];
     [fileToSave appendString: @".png"];
+    NSLog(@"screenshot nsme %@", fileToSave);
+
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];

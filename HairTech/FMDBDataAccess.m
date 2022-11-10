@@ -40,14 +40,7 @@
 
     
     BOOL success =   [db executeUpdate:@"DELETE FROM TECHNIQUES WHERE id = ?",[NSNumber numberWithInt:customer.techniqueId]];
-//BOOL success=[db executeUpdate:@"DELETE FROM theTable WHERE id = ?", [NSNumber numberWithInt:myObject.id]]
-    
-    //[NSString stringWithFormat:@"DELETE FROM TECHNIQUES WHERE TECHNIQUENAME IS '%s'",[technique.techniquename UTF8String]]];
 
-    
-    
-    //[db executeUpdate:@"DELETE FROM theTable WHERE id = ?", [NSNumber numberWithInt:myObject.id]];
-    
     [db close];
     
     return success;
@@ -134,4 +127,28 @@ return YES;
 
 }
 
+
+-(void)insertColumnTime{
+    BOOL success;
+
+    FMDatabase *db = [FMDatabase databaseWithPath:[Utility getDatabasePath]];
+    if (![db open])
+    {
+        NSLog(@"open failed");
+        return;
+    }
+
+    if (![db columnExists:@"time" inTableWithName:@"TECHNIQUES"])
+    {
+        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN time TEXT"];
+        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
+    }
+
+//    NSString *insertSQL = @"INSERT INTO  TECHNIQUES  (time)  VALUES (?)";
+//    success = [db executeUpdate:insertSQL, @"2022"];
+//    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
+
+    [db close];
+    
+}
 @end

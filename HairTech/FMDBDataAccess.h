@@ -24,6 +24,7 @@
 -(BOOL) insertCustomer:(Technique *) customer;
 -(BOOL) deleteCustomer:(Technique *) customer;
 -(BOOL) updateCustomer:(Technique *) customer;
+-(void)insertColumnTime;
 //-(void) insertColumn:(Technique *) customer;
 
 @end

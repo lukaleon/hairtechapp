@@ -252,6 +252,7 @@ typedef enum {
 -(void)removeAllDrawings;
 -(void)removeDrawingsForClosing;
 - (void)hideAndCreateTextLayer;
+-(void)removeTextViewFrame;
 
 // undo / redo
 - (BOOL)canUndo;
@@ -259,7 +260,6 @@ typedef enum {
 
 - (BOOL)canRedo;
 - (void)redoLatestStep;
-
 -(void)getScreenShot:(UIImage*)img;
 //@property (nonatomic, weak)IBOutlet UIPanGestureRecognizer *panRecognizer;
 //@property (nonatomic, weak)IBOutlet UITapGestureRecognizer *tapRecognizer;

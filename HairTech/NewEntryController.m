@@ -16,12 +16,17 @@
 @implementation NewEntryController
 @synthesize techniqueName;
 -(void)viewDidAppear:(BOOL)animated{
-    
     [self captureScreenRetina];
-    
 }
+
 -(void)viewDidLoad{
     NSLog(@"technique name %@", self.techniqueName);
+    self.imageLeft.image = [self loadImages:@"thumb1"];
+    self.imageRight.image = [self loadImages:@"thumb2"];
+    self.imageTop.image = [self loadImages:@"thumb3"];
+    self.imageFront.image = [self loadImages:@"thumb4"];
+    self.imageBack.image = [self loadImages:@"thumb5"];
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareButton;
@@ -37,27 +42,27 @@
     [self.imageFront addGestureRecognizer:tapFront];
     [self.imageBack addGestureRecognizer:tapBack];
     
-    if (!self.isFirstTime){
-        self.imageLeft.image = self.imageL;
-        self.imageRight.image = self.imageR;
-        self.imageTop.image = self.imageT;
-        self.imageFront.image = self.imageF;
-        self.imageBack.image = self.imageB;
-    }
-    if (self.isFirstTime && [self.techniqueType isEqualToString:@"version22"]){
-        self.imageLeft.image = [UIImage imageNamed:@"lefthead_s"];
-        self.imageRight.image =  [UIImage imageNamed:@"righthead_s"];
-        self.imageTop.image =  [UIImage imageNamed:@"tophead_s"];
-        self.imageFront.image =  [UIImage imageNamed:@"fronthead_s"];
-        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
-    }
-    if (self.isFirstTime && [self.techniqueType isEqualToString:@"men22"]){
-        self.imageLeft.image = [UIImage imageNamed:@"backhead_s"];
-        self.imageRight.image =  [UIImage imageNamed:@"backhead_s"];
-        self.imageTop.image =  [UIImage imageNamed:@"backhead_s"];
-        self.imageFront.image =  [UIImage imageNamed:@"backhead_s"];
-        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
-    }
+  //  if (!self.isFirstTime){
+//        self.imageLeft.image = self.imageL;
+//        self.imageRight.image = self.imageR;
+//        self.imageTop.image = self.imageT;
+//        self.imageFront.image = self.imageF;
+//        self.imageBack.image = self.imageB;
+   //}
+//    if (self.isFirstTime && [self.techniqueType isEqualToString:@"version22"]){
+//        self.imageLeft.image = [UIImage imageNamed:@"lefthead_s"];
+//        self.imageRight.image =  [UIImage imageNamed:@"righthead_s"];
+//        self.imageTop.image =  [UIImage imageNamed:@"tophead_s"];
+//        self.imageFront.image =  [UIImage imageNamed:@"fronthead_s"];
+//        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
+//    }
+//    if ( [self.techniqueType isEqualToString:@"men22"]){
+//        self.imageLeft.image = [UIImage imageNamed:@"lefthead"];
+//        self.imageRight.image =  [UIImage imageNamed:@"righthead"];
+//        self.imageTop.image =  [UIImage imageNamed:@"tophead"];
+//        self.imageFront.image =  [UIImage imageNamed:@"fronthead_ms"];
+//        self.imageBack.image =[UIImage imageNamed:@"backhead_ms"];
+//    }
     
 //    self.imageLeft.image = self.imageL;
 //    self.imageRight.image = self.imageR;
@@ -70,28 +75,37 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-   // self.imageLeft.image = [self loadImages:@"thumb1"];
-//    self.imageRight.image = [self loadImages:@"thumb2"];
-//    self.imageTop.image = [self loadImages:@"thumb3"];
-//    self.imageFront.image = [self loadImages:@"thumb4"];
-//    self.imageBack.image = [self loadImages:@"thumb5"];
+ 
 }
+
 
 -(UIImage*)loadImages:(NSString*)headtype
 {
-    NSMutableString *filenamethumb;
-    [filenamethumb isEqualToString: @"%@/"];
-    NSMutableString *prefix;
-    [prefix isEqualToString:techniqueName];
-    filenamethumb = [filenamethumb mutableCopy];
-    [filenamethumb appendString: prefix];
-    filenamethumb = [filenamethumb mutableCopy];
-    [filenamethumb appendString: @"headtype"];
-    filenamethumb = [filenamethumb mutableCopy];
-    [filenamethumb appendString: @".png"];
+//    NSMutableString *filenamethumb;
+//    filenamethumb = @"%@/";
+//    NSMutableString *prefix;
+//    prefix = techniqueName;
+//    filenamethumb = [filenamethumb mutableCopy];
+//    [filenamethumb appendString: prefix];
+//    filenamethumb = [filenamethumb mutableCopy];
+//    [filenamethumb appendString: headtype];
+//    filenamethumb = [filenamethumb mutableCopy];
+//    [filenamethumb appendString: @".png"];
+    
+    NSMutableString *filenamethumb1 = @"%@/";
+    NSMutableString *prefix= techniqueName;
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: prefix];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: headtype];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: @".png"];
+    
+    NSLog(@"print %@", filenamethumb1);
+    
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
+    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
         NSData *data1 = [NSData dataWithContentsOfFile:filePath];
     UIImage *tempimage = [UIImage imageWithData:data1];
     return tempimage;
@@ -162,6 +176,7 @@
 
 -(void)captureScreenRetina
 {
+    NSLog(@"Screen to view");
     entryviewImage = self.navigationItem.title;
     entryviewImage = [entryviewImage mutableCopy];
     [entryviewImage appendString: @"EntryBig"];
@@ -185,8 +200,8 @@
     
     CGRect rect = CGRectMake(self.imageLeft.frame.origin.x, self.imageLeft.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
     
-    UIGraphicsBeginImageContextWithOptions(rect.size, self.view.opaque, 0.0);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.view.opaque, 0.0);
+    [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

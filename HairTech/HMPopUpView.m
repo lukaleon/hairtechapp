@@ -69,7 +69,7 @@
         //Separator View creation
         separatorView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, cvFrame.origin.y + 45, cvFrame.size.width, 1)];
         separatorView.backgroundColor = [UIColor colorNamed:@"deepblue"];
-        separatorView.alpha = 0.3;
+        separatorView.alpha = 0.0;
         [containerView addSubview:separatorView];
         
         //Title label
@@ -83,6 +83,7 @@
         
         //TextField for user inputs
         txtField = [[UITextField alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 40, cvFrame.origin.y + 70, cvFrame.size.width - 80, 30)];
+        [[UITextField appearance] setTintColor:[UIColor colorNamed:@"orange"]];
         txtField.textAlignment = NSTextAlignmentCenter;
         txtField.backgroundColor = [UIColor colorWithRed:0.623 green:0.618 blue:0.642 alpha:0.4];
         txtField.borderStyle = UITextBorderStyleRoundedRect;
@@ -92,7 +93,7 @@
         txtField.layer.cornerRadius = 3;
         txtField.clipsToBounds = YES;
         txtField.textColor =  [UIColor colorNamed:@"deepblue"];
-        txtField.tintColor = [UIColor blackColor];
+       // txtField.tintColor = [UIColor blackColor];
         txtField.font = [UIFont fontWithName:@"AvenirNext-Medium" size:13];
         txtField.delegate = self;
         [containerView addSubview:txtField];
@@ -105,9 +106,9 @@
         //Action button creation
         btnOk = [[UIButton alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 115, cvFrame.size.width / 2 - 1, 39)];
         [btnOk setTitle:okBtnTtl forState:UIControlStateNormal];
-        [btnOk setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
+        [btnOk setTitleColor:[UIColor colorNamed:@"de"] forState:UIControlStateNormal];
 
-        btnOk.backgroundColor = [UIColor colorNamed:@"grey"];
+        btnOk.backgroundColor = [UIColor colorNamed:@"orange"];
         btnOk.titleLabel.textColor =clr;
         btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         btnOk.enabled = NO;

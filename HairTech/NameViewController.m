@@ -80,7 +80,7 @@
             self.continue_btn.alpha = 1.0;
             [self dropShadow:pressedButton];
             [self removeShadow:self.fem_btn];
-            self.genderType = @"male22";
+            self.genderType = @"men22";
             break;
     }
 }

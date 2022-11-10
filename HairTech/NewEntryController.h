@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic)  UIImage *imageF;
 @property (weak, nonatomic)  UIImage *imageB;
 @property BOOL isFirstTime;
+@property (weak, nonatomic) IBOutlet UIView *screenShotView;
 
 
 -(void)setImagesForLeft:(UIImage*)left rigth:(UIImage*)right top:(UIImage*) front:(UIImage*)front back:(UIImage*)back;
