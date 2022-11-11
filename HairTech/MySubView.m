@@ -440,10 +440,18 @@
         [Utility showAlert:@"Error" message:@"Validation Failed!"];
         return;
     }
-    
+
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db insertCustomer:technique];
-  
+    
+   
+    
+    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"lefthead"]];
+    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"righthead"]];
+    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"tophead"]];
+    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"fronthead"]];
+    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"backhead"]];
+
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"populate"
      object:self];
@@ -457,6 +465,25 @@
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"openEntry"
      object:self];
+}
+
+
+- (void)createJSON:(NSMutableString*)filename{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:filename];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
+        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
+    }
+}
+-(NSMutableString *)createFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
+    NSMutableString * newString = [fileName mutableCopy];
+    newString = [newString mutableCopy];
+    [newString appendString:type];
+    newString = [newString mutableCopy];
+    [newString appendString:@".json"];
+    return newString;
 }
 
 -(BOOL) validate:(Technique *)c
@@ -532,57 +559,22 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
-///////////////////////*************************************************/////////////////////////
+
+- (NSMutableString *)createFileName:(NSString *)fileName prefix:(NSString*)prefix{
+    NSMutableString *filenamethumb = [fileName mutableCopy];
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: prefix];
+    return filenamethumb;
+}
 
 -(void)copyXFiles
 {
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 = self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3 = [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 = self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5 = [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
+    NSMutableString * cellImage = [self createFileName:self.textField.text prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self createFileName:self.textField.text prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self createFileName:self.textField.text prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self createFileName:self.textField.text prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self createFileName:self.textField.text prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self createFileName:self.textField.text prefix:@"thumb5.png"];
     
     [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
     [self copyFileFromBundleToDocs:@"lefthead_s.png"];
@@ -591,70 +583,24 @@
     [self copyFileFromBundleToDocs:@"backhead_s.png"];
     [self copyFileFromBundleToDocs:@"fronthead_s.png"];
     
-    [self changeFileName:@"uiimage_cell_x.png" to:foothumbCell];
-    [self changeFileName:@"lefthead_s.png" to:foothumb1];
-    [self changeFileName:@"righthead_s.png" to:foothumb2];
-    [self changeFileName:@"tophead_s.png" to:foothumb3];
-    [self changeFileName:@"fronthead_s.png" to:foothumb4];
-    [self changeFileName:@"backhead_s.png" to:foothumb5];
+    [self changeFileName:@"uiimage_cell_x.png" to:cellImage];
+    [self changeFileName:@"lefthead_s.png" to:filenamethumb1];
+    [self changeFileName:@"righthead_s.png" to:filenamethumb2];
+    [self changeFileName:@"tophead_s.png" to:filenamethumb3];
+    [self changeFileName:@"fronthead_s.png" to:filenamethumb4];
+    [self changeFileName:@"backhead_s.png" to:filenamethumb5];
     
 }
 /*--------------------------MEN_HEADS-------------------------*/
 
 -(void)copyXFilesMEN
 {
-    NSMutableString *bfcol0 =@"Entry";
-    foothumbCell =self.textField.text;
-    foothumbCell = [self.textField.text mutableCopy];
-    [foothumbCell appendString:bfcol0];
-    foothumbCell= [foothumbCell mutableCopy];
-    [foothumbCell appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumbCell);
-    
-    
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 =self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    foothumb2 =self.textField.text;
-    foothumb2 = [self.textField.text mutableCopy];
-    [foothumb2 appendString:bfcol2];
-    foothumb2= [foothumb2 mutableCopy];
-    [foothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb2);
-    
-    NSMutableString *bfcol3 =@"thumb3";
-    foothumb3 =self.textField.text;
-    foothumb3 = [self.textField.text mutableCopy];
-    [foothumb3 appendString:bfcol3];
-    foothumb3= [foothumb3 mutableCopy];
-    [foothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb3);
-    
-    NSMutableString *bfcol4 =@"thumb4";
-    foothumb4 =self.textField.text;
-    foothumb4 = [self.textField.text mutableCopy];
-    [foothumb4 appendString:bfcol4];
-    foothumb4= [foothumb4 mutableCopy];
-    [foothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb4);
-    
-    
-    NSMutableString *bfcol5 =@"thumb5";
-    foothumb5 =self.textField.text;
-    foothumb5 = [self.textField.text mutableCopy];
-    [foothumb5 appendString:bfcol5];
-    foothumb5= [foothumb5 mutableCopy];
-    [foothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foothumb5);
-    
-    
+    NSMutableString * cellImage = [self createFileName:self.textField.text prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self createFileName:self.textField.text prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self createFileName:self.textField.text prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self createFileName:self.textField.text prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self createFileName:self.textField.text prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self createFileName:self.textField.text prefix:@"thumb5.png"];
     
     [self copyFileFromBundleToDocs:@"men-full-11.png"];
     [self copyFileFromBundleToDocs:@"lefthead_ms.png"];
@@ -663,12 +609,12 @@
     [self copyFileFromBundleToDocs:@"backhead_ms.png"];
     [self copyFileFromBundleToDocs:@"fronthead_ms.png"];
     
-    [self changeFileName:@"men-full-11.png" to:foothumbCell];
-    [self changeFileName:@"lefthead_ms.png" to:foothumb1];
-    [self changeFileName:@"righthead_ms.png" to:foothumb2];
-    [self changeFileName:@"tophead_ms.png" to:foothumb3];
-    [self changeFileName:@"fronthead_ms.png" to:foothumb4];
-    [self changeFileName:@"backhead_ms.png" to:foothumb5];
+    [self changeFileName:@"men-full-11.png" to:cellImage];
+    [self changeFileName:@"lefthead_ms.png" to:filenamethumb1];
+    [self changeFileName:@"righthead_ms.png" to:filenamethumb2];
+    [self changeFileName:@"tophead_ms.png" to:filenamethumb3];
+    [self changeFileName:@"fronthead_ms.png" to:filenamethumb4];
+    [self changeFileName:@"backhead_ms.png" to:filenamethumb5];
 }
 
 @end

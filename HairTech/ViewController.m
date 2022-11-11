@@ -240,23 +240,18 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [button addTarget:self
                action:@selector(openSubView:)
      forControlEvents:UIControlEventTouchUpInside];
-    button.backgroundColor = [UIColor orangeColor];
+    button.backgroundColor = [UIColor clearColor];
     button.adjustsImageWhenHighlighted = NO;
-    UIImage *img = [UIImage imageNamed:@"newtechnique.png"];
+    UIImage *img = [UIImage imageNamed:@"addnewtech.png"];
     [button setImage:img forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"newtechnique_h.png"] forState:UIControlStateHighlighted];
-    [button setBackgroundColor:[UIColor whiteColor]];
+    [button setImage:[UIImage imageNamed:@"addnewtech.png"] forState:UIControlStateHighlighted];
+   // [button setBackgroundColor:[UIColor whiteColor]];
     button.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
                               self.view.frame.origin.y + self.view.frame.size.height - 100, 50 , 50);
-    button.layer.masksToBounds = NO;
-    button.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
-    button.layer.borderWidth = 0.0f;
-    button.layer.cornerRadius = 25;
-//    [button.layer setShadowOffset:CGSizeMake(1, 3)];
-//    [button.layer setShadowColor:[[UIColor colorNamed:@"orange"] CGColor]];
-//    [button.layer setShadowRadius:4.0f];
-//    [button.layer setShadowOpacity:0.6];
-    
+    button.layer.masksToBounds = YES;
+    button.layer.cornerRadius = button.frame.size.height / 2;
+
+
     [self.view addSubview:button];
 }
 
@@ -690,11 +685,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
     cell.dateLabel.userInteractionEnabled = YES;
     
-    if ([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
-        cell.iconTag.alpha = 1;
+    if (![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
+       // cell.iconTag.alpha = 1;
+        cell.viewModeLabel.alpha = 0.3;
     }
     else {
-        cell.iconTag.alpha = 0;
+        cell.viewModeLabel.alpha = 0;
+
+        //cell.iconTag.alpha = 0;
     }
     return cell;
 }
@@ -723,8 +721,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     EntryViewController *entryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
-
     Technique *technique = [self.techniques objectAtIndex:[indexPath row]];
+    
     NSMutableString *filenamethumb1 = @"%@/";
     NSMutableString *prefix= technique.techniqueimagethumb1;
     filenamethumb1 = [filenamethumb1 mutableCopy];
@@ -786,6 +784,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.image4 = tempimage4;
     self.image5 = tempimage5;
     
+    
     NSLog(@"technique name version %@", technique.date);
     if(![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
         
@@ -804,13 +803,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         
         Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
         UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
+        entryVC.navigationItem.title = technique.techniquename;
+
        // cell.contentView.backgroundColor =  [UIColor colorNamed:@"w"];
         cell.contentView.layer.cornerRadius = 15.0f;
         [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
         [self.navigationController pushViewController: entryVC animated:YES];
     }
     if([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
-        NSLog(@"FILENAME %@",filenamethumb1);
+       // NSLog(@"FILENAME %@",filenamethumb1);
+        [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
         newEntryVC.isFirstTime = NO;
         newEntryVC.navigationItem.title = technique.techniquename;
         newEntryVC.techniqueName = technique.techniquename;
@@ -1026,10 +1028,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     actionSheet.delegate = self;
     //[actionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     [actionSheet showInView:self.view];
+    
+
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
+
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
@@ -1078,6 +1082,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    }
     }
 
+
 -(void)checkArrayCount
 {
     NSLog(@"Array count  = %lu", arrayOfTechnique.count);
@@ -1102,139 +1107,75 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
 }
 
+- (NSMutableString *)getFileName:(NSString *)fileName prefix:(NSString*)prefix{
+    NSMutableString *filenamethumb = [fileName mutableCopy];
+    filenamethumb = [filenamethumb mutableCopy];
+    [filenamethumb appendString: prefix];
+    return filenamethumb;
+}
+
 - (void)removeImage:(NSString*)fileName {
     
-    NSMutableString *filenamethumb = fileName;
-    filenamethumb = [filenamethumb mutableCopy];
-    [filenamethumb appendString: @"Entry"];
-    filenamethumb = [filenamethumb mutableCopy];
-    [filenamethumb appendString: @".png"];
-    NSLog(@"Результат видалення entryScreenCapture 1: %@.",filenamethumb);
+    NSMutableString * json_l = [self getFileName:fileName prefix:@"lefthead.json"];
+    NSMutableString * json_r = [self getFileName:fileName prefix:@"righthead.json"];
+    NSMutableString * json_t = [self getFileName:fileName prefix:@"tophead.json"];
+    NSMutableString * json_f = [self getFileName:fileName prefix:@"fronthead.json"];
+    NSMutableString * json_b = [self getFileName:fileName prefix:@"backhead.json"];
     
-    NSMutableString *filenamethumb1 = fileName;
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: @"thumb1"];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: @".png"];
-    NSLog(@"Результат видалення маленької 1: %@.",filenamethumb1);
-    
-    NSMutableString *filenamethumb2 = fileName;
-    filenamethumb2 = [filenamethumb2 mutableCopy];
-    [filenamethumb2 appendString: @"thumb2"];
-    filenamethumb2 = [filenamethumb2 mutableCopy];
-    [filenamethumb2 appendString: @".png"];
-    NSLog(@"Результат видалення маленької 2: %@.",filenamethumb2);
-    
-    NSMutableString *filenamethumb3 = fileName;
-    filenamethumb3 = [filenamethumb3 mutableCopy];
-    [filenamethumb3 appendString: @"thumb3"];
-    filenamethumb3 = [filenamethumb3 mutableCopy];
-    [filenamethumb3 appendString: @".png"];
-    NSLog(@"Результат видалення маленької 3: %@.",filenamethumb3);
+    NSMutableString * filenamethumb = [self getFileName:fileName prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self getFileName:fileName prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self getFileName:fileName prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self getFileName:fileName prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self getFileName:fileName prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self getFileName:fileName prefix:@"thumb5.png"];
 
-    
-    NSMutableString *filenamethumb4 = fileName;
-    filenamethumb4 = [filenamethumb4 mutableCopy];
-    [filenamethumb4 appendString: @"thumb4"];
-    filenamethumb4 = [filenamethumb4 mutableCopy];
-    [filenamethumb4 appendString: @".png"];
-    NSLog(@"Результат видалення маленької 4: %@.",filenamethumb4);
-    
-    
-    NSMutableString *filenamethumb5 = fileName;
-    filenamethumb5 = [filenamethumb5 mutableCopy];
-    [filenamethumb5 appendString: @"thumb5"];
-    filenamethumb5 = [filenamethumb5 mutableCopy];
-    [filenamethumb5 appendString: @".png"];
-    NSLog(@"Результат видалення маленької 5: %@.",filenamethumb5);
-    
-    NSMutableString * filenamebig1 = fileName;
-    filenamebig1 = [filenamebig1 mutableCopy];
-    [filenamebig1 appendString: @"big1"];
-    filenamebig1 = [filenamebig1 mutableCopy];
-    [filenamebig1 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки1: %@.",filenamebig1);
-    
-    NSMutableString * filenamebig2 = fileName;
-    filenamebig2 = [filenamebig2 mutableCopy];
-    [filenamebig2 appendString: @"big2"];
-    filenamebig2 = [filenamebig2 mutableCopy];
-    [filenamebig2 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки2: %@.",filenamebig2);
-    
-    NSMutableString * filenamebig3 = fileName;
-    filenamebig3 = [filenamebig3 mutableCopy];
-    [filenamebig3 appendString: @"big3"];
-    filenamebig3 = [filenamebig3 mutableCopy];
-    [filenamebig3 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки2: %@.",filenamebig3);
-    
-    NSMutableString * filenamebig4 = fileName;
-    filenamebig4 = [filenamebig4 mutableCopy];
-    [filenamebig4 appendString: @"big4"];
-    filenamebig4 = [filenamebig4 mutableCopy];
-    [filenamebig4 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки2: %@.",filenamebig4);
-    
-    NSMutableString * filenamebig5 = fileName;
-    filenamebig5 = [filenamebig5 mutableCopy];
-    [filenamebig5 appendString: @"big5"];
-    filenamebig5 = [filenamebig5 mutableCopy];
-    [filenamebig5 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки5: %@.",filenamebig5);
+    NSMutableString * filenamebig1 = [self getFileName:fileName prefix:@"big1.png"];
+    NSMutableString * filenamebig2 = [self getFileName:fileName prefix:@"big2.png"];
+    NSMutableString * filenamebig3 = [self getFileName:fileName prefix:@"big3.png"];
+    NSMutableString * filenamebig4 = [self getFileName:fileName prefix:@"big4.png"];
+    NSMutableString * filenamebig5 = [self getFileName:fileName prefix:@"big5.png"];
+    NSMutableString * filenamebig0 = [self getFileName:fileName prefix:@"EntryBig.png"];
 
-
-    NSMutableString * filenamebig0 = fileName;
-    filenamebig0 = [filenamebig0 mutableCopy];
-    [filenamebig0 appendString: @"EntryBig"];
-    filenamebig0 = [filenamebig0 mutableCopy];
-    [filenamebig0 appendString: @".png"];
-    
-    NSLog(@"Результат видалення великоиї картинки5: %@.",filenamebig0);
-
-
-    
-    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,   YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     NSString *fullPath0 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb]];
-    
+                          [NSString stringWithFormat:@"%@",filenamethumb]];
     NSString *fullPath = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb1]];
+                          [NSString stringWithFormat:@"%@",filenamethumb1]];
     NSString *fullPath2 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb2]];
+                          [NSString stringWithFormat:@"%@",filenamethumb2]];
     NSString *fullPath3 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb3]];
+                          [NSString stringWithFormat:@"%@",filenamethumb3]];
     NSString *fullPath4 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb4]];
+                           [NSString stringWithFormat:@"%@", filenamethumb4]];
     NSString *fullPath5 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamethumb5]];
-    
+                           [NSString stringWithFormat:@"%@", filenamethumb5]];
     
     NSString *fullPathbig1 = [documentsDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:filenamebig1]];
+                          [NSString stringWithFormat:@"%@",filenamebig1]];
     NSString *fullPathbig2 = [documentsDirectory stringByAppendingPathComponent:
-                              [NSString stringWithFormat:filenamebig2]];
+                              [NSString stringWithFormat:@"%@",filenamebig2]];
     NSString *fullPathbig3 = [documentsDirectory stringByAppendingPathComponent:
-                              [NSString stringWithFormat:filenamebig3]];
+                              [NSString stringWithFormat:@"%@",filenamebig3]];
     NSString *fullPathbig4 = [documentsDirectory stringByAppendingPathComponent:
-                              [NSString stringWithFormat:filenamebig4]];
+                              [NSString stringWithFormat:@"%@",filenamebig4]];
     NSString *fullPathbig5 = [documentsDirectory stringByAppendingPathComponent:
-                              [NSString stringWithFormat:filenamebig5]];
-    
+                              [NSString stringWithFormat:@"%@",filenamebig5]];
     NSString *fullPathbig0 = [documentsDirectory stringByAppendingPathComponent:
-                              [NSString stringWithFormat:filenamebig0]];
+                              [NSString stringWithFormat:@"%@",filenamebig0]];
+    NSString *jsonPath_l = [documentsDirectory stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"%@",json_l]];
+    NSString *jsonPath_r = [documentsDirectory stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"%@",json_r]];
+    NSString *jsonPath_t = [documentsDirectory stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"%@",json_t]];
+    NSString *jsonPath_f = [documentsDirectory stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"%@",json_f]];
+    NSString *jsonPath_b = [documentsDirectory stringByAppendingPathComponent:
+                              [NSString stringWithFormat:@"%@",json_b]];
     
-
-
     [fileManager removeItemAtPath: fullPath0 error:NULL];
     [fileManager removeItemAtPath: fullPath error:NULL];
     [fileManager removeItemAtPath: fullPath2 error:NULL];
@@ -1242,15 +1183,18 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [fileManager removeItemAtPath: fullPath4 error:NULL];
     [fileManager removeItemAtPath: fullPath5 error:NULL];
 
-    
     [fileManager removeItemAtPath:fullPathbig1 error:NULL];
     [fileManager removeItemAtPath:fullPathbig2 error:NULL];
     [fileManager removeItemAtPath:fullPathbig3 error:NULL];
     [fileManager removeItemAtPath:fullPathbig4 error:NULL];
     [fileManager removeItemAtPath:fullPathbig5 error:NULL];
     [fileManager removeItemAtPath:fullPathbig0 error:NULL];
-
-
+    
+    [fileManager removeItemAtPath:jsonPath_l error:NULL];
+    [fileManager removeItemAtPath:jsonPath_r error:NULL];
+    [fileManager removeItemAtPath:jsonPath_t error:NULL];
+    [fileManager removeItemAtPath:jsonPath_f error:NULL];
+    [fileManager removeItemAtPath:jsonPath_b error:NULL];
     NSError *error = nil;
     if(![fileManager removeItemAtPath: fullPath error:&error]) {
         NSLog(@"Delete failed:%@", error);
@@ -1324,6 +1268,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 
+- (NSMutableString*)getNameOnRenaming:(NSString *)txtField prefix:(NSString*)prefix{
+    NSMutableString * filename = [txtField mutableCopy];
+    filename = [filename mutableCopy];
+    [filename appendString:prefix];
+    return filename;
+ }
+
 -(void)renameTechniqueDelegate:(NSString*)txtField{
    
     Technique *technique = [self.techniques objectAtIndex:renameIndexPath];
@@ -1332,126 +1283,54 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self populateCustomers];
     NSLog(@"techme %@", technique.techniqueimagethumb1);
 
-    NSMutableString *bfcol0 =@"Entry";
-    rfoothumb =txtField;
-    rfoothumb = [txtField mutableCopy];
-    [rfoothumb appendString:bfcol0];
-    rfoothumb= [rfoothumb mutableCopy];
-    [rfoothumb appendString:@".png"];
-    NSLog(@"RESULT: %@.",rfoothumb);
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    rfoothumb1 =txtField;
-    rfoothumb1 = [txtField mutableCopy];
-    [rfoothumb1 appendString:bfcol1];
-    rfoothumb1= [rfoothumb1 mutableCopy];
-    [rfoothumb1 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoothumb1);
-    
-    NSMutableString *bfcol2 =@"thumb2";
-    rfoothumb2 =txtField;
-    rfoothumb2 = [txtField mutableCopy];
-    [rfoothumb2 appendString:bfcol2];
-    rfoothumb2= [rfoothumb2 mutableCopy];
-    [rfoothumb2 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoothumb2);
-                 
-    NSMutableString *bfcol3 =@"thumb3";
-    rfoothumb3 =txtField;
-    rfoothumb3 = [txtField mutableCopy];
-    [rfoothumb3 appendString:bfcol3];
-    rfoothumb3= [rfoothumb3 mutableCopy];
-    [rfoothumb3 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoothumb3);
-                 
-    NSMutableString *bfcol4 =@"thumb4";
-    rfoothumb4 =txtField;
-    rfoothumb4 = [txtField mutableCopy];
-    [rfoothumb4 appendString:bfcol4];
-    rfoothumb4= [rfoothumb4 mutableCopy];
-    [rfoothumb4 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoothumb4);
-                 
-    NSMutableString *bfcol5 =@"thumb5";
-    rfoothumb5 =txtField;
-    rfoothumb5 = [txtField mutableCopy];
-    [rfoothumb5 appendString:bfcol5];
-    rfoothumb5= [rfoothumb5 mutableCopy];
-    [rfoothumb5 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoothumb5);
-                 
-    NSMutableString *bfcol_1 =@"big1";
-    rfoobig1 =txtField;
-    rfoobig1 = [txtField mutableCopy];
-    [rfoobig1 appendString:bfcol_1];
-    rfoobig1= [rfoobig1 mutableCopy];
-    [rfoobig1 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoobig1);
-                 
-    NSMutableString *bfcol_2 =@"big2";
-    rfoobig2 =txtField;
-    rfoobig2 = [txtField mutableCopy];
-    [rfoobig2 appendString:bfcol_2];
-    rfoobig2= [rfoobig2 mutableCopy];
-    [rfoobig2 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoobig2);
-                 
-    NSMutableString *bfcol_3 =@"big3";
-    rfoobig3 =txtField;
-    rfoobig3 = [txtField mutableCopy];
-    [rfoobig3 appendString:bfcol_3];
-    rfoobig3= [rfoobig3 mutableCopy];
-    [rfoobig3 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoobig3);
-                 
-    NSMutableString *bfcol_4 =@"big4";
-    rfoobig4 =txtField;
-    rfoobig4 = [txtField mutableCopy];
-    [rfoobig4 appendString:bfcol_4];
-    rfoobig4= [rfoobig4 mutableCopy];
-    [rfoobig4 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoobig4);
-                 
-    NSMutableString *bfcol_5 =@"big5";
-    rfoobig5 =txtField;
-    rfoobig5 = [txtField mutableCopy];
-    [rfoobig5 appendString:bfcol_5];
-    rfoobig5= [rfoobig5 mutableCopy];
-    [rfoobig5 appendString:@".png"];
-    NSLog(@"Результат: %@.",rfoobig5);
-    
-    
-    
-   
-    
+    NSMutableString * filenamethumb = [self getNameOnRenaming:txtField prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self getNameOnRenaming:txtField prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self getNameOnRenaming:txtField prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self getNameOnRenaming:txtField prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self getNameOnRenaming:txtField prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self getNameOnRenaming:txtField prefix:@"thumb5.png"];
+    NSMutableString * filenamebig1 = [self getNameOnRenaming:txtField prefix:@"big1.png"];
+    NSMutableString * filenamebig2 = [self getNameOnRenaming:txtField prefix:@"big2.png"];
+    NSMutableString * filenamebig3 = [self getNameOnRenaming:txtField prefix:@"big3.png"];
+    NSMutableString * filenamebig4 = [self getNameOnRenaming:txtField prefix:@"big4.png"];
+    NSMutableString * filenamebig5 = [self getNameOnRenaming:txtField prefix:@"big5.png"];
+    NSMutableString * json_l = [self getNameOnRenaming:txtField prefix:@"lefthead.json"];
+    NSMutableString * json_r = [self getNameOnRenaming:txtField prefix:@"righthead.json"];
+    NSMutableString * json_t = [self getNameOnRenaming:txtField prefix:@"tophead.json"];
+    NSMutableString * json_f = [self getNameOnRenaming:txtField prefix:@"fronthead.json"];
+    NSMutableString * json_b = [self getNameOnRenaming:txtField prefix:@"backhead.json"];
 
     [self changeFileName:technique.techniquename to:txtField];
-    [self changeFileName:technique.techniqueimage to:rfoothumb];
-    [self changeFileName:technique.techniqueimagethumb1 to:rfoothumb1];
-    [self changeFileName:technique.techniqueimagethumb2 to:rfoothumb2];
-    [self changeFileName:technique.techniqueimagethumb3 to:rfoothumb3];
-    [self changeFileName:technique.techniqueimagethumb4 to:rfoothumb4];
-    [self changeFileName:technique.techniqueimagethumb5 to:rfoothumb5];
-    [self changeFileName:technique.techniqueimagebig1 to:rfoobig1];
-    [self changeFileName:technique.techniqueimagebig2 to:rfoobig2];
-    [self changeFileName:technique.techniqueimagebig3 to:rfoobig3];
-    [self changeFileName:technique.techniqueimagebig4 to:rfoobig4];
-    [self changeFileName:technique.techniqueimagebig5 to:rfoobig5];
+    [self changeFileName:technique.techniqueimage to:filenamethumb];
+    [self changeFileName:technique.techniqueimagethumb1 to:filenamethumb1];
+    [self changeFileName:technique.techniqueimagethumb2 to:filenamethumb2];
+    [self changeFileName:technique.techniqueimagethumb3 to:filenamethumb3];
+    [self changeFileName:technique.techniqueimagethumb4 to:filenamethumb4];
+    [self changeFileName:technique.techniqueimagethumb5 to:filenamethumb5];
+    [self changeFileName:technique.techniqueimagebig1 to:filenamebig1];
+    [self changeFileName:technique.techniqueimagebig2 to:filenamebig2];
+    [self changeFileName:technique.techniqueimagebig3 to:filenamebig3];
+    [self changeFileName:technique.techniqueimagebig4 to:filenamebig4];
+    [self changeFileName:technique.techniqueimagebig5 to:filenamebig5];
+    
+    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"lefthead.json"] to:json_l];
+    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"righthead.json"] to:json_r];
+    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"tophead.json"] to:json_t];
+    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"fronthead.json"] to:json_f];
+    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"backhead.json"] to:json_b];
     
     technique.techniquename = txtField;
-    //technique.date = self.textField.text;
-    //technique.date = @"new_version";
-    technique.techniqueimage=rfoothumb;
-    technique.techniqueimagethumb1=rfoothumb1;
-    technique.techniqueimagethumb2=rfoothumb2;
-    technique.techniqueimagethumb3=rfoothumb3;
-    technique.techniqueimagethumb4=rfoothumb4;
-    technique.techniqueimagethumb5=rfoothumb5;
-    technique.techniqueimagebig1=rfoobig1;
-    technique.techniqueimagebig2=rfoobig2;
-    technique.techniqueimagebig3=rfoobig3;
-    technique.techniqueimagebig4=rfoobig4;
-    technique.techniqueimagebig5=rfoobig5;
+    technique.techniqueimage = filenamethumb;
+    technique.techniqueimagethumb1 = filenamethumb1;
+    technique.techniqueimagethumb2 = filenamethumb2;
+    technique.techniqueimagethumb3 = filenamethumb3;
+    technique.techniqueimagethumb4 = filenamethumb4;
+    technique.techniqueimagethumb5 = filenamethumb5;
+    technique.techniqueimagebig1 = filenamebig1;
+    technique.techniqueimagebig2 = filenamebig2;
+    technique.techniqueimagebig3 = filenamebig3;
+    technique.techniqueimagebig4 = filenamebig4;
+    technique.techniqueimagebig5 = filenamebig5;
     
     [db insertCustomer:technique];
     [self populateCustomers];

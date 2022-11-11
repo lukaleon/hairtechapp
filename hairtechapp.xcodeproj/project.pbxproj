@@ -11,8 +11,6 @@
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
-		401E398E29014F5D0098ECC9 /* newtechnique.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398C29014F5D0098ECC9 /* newtechnique.png */; };
-		401E398F29014F5D0098ECC9 /* newtechnique_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 401E398D29014F5D0098ECC9 /* newtechnique_h.png */; };
 		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
 		4043E2D328DB7E0500BF9FF8 /* a-sm-tr.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */; };
 		4043E2D428DB7E0500BF9FF8 /* a-sm.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2D028DB7E0500BF9FF8 /* a-sm.png */; };
@@ -64,6 +62,7 @@
 		40F46B06291C1D4E00E7FC77 /* fronthead_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F46B01291C1D4E00E7FC77 /* fronthead_s.png */; };
 		40F46B07291C1D4E00E7FC77 /* backhead_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F46B02291C1D4E00E7FC77 /* backhead_s.png */; };
 		40F46B08291C1D4E00E7FC77 /* lefthead_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F46B03291C1D4E00E7FC77 /* lefthead_s.png */; };
+		40F46B12291E607200E7FC77 /* addnewtech.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F46B11291E607200E7FC77 /* addnewtech.png */; };
 		40FAF8DD28049148004DA2BA /* width1.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D828049148004DA2BA /* width1.png */; };
 		40FAF8DE28049148004DA2BA /* width3.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8D928049148004DA2BA /* width3.png */; };
 		40FAF8DF28049148004DA2BA /* width4.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8DA28049148004DA2BA /* width4.png */; };
@@ -409,8 +408,6 @@
 		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
 		40179E0128C6734C0090CB0C /* SPUserResizableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUserResizableView.h; sourceTree = "<group>"; };
 		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
-		401E398C29014F5D0098ECC9 /* newtechnique.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newtechnique.png; sourceTree = "<group>"; };
-		401E398D29014F5D0098ECC9 /* newtechnique_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newtechnique_h.png; sourceTree = "<group>"; };
 		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
 		403F27F928C352190092DA5D /* TextRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRect.m; sourceTree = "<group>"; };
 		4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "a-sm-tr.png"; sourceTree = "<group>"; };
@@ -475,6 +472,7 @@
 		40F46B01291C1D4E00E7FC77 /* fronthead_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fronthead_s.png; sourceTree = "<group>"; };
 		40F46B02291C1D4E00E7FC77 /* backhead_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backhead_s.png; sourceTree = "<group>"; };
 		40F46B03291C1D4E00E7FC77 /* lefthead_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lefthead_s.png; sourceTree = "<group>"; };
+		40F46B11291E607200E7FC77 /* addnewtech.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addnewtech.png; sourceTree = "<group>"; };
 		40FAF8D828049148004DA2BA /* width1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width1.png; sourceTree = "<group>"; };
 		40FAF8D928049148004DA2BA /* width3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width3.png; sourceTree = "<group>"; };
 		40FAF8DA28049148004DA2BA /* width4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width4.png; sourceTree = "<group>"; };
@@ -1012,9 +1010,8 @@
 		4071B5C728D9F15F00CCC9C3 /* New Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				401E398D29014F5D0098ECC9 /* newtechnique_h.png */,
-				401E398C29014F5D0098ECC9 /* newtechnique.png */,
 				407FB91028F1A9D100371E24 /* trash.svg */,
+				40F46B11291E607200E7FC77 /* addnewtech.png */,
 				407FB90828F1A00B00371E24 /* hairtech_logo.PNG */,
 				407FB90628F185ED00371E24 /* dots.png */,
 				407FB90128F17FA000371E24 /* redoNew.png */,
@@ -1922,6 +1919,7 @@
 				B434128D16E61E41003FAFA7 /* popoverArrowUp.png in Resources */,
 				B434128E16E61E41003FAFA7 /* popoverArrowUp@2x.png in Resources */,
 				407FB90228F17FA000371E24 /* undoNew.png in Resources */,
+				40F46B12291E607200E7FC77 /* addnewtech.png in Resources */,
 				B434128F16E61E41003FAFA7 /* popoverArrowUpSimple.png in Resources */,
 				407FB91128F1A9D100371E24 /* trash.svg in Resources */,
 				B46561A520BD6D6400BF5BB9 /* Default.png in Resources */,
@@ -1936,7 +1934,6 @@
 				B434129216E61E41003FAFA7 /* popoverBgSimple.png in Resources */,
 				B434129316E61E41003FAFA7 /* README in Resources */,
 				B4D094AF16F5F0840083868B /* uiimage_background.png in Resources */,
-				401E398E29014F5D0098ECC9 /* newtechnique.png in Resources */,
 				B4594D7416F60DD20032ACA7 /* Back_Head_Proba_Transp.png in Resources */,
 				B4908BC616FA5AFD00E092CE /* btn_SubView.png in Resources */,
 				B4908BCA16FA5DDE00E092CE /* uiimage_subview.png in Resources */,
@@ -2121,7 +2118,6 @@
 				B42DB26121C459B5003B3733 /* line_dash.png in Resources */,
 				B4EB2B8A237414D900F149C6 /* men-ipad-back.png in Resources */,
 				B4A9C0B817799F9D003043B2 /* textview_white@2x.png in Resources */,
-				401E398F29014F5D0098ECC9 /* newtechnique_h.png in Resources */,
 				40F46B08291C1D4E00E7FC77 /* lefthead_s.png in Resources */,
 				B46D100E17FB4B4A0087E225 /* avatar@2x.jpg in Resources */,
 				B4BBEEDE1779C0F000FEBFC3 /* cancel_button_subview.png in Resources */,

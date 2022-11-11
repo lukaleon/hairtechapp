@@ -85,7 +85,7 @@
         txtField = [[UITextField alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 40, cvFrame.origin.y + 70, cvFrame.size.width - 80, 30)];
         [[UITextField appearance] setTintColor:[UIColor colorNamed:@"orange"]];
         txtField.textAlignment = NSTextAlignmentCenter;
-        txtField.backgroundColor = [UIColor colorWithRed:0.623 green:0.618 blue:0.642 alpha:0.4];
+        txtField.backgroundColor = [UIColor colorWithRed:215.0/255.0 green:213.0/255.0 blue:215.0/255.0 alpha:1.0];
         txtField.borderStyle = UITextBorderStyleRoundedRect;
        // txtField.layer.borderColor = [UIColor colorNamed:@"orange"].CGColor;
        // txtField.layer.borderWidth=1.0;
@@ -106,9 +106,9 @@
         //Action button creation
         btnOk = [[UIButton alloc] initWithFrame:CGRectMake(cvFrame.origin.x , cvFrame.origin.y + 115, cvFrame.size.width / 2 - 1, 39)];
         [btnOk setTitle:okBtnTtl forState:UIControlStateNormal];
-        [btnOk setTitleColor:[UIColor colorNamed:@"de"] forState:UIControlStateNormal];
+        [btnOk setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
 
-        btnOk.backgroundColor = [UIColor colorNamed:@"orange"];
+        btnOk.backgroundColor = [UIColor colorNamed:@"grey"];
         btnOk.titleLabel.textColor =clr;
         btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         btnOk.enabled = NO;

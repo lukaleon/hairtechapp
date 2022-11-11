@@ -542,25 +542,19 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     self.hideBar;
     [self.label setHidden:YES];
     [self.labelHairTech setHidden:YES];
-        entryviewImage =self.navigationItem.title;
-;
+    entryviewImage = self.navigationItem.title;
     entryviewImage = [entryviewImage mutableCopy];
     [entryviewImage appendString: @"EntryBig"];
     entryviewImage = [entryviewImage mutableCopy];
     [entryviewImage appendString: @".png"];
-    
-    NSLog(@"Результат збереження великоиі EntryViewController: %@.",entryviewImage);
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
-    
+        NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
     UIGraphicsBeginImageContext(self.view.bounds.size);
-    
     [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+        
     data = UIImagePNGRepresentation(image);
     [data writeToFile:path atomically:YES];
 
@@ -571,7 +565,7 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     
     CGSize newSize = CGSizeMake(256, 334);
     UIGraphicsBeginImageContext(newSize);
-    
+
     [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -584,14 +578,10 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     NSLog(@"Результат entryviewImageSmall from Capture screen: %@.",entryviewImageSmall);
     
         
-        
-        
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
-    
     thumbdata = UIImagePNGRepresentation(newImage);
-    
     [thumbdata writeToFile:thumbpath atomically:YES];
     }
 }
@@ -611,11 +601,8 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     [entryviewImage appendString: @".png"];
     
     NSLog(@"Результат збереження великоиі EntryViewController: %@.",entryviewImage);
-    
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
     NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
     UIGraphicsBeginImageContext(self.view.bounds.size);
     [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -623,16 +610,13 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
     UIGraphicsEndImageContext();
     data = UIImagePNGRepresentation(image);
     [data writeToFile:path atomically:YES];
-    
-    
-    
+
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
    // if ((screenWidth == 414)&&(screenHeight==736))
    // {
-        
         
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];

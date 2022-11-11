@@ -39,13 +39,7 @@ static UIImage *deleteButtonImg;
             */
           self.renameBtn.enabled=NO;
           self.deleteBtn.enabled=NO;
-            
-
-            
-        
-        
-          
-            
+                    
             tapCount = 1;
         }
         
@@ -54,20 +48,6 @@ static UIImage *deleteButtonImg;
 }
 
 
-
-
-
-
-
-/*
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
-    [self.selectedBackgroundView setBackgroundColor:[UIColor blueColor]];
-    
-}
-*/
 - (void)setColor:(UIColor *)color {
     [self.dateLabel setBackgroundColor:color];
 }
@@ -105,23 +85,8 @@ static UIImage *deleteButtonImg;
 
 }
 - (IBAction)showEditMenu:(id)sender {
+  //  [self addOrangeLayer];
 
-//    [[NSNotificationCenter defaultCenter]
-//     postNotificationName:@"hideAllBars"
-//     object:self];
-//
-//
-//    tapCount=tapCount+1;
-//
-//    if(tapCount % 2 ==0){
-//        [self showBar];
-//    }
-//    else{
-//       [self hideBar];
-//        tapCount=1;
-//
-//    }
-//
     [self deletePressed];
     
 }
@@ -133,12 +98,19 @@ static UIImage *deleteButtonImg;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showPop"
      object:self];
+
     
 }
+
+- (void)addOrangeLayer{
+    UIView *temp = [[UIView alloc] initWithFrame:self.image.frame];
+    temp.layer.cornerRadius = 15;
+    temp.backgroundColor = [UIColor colorNamed:@"grey"];
+    temp.alpha = 0.3;
+    [self addSubview:temp];
+}
+
 - (void)deletePressed{
-    
-   // [self hideBar];
-   
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.cellNameForDelete = self.dateLabel.text;
     

@@ -16,7 +16,7 @@
 @implementation NewEntryController
 @synthesize techniqueName;
 -(void)viewDidAppear:(BOOL)animated{
-    [self captureScreenRetina];
+    [self captureScreenRetinaOnLoad];
 }
 
 -(void)viewDidLoad{
@@ -143,19 +143,16 @@
 - (void)share:(id)sender{
     NSString *textToShare;
     textToShare = [NSString stringWithFormat:@""];
-    UIImage *imageToShare;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        //  imageToShare =  [self captureRetinaScreenForMail];
-    }
-    else
-    {
-        //imageToShare = [self captureScreenForMail];
-    }
+    self.labelToSave.text = self.techniqueName;
+    textToShare = self.labelToSave.text;
+    self.labelToSave.alpha = 1.0;
+    self.logo.alpha = 1.0;
+    UIImage * imageToShare = [self captureScreenRetina];
+    UIImage * logoToShare =  self.logo.image;
     NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
-    
+
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
     if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
         UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
@@ -171,50 +168,63 @@
         popoverPresentationController.sourceView = self.view;
         popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
     }
+    self.labelToSave.alpha = 0.0;
+    self.logo.alpha = 0.0;
 }
 
 
--(void)captureScreenRetina
+- (NSMutableString*)createFileName:(NSMutableString*)name prefix:(NSString*)prefix {
+    name = self.navigationItem.title;
+    name = [name mutableCopy];
+    [name appendString: prefix];
+    name = [name mutableCopy];
+    [name appendString: @".png"];
+    return name;
+}
+
+-(UIImage*)captureScreenRetinaOnLoad
 {
-    NSLog(@"Screen to view");
-    entryviewImage = self.navigationItem.title;
-    entryviewImage = [entryviewImage mutableCopy];
-    [entryviewImage appendString: @"EntryBig"];
-    entryviewImage = [entryviewImage mutableCopy];
-    [entryviewImage appendString: @".png"];
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
-    
-    UIGraphicsBeginImageContext(self.view.bounds.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    NSData * data = UIImagePNGRepresentation(image);
-    [data writeToFile:path atomically:YES];
-    
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    CGFloat screenHeight = screenRect.size.height;
-    
-    CGRect rect = CGRectMake(self.imageLeft.frame.origin.x, self.imageLeft.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-    
-    UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.view.opaque, 0.0);
+    self.logo.alpha = 0;
+    self.labelToSave.alpha = 0;
+//    entryviewImage =  [self createFileName:entryviewImage prefix:@"EntryBig"];
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
+//    
+//    UIGraphicsBeginImageContext(self.view.bounds.size);
+//    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    NSData * data = UIImagePNGRepresentation(image);
+//    [data writeToFile:path atomically:YES];
+//    
+//    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    CGFloat screenWidth = screenRect.size.width;
+//    CGFloat screenHeight = screenRect.size.height;
+//    
+//    CGRect rect = CGRectMake(self.imageLeft.frame.origin.x, self.imageLeft.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+//    
+    UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    entryviewImageSmall = self.navigationItem.title;
-    entryviewImageSmall = [entryviewImageSmall mutableCopy];
-    [entryviewImageSmall appendString: @"Entry"];
-    entryviewImageSmall = [entryviewImageSmall mutableCopy];
-    [entryviewImageSmall appendString: @".png"];
+    entryviewImageSmall =  [self createFileName:entryviewImageSmall prefix:@"Entry"];
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     [thumbdata writeToFile:thumbpath atomically:YES];
+    return newImage;
+}
+-(UIImage*)captureScreenRetina
+{
+    UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
+    [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 //
 //-(void)setImageForButton:(UIImage*)img{

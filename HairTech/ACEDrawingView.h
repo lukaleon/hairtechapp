@@ -102,6 +102,7 @@ typedef enum {
     int cycle;
 
 }
+@property NSMutableString * fileNameInside;
 @property BOOL newAppVersion;
 @property (strong, nonatomic) NSMutableArray<LayersData *> *layers;
 
@@ -276,17 +277,11 @@ typedef enum {
 
 -(void)removeCirclesOnZoomDelegate;
 -(void)bringArrowsToFront;
--(void)loadJSONData;
+-(void)loadJSONData:(NSMutableString*)fileName;
 @end
 
 #pragma mark -
-
-
-
-
-
 @protocol ACEDrawingViewDelegate <NSObject>
-
 double dist(CGPoint a, CGPoint b);
 double dist2(CGPoint a, CGPoint b);
 - (UIColor *)colorAtPixel:(CGPoint)point;

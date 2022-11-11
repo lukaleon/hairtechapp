@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableString *entryviewImageSmall;
 
 }
+@property (weak, nonatomic) IBOutlet UIImageView *logo;
+@property (weak, nonatomic) IBOutlet UILabel *labelToSave;
 @property (weak, nonatomic) IBOutlet UIImageView *imageLeft;
 @property (weak, nonatomic) IBOutlet UIImageView *imageRight;
 @property (weak, nonatomic) IBOutlet UIImageView *imageTop;

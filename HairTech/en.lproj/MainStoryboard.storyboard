@@ -902,16 +902,16 @@
                                                     <rect key="frame" x="16" y="8" width="186" height="35"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="15"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="16"/>
                                                     <color key="textColor" name="deepblue"/>
                                                     <nil key="highlightedColor"/>
                                                     <color key="shadowColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IeQ-GM-4VG">
-                                                    <rect key="frame" x="200" y="12" width="36" height="36"/>
+                                                    <rect key="frame" x="206" y="8" width="36" height="36"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                                                    <color key="tintColor" name="blue"/>
+                                                    <color key="tintColor" name="deepblue"/>
                                                     <state key="normal" image="trash_edited">
                                                         <color key="titleColor" systemColor="systemGray2Color"/>
                                                     </state>
@@ -919,10 +919,17 @@
                                                         <action selector="showEditMenu:" destination="7DT-Vp-VQc" eventType="touchUpInside" id="Ytn-Jr-YZe"/>
                                                     </connections>
                                                 </button>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="new_icon_round" translatesAutoresizingMaskIntoConstraints="NO" id="Dwc-vx-mbm">
-                                                    <rect key="frame" x="17" y="36" width="32" height="12"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="view_mode" translatesAutoresizingMaskIntoConstraints="NO" id="Dwc-vx-mbm">
+                                                    <rect key="frame" x="17" y="36" width="60" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="VIEW MODE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SDA-ZN-zeF">
+                                                    <rect key="frame" x="17" y="37" width="60" height="14"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="10"/>
+                                                    <color key="textColor" name="deepblue"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -936,6 +943,7 @@
                                             <outlet property="image" destination="irH-Qk-87m" id="NfD-jA-OTo"/>
                                             <outlet property="menuBar" destination="i9j-Vu-wt3" id="s78-2e-4vf"/>
                                             <outlet property="renameBtn" destination="ti4-Bp-lnh" id="arv-bg-4KR"/>
+                                            <outlet property="viewModeLabel" destination="SDA-ZN-zeF" id="edk-Ip-h1y"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -2429,6 +2437,22 @@
                                             <constraint firstAttribute="width" secondItem="DPi-1N-KS6" secondAttribute="height" multiplier="59:77" id="qnX-L9-8FI"/>
                                         </constraints>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eKn-kB-Alq">
+                                        <rect key="frame" x="30" y="806" width="312" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="uWu-Yj-mSd"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="15"/>
+                                        <color key="textColor" name="grey"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="tdV-QX-665">
+                                        <rect key="frame" x="380" y="806.66666666666663" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="SCi-dO-3a4"/>
+                                            <constraint firstAttribute="width" constant="20" id="fbP-ch-2VO"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <viewLayoutGuide key="safeArea" id="Yfz-C1-KyK"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2455,6 +2479,7 @@
                                     </constraint>
                                     <constraint firstItem="Yfz-C1-KyK" firstAttribute="bottom" secondItem="y68-nx-pJz" secondAttribute="bottom" id="rym-52-KQJ"/>
                                     <constraint firstItem="Yfz-C1-KyK" firstAttribute="trailing" secondItem="aMc-nj-QV5" secondAttribute="trailing" id="xho-9V-yq1"/>
+                                    <constraint firstItem="tdV-QX-665" firstAttribute="centerY" secondItem="eKn-kB-Alq" secondAttribute="centerY" id="yQd-bJ-IYY"/>
                                     <constraint firstItem="aMc-nj-QV5" firstAttribute="width" secondItem="FVO-L4-1c5" secondAttribute="width" multiplier="0.549612" id="ylI-uT-hio">
                                         <variation key="heightClass=regular-widthClass=regular" constant="-100"/>
                                     </constraint>
@@ -2464,10 +2489,14 @@
                         <viewLayoutGuide key="safeArea" id="04s-wW-jkv"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="eKn-kB-Alq" firstAttribute="leading" secondItem="04s-wW-jkv" secondAttribute="leading" constant="30" id="Baq-Bj-NKr"/>
                             <constraint firstItem="FVO-L4-1c5" firstAttribute="width" secondItem="kl8-VJ-rb8" secondAttribute="width" id="LwK-8l-Zrt"/>
                             <constraint firstItem="FVO-L4-1c5" firstAttribute="top" secondItem="04s-wW-jkv" secondAttribute="top" id="NXD-B2-qAu"/>
                             <constraint firstItem="FVO-L4-1c5" firstAttribute="height" secondItem="04s-wW-jkv" secondAttribute="height" id="W3h-34-UOg"/>
                             <constraint firstItem="FVO-L4-1c5" firstAttribute="centerY" secondItem="04s-wW-jkv" secondAttribute="centerY" id="Ymb-ZE-93c"/>
+                            <constraint firstItem="eKn-kB-Alq" firstAttribute="centerX" secondItem="04s-wW-jkv" secondAttribute="centerX" constant="-29" id="Yvv-hf-1F1"/>
+                            <constraint firstItem="04s-wW-jkv" firstAttribute="bottom" secondItem="eKn-kB-Alq" secondAttribute="bottom" constant="12" id="bpo-xS-7wt"/>
+                            <constraint firstItem="04s-wW-jkv" firstAttribute="trailing" secondItem="tdV-QX-665" secondAttribute="trailing" constant="30" id="de6-e2-0ec"/>
                             <constraint firstItem="04s-wW-jkv" firstAttribute="bottom" secondItem="FVO-L4-1c5" secondAttribute="bottom" id="f5M-j3-MN2"/>
                             <constraint firstItem="FVO-L4-1c5" firstAttribute="centerX" secondItem="04s-wW-jkv" secondAttribute="centerX" id="yte-6y-BEg"/>
                         </constraints>
@@ -2478,6 +2507,8 @@
                         <outlet property="imageLeft" destination="2lm-xV-P5o" id="whL-rx-CmN"/>
                         <outlet property="imageRight" destination="T31-gU-41Z" id="fby-FL-bkq"/>
                         <outlet property="imageTop" destination="DPi-1N-KS6" id="usb-3w-4xX"/>
+                        <outlet property="labelToSave" destination="eKn-kB-Alq" id="UVu-ji-B3k"/>
+                        <outlet property="logo" destination="tdV-QX-665" id="MWb-Vg-IZc"/>
                         <outlet property="screenShotView" destination="FVO-L4-1c5" id="kML-fv-SlT"/>
                     </connections>
                 </viewController>
@@ -2698,7 +2729,7 @@
         <image name="lefthead_s" width="400" height="534"/>
         <image name="lineNew.png" width="40" height="40"/>
         <image name="lineNew_white.png" width="40" height="40"/>
-        <image name="new_icon_round" width="96" height="36"/>
+        <image name="logo" width="60" height="60"/>
         <image name="penNew_White.png" width="40" height="40"/>
         <image name="pencil.png" width="40" height="40"/>
         <image name="pencil_white.png" width="40" height="40"/>
@@ -2712,11 +2743,9 @@
         <image name="trash_edited" width="120" height="120"/>
         <image name="undo.png" width="69" height="68"/>
         <image name="undoNew.png" width="40" height="40"/>
+        <image name="view_mode" width="180" height="36"/>
         <namedColor name="addButton">
             <color red="1" green="0.72941176470588232" blue="0.28627450980392155" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="blue">
-            <color red="0.67450980392156867" green="0.74901960784313726" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="deepblue">
             <color red="0.21568627450980393" green="0.23137254901960785" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

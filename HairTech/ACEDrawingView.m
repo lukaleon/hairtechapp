@@ -118,8 +118,8 @@ UIColor* tempColor;
     return self;
 }
 
-- (void)loadDataFromJsonOnStart {
-    [self fetchData]; //fetching data from json file
+- (void)loadDataFromJsonOnStart:(NSMutableString*)fileName{
+    [self fetchData:fileName]; //fetching data from json file
    
     for(LayersData * layerData in self.arrayOfLayersForJSON){
         NSLog(@"COLOR LOADED FROM ARRAY %@", layerData.color);
@@ -189,9 +189,10 @@ UIColor* tempColor;
     return self;
 }
 
--(void)loadJSONData{
+-(void)loadJSONData:(NSMutableString*)fileName{
     self.backgroundColor = [UIColor whiteColor];
-    [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
+    self.fileNameInside = fileName;
+    [self loadDataFromJsonOnStart:fileName]; //LOAADING DATA FROM JSON
     [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
 }
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
@@ -211,7 +212,7 @@ UIColor* tempColor;
         [self updateAllPoints];
    
         [self storeDataInJson];
-        [self fetchData];
+        [self fetchData:self.fileNameInside];
  //   NSLog(@"layers count  after revoke %lu", self.arrayOfLayersForJSON.count );
    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
 
@@ -396,7 +397,7 @@ UIColor* tempColor;
       //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
         [self storeDataInJson];
-        [self fetchData];
+        [self fetchData:self.fileNameInside];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
@@ -856,7 +857,7 @@ UIColor* tempColor;
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self storeDataInJson];
-        [self fetchData];
+        [self fetchData:self.fileNameInside];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate removeTextSettings];
@@ -1501,7 +1502,7 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData];
+    [self fetchData:self.fileNameInside];
 }
 -(void)removeDrawingsForClosing{
     [self hideMenu];
@@ -1726,7 +1727,7 @@ UIColor* tempColor;
     NSError * error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"layersdata.json"];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:self.fileNameInside];
     NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
     [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
@@ -1797,12 +1798,12 @@ UIColor* tempColor;
     return stringArray;
 }
 
--(void)fetchData{
+-(void)fetchData:(NSMutableString*)fileName{
     
     /* LOCAL FETCHING*/
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:@"layersdata.json"];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
     //NSLog(@"filepath %@", filePath);
     NSData *data = [NSData dataWithContentsOfFile:filePath];
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
@@ -1814,42 +1815,43 @@ UIColor* tempColor;
     
     NSMutableDictionary * props = [NSMutableDictionary dictionary];
     NSMutableDictionary * array = [NSMutableDictionary dictionary];
-
-    for (NSDictionary *dictOfLayers in json) {
-        NSString *name = dictOfLayers[@"id"];
-        props = [dictOfLayers objectForKey:@"layerproperties"];
-        array = [props objectForKey:@"pointArray"];
-        
-        NSString *lineWidth = props[@"lineWidth"];
-        NSString *lineColor = props[@"lineColor"];
-        NSString *startPoint = props[@"startPoint"];
-        NSString *endPoint = props[@"endPoint"];
-        NSString *layerType = props[@"type"];
-        NSString *fontSize = props[@"fontSize"];
-        NSString *controlPoint = props[@"controlPoint"];
-        NSString *textWidth = props[@"width"];
-        NSString *textHeight = props[@"height"];
-        NSString *text = props[@"text"];
-        NSArray *grPoints = array[@"points"];
-
-        LayersData *layers = LayersData.new;
-        layers.startPoint = CGPointFromString(startPoint);
-        layers.endPoint = CGPointFromString(endPoint);
-        layers.lineWidth = [lineWidth floatValue];
-       
-        layers.color = [self getColorFromString:lineColor];
-        layers.type = layerType;
-        layers.fontSize = [fontSize floatValue];
-        layers.controlPoint = CGPointFromString(controlPoint);
-        layers.layerID = name;
-        layers.height = [textHeight floatValue];
-        layers.width = [textWidth floatValue];
-        layers.text = text;
-        layers.grafittiPoints = grPoints;
-        NSLog(@"array of points %lu", grPoints.count);
-
-        [self.arrayOfLayersForJSON addObject:layers];
-        
+    if(json.count >0){
+        for (NSDictionary *dictOfLayers in json) {
+            NSString *name = dictOfLayers[@"id"];
+            props = [dictOfLayers objectForKey:@"layerproperties"];
+            array = [props objectForKey:@"pointArray"];
+            
+            NSString *lineWidth = props[@"lineWidth"];
+            NSString *lineColor = props[@"lineColor"];
+            NSString *startPoint = props[@"startPoint"];
+            NSString *endPoint = props[@"endPoint"];
+            NSString *layerType = props[@"type"];
+            NSString *fontSize = props[@"fontSize"];
+            NSString *controlPoint = props[@"controlPoint"];
+            NSString *textWidth = props[@"width"];
+            NSString *textHeight = props[@"height"];
+            NSString *text = props[@"text"];
+            NSArray *grPoints = array[@"points"];
+            
+            LayersData *layers = LayersData.new;
+            layers.startPoint = CGPointFromString(startPoint);
+            layers.endPoint = CGPointFromString(endPoint);
+            layers.lineWidth = [lineWidth floatValue];
+            
+            layers.color = [self getColorFromString:lineColor];
+            layers.type = layerType;
+            layers.fontSize = [fontSize floatValue];
+            layers.controlPoint = CGPointFromString(controlPoint);
+            layers.layerID = name;
+            layers.height = [textHeight floatValue];
+            layers.width = [textWidth floatValue];
+            layers.text = text;
+            layers.grafittiPoints = grPoints;
+            NSLog(@"array of points %lu", grPoints.count);
+            
+            [self.arrayOfLayersForJSON addObject:layers];
+            
+        }
     }
 }
 
@@ -1879,7 +1881,7 @@ UIColor* tempColor;
     }
 }
 
-
+/*
 
 - (void)fetchCoursesUsingJSON {
     NSLog(@"Fetching Courses");
@@ -1944,5 +1946,5 @@ UIColor* tempColor;
             
         }] resume];
     
-}
+}*/
 @end

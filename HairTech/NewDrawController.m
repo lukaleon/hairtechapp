@@ -106,8 +106,18 @@
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
-   // [self.drawingView loadJSONData];
+    [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
     //[scrollView setZoomScale:zoomIdx animated:YES];
+}
+
+-(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
+    NSMutableString * newString = [fileName mutableCopy];
+    newString = [newString mutableCopy];
+    [newString appendString:type];
+    newString = [newString mutableCopy];
+    [newString appendString:@".json"];
+    NSLog(@"filename %@", newString);
+    return newString;
 }
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];
