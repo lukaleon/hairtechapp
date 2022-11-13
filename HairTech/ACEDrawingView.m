@@ -225,7 +225,20 @@ UIColor* tempColor;
    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
 
 }
+- (void)revokeTextView {
+        [self hideMenu];
+        [[self.layerArray lastObject] removeFromSuperlayer];
+        [self.layerArray removeObject:[self.layerArray lastObject]];
+        self.selectedLayer.isSelected = NO;
+        self.selectedLayer = nil;
+        self.drawingLayer = nil;
+        [self updateAllPoints];
+        [self storeDataInJson];
+        [self fetchData:self.fileNameInside];
+        NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
+   // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
 
+}
 #pragma mark Touches Methods
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -559,7 +572,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer2];
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
-     else if (JVDrawingTypeText == self.type){
+    else if (JVDrawingTypeText == self.type){
         self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
@@ -571,6 +584,7 @@ UIColor* tempColor;
                              font:layer.fontSize];
         [self.delegate selectTextTool:self.textTypesSender textColor:layer.lineColor_ fontSize:layer.fontSize isSelected:textViewSelected];
         [self revoke];
+        
     } else if (JVDrawingTypeArrow == self.type || JVDrawingTypeLine == self.type || JVDrawingTypeDashedLine == self.type) {
         self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
         self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
@@ -819,7 +833,10 @@ UIColor* tempColor;
 -(void)removeTextView{
     
     if(textViewSelected){
-        [self revoke];
+        //[self revoke];
+        [self hideAndCreateTextLayer];
+        [self.bufferOfLayers addObject:[self.layerArray lastObject]];
+        [self revokeTextView];
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
         [currentlyEditingView hideEditingHandles];
@@ -872,6 +889,8 @@ UIColor* tempColor;
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate removeTextSettings];
+        [self.delegate updateButtonStatus];
+
     }
 }
 
@@ -923,6 +942,7 @@ UIColor* tempColor;
         [self.layerArray addObject:self.drawingLayer];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
+        [self.delegate updateButtonStatus];
 
     }
     textViewSelected = NO;
