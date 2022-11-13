@@ -47,9 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL curveToggleIsOn;
     BOOL textSelected;
     BOOL textSetterState;
+    
 }
-@property (nonatomic, assign) NSString * techniqueName;
 
+
+@property (nonatomic, assign) NSString * techniqueName;
 @property (nonatomic, assign) NSString * labelText;
 @property (nonatomic, assign) NSString * headtype;
 @property (nonatomic, assign) IBOutlet UIImageView *img;

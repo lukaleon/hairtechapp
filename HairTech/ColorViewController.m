@@ -102,23 +102,26 @@
 
     }
     [self LoadColorsAtStart];
+    
+    NSLog(@"LINE WIDTH %f " , [self loadFloatFromUserDefaultsForKey:@"lineWidth"]);
+    
    
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 2.0 ){
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 1.6 ){
         [self button1Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 4.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 2.4 )
     {
         [self button2Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 6.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 4.0 )
     {
         [self button3Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 8.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 6.0 )
     {
         [self button4Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 12.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 10.0 )
     {
         [self button5Select];
     }
@@ -425,9 +428,6 @@ else {
     }
 }
 
-
-
-
 -(void)addWidthButtons{
     widthButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [widthButton1 addTarget:self
@@ -452,7 +452,6 @@ else {
     [widthButton2 setBackgroundImage:btnWidth2 forState:UIControlStateNormal];
     widthButton2.backgroundColor = [UIColor grayColor];
     widthButton2.adjustsImageWhenHighlighted = NO;
-
     [self addSubview:widthButton2];
 
     
@@ -504,8 +503,6 @@ else {
 */
 
 -(void)button1Select{
-    
-    
     [widthButton1 setSelected:YES];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:NO];
@@ -569,10 +566,6 @@ else {
 }
 
 -(void)button3Select{
-    
-
-    
-    
     [widthButton1 setSelected:NO];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:YES];
@@ -609,21 +602,21 @@ else {
     [widthButton3 setSelected:NO];
     [widthButton4 setSelected:YES];
     [widthButton5 setSelected:NO];
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
+    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 0.0){
         [widthButton4 setBackgroundColor:self.tColor5];
     }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
+    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 2.0){
         [widthButton4 setBackgroundColor:self.tColor3];
     }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
+    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 3.0){
         [widthButton4 setBackgroundColor:self.tColor4];
     }
     
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
+   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 5.0){
         [widthButton4 setBackgroundColor:self.tColor6];
     }
     
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
+   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 1.0){
         [widthButton4 setBackgroundColor:self.tColor2];
     }
     
@@ -639,21 +632,21 @@ else {
     [widthButton3 setSelected:NO];
     [widthButton4 setSelected:NO];
     [widthButton5 setSelected:YES];
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
+    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 0.0){
         [widthButton5 setBackgroundColor:self.tColor5];
     }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
+    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 2.0){
         [widthButton5 setBackgroundColor:self.tColor3];
     }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
+    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 3.0){
         [widthButton5 setBackgroundColor:self.tColor4];
     }
     
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
+   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 5.0){
         [widthButton5 setBackgroundColor:self.tColor6];
     }
     
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
+   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 1.0){
         [widthButton5 setBackgroundColor:self.tColor2];
     }
     
@@ -666,50 +659,39 @@ else {
 - (void)buttonTapped:(UIButton *)sender
 {
     switch(sender.tag){
-
     case 0:{
         NSLog(@"Photo1");
-        
         [self button1Select];
-        [delegate sliderDidSelectWidth:2.0];
-        [self saveFloatToUserDefaults:2.0 forKey:@"lineWidth"];
-        
+        [delegate sliderDidSelectWidth:1.6];
+        [self saveFloatToUserDefaults:1.6 forKey:@"lineWidth"];
     }
         break;
     case 1:{
         NSLog(@"Photo2");
         [self button2Select];
-        [delegate sliderDidSelectWidth:4.0];
-        [self saveFloatToUserDefaults:4.0 forKey:@"lineWidth"];
-
-
+        [delegate sliderDidSelectWidth:2.4];
+        [self saveFloatToUserDefaults:2.4 forKey:@"lineWidth"];
     }
         break;
     case 2:{
         NSLog(@"Photo3");
         [self button3Select];
-        [delegate sliderDidSelectWidth:6.0];
-        [self saveFloatToUserDefaults:6.0 forKey:@"lineWidth"];
-
-
+        [delegate sliderDidSelectWidth:4.0];
+        [self saveFloatToUserDefaults:4.0 forKey:@"lineWidth"];
     }
         break;
     case 3:{
         NSLog(@"Photo4");
         [self button4Select];
-        [delegate sliderDidSelectWidth:8.0];
-        [self saveFloatToUserDefaults:8.0 forKey:@"lineWidth"];
-
-
+        [delegate sliderDidSelectWidth:6.0];
+        [self saveFloatToUserDefaults:6.0 forKey:@"lineWidth"];
     }
         break;
     case 4:{
         NSLog(@"Photo5");
         [self button5Select];
-        [delegate sliderDidSelectWidth:12.0];
-        [self saveFloatToUserDefaults:12.0 forKey:@"lineWidth"];
-
-
+        [delegate sliderDidSelectWidth:10.0];
+        [self saveFloatToUserDefaults:10.0 forKey:@"lineWidth"];
     }
         break;
 }
@@ -717,7 +699,7 @@ else {
 
 -(void)currentColor:(UIColor*)currentColor {
     
-   // widthButton1.backgroundColor = currentColor;
+   //widthButton1.backgroundColor = currentColor;
 }
 
 

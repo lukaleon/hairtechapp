@@ -107,7 +107,9 @@
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
     [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
-    //[scrollView setZoomScale:zoomIdx animated:YES];
+    if(IDIOM == IPAD){
+    [scrollView setZoomScale:1.7 animated:YES];
+    }
 }
 
 -(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
@@ -218,6 +220,7 @@
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     [self.drawingView updateZoomFactor:scrollView.zoomScale];
+    NSLog(@"zoom scale %f", scrollView.zoomScale);
 //    if ( IDIOM == IPAD){
 //        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
 //        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
@@ -275,16 +278,16 @@
     
     UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [undo addTarget:self
-             action:@selector(undo)
+             action:@selector(undoPressed)
    forControlEvents:UIControlEventTouchUpInside];
     [undo.widthAnchor constraintEqualToConstant:30].active = YES;
     [undo.heightAnchor constraintEqualToConstant:30].active = YES;
     [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
     [undo setTintColor:[UIColor colorNamed:@"deepblue"]];
     
-    UIButton *redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    UIButton * redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [redo addTarget:self
-             action:@selector(redo)
+             action:@selector(redoPressed)
    forControlEvents:UIControlEventTouchUpInside];
     [redo.widthAnchor constraintEqualToConstant:30].active = YES;
     [redo.heightAnchor constraintEqualToConstant:30].active = YES;
@@ -302,9 +305,11 @@
 
     UIBarButtonItem * gridBtn =[[UIBarButtonItem alloc] initWithCustomView:grid];
     UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
-    UIBarButtonItem *undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
-    UIBarButtonItem *redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn,gridBtn, nil];
+    UIBarButtonItem * undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
+    UIBarButtonItem * redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, gridBtn, nil];
+    [self updateButtonStatus];
+
 }
 
 -(void)presentAlertView{
@@ -351,9 +356,11 @@
 
 -(void)clearPage{
     [self.drawingView removeAllDrawings];
+    [self updateButtonStatus];
+
 }
 -(void)clearPageForClosing{
-    [self.drawingView removeDrawingsForClosing];
+   // [self.drawingView removeDrawingsForClosing];
 }
 
 -(void)addGrid{
@@ -807,17 +814,16 @@ return YES;
     return [userDefaults floatForKey:key];
 }
 
--(void) saveCurrentToolToUserDeafaults:(float)x forKey:(NSString *)key {
+-(void)saveCurrentToolToUserDeafaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setFloat:x forKey:key];
     [userDefaults synchronize];
 }
 
--(float) loadCurrentToolFromUserDefaultsForKey:(NSString *)key {
+-(float)loadCurrentToolFromUserDefaultsForKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
     return [userDefaults floatForKey:key];
 }
-
 -(void)selectPreviousTool:(id)sender{
     textSelected = NO;
     [self pencilPressed:sender];
@@ -960,7 +966,7 @@ return YES;
             
             CGRect gripFrame = CGRectMake(0, 0, 70, 38);
             if (!textSelected){
-                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.drawingView.center text:@"TEXT" color:textColor font:self.fontSizeVC];
+                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
                 [contentTextView setFontSizee:self.fontSizeVC];
                 self.drawingView.textViewFontSize = self.fontSizeVC;
             }
@@ -1148,6 +1154,19 @@ return YES;
     }
 }
 
-
-
+-(void)undoPressed{
+    NSLog(@"UNDO");
+    [self.drawingView undoLatestStep];
+    [self updateButtonStatus];
+}
+-(void)redoPressed{
+    NSLog(@"REDO");
+    [self.drawingView redoLatestStep];
+    [self updateButtonStatus];
+}
+- (void)updateButtonStatus
+{
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
+}
 @end

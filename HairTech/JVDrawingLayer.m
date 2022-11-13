@@ -428,16 +428,25 @@
 - (void)moveCurvedLinePathWithStartPoint:(CGPoint)startPoint
                                 endPoint:(CGPoint)endPoint
                                 midPoint:(CGPoint)midPt
-                              isSelected:(BOOL)isSelected {
+                              isSelected:(BOOL)isSelected
+                            {
     NSLog(@"isSelected %d", isSelected);
     if (isSelected) {
 
         self.path = [self editCurvedLineWithStartPoint:startPoint endPoint:endPoint midPoint:midPt length:0].CGPath;
     }
     else {
-        self.path = [self createCurvedLineWithStartPoint:startPoint endPoint:endPoint midPoint:midPt length:0].CGPath;
+        self.path = [self createCurvedLineWithStartPoint:startPoint endPoint:endPoint  midPoint:midPt length:0  ].CGPath;
     }
 }
+- (void)redrawCurvedLineStartPoint:(CGPoint)startPoint
+                                endPoint:(CGPoint)endPoint
+                                midPoint:(CGPoint)midPt
+{
+    self.path = [self editCurvedLineWithStartPoint:startPoint endPoint:endPoint midPoint:midPt length:0].CGPath;
+
+}
+
 
 - (void)moveDashedLinePathWithStartPoint:(CGPoint)startPoint
                                endPoint:(CGPoint)endPoint
@@ -469,13 +478,17 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     return CGPointMake ((p1.x + p2.x) * 0.5,(p1.y + p2.y) * 0.5);
 }
 
-- (UIBezierPath *)createCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length {
+- (UIBezierPath *)createCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length  {
     NSLog(@"create curved line ");
+    
+    NSLog(@"MID X %f, MID Y %f", midPt.x, midPt.y);
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:startPoint];
     [path addQuadCurveToPoint:endPoint controlPoint:midPoint(startPoint, endPoint)];
     self.controlPointOfCurve = midPoint(startPoint, endPoint);
     return path;
+    
+
     
 }
 

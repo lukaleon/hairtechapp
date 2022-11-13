@@ -98,5 +98,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
                                 endPoint:(CGPoint)endPoint
                                 midPoint:(CGPoint)midPt
                               isSelected:(BOOL)isSelected;
+- (void)redrawCurvedLineStartPoint:(CGPoint)startPoint
+                                endPoint:(CGPoint)endPoint
+                          midPoint:(CGPoint)midPt;
 
 @end

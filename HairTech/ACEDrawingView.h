@@ -100,8 +100,10 @@ typedef enum {
     CGPoint bufferStartPoint;
     CGPoint bufferEndPoint;
     int cycle;
-
+    
 }
+@property NSMutableArray * bufferOfLayers;
+
 @property NSMutableString * fileNameInside;
 @property BOOL newAppVersion;
 @property (strong, nonatomic) NSMutableArray<LayersData *> *layers;
@@ -292,6 +294,7 @@ double dist2(CGPoint a, CGPoint b);
 -(void)removeTextSettings;
 -(void)disableZoomWhenTouchesMoved;
 -(void)enableZoomWhenTouchesMoved;
+-(void)updateButtonStatus;
 
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;

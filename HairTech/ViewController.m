@@ -127,7 +127,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if ([sharedDefaults boolForKey:@"FirstLaunch"])
     {
         [self saveColorsToDefaults];
-        [self saveFloatToUserDefaults:2.0 forKey:@"lineWidth"];
+        [self saveFloatToUserDefaults:1.0 forKey:@"lineWidth"];
         [self saveFloatToUserDefaults:0.0 forKey:@"eraserPressed"];
         
 [self openSubView:self];
@@ -148,7 +148,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if ( ![userDefaults valueForKey:@"version"] )
     {
         [self saveColorsToDefaults];
-        [self saveFloatToUserDefaults:2.0 forKey:@"lineWidth"];
+        [self saveFloatToUserDefaults:1.0 forKey:@"lineWidth"];
         [self saveFloatToUserDefaults:0.0 forKey:@"eraserPressed"];
         
         // Adding version number to NSUserDefaults for first version:
@@ -1028,17 +1028,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     actionSheet.delegate = self;
     //[actionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     [actionSheet showInView:self.view];
-    
-
 }
+
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
-        
-        
+    
         __block NSUInteger index = NSUIntegerMax;
         
         [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
@@ -1062,12 +1060,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self checkArrayCount];
 
 
-        }
-    
-    
-  
-    
-    else {
+    } else {
        // [ self.editButtonOutlet setEnabled:YES];
 
         for (Cell *cell in [self.collectionView visibleCells]) {
@@ -1076,9 +1069,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
       //  isDeletionModeActive = NO;
        MyCustomLayout *layout = (MyCustomLayout *)self.collectionView.collectionViewLayout;
        [layout invalidateLayout];
- 
         self.navigationItem.title=@"Collection";
-    [self.addTechnique setEnabled:YES];
+        [self.addTechnique setEnabled:YES];
+        [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:YES];
    }
     }
 
@@ -1393,5 +1386,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
     return fileExist;
 }
+
 
 @end

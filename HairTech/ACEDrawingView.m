@@ -132,9 +132,16 @@ UIColor* tempColor;
                 }
                 
             } if (JVDrawingTypeCurvedLine == [layerData.type integerValue] ||JVDrawingTypeCurvedDashLine == [layerData.type integerValue] ){
-                
+                BOOL selected;
+                if (CGPointEqualToPoint(layerData.controlPoint,midsPoint(layerData.startPoint, layerData.endPoint))){
+                    selected = NO;
+                } else {
+                    selected = YES;
+                }
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
-                [self.drawingLayer moveCurvedLinePathWithStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint isSelected:YES];
+                [self.drawingLayer moveCurvedLinePathWithStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint isSelected:selected];
+             //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
+             
             }
             else {
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
@@ -154,7 +161,7 @@ UIColor* tempColor;
         if(layerData.endPoint.x != 0 && layerData.endPoint.y !=0){
             [self.layer addSublayer:self.drawingLayer];
             [self.layerArray addObject:self.drawingLayer];
-            NSLog(@"layerArray   %lu", self.layerArray.count );
+//            NSLog(@"layerArray   %lu", self.layerArray.count );
         }
     }
 }
@@ -180,6 +187,7 @@ UIColor* tempColor;
         self.layersDict = [[NSMutableDictionary alloc]init];
         self.arrayOfLayersForJSON = [NSMutableArray array];
         arrayOfPoints = [NSMutableArray array];
+        self.bufferOfLayers = [NSMutableArray array];
         //NSLog(@"BOOL in setter %s", self.newAppVersion ? "true" : "false");
 
        // [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
@@ -204,19 +212,20 @@ UIColor* tempColor;
 
 - (void)revoke {
         [self hideMenu];
+        [self.bufferOfLayers addObject:self.selectedLayer]; //Add layer to buffer array for redo
         [self.layerArray removeObject:self.selectedLayer];
         [self.selectedLayer removeFromSuperlayer];
         self.selectedLayer.isSelected = NO;
         self.selectedLayer = nil;
         self.drawingLayer = nil;
         [self updateAllPoints];
-   
         [self storeDataInJson];
         [self fetchData:self.fileNameInside];
- //   NSLog(@"layers count  after revoke %lu", self.arrayOfLayersForJSON.count );
+        NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
 
 }
+
 #pragma mark Touches Methods
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -375,6 +384,9 @@ UIColor* tempColor;
                 [self autoPosition:&currentPoint basePoint:self.firstTouch];
                 [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
             }
+            if(self.drawingLayer.type == JVDrawingTypeCurvedLine || self.drawingLayer .type == JVDrawingTypeCurvedDashLine){
+                self.drawingLayer.midPmoving = midsPoint(currentPoint, startOfLine);
+            }
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             self.lastTouch = currentPoint;
             if (self.magnifierView.hidden == NO){
@@ -400,8 +412,7 @@ UIColor* tempColor;
         [self fetchData:self.fileNameInside];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
-        NSLog(@"Array of points %lu", (unsigned long)arrayOfPoints.count );
-
+        [self.delegate updateButtonStatus];
         if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
             [self selectLayer:[self.layerArray lastObject]];
         }
@@ -1524,6 +1535,10 @@ UIColor* tempColor;
 
 #pragma mark - Undo / Redo
 
+
+
+
+/*
 - (NSUInteger)undoSteps
 {
     return self.bufferArray.count;
@@ -1587,7 +1602,47 @@ UIColor* tempColor;
         
     }
 }
+ 
+*/
+- (NSUInteger)undoSteps
+{
+    return self.bufferOfLayers.count;
+}
+- (BOOL)canUndo
+{
+    return self.layerArray.count > 0;
+}
 
+- (BOOL)canRedo
+{
+    return self.bufferOfLayers.count > 0;
+}
+- (void)undoLatestStep
+{
+    if ([self canUndo]) {
+        if(self.selectedLayer.isSelected){
+            [self removeCircles];
+        }
+        [self.bufferOfLayers addObject:[self.layerArray lastObject]];
+        [[self.layerArray lastObject] removeFromSuperlayer];
+        [self.layerArray removeLastObject];
+        [self updateAllPoints];
+        [self storeDataInJson];
+        [self fetchData:self.fileNameInside];
+    }
+    NSLog(@"buffer array cont %lu", self.bufferOfLayers.count);
+
+}
+-(void)redoLatestStep{
+    if ([self canRedo]) {
+        [self.layer addSublayer: [self.bufferOfLayers lastObject]];
+        [self.layerArray addObject:[self.bufferOfLayers lastObject]];
+        [self.bufferOfLayers removeLastObject];
+        [self updateAllPoints];
+        [self storeDataInJson];
+        [self fetchData:self.fileNameInside];
+    }
+}
 #if !ACE_HAS_ARC
 
 - (void)dealloc
