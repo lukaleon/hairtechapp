@@ -43,6 +43,7 @@
 }
 
 
+@property (weak, nonatomic) IBOutlet UIImageView *shadowLayer;
 
 @property (weak, nonatomic) IBOutlet UIButton *sidemenuButton;
 

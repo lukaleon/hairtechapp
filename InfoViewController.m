@@ -15,6 +15,9 @@
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     self.navigationItem.title = @"App Info";
     self.shareBtn.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
+       [self.infoTableView registerNib:[UINib nibWithNibName:@"cell" bundle:nil]
+            forCellReuseIdentifier:@"cell"];
+
 }
 
 
@@ -32,5 +35,15 @@
     popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
     popoverPresentationController.sourceView = self.view;
     popoverPresentationController.sourceRect = CGRectMake(685,60,10,1);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    cell.backgroundColor = [UIColor redColor];
+    return  cell;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 5;
 }
 @end

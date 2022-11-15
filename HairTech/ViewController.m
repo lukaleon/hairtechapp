@@ -230,7 +230,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)openInfoController{
     
-    InfoViewController * viewController =[self.storyboard  instantiateViewControllerWithIdentifier:@"InfoViewController"];
+    InfoViewController * viewController =[self.storyboard  instantiateViewControllerWithIdentifier:@"tableView"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -390,12 +390,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 //        newsize.width = 246;
 //        newsize.height = 380;
        newsize.width = 240;
-       newsize.height = 360;
+       newsize.height = 345;
         return newsize;
-   } else
+   }
+   else
    {
         newsize.width = ((self.view.frame.size.width / 100) * 80);
         newsize.height = ((self.view.frame.size.height / 100) * 68);
+//       newsize.width = self.view.frame.size.width;
+//       newsize.height = newsize.width *  1.65;
        
         return newsize;
     }
@@ -626,19 +629,19 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [gestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [cell addGestureRecognizer:gestureRecognizer];
     
-    UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-    cell.contentView.backgroundColor =  [UIColor whiteColor];
-    [cell.contentView.layer setCornerRadius:15.0f];
-    cell.clipsToBounds = YES;
+      
+        cell.contentView.backgroundColor =  [UIColor whiteColor];
+        [cell.contentView.layer setCornerRadius:15.0f];
+        cell.clipsToBounds = YES;
+        
+        cell.contentView.layer.masksToBounds = YES;
     
-    cell.contentView.layer.masksToBounds = YES;
-
-    cell.layer.shadowColor = [UIColor blackColor].CGColor;
-    cell.layer.shadowOffset = CGSizeMake(0,0);
-    cell.layer.shadowRadius = 8.0f;
-    cell.layer.shadowOpacity = 0.2f;
-    cell.layer.masksToBounds = NO;
-    cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
+        cell.layer.shadowColor = [UIColor blackColor].CGColor;
+        cell.layer.shadowOffset = CGSizeMake(0,6);
+        cell.layer.shadowRadius = 15.0f;
+        cell.layer.shadowOpacity = 0.25f;
+        cell.layer.masksToBounds = NO;
+        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
     cell.dateLabel.text = technique.techniquename;
 
@@ -665,20 +668,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    
      if ( IDIOM == IPAD ) {
          
-         
-         [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
+      //   [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
          
      }else{
-         CGSize  newsize;
-         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
-         CGRect screenRect = [[UIScreen mainScreen] bounds];
-         CGFloat screenWidth = screenRect.size.width;
-         CGFloat screenHeight = screenRect.size.height;
-         //[cell.image setFrame:CGRectMake(0, 0, (screenWidth*90)/100, (screenHeight*80)/100)];
-         cell.image.frame = CGRectMake(0, 0, cell.frame.size.width , cell.frame.size.height);
 
-         [cell.contentView.layer setCornerRadius:15.0f];
-        }
+        CGSize  newsize;
+        newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        cell.image.frame = CGRectMake(0, 30, cell.frame.size.width , cell.frame.size.height);         [cell.contentView.layer setCornerRadius:15.0f];
+     }
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
@@ -686,12 +684,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     cell.dateLabel.userInteractionEnabled = YES;
     
     if (![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
-       // cell.iconTag.alpha = 1;
+        cell.image.frame = CGRectMake(0, 0, cell.frame.size.width , cell.frame.size.height);
         cell.viewModeLabel.alpha = 0.3;
     }
     else {
+        cell.image.frame = CGRectMake(0, 30, cell.frame.size.width , cell.frame.size.height);
         cell.viewModeLabel.alpha = 0;
-
         //cell.iconTag.alpha = 0;
     }
     return cell;

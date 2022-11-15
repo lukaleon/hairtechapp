@@ -10,9 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface InfoViewController : UIViewController
+@interface InfoViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 - (IBAction)share:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *shareBtn;
+@property (weak, nonatomic) IBOutlet UITableView *infoTableView;
 
 @end
 

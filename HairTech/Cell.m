@@ -15,19 +15,18 @@ static UIImage *deleteButtonImg;
         self = [super initWithCoder:aDecoder];
         if (self)
         {
-
-            [self.layer setBorderColor:[UIColor colorWithRed:225.0/255.0f green:225.0f/255.0f blue:225.0f/255.0f alpha:1.0f].CGColor];
+            self.backgroundColor = [UIColor colorNamed:@"grey"];
             
-            [self.layer setMasksToBounds:NO];
+          //  [self.layer setMasksToBounds:NO];
             //[self.layer setBorderWidth:3.0f];
-            [self.layer setBackgroundColor:[[UIColor clearColor]CGColor]];
-            [self.layer setCornerRadius:15.0f];
-            [self.layer setOpacity:1.0f];
+          //  [self.layer setBackgroundColor:[[UIColor clearColor]CGColor]];
+           // [self.layer setCornerRadius:15.0f];
+            //[self.layer setOpacity:1.0f];
             
-            [self.layer setShadowOffset:CGSizeMake(0, 2)];
-            [self.layer setShadowColor:[[UIColor blackColor] CGColor]];
-            [self.layer setShadowRadius:8.0f];
-            [self.layer setShadowOpacity:0.9];
+//            [self.layer setShadowOffset:CGSizeMake(0, 8)];
+//            [self.layer setShadowColor:[[UIColor blackColor] CGColor]];
+//            [self.layer setShadowRadius:24.0f];
+//            [self.layer setShadowOpacity:0.25];
             
            // [self.cell_menu_btn setBackgroundImage:[UIImage imageNamed:@"btn_cell_menu_fl.png"] forState:UIControlStateNormal];
             /*
@@ -49,7 +48,7 @@ static UIImage *deleteButtonImg;
 
 
 - (void)setColor:(UIColor *)color {
-    [self.dateLabel setBackgroundColor:color];
+  //  [self.dateLabel setBackgroundColor:color];
 }
 
 

@@ -96,7 +96,9 @@ return YES;
     
    // FMResultSet *results = [db executeQuery:@"SELECT * FROM customers"];
     
-    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY TECHNIQUENAME"];
+    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY TECHNIQUENAME "];
+//    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY TECHNIQUENAME ASC"]; Ascending for future
+
   
     while([results next])
 

@@ -41,14 +41,13 @@
 - (IBAction)Continue:(id)sender {
     
      MySubView * mySubView = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
-    mySubView.maleOrFemale = self.genderType;
+     mySubView.maleOrFemale = self.genderType;
      [self.navigationController pushViewController:mySubView animated:YES];
 }
 
 -(void)closeView{
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 -(void)dropShadow:(UIButton*)btn{
     btn.layer.shadowColor = [UIColor colorNamed:@"orange"].CGColor;
