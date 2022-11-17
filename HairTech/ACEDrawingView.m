@@ -299,7 +299,7 @@ UIColor* tempColor;
                 self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             }
          else {
-              [self.delegate disableZoomWhenTouchesMoved];
+             [self.delegate disableZoomWhenTouchesMoved];
              self.selectedLayer.isSelected = NO;
              [self removeCircles];
              [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
@@ -2022,4 +2022,5 @@ UIColor* tempColor;
         }] resume];
     
 }*/
+
 @end

@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TODetailTableViewController : UITableViewController
+@interface TODetailTableViewController : UITableViewController 
 {
     NSArray * sectionName;
+    NSUInteger rowsInSection;
+    NSArray * sectionOneItems;
+    NSArray * sectionTwoItems;
+
 }
 @end
 

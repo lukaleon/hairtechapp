@@ -45,16 +45,13 @@
 		407FB92128FE99C300371E24 /* NewEntryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407FB92028FE99C300371E24 /* NewEntryController.m */; };
 		407FB92428FEABCA00371E24 /* NewDrawController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407FB92328FEABCA00371E24 /* NewDrawController.m */; };
 		40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB525328B8FF62001B97B6 /* CircleLayer.m */; };
-		40B79ACE2922844D003A8680 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79ACD2922844D003A8680 /* TableViewController.m */; };
-		40B79ADC292284F1003A8680 /* MKIconCheckmarkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AD5292284F1003A8680 /* MKIconCheckmarkTableViewCell.m */; };
-		40B79ADD292284F1003A8680 /* MKSocialShareTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AD7292284F1003A8680 /* MKSocialShareTableViewCell.m */; };
-		40B79ADE292284F1003A8680 /* MKSwitchControlTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AD9292284F1003A8680 /* MKSwitchControlTableViewCell.m */; };
-		40B79ADF292284F1003A8680 /* ParentalGateSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79ADA292284F1003A8680 /* ParentalGateSuccessViewController.m */; };
 		40B79AE52922BB6D003A8680 /* TORoundedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AE32922BB6C003A8680 /* TORoundedTableViewCell.m */; };
 		40B79AE62922BB6D003A8680 /* TORoundedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AE42922BB6C003A8680 /* TORoundedTableView.m */; };
 		40B79AE92922BBA6003A8680 /* TODetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AE72922BBA6003A8680 /* TODetailTableViewController.m */; };
 		40B79AEC2922BC0F003A8680 /* TORoundedTableViewCapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AEA2922BC0F003A8680 /* TORoundedTableViewCapCell.m */; };
 		40B79AEF2922BC28003A8680 /* TORoundedTableViewCellBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AED2922BC27003A8680 /* TORoundedTableViewCellBackground.m */; };
+		40B79AF2292585F1003A8680 /* GT-Planar-Bold-Trial.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40B79AF1292585F0003A8680 /* GT-Planar-Bold-Trial.otf */; };
+		40B79AF429258600003A8680 /* GT-Planar-Regular-Trial.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40B79AF329258600003A8680 /* GT-Planar-Regular-Trial.otf */; };
 		40BC7FA428E58EAE00F7364A /* book.json in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FA328E58EAE00F7364A /* book.json */; };
 		40BC7FA828E7112A00F7364A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40BC7FA728E7112A00F7364A /* ViewController.m */; };
 		40BC7FC228EF746600F7364A /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FC128EF746600F7364A /* info.png */; };
@@ -463,16 +460,6 @@
 		407FB92328FEABCA00371E24 /* NewDrawController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewDrawController.m; sourceTree = "<group>"; };
 		40AB525228B8FF62001B97B6 /* CircleLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleLayer.h; sourceTree = "<group>"; };
 		40AB525328B8FF62001B97B6 /* CircleLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleLayer.m; sourceTree = "<group>"; };
-		40B79ACC2922844D003A8680 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
-		40B79ACD2922844D003A8680 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
-		40B79AD4292284F1003A8680 /* ParentalGateSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParentalGateSuccessViewController.h; sourceTree = "<group>"; };
-		40B79AD5292284F1003A8680 /* MKIconCheckmarkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKIconCheckmarkTableViewCell.m; sourceTree = "<group>"; };
-		40B79AD6292284F1003A8680 /* MKSwitchControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSwitchControlTableViewCell.h; sourceTree = "<group>"; };
-		40B79AD7292284F1003A8680 /* MKSocialShareTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSocialShareTableViewCell.m; sourceTree = "<group>"; };
-		40B79AD8292284F1003A8680 /* MKSocialShareTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSocialShareTableViewCell.h; sourceTree = "<group>"; };
-		40B79AD9292284F1003A8680 /* MKSwitchControlTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSwitchControlTableViewCell.m; sourceTree = "<group>"; };
-		40B79ADA292284F1003A8680 /* ParentalGateSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentalGateSuccessViewController.m; sourceTree = "<group>"; };
-		40B79ADB292284F1003A8680 /* MKIconCheckmarkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKIconCheckmarkTableViewCell.h; sourceTree = "<group>"; };
 		40B79AE12922BB6C003A8680 /* TORoundedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TORoundedTableViewCell.h; sourceTree = "<group>"; };
 		40B79AE22922BB6C003A8680 /* TORoundedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TORoundedTableView.h; sourceTree = "<group>"; };
 		40B79AE32922BB6C003A8680 /* TORoundedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TORoundedTableViewCell.m; sourceTree = "<group>"; };
@@ -483,6 +470,8 @@
 		40B79AEB2922BC0F003A8680 /* TORoundedTableViewCapCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TORoundedTableViewCapCell.h; sourceTree = "<group>"; };
 		40B79AED2922BC27003A8680 /* TORoundedTableViewCellBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TORoundedTableViewCellBackground.m; sourceTree = "<group>"; };
 		40B79AEE2922BC27003A8680 /* TORoundedTableViewCellBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TORoundedTableViewCellBackground.h; sourceTree = "<group>"; };
+		40B79AF1292585F0003A8680 /* GT-Planar-Bold-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GT-Planar-Bold-Trial.otf"; sourceTree = "<group>"; };
+		40B79AF329258600003A8680 /* GT-Planar-Regular-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GT-Planar-Regular-Trial.otf"; sourceTree = "<group>"; };
 		40BC7FA328E58EAE00F7364A /* book.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = book.json; sourceTree = "<group>"; };
 		40BC7FA728E7112A00F7364A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		40BC7FC128EF746600F7364A /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
@@ -1095,21 +1084,6 @@
 			name = "New Version";
 			sourceTree = "<group>";
 		};
-		40B79AD3292284E5003A8680 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				40B79ADB292284F1003A8680 /* MKIconCheckmarkTableViewCell.h */,
-				40B79AD5292284F1003A8680 /* MKIconCheckmarkTableViewCell.m */,
-				40B79AD8292284F1003A8680 /* MKSocialShareTableViewCell.h */,
-				40B79AD7292284F1003A8680 /* MKSocialShareTableViewCell.m */,
-				40B79AD6292284F1003A8680 /* MKSwitchControlTableViewCell.h */,
-				40B79AD9292284F1003A8680 /* MKSwitchControlTableViewCell.m */,
-				40B79AD4292284F1003A8680 /* ParentalGateSuccessViewController.h */,
-				40B79ADA292284F1003A8680 /* ParentalGateSuccessViewController.m */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
 		40B79AE02922BB4B003A8680 /* Rounded Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -1121,21 +1095,35 @@
 				40B79AE42922BB6C003A8680 /* TORoundedTableView.m */,
 				40B79AE12922BB6C003A8680 /* TORoundedTableViewCell.h */,
 				40B79AE32922BB6C003A8680 /* TORoundedTableViewCell.m */,
+			);
+			path = "Rounded Cells";
+			sourceTree = "<group>";
+		};
+		40B79AF029258501003A8680 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				40B79AF329258600003A8680 /* GT-Planar-Regular-Trial.otf */,
+				40B79AF1292585F0003A8680 /* GT-Planar-Bold-Trial.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
+		40B79AF829262E87003A8680 /* CVCell */ = {
+			isa = PBXGroup;
+			children = (
 				40B79AE82922BBA6003A8680 /* TODetailTableViewController.h */,
 				40B79AE72922BBA6003A8680 /* TODetailTableViewController.m */,
 			);
-			path = "Rounded Cells";
+			path = CVCell;
 			sourceTree = "<group>";
 		};
 		40BC7FC628EF79F300F7364A /* InfoViewController */ = {
 			isa = PBXGroup;
 			children = (
 				40B79AE02922BB4B003A8680 /* Rounded Cells */,
-				40B79AD3292284E5003A8680 /* Cells */,
+				40B79AF829262E87003A8680 /* CVCell */,
 				40BC7FC328EF794F00F7364A /* InfoViewController.h */,
 				40BC7FC428EF794F00F7364A /* InfoViewController.m */,
-				40B79ACC2922844D003A8680 /* TableViewController.h */,
-				40B79ACD2922844D003A8680 /* TableViewController.m */,
 			);
 			name = InfoViewController;
 			path = ..;
@@ -1850,6 +1838,7 @@
 		CEB7E7541649A62A0099C14C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				40B79AF029258501003A8680 /* Fonts */,
 				40F46ADE291A6AAB00E7FC77 /* head 22 */,
 				4071B5C728D9F15F00CCC9C3 /* New Buttons */,
 				4043E2E028E5886700BF9FF8 /* buttons_other */,
@@ -1981,6 +1970,7 @@
 				B401A6212179CC8A00BBE2ED /* cell_menu_exp.png in Resources */,
 				4043E2D528DB7E0500BF9FF8 /* a-big-tr.png in Resources */,
 				B434128C16E61E41003FAFA7 /* popoverArrowRightSimple.png in Resources */,
+				40B79AF429258600003A8680 /* GT-Planar-Regular-Trial.otf in Resources */,
 				B417453821529E2D00380F2F /* scr.png in Resources */,
 				B434128D16E61E41003FAFA7 /* popoverArrowUp.png in Resources */,
 				B434128E16E61E41003FAFA7 /* popoverArrowUp@2x.png in Resources */,
@@ -2177,6 +2167,7 @@
 				B4A9C0B2177993DB003043B2 /* textView.png in Resources */,
 				B49F548621CEABCF00810981 /* text_tool.png in Resources */,
 				B4A9C0B41779950A003043B2 /* textView_new.png in Resources */,
+				40B79AF2292585F1003A8680 /* GT-Planar-Bold-Trial.otf in Resources */,
 				B4A9C0B617799728003043B2 /* textview_white.png in Resources */,
 				B401CA0D1B049C7200596292 /* Technique.db in Resources */,
 				B4EB2BC62374150A00F149C6 /* men-iphone7-top.png in Resources */,
@@ -2283,13 +2274,11 @@
 				B419661717F9CCC8003E9159 /* UIView+REFrostedViewController.m in Sources */,
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
-				40B79ADF292284F1003A8680 /* ParentalGateSuccessViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				B4FA974D16680C4100F36E34 /* Cell.m in Sources */,
 				B4FA975016680CDB00F36E34 /* CellBackground.m in Sources */,
 				B4FA975616681A2500F36E34 /* CollectionViewBackground.m in Sources */,
 				40BC7FA828E7112A00F7364A /* ViewController.m in Sources */,
-				40B79ADD292284F1003A8680 /* MKSocialShareTableViewCell.m in Sources */,
 				B4BBBBAE1AF36E0D00A9FA45 /* WEPopoverContainerView.m in Sources */,
 				B445F671166DF15F00E38343 /* Technique.m in Sources */,
 				B419661D17F9D4DB003E9159 /* DEMOMenuViewController.m in Sources */,
@@ -2300,8 +2289,6 @@
 				B401CA051B04796E00596292 /* FMDatabasePool.m in Sources */,
 				B4ADB97516A035EF009ED1A9 /* TopHeadViewController.m in Sources */,
 				B401CA031B04796E00596292 /* FMDatabaseQueue.m in Sources */,
-				40B79ACE2922844D003A8680 /* TableViewController.m in Sources */,
-				40B79ADE292284F1003A8680 /* MKSwitchControlTableViewCell.m in Sources */,
 				B4C144DC213D02FC00E6E32E /* AMPopTip+Animation.m in Sources */,
 				407FB92428FEABCA00371E24 /* NewDrawController.m in Sources */,
 				B401CA0B1B04798D00596292 /* FMDBDataAccess.m in Sources */,
@@ -2311,7 +2298,6 @@
 				4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */,
 				40B79AE92922BBA6003A8680 /* TODetailTableViewController.m in Sources */,
 				400B02552916D11F007A7871 /* NameViewController.m in Sources */,
-				40B79ADC292284F1003A8680 /* MKIconCheckmarkTableViewCell.m in Sources */,
 				40DC4707284A143900509D4D /* Ruler.m in Sources */,
 				407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */,
 				407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */,

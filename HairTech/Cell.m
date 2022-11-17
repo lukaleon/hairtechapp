@@ -15,7 +15,7 @@ static UIImage *deleteButtonImg;
         self = [super initWithCoder:aDecoder];
         if (self)
         {
-            self.backgroundColor = [UIColor colorNamed:@"grey"];
+           // self.backgroundColor = [UIColor colorNamed:@"grey"];
             
           //  [self.layer setMasksToBounds:NO];
             //[self.layer setBorderWidth:3.0f];

@@ -285,13 +285,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)viewDidLoad
 {
-    self.view.backgroundColor = [UIColor colorNamed:@"grey"];
+    self.view.backgroundColor = [UIColor colorNamed:@"bg_new"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithOpaqueBackground];
         appearance.backgroundColor = [UIColor colorNamed:@"blue"];
         appearance.shadowColor =  [UIColor clearColor];
-        appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"deepblue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:18]};
+        appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"deepblue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:18]};
        // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = self.navigationController.navigationBar.standardAppearance;
@@ -629,8 +629,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [gestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [cell addGestureRecognizer:gestureRecognizer];
     
-      
-        cell.contentView.backgroundColor =  [UIColor whiteColor];
+        cell.contentView.backgroundColor = [UIColor whiteColor];
         [cell.contentView.layer setCornerRadius:15.0f];
         cell.clipsToBounds = YES;
         
@@ -669,13 +668,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
      if ( IDIOM == IPAD ) {
          
       //   [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
+        // [cell.contentView.layer setCornerRadius:15.0f];
          
      }else{
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        cell.image.frame = CGRectMake(0, 30, cell.frame.size.width , cell.frame.size.height);         [cell.contentView.layer setCornerRadius:15.0f];
+        cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);         //[cell.contentView.layer setCornerRadius:15.0f];
      }
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
@@ -688,9 +688,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         cell.viewModeLabel.alpha = 0.3;
     }
     else {
-        cell.image.frame = CGRectMake(0, 30, cell.frame.size.width , cell.frame.size.height);
+        cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
         cell.viewModeLabel.alpha = 0;
-        //cell.iconTag.alpha = 0;
     }
     return cell;
 }
@@ -842,6 +841,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self presentViewController:nc animated:YES completion:nil];
 */
         
+        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+
         MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
         mysubview.delegate = self;
         NameViewController *nameView  = [self.storyboard instantiateViewControllerWithIdentifier:@"NameViewController"];
