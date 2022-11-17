@@ -75,6 +75,8 @@
 		40FAF8DF28049148004DA2BA /* width4.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8DA28049148004DA2BA /* width4.png */; };
 		40FAF8E028049148004DA2BA /* width2.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8DB28049148004DA2BA /* width2.png */; };
 		40FAF8E128049148004DA2BA /* width5.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FAF8DC28049148004DA2BA /* width5.png */; };
+		40FCA47329268A050082D645 /* tableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FCA47229268A050082D645 /* tableCell.m */; };
+		40FCA47629268A390082D645 /* collectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FCA47529268A390082D645 /* collectionCell.m */; };
 		B401A6212179CC8A00BBE2ED /* cell_menu_exp.png in Resources */ = {isa = PBXBuildFile; fileRef = B401A6202179CC8000BBE2ED /* cell_menu_exp.png */; };
 		B401CA011B04796E00596292 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = B401C9F81B04796E00596292 /* FMDatabase.m */; };
 		B401CA021B04796E00596292 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B401C9FA1B04796E00596292 /* FMResultSet.m */; };
@@ -497,6 +499,10 @@
 		40FAF8DA28049148004DA2BA /* width4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width4.png; sourceTree = "<group>"; };
 		40FAF8DB28049148004DA2BA /* width2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width2.png; sourceTree = "<group>"; };
 		40FAF8DC28049148004DA2BA /* width5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = width5.png; sourceTree = "<group>"; };
+		40FCA47129268A050082D645 /* tableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tableCell.h; sourceTree = "<group>"; };
+		40FCA47229268A050082D645 /* tableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tableCell.m; sourceTree = "<group>"; };
+		40FCA47429268A390082D645 /* collectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = collectionCell.h; sourceTree = "<group>"; };
+		40FCA47529268A390082D645 /* collectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = collectionCell.m; sourceTree = "<group>"; };
 		B401A6202179CC8000BBE2ED /* cell_menu_exp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_menu_exp.png; sourceTree = "<group>"; };
 		B401C9F61B04796E00596292 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		B401C9F71B04796E00596292 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
@@ -1111,10 +1117,22 @@
 		40B79AF829262E87003A8680 /* CVCell */ = {
 			isa = PBXGroup;
 			children = (
+				40B79AFC29264A75003A8680 /* Swift */,
+				40FCA47129268A050082D645 /* tableCell.h */,
+				40FCA47229268A050082D645 /* tableCell.m */,
+				40FCA47429268A390082D645 /* collectionCell.h */,
+				40FCA47529268A390082D645 /* collectionCell.m */,
 				40B79AE82922BBA6003A8680 /* TODetailTableViewController.h */,
 				40B79AE72922BBA6003A8680 /* TODetailTableViewController.m */,
 			);
 			path = CVCell;
+			sourceTree = "<group>";
+		};
+		40B79AFC29264A75003A8680 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Swift;
 			sourceTree = "<group>";
 		};
 		40BC7FC628EF79F300F7364A /* InfoViewController */ = {
@@ -1897,6 +1915,7 @@
 				TargetAttributes = {
 					CEB7E7481649A62A0099C14C = {
 						DevelopmentTeam = U53VZGYE8K;
+						LastSwiftMigration = 1400;
 					};
 				};
 			};
@@ -2282,6 +2301,7 @@
 				B4BBBBAE1AF36E0D00A9FA45 /* WEPopoverContainerView.m in Sources */,
 				B445F671166DF15F00E38343 /* Technique.m in Sources */,
 				B419661D17F9D4DB003E9159 /* DEMOMenuViewController.m in Sources */,
+				40FCA47329268A050082D645 /* tableCell.m in Sources */,
 				407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */,
 				B4BBBBAF1AF36E0D00A9FA45 /* WEPopoverController.m in Sources */,
 				B43A5656167A6A3000D886C1 /* LoadingViewController.m in Sources */,
@@ -2306,6 +2326,7 @@
 				B4B64DD116DE3BA800FC54B7 /* HelpViewController.m in Sources */,
 				B4C144DE213D02FC00E6E32E /* AMPopTip+Entrance.m in Sources */,
 				B4682CAB1AFF4F9300FA2A5D /* MAThemeKit.m in Sources */,
+				40FCA47629268A390082D645 /* collectionCell.m in Sources */,
 				B401CA081B04798000596292 /* Utility.m in Sources */,
 				B434126E16E61E25003FAFA7 /* ColorButton.m in Sources */,
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
@@ -2479,6 +2500,7 @@
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = hairtechapp;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 6.1.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2487,6 +2509,9 @@
 				PRODUCT_NAME = hairtech;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CVCell/Swift/hairtech-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7s armv7";
 				WRAPPER_EXTENSION = app;
@@ -2514,6 +2539,7 @@
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = hairtechapp;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 6.1.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2521,6 +2547,8 @@
 				PRODUCT_NAME = hairtech;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CVCell/Swift/hairtech-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7s armv7";
 				WRAPPER_EXTENSION = app;

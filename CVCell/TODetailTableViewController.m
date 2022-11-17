@@ -12,6 +12,7 @@
 #import "TORoundedTableViewCell.h"
 #import "TORoundedTableViewCapCell.h"
 
+
 @implementation TODetailTableViewController
 
 #pragma mark - Rounded Table Configuration Example -
@@ -19,12 +20,16 @@
 -(void)viewDidLoad{
    [self.tableView setSeparatorColor:[UIColor colorNamed:@"bg_new"]];
     self.tableView.separatorInset = UIEdgeInsetsZero;
-    sectionName = @[@"Contact", @"Follow"];
+    sectionName = @[@"Get started",@"Contact", @"Follow"];
     self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
     sectionOneItems = @[@"Help", @"Rate our app", @"Report issue", @"Give us your feedback"];
     sectionTwoItems = @[@"Follow us", @"Visit our web site"];
+   // [self.tableView registerNib:[UINib nibWithNibName:@"tableCell" bundle:nil]
+     //  forCellReuseIdentifier:@"tableCell"];
+    
+
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -37,8 +42,8 @@
 }
 
 - (UIView *)addLogoToHeader {
-   UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 80)];
-    UIImageView *thumbnail = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 120, 40)];
+   UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 100)];
+    UIImageView *thumbnail = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200, 100)];
     thumbnail.image = [UIImage imageNamed:@"ht_logo_new"];
     thumbnail.contentMode = UIViewContentModeScaleAspectFit;
     [header addSubview:thumbnail];
@@ -72,6 +77,7 @@
 }
 - (UITableViewCell *)tableView:(TORoundedTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   
     /*
      Because the first and last cells in a section (dubbed the 'cap' cells) do a lot of extra work on account of the rounded corners,
      for ultimate efficiency, it is recommended to create those ones separately from the ones in the middle of the section.
@@ -126,21 +132,30 @@
     [cell setIndentationWidth:2];
     
 
-    if(indexPath.section == 0){
-     
+    if(indexPath.section == 1){
+       // UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
         cell.textLabel.text = [sectionOneItems objectAtIndex:indexPath.row];
         rowsInSection = sectionOneItems.count;
+
         return cell;
 
     }
 
-    else if ( indexPath.section == 1 ) {
-
+    if (indexPath.section == 2) {
+        //UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
         cell.textLabel.text = [sectionTwoItems objectAtIndex:indexPath.row];
         rowsInSection = sectionTwoItems.count;
         return cell;
     }
-
+    if (indexPath.section == 0) {
+        
+        tableCell *cell2 = [tableView dequeueReusableCellWithIdentifier:@"tableCell" forIndexPath:indexPath];
+        //[cell2.collectionView registerClass:[collectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
+        cell2.collectionView.delegate = self;
+        cell2.collectionView.dataSource = self;
+        cell2.backgroundColor = [UIColor clearColor];
+        return cell2;
+    }
     else {
         return nil;
     }
@@ -177,16 +192,18 @@
 #pragma mark - General Table View Configuration -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if(section == 0){
-        rowsInSection = sectionOneItems.count;
+        rowsInSection = 1;
     }if (section == 1){
-        rowsInSection = sectionTwoItems.count;
+        rowsInSection = sectionOneItems.count;
     }
+    if (section == 2){
+        rowsInSection = sectionTwoItems.count;    }
     return rowsInSection;
 }
 
@@ -209,7 +226,7 @@
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(nonnull UIView *)view forSection:(NSInteger)section
 {
     UITableViewHeaderFooterView *tableViewHeaderFooterView = (UITableViewHeaderFooterView *)view;
-    tableViewHeaderFooterView.textLabel.font = [UIFont fontWithName:@"AvenirNext-Bold" size:20];
+    tableViewHeaderFooterView.textLabel.font = [UIFont fontWithName:@"AvenirNext-Bold" size:22];
     tableViewHeaderFooterView.textLabel.textColor = [UIColor colorNamed:@"textColor"];
     tableViewHeaderFooterView.textLabel.text = [tableViewHeaderFooterView.textLabel.text capitalizedString];
 }
@@ -218,4 +235,46 @@
     return 40;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+    {
+        return 160;
+    }
+    return 50;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    return 3;
+}
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+ //   collectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
+    
+    collectionCell *cell = (collectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
+
+
+    cell.backgroundColor = [UIColor clearColor];
+        if (indexPath.row == 0){
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
+            cell.label.text = @"How to use Hairtechapp";
+        }
+        if (indexPath.row == 1){
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
+            cell.label.text = @"What's new";
+
+        }
+        if (indexPath.row == 2){
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"blueTest"];
+            cell.label.text = @"Great features inside";
+
+        }
+    [cell.contentView.layer setCornerRadius:25.0];
+    cell.clipsToBounds = YES;
+    return cell;
+}
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(CGRectGetWidth(collectionView.frame)/3,(CGRectGetHeight (collectionView.frame)- 4));
+}
 @end

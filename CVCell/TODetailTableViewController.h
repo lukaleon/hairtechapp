@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "tableCell.h"
+#import "collectionCell.h"
 
-@interface TODetailTableViewController : UITableViewController 
+@interface TODetailTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
 {
     NSArray * sectionName;
     NSUInteger rowsInSection;
     NSArray * sectionOneItems;
     NSArray * sectionTwoItems;
-
 }
 @end
 
