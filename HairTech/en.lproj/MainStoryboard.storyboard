@@ -10,6 +10,11 @@
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="GT-Planar-Bold-Trial.otf">
+            <string>GTPlanarTrial-Bd</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Help View Controller-->
         <scene sceneID="vTT-Y2-FtB">
@@ -1995,6 +2000,56 @@
             </objects>
             <point key="canvasLocation" x="-3121.875" y="-795.703125"/>
         </scene>
+        <!--Whats New Controller-->
+        <scene sceneID="OY7-1Y-LnH">
+            <objects>
+                <viewController storyboardIdentifier="whatsnew" modalPresentationStyle="fullScreen" id="98q-HH-rsU" customClass="WhatsNewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="r5q-tb-4IH">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cm-00-69G">
+                                <rect key="frame" x="68" y="489.66666666666669" width="280" height="26.666666666666686"/>
+                                <fontDescription key="fontDescription" name="GTPlanarTrial-Bd" family="GT Planar Trial" pointSize="23"/>
+                                <color key="textColor" name="deepblue"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CI7-QC-Igp">
+                                <rect key="frame" x="0.0" y="40" width="82" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <attributedString key="attributedTitle">
+                                        <fragment content="Close">
+                                            <attributes>
+                                                <font key="NSFont" size="18" name="AvenirNext-DemiBold"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                    <color key="baseForegroundColor" name="orange"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="closeView:" destination="98q-HH-rsU" eventType="touchUpInside" id="0Nk-xm-0B2"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="PoB-dK-c4b"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="5cm-00-69G" firstAttribute="centerY" secondItem="PoB-dK-c4b" secondAttribute="centerY" constant="24.5" id="WBZ-rm-jcq"/>
+                            <constraint firstItem="5cm-00-69G" firstAttribute="centerX" secondItem="PoB-dK-c4b" secondAttribute="centerX" constant="-7" id="urI-4R-PNj"/>
+                            <constraint firstItem="5cm-00-69G" firstAttribute="width" secondItem="PoB-dK-c4b" secondAttribute="width" multiplier="0.651163" id="ymu-4R-kaM"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="btn" destination="CI7-QC-Igp" id="NUc-ce-TXZ"/>
+                        <outlet property="label" destination="5cm-00-69G" id="vzq-om-Nzl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W9F-qd-IWG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6004.1860465116279" y="-987.55364806866964"/>
+        </scene>
         <!--App Info-->
         <scene sceneID="LiD-cF-zae">
             <objects>
@@ -2016,29 +2071,58 @@
                                             <rect key="frame" x="0.0" y="0.0" width="430" height="50"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ZpW-1x-dzV">
-                                                <size key="itemSize" width="128" height="128"/>
+                                                <size key="itemSize" width="128" height="89"/>
                                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             </collectionViewFlowLayout>
                                             <cells>
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCell" id="sT7-ne-WSn" customClass="collectionCell">
-                                                    <rect key="frame" x="0.0" y="-39" width="128" height="128"/>
+                                                    <rect key="frame" x="0.0" y="-19.666666666666668" width="128" height="89"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Yen-uh-2v4">
-                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="89"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="8l5-vv-2Bk">
-                                                                <rect key="frame" x="8" y="80" width="98" height="31"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="12"/>
-                                                                <color key="textColor" name="deepblue"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vS4-yP-L49">
+                                                                <rect key="frame" x="-56" y="0.0" width="240" height="128"/>
+                                                            </imageView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y9U-LI-rcO">
+                                                                <rect key="frame" x="-56" y="-0.33333206176757812" width="240" height="128"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8l5-vv-2Bk">
+                                                                        <rect key="frame" x="20" y="0.0" width="200" height="74"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="120" id="0Cq-sC-80c"/>
+                                                                            <constraint firstAttribute="height" priority="500" constant="74" id="RWU-L1-j1o"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
+                                                                        <color key="textColor" name="deepblue"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstItem="8l5-vv-2Bk" firstAttribute="top" secondItem="y9U-LI-rcO" secondAttribute="top" constant="10" id="9yu-AD-ycz"/>
+                                                                    <constraint firstItem="8l5-vv-2Bk" firstAttribute="leading" secondItem="y9U-LI-rcO" secondAttribute="leading" constant="14" id="SEw-O1-j6m"/>
+                                                                </constraints>
+                                                            </view>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstItem="y9U-LI-rcO" firstAttribute="trailing" secondItem="vS4-yP-L49" secondAttribute="trailing" id="4ST-3y-5RL"/>
+                                                            <constraint firstItem="vS4-yP-L49" firstAttribute="top" secondItem="Yen-uh-2v4" secondAttribute="top" id="51s-Qh-Al3"/>
+                                                            <constraint firstItem="vS4-yP-L49" firstAttribute="leading" secondItem="Yen-uh-2v4" secondAttribute="leading" id="71o-kn-f54"/>
+                                                            <constraint firstItem="y9U-LI-rcO" firstAttribute="height" secondItem="vS4-yP-L49" secondAttribute="height" multiplier="0.4" id="ALr-jB-Zqu"/>
+                                                            <constraint firstItem="y9U-LI-rcO" firstAttribute="bottom" secondItem="vS4-yP-L49" secondAttribute="bottom" id="hcD-d2-aoT"/>
+                                                            <constraint firstAttribute="bottom" secondItem="vS4-yP-L49" secondAttribute="bottom" id="jU2-LY-d5G"/>
+                                                            <constraint firstAttribute="trailing" secondItem="vS4-yP-L49" secondAttribute="trailing" id="qMX-Pn-aFX"/>
+                                                            <constraint firstItem="y9U-LI-rcO" firstAttribute="leading" secondItem="vS4-yP-L49" secondAttribute="leading" id="y8U-32-ib1"/>
+                                                            <constraint firstItem="y9U-LI-rcO" firstAttribute="width" secondItem="vS4-yP-L49" secondAttribute="width" id="yw0-Ke-lix"/>
+                                                        </constraints>
                                                     </collectionViewCellContentView>
+                                                    <size key="customSize" width="128" height="89"/>
                                                     <connections>
+                                                        <outlet property="image" destination="vS4-yP-L49" id="Cdr-Hb-qxc"/>
                                                         <outlet property="label" destination="8l5-vv-2Bk" id="KYt-4E-6bz"/>
                                                     </connections>
                                                 </collectionViewCell>

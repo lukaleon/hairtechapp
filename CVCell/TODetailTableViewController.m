@@ -11,7 +11,10 @@
 #import "TORoundedTableView.h"
 #import "TORoundedTableViewCell.h"
 #import "TORoundedTableViewCapCell.h"
+#import "WhatsNewController.h"
 
+#define IDIOM    UI_USER_INTERFACE_IDIOM()
+#define IPAD     UIUserInterfaceIdiomPad
 
 @implementation TODetailTableViewController
 
@@ -24,7 +27,7 @@
     self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
-    sectionOneItems = @[@"Help", @"Rate our app", @"Report issue", @"Give us your feedback"];
+    sectionOneItems = @[@"Help", @"Rate our app", @"Report an issue", @"Give us your feedback"];
     sectionTwoItems = @[@"Follow us", @"Visit our web site"];
    // [self.tableView registerNib:[UINib nibWithNibName:@"tableCell" bundle:nil]
      //  forCellReuseIdentifier:@"tableCell"];
@@ -125,8 +128,7 @@
         cell.textLabel.backgroundColor = [UIColor whiteColor];
         cell.textLabel.opaque = YES;
     }
-
-    cell.textLabel.font =[UIFont fontWithName:@"AvenirNext-DemiBold" size:17];
+    cell.textLabel.font = [self fontSizeiPad:19 iPhone:17];
     cell.textLabel.textColor = [UIColor colorNamed:@"textColor"];
     [cell setIndentationLevel:10];
     [cell setIndentationWidth:2];
@@ -166,7 +168,7 @@
 {
     //Play the deselection animation
     
-    if ( indexPath.section == 1 && indexPath.row == 0 ) {
+    if ( indexPath.section == 2 && indexPath.row == 0 ) {
         UIApplication *application = [UIApplication sharedApplication];
         NSURL *URL = [NSURL URLWithString:@"http://instagram.com/hairtechapp"];
         [application openURL:URL options:@{} completionHandler:^(BOOL success) {
@@ -176,7 +178,7 @@
         }];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    if ( indexPath.section == 1 && indexPath.row == 1 ) {
+    if ( indexPath.section == 2 && indexPath.row == 1 ) {
         
         UIApplication *application = [UIApplication sharedApplication];
         NSURL *URL = [NSURL URLWithString:@"http://hairtechapp.com"];
@@ -239,9 +241,15 @@
 {
     if (indexPath.section == 0)
     {
-        return 160;
+       CGSize newSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds)/3.55,(CGRectGetHeight ([UIScreen mainScreen].bounds) / 3.55));
+        if (IDIOM == IPAD){
+            return newSize.height;
+        }else {
+            return 200;
+            
+        }
     }
-    return 50;
+    return 55;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -253,11 +261,17 @@
     
     collectionCell *cell = (collectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
 
-
+    CGRect rect = CGRectMake(cell.label.frame.origin.x, cell.label.frame.origin.y, cell.label.frame.size.width, (cell.frame.size.height) / 2.5);
     cell.backgroundColor = [UIColor clearColor];
+    //cell.label.backgroundColor = [UIColor yellowColor];
+
+    cell.label.numberOfLines = 0;
+    cell.label.frame = rect;
+    cell.label.font = [self fontSizeiPad:17 iPhone:14];
         if (indexPath.row == 0){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
             cell.label.text = @"How to use Hairtechapp";
+            //cell.image.image = [UIImage imageNamed:@"ht_logo_new"];
         }
         if (indexPath.row == 1){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
@@ -273,8 +287,38 @@
     cell.clipsToBounds = YES;
     return cell;
 }
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
+    collectionCell *cell = (collectionCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    whatsnew.view.backgroundColor = cell.contentView.backgroundColor;
+    whatsnew.label.text = @"This is hairtech app";
+    [self presentViewController:whatsnew animated:YES completion:nil];
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(CGRectGetWidth(collectionView.frame)/3,(CGRectGetHeight (collectionView.frame)- 4));
+    CGSize newSize;
+    if(IDIOM == IPAD){
+        newSize = CGSizeMake(CGRectGetWidth(collectionView.frame)/3.55,(CGRectGetHeight (collectionView.frame)-4));
+    }else
+    {
+        newSize = CGSizeMake(CGRectGetWidth(collectionView.frame)/2.7,(CGRectGetHeight (collectionView.frame)-4));
+    }
+    
+    return CGSizeMake(newSize.width,newSize.width * 1.3);
 }
+
+-(UIFont*)fontSizeiPad:(CGFloat)ipadSize iPhone:(CGFloat)iphoneSize{
+    UIFont * font;
+    if (IDIOM == IPAD){
+    font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:ipadSize];
+    }else{
+    font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:iphoneSize];
+    }
+    return font;
+}
+
+
 @end
