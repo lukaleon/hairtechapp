@@ -10,7 +10,7 @@
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
 
-#define btnColor  [UIColor colorWithRed:0.20 green:0.20 blue:0.20 alpha:1.0]
+#define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -163,7 +163,7 @@
 - (void)setupBottomToolBar {
    self.toolbar.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 80, self.view.frame.size.width - 20, 55);
     self.toolbar.alpha = 1.0f;
-    [self.toolbar.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+    [self.toolbar.layer setBackgroundColor:[UIColor colorNamed:@"whiteDark"].CGColor];
     [self.toolbar.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.toolbar.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -273,7 +273,7 @@
     [grid setImage:[UIImage imageNamed:@"grid"] forState:UIControlStateNormal];
     //[grid setImage:[UIImage imageNamed:@"grid_sel"] forState:UIControlStateSelected];
 
-    [grid setTintColor:[UIColor colorNamed:@"deepblue"]];
+    [grid setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
     
     UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -283,7 +283,7 @@
     [undo.widthAnchor constraintEqualToConstant:30].active = YES;
     [undo.heightAnchor constraintEqualToConstant:30].active = YES;
     [undo setImage:[UIImage imageNamed:@"undoNew.png"] forState:UIControlStateNormal];
-    [undo setTintColor:[UIColor colorNamed:@"deepblue"]];
+    [undo setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
     
     UIButton * redo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [redo addTarget:self
@@ -292,7 +292,7 @@
     [redo.widthAnchor constraintEqualToConstant:30].active = YES;
     [redo.heightAnchor constraintEqualToConstant:30].active = YES;
     [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
-    [redo setTintColor:[UIColor colorNamed:@"deepblue"]];
+    [redo setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
     UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [more addTarget:self
@@ -301,7 +301,7 @@
     [more.widthAnchor constraintEqualToConstant:30].active = YES;
     [more.heightAnchor constraintEqualToConstant:30].active = YES;
     [more setImage:[UIImage imageNamed:@"dots.png"] forState:UIControlStateNormal];
-    [more setTintColor:[UIColor colorNamed:@"deepblue"]];
+    [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
     UIBarButtonItem * gridBtn =[[UIBarButtonItem alloc] initWithCustomView:grid];
     UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];

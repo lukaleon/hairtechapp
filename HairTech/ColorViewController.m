@@ -206,8 +206,9 @@
     self.layer.shadowRadius = 7;
     self.layer.shadowOpacity = 0.2;
     self.layer.masksToBounds = NO;
-    [self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
-    
+    //[self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
+    [self setBackgroundColor:[UIColor colorNamed:@"whiteDark"]];
+
     UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 36, 240,80)];
     scroll.contentSize = CGSizeMake(200, 320);
     [self addSubview:scroll];
@@ -361,7 +362,9 @@ else {
         originOfButtons = screenPartitionIdx / 2.4;
     }
     self.layer.cornerRadius = 15;
-    [self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
+    //[self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
+    [self setBackgroundColor:[UIColor colorNamed:@"whiteDark"]];
+
     button1 =  [self fontButton:@"decreaseFontSize:" imageName1:@"a-sm.png" imageName2:@"a-sm-tr.png" startX:originOfButtons width: 34 yAxe:11];
    button2 = [self fontButton:@"increaseFontSize:" imageName1:@"a-big.png" imageName2:@"a-big-tr.png" startX:  button1.frame.origin.x + screenPartitionIdx width:34 yAxe:11];
     

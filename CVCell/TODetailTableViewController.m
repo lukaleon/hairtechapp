@@ -21,10 +21,10 @@
 #pragma mark - Rounded Table Configuration Example -
 
 -(void)viewDidLoad{
-   [self.tableView setSeparatorColor:[UIColor colorNamed:@"bg_new"]];
+   [self.tableView setSeparatorColor:[UIColor colorNamed:@"grey"]];
     self.tableView.separatorInset = UIEdgeInsetsZero;
     sectionName = @[@"Get started",@"Contact", @"Follow"];
-    self.tableView.tableHeaderView = [self addLogoToHeader];
+   // self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
     sectionOneItems = @[@"Help", @"Rate our app", @"Report an issue", @"Give us your feedback"];
@@ -37,7 +37,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger sectionID = [indexPath indexAtPosition:0];
-    if(sectionID ==0){
+    if(sectionID == 1){
         if ((indexPath.row != 0) && (indexPath.row != sectionOneItems.count - 1)){
             cell.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         }

@@ -121,10 +121,10 @@ static UIImage *deleteButtonImg;
      [self.menuBar setBackgroundColor:[UIColor whiteColor]];
      [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
     
-    [self.menuBarExpanded.layer setShadowOffset:CGSizeMake(0, 2)];
+    [self.menuBarExpanded.layer setShadowOffset:CGSizeMake(0, 1)];
     [self.menuBarExpanded.layer setShadowColor:[[UIColor blackColor] CGColor]];
-    [self.menuBarExpanded.layer setShadowRadius:8.0f];
-    [self.menuBarExpanded.layer setShadowOpacity:0.2];
+    [self.menuBarExpanded.layer setShadowRadius:2.0f];
+    [self.menuBarExpanded.layer setShadowOpacity:0.1];
     //    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
 //    [self.deleteBtn setBackgroundColor:[UIColor whiteColor]];
 //    [self.deleteBtn.layer setCornerRadius:15.0];

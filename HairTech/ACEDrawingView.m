@@ -112,18 +112,18 @@ UIColor* tempColor;
 {
     self = [super initWithFrame:frame];
     if (self) {
-
-      
+        
+        
     }
     return self;
 }
 
 - (void)loadDataFromJsonOnStart:(NSMutableString*)fileName{
     [self fetchData:fileName]; //fetching data from json file
-   
+    
     for(LayersData * layerData in self.arrayOfLayersForJSON){
         NSLog(@"COLOR LOADED FROM ARRAY %@", layerData.color);
-    
+        
         if (JVDrawingTypeText != [layerData.type integerValue]){
             self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:layerData.startPoint endPoint:layerData.endPoint type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color controlPoint:layerData.controlPoint grafittiPoints:layerData.grafittiPoints];
             if(JVDrawingTypeGraffiti == [layerData.type integerValue] ){
@@ -140,35 +140,35 @@ UIColor* tempColor;
                 }
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
                 [self.drawingLayer moveCurvedLinePathWithStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint isSelected:selected];
-             //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
-             
+                //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
+                
             }
             else {
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
             }
         } else {
             
-                CGRect rect = CGRectMake(layerData.startPoint.x, layerData.startPoint.y, layerData.width, layerData.height);
-                self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:layerData.startPoint
-                                                                            frame:rect
-                                                                             text:layerData.text
-                                                                             type:[layerData.type integerValue]
-                                                                        lineWidth:layerData.lineWidth
-                                                                        lineColor:layerData.color
-                                                                         fontSize:layerData.fontSize
-                                                                       isSelected:NO];
+            CGRect rect = CGRectMake(layerData.startPoint.x, layerData.startPoint.y, layerData.width, layerData.height);
+            self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:layerData.startPoint
+                                                                        frame:rect
+                                                                         text:layerData.text
+                                                                         type:[layerData.type integerValue]
+                                                                    lineWidth:layerData.lineWidth
+                                                                    lineColor:layerData.color
+                                                                     fontSize:layerData.fontSize
+                                                                   isSelected:NO];
         }
         if(layerData.endPoint.x != 0 && layerData.endPoint.y !=0){
             [self.layer addSublayer:self.drawingLayer];
             [self.layerArray addObject:self.drawingLayer];
-//            NSLog(@"layerArray   %lu", self.layerArray.count );
+            //            NSLog(@"layerArray   %lu", self.layerArray.count );
         }
     }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-
+    
     self = [super initWithCoder:aDecoder];
     if (self) {
         
@@ -189,10 +189,10 @@ UIColor* tempColor;
         arrayOfPoints = [NSMutableArray array];
         self.bufferOfLayers = [NSMutableArray array];
         //NSLog(@"BOOL in setter %s", self.newAppVersion ? "true" : "false");
-
-       // [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
-//        [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
-
+        
+        // [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
+        //        [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
+        
     }
     return self;
 }
@@ -211,35 +211,39 @@ UIColor* tempColor;
 }
 
 - (void)revoke {
-        [self hideMenu];
-        [self.bufferOfLayers addObject:self.selectedLayer]; //Add layer to buffer array for redo
-        [self.layerArray removeObject:self.selectedLayer];
-        [self.selectedLayer removeFromSuperlayer];
-        self.selectedLayer.isSelected = NO;
-        self.selectedLayer = nil;
-        self.drawingLayer = nil;
-        [self updateAllPoints];
-        [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
-        NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
-   // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
-
+    [self hideMenu];
+    [self.bufferOfLayers addObject:self.selectedLayer]; //Add layer to buffer array for redo
+    [self.layerArray removeObject:self.selectedLayer];
+    [self.selectedLayer removeFromSuperlayer];
+    self.selectedLayer.isSelected = NO;
+    self.selectedLayer = nil;
+    self.drawingLayer = nil;
+    [self updateAllPoints];
+    [self storeDataInJson];
+    [self fetchData:self.fileNameInside];
+    NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
+    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
+    
 }
 - (void)revokeTextView {
-        [self hideMenu];
-        [[self.layerArray lastObject] removeFromSuperlayer];
-        [self.layerArray removeObject:[self.layerArray lastObject]];
-        self.selectedLayer.isSelected = NO;
-        self.selectedLayer = nil;
-        self.drawingLayer = nil;
-        [self updateAllPoints];
-        [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
-        NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
-   // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
-
+    [self hideMenu];
+    [[self.layerArray lastObject] removeFromSuperlayer];
+    [self.layerArray removeObject:[self.layerArray lastObject]];
+    self.selectedLayer.isSelected = NO;
+    self.selectedLayer = nil;
+    self.drawingLayer = nil;
+    [self updateAllPoints];
+    [self storeDataInJson];
+    [self fetchData:self.fileNameInside];
+    NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
+    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
+    
 }
 #pragma mark Touches Methods
+
+- (void)setIsFirstTouch:(BOOL)isFirstTouch {
+    _isFirstTouch = isFirstTouch;
+}
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     unsigned long count = [[event allTouches] count];
@@ -256,11 +260,11 @@ UIColor* tempColor;
     CGPoint currentPoint = [touch locationInView:self];
     startOfLine = currentPoint;
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine || self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
-    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                       target:self
-                                                     selector:@selector(showLoupe2:)
-                                                     userInfo:nil
-                                                      repeats:NO];
+        self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                           target:self
+                                                         selector:@selector(showLoupe2:)
+                                                         userInfo:nil
+                                                          repeats:NO];
     }
     if (UIMenuController.sharedMenuController.isMenuVisible) {
         [UIMenuController.sharedMenuController setMenuVisible:NO animated:YES];
@@ -286,37 +290,39 @@ UIColor* tempColor;
     CGPoint previousPoint = [touch previousLocationInView:self];
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
-//    if (currentPoint.x > self.frame.size.width || currentPoint.x < 0 || currentPoint.y < 0 || currentPoint.y > self.frame.size.height){
-//        return;
-//    }
-
+    //    if (currentPoint.x > self.frame.size.width || currentPoint.x < 0 || currentPoint.y < 0 || currentPoint.y > self.frame.size.height){
+    //        return;
+    //    }
+    
     if (self.isFirstTouch) {
-
-      //  if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
-//            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
-      
-            if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 / self.zoomFactor ofPath:self.selectedLayer.path]){
-                self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
-            }
-         else {
-             [self.delegate disableZoomWhenTouchesMoved];
-             self.selectedLayer.isSelected = NO;
-             [self removeCircles];
-             [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
-             self.firstTouch = previousPoint;
-             self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint
-                                                                      type:self.type
-                                                                 lineWidth:self.lineWidth
-                                                                 lineColor:self.lineColor];
+        
+        //  if (self.selectedLayer && [self.selectedLayer caculateLocationWithPoint:currentPoint]) {
+        //            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+        
+        if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 / self.zoomFactor ofPath:self.selectedLayer.path]){
+            
+            self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
+            
+        } else {
+            
+            [self.delegate disableZoomWhenTouchesMoved];
+            self.selectedLayer.isSelected = NO;
+            [self removeCircles];
+            [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
+            self.firstTouch = previousPoint;
+            self.drawingLayer = [JVDrawingLayer createLayerWithStartPoint:previousPoint
+                                                                     type:self.type
+                                                                lineWidth:self.lineWidth
+                                                                lineColor:self.lineColor];
             // [self.delegate disableZoomWhenTouchesMoved];
             [self.layer addSublayer:self.drawingLayer];
-             }
+        }
     } else {
         if (self.isMoveLayer) {
             
             if (cycle < 1){
-               CGPoint start =  [self.selectedLayer getStartPointOfLayer:self.selectedLayer];
-               CGPoint end = [self.selectedLayer getEndPointOfLayer:self.selectedLayer];
+                CGPoint start =  [self.selectedLayer getStartPointOfLayer:self.selectedLayer];
+                CGPoint end = [self.selectedLayer getEndPointOfLayer:self.selectedLayer];
                 bufferEndPoint = end;
                 bufferStartPoint = start;
                 [arrayOfPoints removeObject:NSStringFromCGPoint(start)];
@@ -349,7 +355,7 @@ UIColor* tempColor;
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
-                    
+                        
                     default:
                         break;
                 }
@@ -362,16 +368,16 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-//                        bufferStartPoint = currentPoint;
-//                        bufferEndPoint = self.selectedLayer.endPointToConnect;
-
+                        //                        bufferStartPoint = currentPoint;
+                        //                        bufferEndPoint = self.selectedLayer.endPointToConnect;
+                        
                         if (self.magnifierView.hidden == NO){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
                     case JVDrawingTouchMid:
                         NSLog(@"MOVING MIDDLE POINT");
-
+                        
                         [self hideLoupe]; // hide loupe when middle touched
                         [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
                         [self circlePosition:self.selectedLayer.startPmoving point2:self.selectedLayer.endPmoving forBothLayers:self.circleLayer1 circle2:self.circleLayer2];
@@ -411,7 +417,7 @@ UIColor* tempColor;
     self.isFirstTouch = NO;
     
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
-
+    
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -419,7 +425,7 @@ UIColor* tempColor;
     cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
-      //add endPoint to Array when line first drawn
+        //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
         [self storeDataInJson];
         [self fetchData:self.fileNameInside];
@@ -430,63 +436,63 @@ UIColor* tempColor;
             [self selectLayer:[self.layerArray lastObject]];
         }
         [self.drawingLayer addToTrack];
-
+        
     } else {
         if (self.isMoveLayer) {
             [self updateAllPoints];
             [self storeDataInJson];
-
-          [self.selectedLayer addToTrack];
+            
+            [self.selectedLayer addToTrack];
         }
         if (self.isFirstTouch) {
-             if(self.eraserSelected == NO){
-            BOOL layerHasBeenPicked = NO;
-            UITouch *touch = [touches anyObject];
-            CGPoint currentPoint = [touch locationInView:self];
-            for (JVDrawingLayer *layer in self.layerArray) {
-                if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
-                    [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
-                    layerHasBeenPicked = YES;
-                    if (layer == self.selectedLayer && !menuVisible) {
-                        // the layer is already selected; show the menu
-                        [self showMenu];
-                    } else {
-                        // clear the selection
-                        self.selectedLayer.isSelected = NO;
-                        [self removeCircles];
-                        [self hideMenu];
-                        // draw new selection
-                        [self selectLayer:layer];
-                        
+            if(self.eraserSelected == NO){
+                BOOL layerHasBeenPicked = NO;
+                UITouch *touch = [touches anyObject];
+                CGPoint currentPoint = [touch locationInView:self];
+                for (JVDrawingLayer *layer in self.layerArray) {
+                    if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
+                        [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
+                        layerHasBeenPicked = YES;
+                        if (layer == self.selectedLayer && !menuVisible) {
+                            // the layer is already selected; show the menu
+                            [self showMenu];
+                        } else {
+                            // clear the selection
+                            self.selectedLayer.isSelected = NO;
+                            [self removeCircles];
+                            [self hideMenu];
+                            // draw new selection
+                            [self selectLayer:layer];
+                            
+                        }
+                        break;
                     }
-                    break;
+                } //-for
+                // if no layer has been picked up by the tap, remove the selection
+                if (!layerHasBeenPicked) {
+                    self.selectedLayer.isSelected = NO;
+                    self.selectedLayer = nil;
+                    [self removeCircles];
+                    [self hideMenu];
                 }
-            } //-for
-            // if no layer has been picked up by the tap, remove the selection
-            if (!layerHasBeenPicked) {
-                self.selectedLayer.isSelected = NO;
-                self.selectedLayer = nil;
-                [self removeCircles];
-                [self hideMenu];
-            }
-            //       self.drawingLayerSelectedBlock(self.selectedLayer);
-            
-        }else if(self.eraserSelected == YES) {
-            NSLog(@"trying to delete line");
-
-            UITouch *touch = [touches anyObject];
-            CGPoint currentPoint = [touch locationInView:self];
-            for (JVDrawingLayer *layer in self.layerArray) {
-                if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
-                    [layer caculateLocationWithPoint:currentPoint];
-                    self.selectedLayer = layer;
-                    self.selectedLayer.isSelected = YES;
-                    [self revoke];
-                    break;
+                //       self.drawingLayerSelectedBlock(self.selectedLayer);
+                
+            }else if(self.eraserSelected == YES) {
+                NSLog(@"trying to delete line");
+                
+                UITouch *touch = [touches anyObject];
+                CGPoint currentPoint = [touch locationInView:self];
+                for (JVDrawingLayer *layer in self.layerArray) {
+                    if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
+                        [layer caculateLocationWithPoint:currentPoint];
+                        self.selectedLayer = layer;
+                        self.selectedLayer.isSelected = YES;
+                        [self revoke];
+                        break;
+                    }
                 }
+                
             }
-            
-        }
         }
     }
     [self.delegate enableZoomWhenTouchesMoved];
@@ -494,7 +500,7 @@ UIColor* tempColor;
 
 - (void)setEraserSelected:(BOOL)eraserSelected
 {
-     _eraserSelected = eraserSelected;
+    _eraserSelected = eraserSelected;
     NSLog(@"BOOL in eraser %s", _eraserSelected ? "true" : "false");
 }
 
@@ -507,7 +513,7 @@ UIColor* tempColor;
     CGFloat keyOfPointWithMinDistance = -1;
     CGPoint nearestPointToTouchedPoint = CGPointZero;
     int index = 0;
-        for (NSString * cgpointVal in arrayOfPoints){
+    for (NSString * cgpointVal in arrayOfPoints){
         discoveryPoint = CGPointFromString(cgpointVal);
         if (fabs(previousPoint->x - discoveryPoint.x)<tolerance && fabs(previousPoint->y - discoveryPoint.y)<tolerance) {
             //Calculating the distance between points with touchedPoint in their range(Square) and adding them to an array.
@@ -523,15 +529,15 @@ UIColor* tempColor;
         }
     }
 }
-    
+
 - (CGFloat) pointPairToBearingDegrees:(CGPoint)startingPoint secondPoint:(CGPoint) endingPoint
-    {
-        CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
-        float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
-        float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
-        bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
-        return bearingDegrees;
-    }
+{
+    CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
+    float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
+    float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
+    bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
+    return bearingDegrees;
+}
 - (void)updateAllPoints {
     [arrayOfPoints removeAllObjects];
     for (JVDrawingLayer *layer in self.layerArray) {
@@ -621,9 +627,9 @@ UIColor* tempColor;
     [self.arrayOfCircles removeAllObjects];
     self.selectedLayer = nil;
     self.selectedLayer.isSelected = NO;
-//    if (self.textViewNew.hidden == NO){
-//    [self hideTextViewAndRect];
-//    }
+    //    if (self.textViewNew.hidden == NO){
+    //    [self hideTextViewAndRect];
+    //    }
 }
 #pragma mark ZOOM IN / OUT METHODS
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
@@ -670,45 +676,45 @@ UIColor* tempColor;
     return YES;
 }
 - (void)showMenu {
-        CGPoint middlePoint = CGPointZero;
-        CGRect rectOfMenu;
-        if (self.isMoveLayer){
-            middlePoint = midsPoint(self.selectedLayer.startP, self.selectedLayer.endP);
-        }else{
-            middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
-        }
-        if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine){
-
+    CGPoint middlePoint = CGPointZero;
+    CGRect rectOfMenu;
+    if (self.isMoveLayer){
+        middlePoint = midsPoint(self.selectedLayer.startP, self.selectedLayer.endP);
+    }else{
+        middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
+    }
+    if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine){
+        
         //rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
-
+        
         rectOfMenu = CGRectMake(self.selectedLayer.midP.x,self.selectedLayer.midP.y,0,0) ;
         
     } else {
         rectOfMenu = CGRectMake(middlePoint.x, middlePoint.y, 0, 0);
-
+        
     }
-        if (@available(iOS 13.0, *)) {
-            NSLog(@"IOS ABOVE 13");
-            [self becomeFirstResponder];
-            menu = [UIMenuController sharedMenuController];
-            menu.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
-            [menu showMenuFromView:self rect:rectOfMenu];
-        } else {
-            
-            UIMenuController *menu = [UIMenuController sharedMenuController];
-            menu.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
-            [menu setTargetRect:rectOfMenu inView:self];
-            [menu setMenuVisible:YES animated:YES];
-        }
+    if (@available(iOS 13.0, *)) {
+        NSLog(@"IOS ABOVE 13");
+        [self becomeFirstResponder];
+        menu = [UIMenuController sharedMenuController];
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
+        [menu showMenuFromView:self rect:rectOfMenu];
+    } else {
+        
+        UIMenuController *menu = [UIMenuController sharedMenuController];
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
+        [menu setTargetRect:rectOfMenu inView:self];
+        [menu setMenuVisible:YES animated:YES];
+    }
     menuVisible = YES;
 }
 -(void)hideMenu {
     
     if (menu.isMenuVisible) {
-            [menu setMenuVisible:NO animated:YES];
-        }
+        [menu setMenuVisible:NO animated:YES];
+    }
     menuVisible = NO;
 }
 #pragma mark Add Text View
@@ -717,7 +723,7 @@ UIColor* tempColor;
     [self.textViewNew becomeFirstResponder];
     [currentlyEditingView hideEditingHandles];
     [self showTextViewFrame];
-
+    
 }
 -(void)showTextViewFrame{
     self.textViewNew.layer.borderColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
@@ -726,7 +732,7 @@ UIColor* tempColor;
 -(void)hideTextViewFrame{
     self.textViewNew.layer.borderColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:0.0].CGColor;
     self.textViewNew.layer.borderWidth = 1.0;
-
+    
 }
 
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
@@ -747,13 +753,13 @@ UIColor* tempColor;
 }
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView] withEvent:nil]) {
-       //[self.textViewNew becomeFirstResponder];
-       [currentlyEditingView showEditingHandles];
-//        [self enableGestures];
+        //[self.textViewNew becomeFirstResponder];
+        [currentlyEditingView showEditingHandles];
+        //        [self enableGestures];
         return NO;
     }
-   // [self.textViewNew resignFirstResponder];
-   // [currentlyEditingView hideEditingHandles];
+    // [self.textViewNew resignFirstResponder];
+    // [currentlyEditingView hideEditingHandles];
     return YES;
     
 }
@@ -776,7 +782,7 @@ UIColor* tempColor;
     [self addSubview:self.userResizableView];
     [self applyScale:zoomIdx toView:self.userResizableView];
     [self applyScale:zoomIdx toView:self.textViewNew];
-
+    
     [self.arrayOfTextViews addObject:self.userResizableView];
     
     /**Gesture recognizers for UITextView**/
@@ -784,16 +790,16 @@ UIColor* tempColor;
     [self.userResizableView addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.numberOfTapsRequired = 1;
     //gestureRecognizer.cancelsTouchesInView = NO;
-   //[gestureRecognizer setDelegate:self];
+    //[gestureRecognizer setDelegate:self];
     
     gestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenuForTextView)];
     [self addGestureRecognizer:gestureRecognizer2];
     gestureRecognizer2.cancelsTouchesInView = NO;
     gestureRecognizer2.numberOfTapsRequired = 1;
-   // [gestureRecognizer2 setDelegate:self];
+    // [gestureRecognizer2 setDelegate:self];
     NSLog(@"USER FRAME width %f and Height %f", self.userResizableView.frame.size.width, self.userResizableView.frame.size.height);
     NSLog(@"TEXT VIEW width %f and Height %f", self.textViewNew.frame.size.width, self.textViewNew.frame.size.height);
-
+    
 }
 
 -(void)disableGestures{
@@ -801,16 +807,16 @@ UIColor* tempColor;
     gestureRecognizer2.enabled = NO;
 }
 -(void)enableGestures{
-
+    
     gestureRecognizer.enabled = YES;
     gestureRecognizer2.enabled = YES;
 }
 - (void)showMenuOnTextView:(UITapGestureRecognizer*)sender {
-        NSLog(@"Show menu from textview");
-        CGRect rectOfMenu = CGRectMake(self.userResizableView.frame.origin.x +
-                                      (self.userResizableView.frame.size.width / 2),
-                                       self.userResizableView.frame.origin.y ,
-                                       0, 0);
+    NSLog(@"Show menu from textview");
+    CGRect rectOfMenu = CGRectMake(self.userResizableView.frame.origin.x +
+                                   (self.userResizableView.frame.size.width / 2),
+                                   self.userResizableView.frame.origin.y ,
+                                   0, 0);
     if (self.textViewNew.isFirstResponder != YES){
         if (@available(iOS 13.0, *)) {
             NSLog(@"IOS ABOVE 13");
@@ -828,7 +834,7 @@ UIColor* tempColor;
             [menuForTextView setMenuVisible:YES animated:YES];
         }
     }
-
+    
 }
 -(void)removeTextView{
     
@@ -845,8 +851,8 @@ UIColor* tempColor;
         [self.delegate selectPreviousTool:self.previousType];
         [self.delegate removeTextSettings];
         textViewSelected = NO;
-
-
+        
+        
     } else {
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
@@ -855,7 +861,7 @@ UIColor* tempColor;
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
         [self.delegate removeTextSettings];
-
+        
     }
 }
 - (void)hideAndCreateTextLayer {
@@ -890,20 +896,20 @@ UIColor* tempColor;
         [self.textViewNew removeFromSuperview];
         [self.delegate removeTextSettings];
         [self.delegate updateButtonStatus];
-
+        
     }
 }
 
 -(void)hideMenuForTextView{
     
-//    if (menuForTextView.isMenuVisible) {
-//        [menuForTextView setMenuVisible:NO animated:YES];
-////        [self hideAndCreateTextLayer];
-//
-//    }
-     if (self.textViewNew.isFirstResponder == YES || menuForTextView.isMenuVisible){
+    //    if (menuForTextView.isMenuVisible) {
+    //        [menuForTextView setMenuVisible:NO animated:YES];
+    ////        [self hideAndCreateTextLayer];
+    //
+    //    }
+    if (self.textViewNew.isFirstResponder == YES || menuForTextView.isMenuVisible){
         [menuForTextView setMenuVisible:NO animated:YES];
-
+        
         [self.textViewNew resignFirstResponder];
         [self hideTextViewFrame];
         [currentlyEditingView showEditingHandles];    }
@@ -918,7 +924,7 @@ UIColor* tempColor;
 
 -(void)hideAndSaveTextViewWhenNewAdded{
     NSLog(@"HIDE AND SAVE text when new addded");
-
+    
     [self.textViewNew resignFirstResponder];
     self.textViewNew.userInteractionEnabled = NO;
     [currentlyEditingView hideEditingHandles];
@@ -943,17 +949,17 @@ UIColor* tempColor;
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate updateButtonStatus];
-
+        
     }
     textViewSelected = NO;
-
+    
 }
 -(void)removeTextViewFrame{
     if ([self.userResizableView.subviews containsObject:self.textViewNew]){
         [self hideAndCreateTextLayer];
         
     }
-
+    
 }
 
 - (CGFloat)getTextViewHeight{
@@ -961,8 +967,8 @@ UIColor* tempColor;
 }
 - (void)hideHandlesAndMenu{
     if (menuForTextView.isMenuVisible) {
-            [menuForTextView setMenuVisible:NO animated:YES];
-        }
+        [menuForTextView setMenuVisible:NO animated:YES];
+    }
     menuVisible = NO;
     
 }
@@ -973,13 +979,13 @@ UIColor* tempColor;
     NSLog(@"NAME OF CURRENT TECHNIQUE %@", techniqueName);
     currentTechniqueName = techniqueName;
     viewName = nameOfView;
-   // arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
+    // arrayOfPoints = [NSMutableArray arrayWithArray:[self retrievePointsFromDefaults:viewName techniqueName:currentTechniqueName]];
     
-//    for (NSString * cgpointVal in arrayOfPoints)
-//    {
-//        CGPoint pointObj = CGPointFromString(cgpointVal);
-//        [self alocatePointAtView:self.layer pointFromArray:pointObj];
-//    }
+    //    for (NSString * cgpointVal in arrayOfPoints)
+    //    {
+    //        CGPoint pointObj = CGPointFromString(cgpointVal);
+    //        [self alocatePointAtView:self.layer pointFromArray:pointObj];
+    //    }
 }
 
 
@@ -996,15 +1002,15 @@ UIColor* tempColor;
     /// NSLog(@"ScreenBoundsOrientationMEthod");
 }
 -(void)initializeGestureRecognizers{
-  
-//   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self.userResizableView action:@selector(tapTextView:)];
-//     [self.textViewNew addGestureRecognizer:tap];
     
-//    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
-//    [self addGestureRecognizer:panRecognizer];
-//    panRecognizer.enabled = NO;
-//    UILongPressGestureRecognizer * longPressLine = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showMenu)];
-//    [self addGestureRecognizer:longPressLine];
+    //   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self.userResizableView action:@selector(tapTextView:)];
+    //     [self.textViewNew addGestureRecognizer:tap];
+    
+    //    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+    //    [self addGestureRecognizer:panRecognizer];
+    //    panRecognizer.enabled = NO;
+    //    UILongPressGestureRecognizer * longPressLine = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showMenu)];
+    //    [self addGestureRecognizer:longPressLine];
     
 }
 
@@ -1081,10 +1087,10 @@ UIColor* tempColor;
         
         [self.image drawInRect:self.bounds];
         [self.currentTool draw2];
-
+        
         
     }
-
+    
     UIGraphicsEndImageContext();
 }
 
@@ -1251,59 +1257,59 @@ UIColor* tempColor;
 
 -(void)updateTextView
 {
-   /*
-    if(pan == YES)
-    {
-        
-        [self.currentTool setInitialPoint:self.textView.frame.origin];
-        
-    }
-    
-    else
-    {
-        [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
-        
-    }
-    
-    // [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
-    
-    [self.currentTool setInitialPoint:self.textView.frame.origin];
-    
-    [self.currentTool getTextFromView:self.textView.text];
-    
-    [self.currentTool boundsOfTextView:self.textView.frame.size];
-    // [self.currentTool boundsOfTextView:self.textView.textContainer.size];
-    
-    [self.pathArray addObject:self.currentTool];
-    
-    [self.textView setHidden:YES];
-    
-    
-    [self updateCacheImage:NO];
-    
-    // clear the current tool
-    
-    self.currentTool = nil;
-    
-    // clear the redo queue
-    [self.bufferArray removeAllObjects];
-    [self.bufferOfPoints removeAllObjects];
-    
-    
-    
-    // call the delegate
-    if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
-        [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
-    
-        
-      /*
-    }
-    [self setNeedsDisplay];
-    self.textView.text = nil;
-    // editModeforText = NO;
-    touchForText = 0;
-    pan=NO;
-    [self.delegate setButtonVisibleTextPressed];*/
+    /*
+     if(pan == YES)
+     {
+     
+     [self.currentTool setInitialPoint:self.textView.frame.origin];
+     
+     }
+     
+     else
+     {
+     [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
+     
+     }
+     
+     // [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
+     
+     [self.currentTool setInitialPoint:self.textView.frame.origin];
+     
+     [self.currentTool getTextFromView:self.textView.text];
+     
+     [self.currentTool boundsOfTextView:self.textView.frame.size];
+     // [self.currentTool boundsOfTextView:self.textView.textContainer.size];
+     
+     [self.pathArray addObject:self.currentTool];
+     
+     [self.textView setHidden:YES];
+     
+     
+     [self updateCacheImage:NO];
+     
+     // clear the current tool
+     
+     self.currentTool = nil;
+     
+     // clear the redo queue
+     [self.bufferArray removeAllObjects];
+     [self.bufferOfPoints removeAllObjects];
+     
+     
+     
+     // call the delegate
+     if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
+     [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
+     
+     
+     /*
+     }
+     [self setNeedsDisplay];
+     self.textView.text = nil;
+     // editModeforText = NO;
+     touchForText = 0;
+     pan=NO;
+     [self.delegate setButtonVisibleTextPressed];*/
 }
 
 //- (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
@@ -1338,28 +1344,28 @@ UIColor* tempColor;
 
 
 /*
--(void)addTextViewToMiddle
-{
-    
-    pan= NO;
-    self.currentTool = [self toolWithCurrentSettings];
-    self.currentTool.lineColor = self.lineColor;
-    self.currentTool.lineWidthNew = self.lineWidth;
-    
-    [self.textView setHidden:NO];
-    
-    
-    
-    // self.textView.zoomEnabled = YES;
-    self.textView.frame = CGRectMake((self.frame.size.width/2)-100,self.frame.size.height/3, 200,60);
-  
-    
-    
-    [self.textView becomeFirstResponder];
-    self.touchForText = self.touchForText + 1;
-    touchesForUpdate = 0;
-}
-*/
+ -(void)addTextViewToMiddle
+ {
+ 
+ pan= NO;
+ self.currentTool = [self toolWithCurrentSettings];
+ self.currentTool.lineColor = self.lineColor;
+ self.currentTool.lineWidthNew = self.lineWidth;
+ 
+ [self.textView setHidden:NO];
+ 
+ 
+ 
+ // self.textView.zoomEnabled = YES;
+ self.textView.frame = CGRectMake((self.frame.size.width/2)-100,self.frame.size.height/3, 200,60);
+ 
+ 
+ 
+ [self.textView becomeFirstResponder];
+ self.touchForText = self.touchForText + 1;
+ touchesForUpdate = 0;
+ }
+ */
 
 #pragma mark - Show Loupe methods
 - (void)showLoupe:(NSTimer *)timer
@@ -1401,14 +1407,14 @@ UIColor* tempColor;
 }
 
 - (void)scaleTextView:(UIPinchGestureRecognizer *)pinchGestRecognizer{
-//    CGFloat scale = pinchGestRecognizer.scale;
-//    
-//    self.textView.font = [UIFont fontWithName:self.textView.font.fontName size:self.textView.font.pointSize*scale];
-//    
-//    [self textViewDidChange:self.textView];
-//    
-//    
-//    
+    //    CGFloat scale = pinchGestRecognizer.scale;
+    //
+    //    self.textView.font = [UIFont fontWithName:self.textView.font.fontName size:self.textView.font.pointSize*scale];
+    //
+    //    [self textViewDidChange:self.textView];
+    //
+    //
+    //
 }
 
 
@@ -1559,71 +1565,71 @@ UIColor* tempColor;
 
 
 /*
-- (NSUInteger)undoSteps
-{
-    return self.bufferArray.count;
-    return self.bufferOfPoints.count;
-    
-}
-
-- (BOOL)canUndo
-{
-    return self.pathArray.count > 0;
-    return arrayOfPoints.count > 0;
-    
-}
-
-- (void)undoLatestStep
-{
-    if ([self canUndo]) {
-        id<ACEDrawingTool>tool = [self.pathArray lastObject];
-        [self.bufferArray addObject:tool];
-        [self.pathArray removeLastObject];
-        
-        [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
-        [arrayOfPoints removeLastObject];
-        [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
-        [arrayOfPoints removeLastObject];
-        [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
-        
-        [self updateCacheImage:YES];
-        [self setNeedsDisplay];
-        
-        NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
-        
-    }
-    
-    
-}
-
-- (BOOL)canRedo
-{
-    return self.bufferArray.count > 0;
-    return self.bufferOfPoints.count > 0;
-}
-
-- (void)redoLatestStep
-{
-    if ([self canRedo]) {
-        id<ACEDrawingTool>tool = [self.bufferArray lastObject];
-        
-        [self.pathArray addObject:tool];
-        [self.bufferArray removeLastObject];
-        
-        
-        [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
-        [self.bufferOfPoints removeLastObject];
-        [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
-        [self.bufferOfPoints removeLastObject];
-        [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
-        [self updateCacheImage:YES];
-        [self setNeedsDisplay];
-        NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
-        
-    }
-}
+ - (NSUInteger)undoSteps
+ {
+ return self.bufferArray.count;
+ return self.bufferOfPoints.count;
  
-*/
+ }
+ 
+ - (BOOL)canUndo
+ {
+ return self.pathArray.count > 0;
+ return arrayOfPoints.count > 0;
+ 
+ }
+ 
+ - (void)undoLatestStep
+ {
+ if ([self canUndo]) {
+ id<ACEDrawingTool>tool = [self.pathArray lastObject];
+ [self.bufferArray addObject:tool];
+ [self.pathArray removeLastObject];
+ 
+ [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
+ [arrayOfPoints removeLastObject];
+ [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
+ [arrayOfPoints removeLastObject];
+ [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
+ 
+ [self updateCacheImage:YES];
+ [self setNeedsDisplay];
+ 
+ NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
+ 
+ }
+ 
+ 
+ }
+ 
+ - (BOOL)canRedo
+ {
+ return self.bufferArray.count > 0;
+ return self.bufferOfPoints.count > 0;
+ }
+ 
+ - (void)redoLatestStep
+ {
+ if ([self canRedo]) {
+ id<ACEDrawingTool>tool = [self.bufferArray lastObject];
+ 
+ [self.pathArray addObject:tool];
+ [self.bufferArray removeLastObject];
+ 
+ 
+ [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
+ [self.bufferOfPoints removeLastObject];
+ [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
+ [self.bufferOfPoints removeLastObject];
+ [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
+ [self updateCacheImage:YES];
+ [self setNeedsDisplay];
+ NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
+ 
+ }
+ }
+ 
+ */
 - (NSUInteger)undoSteps
 {
     return self.bufferOfLayers.count;
@@ -1651,7 +1657,7 @@ UIColor* tempColor;
         [self fetchData:self.fileNameInside];
     }
     NSLog(@"buffer array cont %lu", self.bufferOfLayers.count);
-
+    
 }
 -(void)redoLatestStep{
     if ([self canRedo]) {
@@ -1741,7 +1747,7 @@ UIColor* tempColor;
 -(void)autoPosition:(CGPoint*)currentPoint basePoint:(CGPoint)firstPoint{
     double dist = hypot((firstPoint.x - currentPoint->x), (firstPoint.y - currentPoint->y));
     CGFloat f = [self pointPairToBearingDegrees:firstPoint secondPoint:*currentPoint];
-
+    
     if ((f<=48)&&(f>=42)&&dist>15){
         double angle =   0.785398163;
         double endX = cos(angle) * dist + firstPoint.x;
@@ -1753,7 +1759,7 @@ UIColor* tempColor;
             performed45 = true;
         }
     }else{ performed45 = false;}
-        if ((f<=138)&&(f>=132)&&dist>15){
+    if ((f<=138)&&(f>=132)&&dist>15){
         double angle =   2.35619449;
         double endX = cos(angle) * dist + firstPoint.x;
         double endY = sin(angle) * dist + firstPoint.y;
@@ -1807,11 +1813,11 @@ UIColor* tempColor;
     NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
     [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
     NSLog(documentsDirectory);
-
+    
     if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
         [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
     }
-
+    
 }
 
 - (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
@@ -1821,7 +1827,7 @@ UIColor* tempColor;
     NSString *textWidth = [[NSNumber numberWithFloat:layer.width] stringValue];
     NSString *textHeight = [[NSNumber numberWithFloat:layer.height] stringValue];
     NSString *colorStr = [[CIColor colorWithCGColor:[layer.lineColor_ CGColor]] stringRepresentation];
-
+    
     NSLog(@"color string saving %@",colorStr);
     
     NSMutableDictionary *dictOfLayers = [NSMutableDictionary dictionary];
@@ -1957,70 +1963,70 @@ UIColor* tempColor;
 }
 
 /*
-
-- (void)fetchCoursesUsingJSON {
-    NSLog(@"Fetching Courses");
-//
-    
-    NSString* filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString* fileName = @"layersdata.json";
-        NSString* fileAtPath = [filePath stringByAppendingPathComponent:fileName];
-    
-    NSString *urlString = @"https://hairtechapp.com";
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    [[NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        NSLog(@"Finished fetching courses....");
-        
-        NSError *err;
-        NSArray *courseJSON = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-        if (err){
-            NSLog(@"Failed to serialize into JSON: %@", err);
-            return;
-        }
-        
-        NSMutableDictionary * props = [NSMutableDictionary dictionary];
-        NSMutableDictionary * array = [NSMutableDictionary dictionary];
-        
-        for (NSDictionary *dictOfLayers in courseJSON) {
-            NSString *name = dictOfLayers[@"id"];
-            props = [dictOfLayers objectForKey:@"layerproperties"];
-            array = [props objectForKey:@"pointArray"];
-            
-            NSString *lineWidth = props[@"lineWidth"];
-            NSString *lineColor = props[@"lineColor"];
-            NSString *startPoint = props[@"startPoint"];
-            NSString *endPoint = props[@"endPoint"];
-            NSString *layerType = props[@"type"];
-            NSString *fontSize = props[@"fontSize"];
-            NSString *controlPoint = props[@"controlPoint"];
-            NSString *textWidth = props[@"width"];
-            NSString *textHeight = props[@"height"];
-            NSString *text = props[@"text"];
-            NSArray *grPoints = array[@"points"];
-            
-            LayersData *layers = LayersData.new;
-            layers.startPoint = CGPointFromString(startPoint);
-            layers.endPoint = CGPointFromString(endPoint);
-            layers.lineWidth = [lineWidth floatValue];
-            
-            layers.color = [self getColorFromString:lineColor];
-            layers.type = layerType;
-            layers.fontSize = [fontSize floatValue];
-            layers.controlPoint = CGPointFromString(controlPoint);
-            layers.layerID = name;
-            layers.height = [textHeight floatValue];
-            layers.width = [textWidth floatValue];
-            layers.text = text;
-            layers.grafittiPoints = grPoints;
-            NSLog(@"array of points %lu", grPoints.count);
-            
-            [self.arrayOfLayersForJSON addObject:layers];
-        }
-            
-        }] resume];
-    
-}*/
+ 
+ - (void)fetchCoursesUsingJSON {
+ NSLog(@"Fetching Courses");
+ //
+ 
+ NSString* filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+ NSString* fileName = @"layersdata.json";
+ NSString* fileAtPath = [filePath stringByAppendingPathComponent:fileName];
+ 
+ NSString *urlString = @"https://hairtechapp.com";
+ NSURL *url = [NSURL URLWithString:urlString];
+ 
+ [[NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+ 
+ NSLog(@"Finished fetching courses....");
+ 
+ NSError *err;
+ NSArray *courseJSON = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+ if (err){
+ NSLog(@"Failed to serialize into JSON: %@", err);
+ return;
+ }
+ 
+ NSMutableDictionary * props = [NSMutableDictionary dictionary];
+ NSMutableDictionary * array = [NSMutableDictionary dictionary];
+ 
+ for (NSDictionary *dictOfLayers in courseJSON) {
+ NSString *name = dictOfLayers[@"id"];
+ props = [dictOfLayers objectForKey:@"layerproperties"];
+ array = [props objectForKey:@"pointArray"];
+ 
+ NSString *lineWidth = props[@"lineWidth"];
+ NSString *lineColor = props[@"lineColor"];
+ NSString *startPoint = props[@"startPoint"];
+ NSString *endPoint = props[@"endPoint"];
+ NSString *layerType = props[@"type"];
+ NSString *fontSize = props[@"fontSize"];
+ NSString *controlPoint = props[@"controlPoint"];
+ NSString *textWidth = props[@"width"];
+ NSString *textHeight = props[@"height"];
+ NSString *text = props[@"text"];
+ NSArray *grPoints = array[@"points"];
+ 
+ LayersData *layers = LayersData.new;
+ layers.startPoint = CGPointFromString(startPoint);
+ layers.endPoint = CGPointFromString(endPoint);
+ layers.lineWidth = [lineWidth floatValue];
+ 
+ layers.color = [self getColorFromString:lineColor];
+ layers.type = layerType;
+ layers.fontSize = [fontSize floatValue];
+ layers.controlPoint = CGPointFromString(controlPoint);
+ layers.layerID = name;
+ layers.height = [textHeight floatValue];
+ layers.width = [textWidth floatValue];
+ layers.text = text;
+ layers.grafittiPoints = grPoints;
+ NSLog(@"array of points %lu", grPoints.count);
+ 
+ [self.arrayOfLayersForJSON addObject:layers];
+ }
+ 
+ }] resume];
+ 
+ }*/
 
 @end

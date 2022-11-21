@@ -276,7 +276,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [sort.widthAnchor constraintEqualToConstant:30].active = YES;
     [sort.heightAnchor constraintEqualToConstant:30].active = YES;
     [sort setImage:[UIImage imageNamed:@"sort.png"] forState:UIControlStateNormal];
-    [sort setTintColor:[UIColor colorNamed:@"deepblue"]];
+    [sort setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
     
     
     UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithCustomView:sort];
@@ -285,21 +285,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)viewDidLoad
 {
-    self.view.backgroundColor = [UIColor colorNamed:@"bg_new"];
+    self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor colorNamed:@"blue"];
+        appearance.backgroundColor = [UIColor colorNamed:@"navBar"];
         appearance.shadowColor =  [UIColor clearColor];
-        appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"deepblue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:18]};
+        appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"textWhiteDeepBlue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:18]};
        // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = self.navigationController.navigationBar.standardAppearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance =appearance;
         [self.navigationController prefersStatusBarHidden];
-        [self.navigationController.navigationBar.layer setShadowOffset:CGSizeMake(0, 2)];
-        [self.navigationController.navigationBar.layer setShadowColor:[[UIColor colorNamed:@"deepblue"] CGColor]];
-        [self.navigationController.navigationBar.layer setShadowRadius:2.0f];
-        [self.navigationController.navigationBar.layer setShadowOpacity:0.2];
+       // [self.navigationController.navigationBar.layer setShadowOffset:CGSizeMake(0, 2)];
+        //[self.navigationController.navigationBar.layer setShadowColor:[[UIColor colorNamed:@"textWhiteDeepBlue"] CGColor]];
+      //  [self.navigationController.navigationBar.layer setShadowRadius:2.0f];
+        //[self.navigationController.navigationBar.layer setShadowOpacity:0.2];
        
 
     }
@@ -395,10 +395,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    }
    else
    {
-        newsize.width = ((self.view.frame.size.width / 100) * 80);
-        newsize.height = ((self.view.frame.size.height / 100) * 68);
-//       newsize.width = self.view.frame.size.width;
-//       newsize.height = newsize.width *  1.65;
+//        newsize.width = ((self.view.frame.size.width / 100) * 80);
+//        newsize.height = ((self.view.frame.size.height / 100) * 68);
+       newsize.width = self.view.frame.size.width / 2.18 ;
+       newsize.height = newsize.width *  1.84;
        
         return newsize;
     }
@@ -635,12 +635,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         
         cell.contentView.layer.masksToBounds = YES;
     
-        cell.layer.shadowColor = [UIColor blackColor].CGColor;
-        cell.layer.shadowOffset = CGSizeMake(0,6);
-        cell.layer.shadowRadius = 15.0f;
-        cell.layer.shadowOpacity = 0.25f;
+//        cell.layer.shadowColor = [UIColor blackColor].CGColor;
+//        cell.layer.shadowOffset = CGSizeMake(0,0);
+//        cell.layer.shadowRadius = 3.0f;
+//        cell.layer.shadowOpacity = 0.1f;
         cell.layer.masksToBounds = NO;
-        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
+//        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
     cell.dateLabel.text = technique.techniquename;
 
@@ -675,7 +675,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);         //[cell.contentView.layer setCornerRadius:15.0f];
+        cell.image.frame = CGRectMake(0, -10, cell.frame.size.width , cell.frame.size.height);         //[cell.contentView.layer setCornerRadius:15.0f];
      }
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
@@ -684,11 +684,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     cell.dateLabel.userInteractionEnabled = YES;
     
     if (![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
-        cell.image.frame = CGRectMake(0, 0, cell.frame.size.width , cell.frame.size.height);
-        cell.viewModeLabel.alpha = 0.3;
+        cell.image.frame = CGRectMake(0, -20, cell.frame.size.width , cell.frame.size.height);
+        cell.viewModeLabel.alpha = 0;
     }
     else {
-        cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
+       // cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
         cell.viewModeLabel.alpha = 0;
     }
     return cell;
