@@ -62,7 +62,7 @@
    
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   
-    UIColor *color = [UIColor colorNamed:@"deepblue"];
+    UIColor *color = [UIColor colorNamed:@"textWhiteDeepBlue"];
       self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"diagram name" attributes:@{NSForegroundColorAttributeName: color}];
     self.textField.layer.cornerRadius = 8;
     

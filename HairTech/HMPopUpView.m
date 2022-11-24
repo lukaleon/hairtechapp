@@ -68,7 +68,7 @@
         
         //Separator View creation
         separatorView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, cvFrame.origin.y + 45, cvFrame.size.width, 1)];
-        separatorView.backgroundColor = [UIColor colorNamed:@"deepblue"];
+        separatorView.backgroundColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
         separatorView.alpha = 0.0;
         [containerView addSubview:separatorView];
         
@@ -76,7 +76,7 @@
         lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 20, cvFrame.origin.y + 15, cvFrame.size.width - 40, 22)];
         lblTitle.numberOfLines = 1;
         lblTitle.text = title;
-        lblTitle.textColor =[UIColor colorNamed:@"deepblue"];
+        lblTitle.textColor =[UIColor colorNamed:@"textWhiteDeepBlue"];
         lblTitle.textAlignment = NSTextAlignmentCenter;
         lblTitle.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:18];
         [containerView addSubview:lblTitle];
@@ -92,7 +92,7 @@
 
         txtField.layer.cornerRadius = 3;
         txtField.clipsToBounds = YES;
-        txtField.textColor =  [UIColor colorNamed:@"deepblue"];
+        txtField.textColor =  [UIColor colorNamed:@"textWhiteDeepBlue"];
        // txtField.tintColor = [UIColor blackColor];
         txtField.font = [UIFont fontWithName:@"AvenirNext-Medium" size:13];
         txtField.delegate = self;
@@ -119,10 +119,10 @@
         btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(btnOk.frame.origin.x + btnOk.frame.size.width + 1, cvFrame.origin.y + 115, cvFrame.size.width / 2, 39)];
         [btnCancel setTitle:cnclBtnTtl forState:UIControlStateNormal];
         
-        [btnCancel setTitleColor:[UIColor colorNamed:@"deepblue"] forState:UIControlStateNormal];
+        [btnCancel setTitleColor:[UIColor colorNamed:@"textWhiteDeepBlue"] forState:UIControlStateNormal];
 
         btnCancel.backgroundColor = [UIColor colorNamed:@"grey"];
-        btnCancel.titleLabel.textColor = [UIColor colorNamed:@"deepblue"];
+        btnCancel.titleLabel.textColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
         btnCancel.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         [containerView addSubview:btnCancel];
         [btnCancel addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];

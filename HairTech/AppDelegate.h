@@ -17,7 +17,6 @@
 @protocol MyViewControllerDelegate <NSObject>
 
 -(void)saveImageWhenterminate;
-
 -(void)closeAndSave;
 -(void)captureScreenRetina;
 
@@ -73,5 +72,6 @@
 
 @property (nonatomic,retain) NSString *globalDate;
 @property (nonatomic,retain) NSString *cellNameForDelete;
+-(void)changeTheme;
 
 @end

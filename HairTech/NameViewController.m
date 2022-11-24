@@ -13,7 +13,7 @@
 @implementation  NameViewController
 -(void)viewDidLoad{
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@" " style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem.tintColor = [UIColor colorNamed:@"deepblue"];
+    self.navigationItem.backBarButtonItem.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     [self setCloseButton];
     [self setAppearanceOfElements];
 }
@@ -26,6 +26,7 @@
     [rightCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
 
     [rightCustomButton setImage:[UIImage imageNamed:@"Close.png"] forState:UIControlStateNormal];
+    rightCustomButton.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     UIBarButtonItem * rightButtonItem =[[UIBarButtonItem alloc] initWithCustomView:rightCustomButton];
     self.navigationItem.rightBarButtonItems = @[rightButtonItem];
 }

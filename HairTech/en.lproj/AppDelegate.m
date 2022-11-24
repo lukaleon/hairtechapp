@@ -47,19 +47,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     ViewController *controller = (ViewController *)navigationController.topViewController;
     navigationController.navigationBar.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
-    
     [[UINavigationBar appearance] setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-    
-   //[Flurry setCrashReportingEnabled:YES];
-    //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
-   //[Flurry startSession:@"9Q5QWZMPWC3M62DZD75S"];
-    //your code
-
-    //[Flurry logEvent:@"App_Launched"];
+  
 
     sleep(1);
 
@@ -88,31 +80,7 @@
     self.databasePath = [documentDir stringByAppendingPathComponent:self.databaseName];
     
    [self createAndCheckDatabase];
-    
    
-    
-/*
-    
-    
-    UIColor *barColor = [UIColor colorWithRed:238.0/255.0 green:239.0/255.0 blue:243.0/255.0 alpha:1];
-    
-    UIColor *barTextColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1];
-    
-    
-    [navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
-    
-   
-    navigationController.navigationBar.clipsToBounds = YES;
-
-    [MAThemeKit setupThemeWithPrimaryColor:[MAThemeKit colorWithR:255 G:255 B:255] secondaryColor:[MAThemeKit colorWithR:250 G:250 B:250] fontName:@"HelveticaNeue-Light" lightStatusBar:YES];
-    // Use the rgb values BEFORE they are divided by 255.0, like you would see in photoshop's color picker
-    UIColor *colorWithRGB = [MAThemeKit colorWithR:0 G:184 B:156];
-    
-    // Use the normal hex string representing the color
-    UIColor *colorWithHex = [MAThemeKit colorWithHexString:@"00b89c"];
-    // Override point for customization after application launch.
-    navigationController.view.backgroundColor=[UIColor whiteColor];
-*/
     dashedCurve =NO;
  
     return YES;
@@ -162,6 +130,8 @@
     
           // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+
 
 -(void) createAndCheckDatabase
 

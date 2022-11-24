@@ -6,8 +6,11 @@ NSString * const AliceBlue = @"0xFFF0F8FF";
  NSString * const Beige = @"0xFFF5F5DC";
  NSString * const Bisque = @"0xFFFFE4C4";
  //NSString * const Black = @"0xFF411C59";
-NSString * const Black = @"0xFF292F40";
- NSString * const BlanchedAlmond = @"0xFFFFEBCD";
+//NSString * const Black = @"0xFF292F40";
+NSString * const Black = @"0xFF000000";
+
+
+NSString * const BlanchedAlmond = @"0xFFFFEBCD";
  NSString * const Blue = @"0xFF0000FF";
  NSString * const BlueViolet = @"0xFF8A2BE2";
  NSString * const Brown = @"0xFFA52A2A";

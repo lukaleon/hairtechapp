@@ -163,7 +163,7 @@
 - (void)setupBottomToolBar {
    self.toolbar.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 80, self.view.frame.size.width - 20, 55);
     self.toolbar.alpha = 1.0f;
-    [self.toolbar.layer setBackgroundColor:[UIColor colorNamed:@"whiteDark"].CGColor];
+    [self.toolbar setBackgroundColor:[UIColor colorNamed:@"whiteDark"]];
     [self.toolbar.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.toolbar.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -434,7 +434,7 @@
         [self addGrid];
         [self saveGridAppearanceToDefaults:YES];
     } else {
-        [grid setTintColor:[UIColor colorNamed:@"deepblue"]];
+        [grid setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
         [self removeGrid];
         [self saveGridAppearanceToDefaults:NO];
     }
@@ -1005,7 +1005,7 @@ return YES;
     self.eraserTool.selected = YES;
     [self.drawingView setEraserSelected:YES];
     [self.drawingView removeCirclesOnZoomDelegate];
-    self.eraserTool.backgroundColor = [UIColor blackColor];
+    self.eraserTool.backgroundColor = [UIColor colorNamed:@"orange"];
 }
 -(void)makeButtonDeselected {
         for(int i=0; i< toolButtons.count; i++){

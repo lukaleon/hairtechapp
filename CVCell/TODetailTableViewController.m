@@ -7,7 +7,7 @@
 //
 
 #import "TODetailTableViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
 #import "TORoundedTableView.h"
 #import "TORoundedTableViewCell.h"
 #import "TORoundedTableViewCapCell.h"
@@ -16,29 +16,54 @@
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
 
+#define SECTIONID_CollectionView 0
+#define SECTIONID_General 1
+#define SECTIONID_GetStarted 2
+#define SECTIONID_Follow 3
+
+
+
 @implementation TODetailTableViewController
 
 #pragma mark - Rounded Table Configuration Example -
 
 -(void)viewDidLoad{
+    NSLog(@"view did load");
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@" " style:UIBarButtonItemStylePlain target:nil action:nil];
    [self.tableView setSeparatorColor:[UIColor colorNamed:@"grey"]];
     self.tableView.separatorInset = UIEdgeInsetsZero;
-    sectionName = @[@"Get started",@"Contact", @"Follow"];
+    self.tableView.layer.cornerRadius = 20;
+    sectionName = @[@"Get started",@"General",@"Contact", @"Follow"];
    // self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
     sectionOneItems = @[@"Help", @"Rate our app", @"Report an issue", @"Give us your feedback"];
     sectionTwoItems = @[@"Follow us", @"Visit our web site"];
+    sectionThemeItems = @[@"Auto", @"Light", @"Dark"];
+    self.themeButtonArray = [NSMutableArray new];
+    arrayOfCellIndexes = [NSMutableArray new];
+
    // [self.tableView registerNib:[UINib nibWithNibName:@"tableCell" bundle:nil]
      //  forCellReuseIdentifier:@"tableCell"];
-    
+}
+-(void)viewWillAppear:(BOOL)animated{
+    NSLog(@"view will appear");
+
+}
+-(void)viewDidAppear:(BOOL)animated{
+    NSLog(@"view did appear");
 
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger sectionID = [indexPath indexAtPosition:0];
-    if(sectionID == 1){
+    if(sectionID == 2){
         if ((indexPath.row != 0) && (indexPath.row != sectionOneItems.count - 1)){
+            cell.backgroundColor = [UIColor colorNamed:@"whiteDark"];
+        }
+    }
+    if(sectionID == 1){
+        if ((indexPath.row != 0) && (indexPath.row != sectionThemeItems.count - 1)){
             cell.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         }
     }
@@ -78,18 +103,10 @@
    // [footerView addSubview:thumbnail];
     return title;
 }
-- (UITableViewCell *)tableView:(TORoundedTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-   
-    /*
-     Because the first and last cells in a section (dubbed the 'cap' cells) do a lot of extra work on account of the rounded corners,
-     for ultimate efficiency, it is recommended to create those ones separately from the ones in the middle of the section.
-    */
-    
-    // Create identifiers for standard cells and the cells that will show the rounded corners
+- (UITableViewCell *)addRoundedCells:(NSIndexPath * _Nonnull)indexPath tableView:(TORoundedTableView * _Nonnull)tableView style:(UITableViewCellStyle)style {
     static NSString *cellIdentifier     = @"Cell";
     static NSString *capCellIdentifier  = @"CapCell";
-
+    
     
     // Work out if this cell needs the top or bottom corners rounded (Or if the section only has 1 row, both!)
     BOOL isTop = (indexPath.row == 0);
@@ -100,25 +117,31 @@
     
     // If it's a non-cap cell, dequeue one with the regular identifier
     if (!isTop && !isBottom) {
-        TORoundedTableViewCell *normalCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (normalCell == nil) {
-            normalCell = [[TORoundedTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-        }
+     //   TORoundedTableViewCell *normalCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+       // if (normalCell == nil) {
+        TORoundedTableViewCell *normalCell = [[TORoundedTableViewCell alloc] initWithStyle:style reuseIdentifier:cellIdentifier];
+//        }
         
         cell = normalCell;
     }
     else {
         // If the cell is indeed one that needs rounded corners, dequeue from the pool of cap cells
-        TORoundedTableViewCapCell *capCell = [tableView dequeueReusableCellWithIdentifier:capCellIdentifier];
-        if (capCell == nil) {
-            capCell = [[TORoundedTableViewCapCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:capCellIdentifier];
-        }
+//        TORoundedTableViewCapCell *capCell = [tableView dequeueReusableCellWithIdentifier:capCellIdentifier];
+//        if (capCell == nil) {
+        TORoundedTableViewCapCell * capCell = [[TORoundedTableViewCapCell alloc] initWithStyle:style reuseIdentifier:capCellIdentifier];
+//        }
         
         // Configure the cell to set the appropriate corners as rounded
         capCell.topCornersRounded = isTop;
         capCell.bottomCornersRounded = isBottom;
         cell = capCell;
     }
+    /*
+     Because the first and last cells in a section (dubbed the 'cap' cells) do a lot of extra work on account of the rounded corners,
+     for ultimate efficiency, it is recommended to create those ones separately from the ones in the middle of the section.
+    */
+    
+    // Create identifiers for standard cells and the cells that will show the rounded corners
 
     // Configure the cell's label
     //cell.textLabel.text = [NSString stringWithFormat:@"Cell %ld", indexPath.row+1];
@@ -132,27 +155,58 @@
     cell.textLabel.textColor = [UIColor colorNamed:@"textColor"];
     [cell setIndentationLevel:10];
     [cell setIndentationWidth:2];
-    
+    return cell;
+}
 
-    if(indexPath.section == 1){
-       // UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
+- (NSString*)getCurrentMode {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString * modeString;
+    if([prefs boolForKey:@"Auto"] == YES){
+        modeString = @"Auto";
+    }
+    if([prefs boolForKey:@"Light"] == YES){
+        modeString = @"Light";
+    }
+    if([prefs boolForKey:@"Dark"] == YES){
+        modeString = @"Dark";
+    }
+    return modeString;
+}
+
+- (UITableViewCell *)tableView:(TORoundedTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   
+    if(indexPath.section == SECTIONID_General){
+        UITableViewCell * cell = [self addRoundedCells:indexPath tableView:tableView style:UITableViewCellStyleValue1];
+       
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.text = @"Theme";
+        cell.detailTextLabel.text = [self getCurrentMode];
+        rowsInSection = sectionThemeItems.count;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+        //cell.accessoryView = [self.themeButtonArray objectAtIndex:[indexPath row]];
+        //[cell addSubview:[self.themeButtonArray objectAtIndex:[indexPath row]]];
+        //[arrayOfCellIndexes addObject:indexPath];
+        return cell;
+
+    }
+    if(indexPath.section == SECTIONID_GetStarted){
+        UITableViewCell * cell = [self addRoundedCells:indexPath tableView:tableView style:UITableViewCellStyleDefault];
         cell.textLabel.text = [sectionOneItems objectAtIndex:indexPath.row];
         rowsInSection = sectionOneItems.count;
-
         return cell;
 
     }
 
-    if (indexPath.section == 2) {
-        //UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
+    if (indexPath.section == SECTIONID_Follow) {
+        UITableViewCell * cell = [self addRoundedCells:indexPath tableView:tableView style:UITableViewCellStyleDefault];
         cell.textLabel.text = [sectionTwoItems objectAtIndex:indexPath.row];
         rowsInSection = sectionTwoItems.count;
         return cell;
     }
-    if (indexPath.section == 0) {
-        
+    if (indexPath.section == SECTIONID_CollectionView) {
         tableCell *cell2 = [tableView dequeueReusableCellWithIdentifier:@"tableCell" forIndexPath:indexPath];
-        //[cell2.collectionView registerClass:[collectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
         cell2.collectionView.delegate = self;
         cell2.collectionView.dataSource = self;
         cell2.backgroundColor = [UIColor clearColor];
@@ -166,47 +220,92 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //Play the deselection animation
+    if (indexPath.section == SECTIONID_General && indexPath.row == 0){
+        WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"themeview"];
+      //  whatsnew.label.text = @"This is hairtech app";
+        whatsnew.view.backgroundColor = [UIColor colorNamed:@"whiteDark"];
+        [self.navigationController pushViewController:whatsnew animated:YES];
+    }
     
-    if ( indexPath.section == 2 && indexPath.row == 0 ) {
-        UIApplication *application = [UIApplication sharedApplication];
-        NSURL *URL = [NSURL URLWithString:@"http://instagram.com/hairtechapp"];
-        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
-            if (success) {
-                 NSLog(@"Opened url");
-            }
-        }];
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    /*NSLog(@"section %ld",(long)indexPath.section);
+    NSLog(@"row %ld",(long)indexPath.row);
+    if (indexPath.section == SECTIONID_Theme){
+        if (indexPath.row == 0){
+            UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryCheckmark;
+            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryNone;
+            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryNone;
+            // [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+    if (indexPath.row == 1 ) {
+        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryCheckmark;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryNone;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryNone;
+        //[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    if (indexPath.row == 2 ){
+        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryCheckmark;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryNone;
+        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryNone;
+        
+    }*/
+//}
+  /*  if ( indexPath.section == 2 && indexPath.row == 0 ) {
+//        UIApplication *application = [UIApplication sharedApplication];
+//        NSURL *URL = [NSURL URLWithString:@"http://instagram.com/hairtechapp"];
+//        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+//            if (success) {
+//                 NSLog(@"Opened url");
+//            }
+//        }];
+
+       // [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     if ( indexPath.section == 2 && indexPath.row == 1 ) {
         
-        UIApplication *application = [UIApplication sharedApplication];
-        NSURL *URL = [NSURL URLWithString:@"http://hairtechapp.com"];
-        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
-            if (success) {
-                NSLog(@"Opened url");
-            }
-        }];
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
+//        UIApplication *application = [UIApplication sharedApplication];
+//        NSURL *URL = [NSURL URLWithString:@"http://hairtechapp.com"];
+//        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+//            if (success) {
+//                NSLog(@"Opened url");
+//            }
+//        }];
+        //[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }*/
 }
 
 #pragma mark - General Table View Configuration -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0){
-        rowsInSection = 1;
-    }if (section == 1){
-        rowsInSection = sectionOneItems.count;
+    
+
+    switch (section) {
+        case SECTIONID_CollectionView:
+            return 1;
+            break;
+        case SECTIONID_General:
+            return 1;
+            break;
+        case SECTIONID_GetStarted:
+            return 4;
+            break;
+        case SECTIONID_Follow:
+            return 2;
+            break;
+        default:
+            return 0;
+            break;
     }
-    if (section == 2){
-        rowsInSection = sectionTwoItems.count;    }
-    return rowsInSection;
+
+    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -214,17 +313,6 @@
     NSString * title = [sectionName objectAtIndex:section];
      return title;
 }
-
-//- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
-//{
-//    NSString * title;
-//    if (section == sectionName.count -1 ){
-//        title = [NSString stringWithFormat: @"Version 6.0.1"];
-//    }
-//    return title;
-//    //        return [NSString stringWithFormat:@"This is the footer for section %ld", (long)section];
-//
-//}
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(nonnull UIView *)view forSection:(NSInteger)section
 {
     UITableViewHeaderFooterView *tableViewHeaderFooterView = (UITableViewHeaderFooterView *)view;
@@ -320,5 +408,8 @@
     return font;
 }
 
-
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"showDetail"]) {
+      }
+}
 @end

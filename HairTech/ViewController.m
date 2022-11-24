@@ -15,6 +15,7 @@
 #import "MyCustomLayout.h"
 #import "HapticHelper.h"
 #import "NameViewController.h"
+#import "TODetailTableViewController.h"
 //#import "Flurry.h"
 
 NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -230,7 +231,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)openInfoController{
     
-    InfoViewController * viewController =[self.storyboard  instantiateViewControllerWithIdentifier:@"tableView"];
+   TODetailTableViewController  * viewController = [self.storyboard  instantiateViewControllerWithIdentifier:@"tableView"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -271,7 +272,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     UIButton *sort = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [sort addTarget:self
-             action:@selector(presentAlertView)
+             action:@selector(changeMode)
    forControlEvents:UIControlEventTouchUpInside];
     [sort.widthAnchor constraintEqualToConstant:30].active = YES;
     [sort.heightAnchor constraintEqualToConstant:30].active = YES;
@@ -283,8 +284,25 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:sortBtn, nil];
 }
 
+- (void)getCurrentMode {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    if([prefs boolForKey:@"Auto"] == YES){
+        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
+    if([prefs boolForKey:@"Light"] == YES){
+        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
+    if([prefs boolForKey:@"Dark"] == YES){
+        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+    }
+    NSLog([prefs boolForKey:@"Auto"] ? @"Yes" : @"No");
+      NSLog([prefs boolForKey:@"Light"] ? @"Yes" : @"No");
+      NSLog([prefs boolForKey:@"Dark"] ? @"Yes" : @"No");
+}
+
 -(void)viewDidLoad
 {
+    [self getCurrentMode];
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
@@ -292,15 +310,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         appearance.backgroundColor = [UIColor colorNamed:@"navBar"];
         appearance.shadowColor =  [UIColor clearColor];
         appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"textWhiteDeepBlue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:18]};
-       // appearance.shadowImage = [UIImage imageWithColor:[UIColor whiteColor]];
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance =appearance;
         [self.navigationController prefersStatusBarHidden];
-       // [self.navigationController.navigationBar.layer setShadowOffset:CGSizeMake(0, 2)];
-        //[self.navigationController.navigationBar.layer setShadowColor:[[UIColor colorNamed:@"textWhiteDeepBlue"] CGColor]];
-      //  [self.navigationController.navigationBar.layer setShadowRadius:2.0f];
-        //[self.navigationController.navigationBar.layer setShadowOpacity:0.2];
-       
+ 
 
     }
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1225,7 +1238,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
        // Technique *tech = [self.techniques objectAtIndex:[indexPath row]];
         HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename diagram" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" okBtnColor:[UIColor colorNamed:@"orange"] delegate:self];
     
-    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"grey"] titleColor: [UIColor colorNamed:@"deepblue"] buttonViewColor:[UIColor colorNamed:@"grey"] buttonBGColor:[UIColor colorNamed:@"grey"] buttonTextColor: [UIColor colorNamed:@"deepblue"]];
+    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"grey"] titleColor: [UIColor colorNamed:@"textWhiteDeepBlue"] buttonViewColor:[UIColor colorNamed:@"grey"] buttonBGColor:[UIColor colorNamed:@"grey"] buttonTextColor: [UIColor colorNamed:@"textWhiteDeepBlue"]];
     [hmPopUp showInView:self.view];
     [hmPopUp setTextFieldText:tech.techniquename];
         

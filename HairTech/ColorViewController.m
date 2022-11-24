@@ -322,7 +322,7 @@ else {
     UIImage *img = [UIImage imageNamed:imgName];
     [button setImage:img forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
-    [button setBackgroundColor:[UIColor blackColor]];
+    [button setBackgroundColor:[UIColor colorNamed:@"cellText"]];
     button.frame = CGRectMake(startX, self.frame.origin.y + yAxe, btnWidth, btnWidth);
     button.layer.cornerRadius = btnWidth / 2;
     button.layer.masksToBounds = YES;
@@ -439,9 +439,9 @@ else {
     widthButton1.tag = 0;
     widthButton1.frame = CGRectMake(50.0,10.0, 20.0, 20.0);
     
-    UIImage *btnWidth1 = [UIImage imageNamed:@"width1.png"];
+    UIImage *btnWidth1 = [UIImage imageNamed:@"width1"];
     [widthButton1 setBackgroundImage:btnWidth1 forState:UIControlStateNormal];
-    widthButton1.backgroundColor = [UIColor grayColor];
+    widthButton1.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton1.adjustsImageWhenHighlighted = NO;
     [self addSubview:widthButton1];
     
@@ -451,9 +451,9 @@ else {
      forControlEvents:UIControlEventTouchUpInside];
     widthButton2.tag = 1;
     widthButton2.frame = CGRectMake(80.0, 10, 20.0, 20.0);
-    UIImage *btnWidth2 = [UIImage imageNamed:@"width2.png"];
+    UIImage *btnWidth2 = [UIImage imageNamed:@"width2"];
     [widthButton2 setBackgroundImage:btnWidth2 forState:UIControlStateNormal];
-    widthButton2.backgroundColor = [UIColor grayColor];
+    widthButton2.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton2.adjustsImageWhenHighlighted = NO;
     [self addSubview:widthButton2];
 
@@ -464,9 +464,10 @@ else {
      forControlEvents:UIControlEventTouchUpInside];
     widthButton3.tag = 2;
     widthButton3.frame = CGRectMake(110.0, 10, 20.0, 20.0);
-    UIImage *btnWidth3 = [UIImage imageNamed:@"width3.png"];
+    UIImage *btnWidth3 = [UIImage imageNamed:@"width3"];
     [widthButton3 setBackgroundImage:btnWidth3 forState:UIControlStateNormal];
-    widthButton3.backgroundColor = [UIColor grayColor];
+    ///widthButton3.backgroundColor = [UIColor clearColor];
+    widthButton3.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton3.adjustsImageWhenHighlighted = NO;
 
     [self addSubview:widthButton3];
@@ -478,9 +479,9 @@ else {
      forControlEvents:UIControlEventTouchUpInside];
     widthButton4.tag = 3;
     widthButton4.frame = CGRectMake(140.0, 10, 20.0, 20.0);
-    UIImage *btnWidth4 = [UIImage imageNamed:@"width4.png"];
+    UIImage *btnWidth4 = [UIImage imageNamed:@"width4"];
     [widthButton4 setBackgroundImage:btnWidth4 forState:UIControlStateNormal];
-    widthButton4.backgroundColor = [UIColor grayColor];
+    widthButton4.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton4.adjustsImageWhenHighlighted = NO;
 
     [self addSubview:widthButton4];
@@ -491,9 +492,9 @@ else {
      forControlEvents:UIControlEventTouchUpInside];
     widthButton5.tag = 4;
     widthButton5.frame = CGRectMake(170.0, 10, 20.0, 20.0);
-    UIImage *btnWidth5 = [UIImage imageNamed:@"width5.png"];
+    UIImage *btnWidth5 = [UIImage imageNamed:@"width5"];
     [widthButton5 setBackgroundImage:btnWidth5 forState:UIControlStateNormal];
-    widthButton5.backgroundColor = [UIColor grayColor];
+    widthButton5.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton5.adjustsImageWhenHighlighted = NO;
     [self addSubview:widthButton5];
 }
@@ -513,28 +514,26 @@ else {
     [widthButton5 setSelected:NO];
     
     if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton1 setBackgroundColor:self.tColor5];
+        [widthButton1 setTintColor:self.tColor5];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton1 setBackgroundColor:self.tColor3];
+        [widthButton1 setTintColor:self.tColor3];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton1 setBackgroundColor:self.tColor4];
+        [widthButton1 setTintColor:self.tColor4];
     }
     
    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton1 setBackgroundColor:self.tColor6];
+        [widthButton1 setTintColor:self.tColor6];
     }
     
    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton1 setBackgroundColor:self.tColor2];
+        [widthButton1 setTintColor:self.tColor2];
     }
-    
-   // [widthButton1 setBackgroundColor:UIColor.blueColor];
-    [widthButton2 setBackgroundColor:UIColor.grayColor];
-    [widthButton3 setBackgroundColor:UIColor.grayColor];
-    [widthButton4 setBackgroundColor:UIColor.grayColor];
-    [widthButton5 setBackgroundColor:UIColor.grayColor];
+    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
 -(void)button2Select{
@@ -546,26 +545,26 @@ else {
     [widthButton5 setSelected:NO];
     
     if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton2 setBackgroundColor:self.tColor5];
+        [widthButton2 setTintColor:self.tColor5];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton2 setBackgroundColor:self.tColor3];
+        [widthButton2 setTintColor:self.tColor3];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton2 setBackgroundColor:self.tColor4];
+        [widthButton2 setTintColor:self.tColor4];
     }
     
    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton2 setBackgroundColor:self.tColor6];
+        [widthButton2 setTintColor:self.tColor6];
     }
     
    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton2 setBackgroundColor:self.tColor2];
+        [widthButton2 setTintColor:self.tColor2];
     }
-    [widthButton1 setBackgroundColor:UIColor.grayColor];
-    [widthButton3 setBackgroundColor:UIColor.grayColor];
-    [widthButton4 setBackgroundColor:UIColor.grayColor];
-    [widthButton5 setBackgroundColor:UIColor.grayColor];
+    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
 -(void)button3Select{
@@ -575,27 +574,27 @@ else {
     [widthButton4 setSelected:NO];
     [widthButton5 setSelected:NO];
     if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton3 setBackgroundColor:self.tColor5];
+        [widthButton3 setTintColor:self.tColor5];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton3 setBackgroundColor:self.tColor3];
+        [widthButton3 setTintColor:self.tColor3];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton3 setBackgroundColor:self.tColor4];
+        [widthButton3 setTintColor:self.tColor4];
     }
     
    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton3 setBackgroundColor:self.tColor6];
+        [widthButton3 setTintColor:self.tColor6];
     }
     
    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton3 setBackgroundColor:self.tColor2];
+        [widthButton3 setTintColor:self.tColor2];
     }
     
-    [widthButton2 setBackgroundColor:UIColor.grayColor];
-    [widthButton1 setBackgroundColor:UIColor.grayColor];
-    [widthButton4 setBackgroundColor:UIColor.grayColor];
-    [widthButton5 setBackgroundColor:UIColor.grayColor];
+    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
 -(void)button4Select{
@@ -606,27 +605,27 @@ else {
     [widthButton4 setSelected:YES];
     [widthButton5 setSelected:NO];
     if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 0.0){
-        [widthButton4 setBackgroundColor:self.tColor5];
+        [widthButton4 setTintColor:self.tColor5];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 2.0){
-        [widthButton4 setBackgroundColor:self.tColor3];
+        [widthButton4 setTintColor:self.tColor3];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 3.0){
-        [widthButton4 setBackgroundColor:self.tColor4];
+        [widthButton4 setTintColor:self.tColor4];
     }
     
    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 5.0){
-        [widthButton4 setBackgroundColor:self.tColor6];
+        [widthButton4 setTintColor:self.tColor6];
     }
     
    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 1.0){
-        [widthButton4 setBackgroundColor:self.tColor2];
+        [widthButton4 setTintColor:self.tColor2];
     }
     
-    [widthButton2 setBackgroundColor:UIColor.grayColor];
-    [widthButton3 setBackgroundColor:UIColor.grayColor];
-    [widthButton1 setBackgroundColor:UIColor.grayColor];
-    [widthButton5 setBackgroundColor:UIColor.grayColor];
+    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
 -(void)button5Select{
@@ -636,27 +635,27 @@ else {
     [widthButton4 setSelected:NO];
     [widthButton5 setSelected:YES];
     if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 0.0){
-        [widthButton5 setBackgroundColor:self.tColor5];
+        [widthButton5 setTintColor:self.tColor5];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 2.0){
-        [widthButton5 setBackgroundColor:self.tColor3];
+        [widthButton5 setTintColor:self.tColor3];
     }
     if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 3.0){
-        [widthButton5 setBackgroundColor:self.tColor4];
+        [widthButton5 setTintColor:self.tColor4];
     }
     
    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 5.0){
-        [widthButton5 setBackgroundColor:self.tColor6];
+        [widthButton5 setTintColor:self.tColor6];
     }
     
    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"] == 1.0){
-        [widthButton5 setBackgroundColor:self.tColor2];
+        [widthButton5 setTintColor:self.tColor2];
     }
     
-    [widthButton2 setBackgroundColor:UIColor.grayColor];
-    [widthButton3 setBackgroundColor:UIColor.grayColor];
-    [widthButton4 setBackgroundColor:UIColor.grayColor];
-    [widthButton1 setBackgroundColor:UIColor.grayColor];
+    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
+    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
 - (void)buttonTapped:(UIButton *)sender

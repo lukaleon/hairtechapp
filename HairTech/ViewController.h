@@ -15,7 +15,6 @@
 #import "FMDBDataAccess.h"
 #import "HMPopUpView.h"
 #import "Cell.h"
-#import "InfoViewController.h"
 #import "NewEntryController.h"
 
 @class EntryViewController;

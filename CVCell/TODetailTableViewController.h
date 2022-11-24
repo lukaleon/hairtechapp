@@ -16,6 +16,10 @@
     NSUInteger rowsInSection;
     NSArray * sectionOneItems;
     NSArray * sectionTwoItems;
+    NSArray * sectionThemeItems;
+    NSMutableArray * arrayOfCellIndexes;
 }
+@property (nonatomic ,retain)NSMutableArray * themeButtonArray;
+
 @end
 
