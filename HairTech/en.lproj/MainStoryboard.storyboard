@@ -961,20 +961,11 @@
                     <connections>
                         <outlet property="collectionView" destination="gXu-Lq-dvW" id="CM9-Jb-15X"/>
                         <outlet property="longpresscell" destination="HQd-Lx-Nxv" id="ahU-7W-BgC"/>
-                        <outlet property="searchDisplayController" destination="mcz-OM-HID" id="ezB-ZV-N43"/>
                         <outlet property="sidemenuButton" destination="KNy-B1-NmY" id="fik-TY-Fsp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bfm-r2-mCe" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="HQd-Lx-Nxv"/>
-                <searchDisplayController id="mcz-OM-HID">
-                    <connections>
-                        <outlet property="delegate" destination="aah-ye-uFk" id="Zy7-oG-Ghr"/>
-                        <outlet property="searchContentsController" destination="aah-ye-uFk" id="5HS-MN-BNx"/>
-                        <outlet property="searchResultsDataSource" destination="aah-ye-uFk" id="vbP-UA-H5i"/>
-                        <outlet property="searchResultsDelegate" destination="aah-ye-uFk" id="Iyt-M2-lih"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-2817.2093023255816" y="-1684.1201716738199"/>
         </scene>

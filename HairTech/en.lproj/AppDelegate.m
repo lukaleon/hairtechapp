@@ -45,8 +45,20 @@
 @synthesize databasePath;
 
 
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSLog(@"App Version is %@",version);
+    
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"setLightModeAsDefaultFromVersion601"]) {
+        [self setLightModeAsDefault];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultFromVersion601"];
+   }
+    [self getCurrentMode];
+    
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     ViewController *controller = (ViewController *)navigationController.topViewController;
     navigationController.navigationBar.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
@@ -131,8 +143,32 @@
           // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-
-
+- (void)getCurrentMode {
+    NSLog(@"current mode ");
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    UIWindow * currentwindow = [[UIApplication sharedApplication] delegate].window;
+    if([prefs boolForKey:@"Auto"] == YES){
+        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+    }
+    if([prefs boolForKey:@"Light"] == YES){
+        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
+    if([prefs boolForKey:@"Dark"] == YES){
+        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+    }
+    NSLog([prefs boolForKey:@"Auto"] ? @"Yes" : @"No");
+      NSLog([prefs boolForKey:@"Light"] ? @"Yes" : @"No");
+      NSLog([prefs boolForKey:@"Dark"] ? @"Yes" : @"No");
+}
+-(void)setLightModeAsDefault{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    UIWindow * currentwindow = [[UIApplication sharedApplication] delegate].window;
+    currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    [prefs setBool:NO forKey:@"Auto"];
+    [prefs setBool:YES forKey:@"Light"];
+    [prefs setBool:NO forKey:@"Dark"];
+    [prefs synchronize];
+}
 -(void) createAndCheckDatabase
 
 {

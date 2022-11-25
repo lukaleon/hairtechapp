@@ -48,11 +48,11 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     NSLog(@"view will appear");
+    [self.tableView reloadData];
 
 }
 -(void)viewDidAppear:(BOOL)animated{
     NSLog(@"view did appear");
-
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

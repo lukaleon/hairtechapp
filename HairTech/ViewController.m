@@ -283,26 +283,27 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithCustomView:sort];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:sortBtn, nil];
 }
-
-- (void)getCurrentMode {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    if([prefs boolForKey:@"Auto"] == YES){
-        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-    }
-    if([prefs boolForKey:@"Light"] == YES){
-        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-    }
-    if([prefs boolForKey:@"Dark"] == YES){
-        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-    }
-    NSLog([prefs boolForKey:@"Auto"] ? @"Yes" : @"No");
-      NSLog([prefs boolForKey:@"Light"] ? @"Yes" : @"No");
-      NSLog([prefs boolForKey:@"Dark"] ? @"Yes" : @"No");
-}
+//
+//- (void)getCurrentMode {
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    UIWindow * currentwindow = [[UIApplication sharedApplication] delegate].window;
+//    if([prefs boolForKey:@"Auto"] == YES){
+//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+//    }
+//    if([prefs boolForKey:@"Light"] == YES){
+//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+//    }
+//    if([prefs boolForKey:@"Dark"] == YES){
+//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+//    }
+//    NSLog([prefs boolForKey:@"Auto"] ? @"Yes" : @"No");
+//      NSLog([prefs boolForKey:@"Light"] ? @"Yes" : @"No");
+//      NSLog([prefs boolForKey:@"Dark"] ? @"Yes" : @"No");
+//}
 
 -(void)viewDidLoad
 {
-    [self getCurrentMode];
+   // [self getCurrentMode];
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];

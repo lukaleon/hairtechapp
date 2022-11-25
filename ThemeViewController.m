@@ -52,10 +52,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    UIWindow * currentwindow = [[UIApplication sharedApplication] delegate].window;
+
     if(indexPath.row == 0){
    
         if (@available(iOS 13.0, *)) {
-            UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+            currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
         } else {
             // Fallback on earlier versions
         }
@@ -71,7 +73,7 @@
     if(indexPath.row == 1){
         
         if (@available(iOS 13.0, *)) {
-            UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+            currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
         } else {
             // Fallback on earlier versions
         }
@@ -87,7 +89,7 @@
     if(indexPath.row == 2){
       
         if (@available(iOS 13.0, *)) {
-            UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+            currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
         } else {
             // Fallback on earlier versions
         }
