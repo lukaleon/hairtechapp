@@ -128,7 +128,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if ([sharedDefaults boolForKey:@"FirstLaunch"])
     {
         [self saveColorsToDefaults];
-        [self saveFloatToUserDefaults:1.0 forKey:@"lineWidth"];
         [self saveFloatToUserDefaults:0.0 forKey:@"eraserPressed"];
         
 [self openSubView:self];
@@ -149,7 +148,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if ( ![userDefaults valueForKey:@"version"] )
     {
         [self saveColorsToDefaults];
-        [self saveFloatToUserDefaults:1.0 forKey:@"lineWidth"];
         [self saveFloatToUserDefaults:0.0 forKey:@"eraserPressed"];
         
         // Adding version number to NSUserDefaults for first version:
@@ -283,23 +281,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithCustomView:sort];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:sortBtn, nil];
 }
-//
-//- (void)getCurrentMode {
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    UIWindow * currentwindow = [[UIApplication sharedApplication] delegate].window;
-//    if([prefs boolForKey:@"Auto"] == YES){
-//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
-//    }
-//    if([prefs boolForKey:@"Light"] == YES){
-//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-//    }
-//    if([prefs boolForKey:@"Dark"] == YES){
-//        currentwindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-//    }
-//    NSLog([prefs boolForKey:@"Auto"] ? @"Yes" : @"No");
-//      NSLog([prefs boolForKey:@"Light"] ? @"Yes" : @"No");
-//      NSLog([prefs boolForKey:@"Dark"] ? @"Yes" : @"No");
-//}
 
 -(void)viewDidLoad
 {
@@ -333,28 +314,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                                object:nil];
 
    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    
-    
+
     self.navigationItem.title = @"Collection";
-    
+
     [self setupNavigationBar];
-    
     // Bottom Border
     [super viewDidLoad];
-
-    if ( IDIOM != IPAD ) {
-        [self.sidemenuButton setAlpha:0];
-//        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)[self.collectionView collectionViewLayout];
-//        layout.sectionInset = UIEdgeInsetsMake(0, (self.view.frame.size.width - (self.view.frame.size.width / 100) * 80)/2 , 0, 0);
-//        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-//        layout.minimumLineSpacing = self.view.frame.size.width - (self.view.frame.size.width / 100) * 80;
-     
-        
-    
-    }
-    
-    
+    [self.sidemenuButton setAlpha:0];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
 
     self.techniques = [[NSMutableArray alloc] init];
@@ -386,8 +352,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(populateAndReload)
                                                  name:@"populate"
                                                object:nil];
-    
-    
+
     
     
 }
@@ -400,7 +365,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     CGSize  newsize;
     newsize = CGSizeMake(CGRectGetWidth(self.view.frame), (CGRectGetHeight(self.view.frame)));
-   if ( IDIOM == IPAD ) {
+    if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
 //        newsize.width = 246;
 //        newsize.height = 380;
        newsize.width = 240;
@@ -649,10 +614,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         
         cell.contentView.layer.masksToBounds = YES;
     
-//        cell.layer.shadowColor = [UIColor blackColor].CGColor;
-//        cell.layer.shadowOffset = CGSizeMake(0,0);
-//        cell.layer.shadowRadius = 3.0f;
-//        cell.layer.shadowOpacity = 0.1f;
+        cell.layer.shadowColor = [UIColor blackColor].CGColor;
+        cell.layer.shadowOffset = CGSizeMake(0,0);
+        cell.layer.shadowRadius = 3.0f;
+        cell.layer.shadowOpacity = 0.1f;
         cell.layer.masksToBounds = NO;
 //        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
@@ -679,18 +644,18 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
     cell.image.image = tempimage;
    
-     if ( IDIOM == IPAD ) {
+   //  if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
          
       //   [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
         // [cell.contentView.layer setCornerRadius:15.0f];
          
-     }else{
+    // }else{
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         cell.image.frame = CGRectMake(0, -10, cell.frame.size.width , cell.frame.size.height);         //[cell.contentView.layer setCornerRadius:15.0f];
-     }
+    // }
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;

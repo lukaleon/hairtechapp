@@ -263,7 +263,7 @@ return YES;
 - (void)setupBottomToolBar {
     self.imageToolbar1.frame = CGRectMake(self.view.frame.origin.x + 10, self.view.frame.origin.y + self.view.frame.size.height - 70, self.view.frame.size.width - 20, 55);
     self.imageToolbar1.alpha = 1.0f;
-    [self.imageToolbar1.layer setBackgroundColor:[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0f]CGColor]];
+    [self.imageToolbar1 setBackgroundColor:[UIColor colorNamed:@"whiteDark"]];
     [self.imageToolbar1.layer setCornerRadius:15.0f];
     [super viewDidLoad];
     self.imageToolbar1.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -2292,7 +2292,6 @@ self.previewImageView.layer.sublayers = nil;
     [button setImage:img forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imgName2] forState:UIControlStateHighlighted];
     [button setTintColor:[UIColor lightGrayColor]];
-    [button setBackgroundColor:[UIColor whiteColor]];
     button.frame = CGRectMake(startX  , 0 + yAxe, btnWidth, btnWidth);
     button.layer.cornerRadius = btnWidth / 2;
     button.layer.masksToBounds = YES;

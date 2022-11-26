@@ -81,19 +81,8 @@
 
 -(UIImage*)loadImages:(NSString*)headtype
 {
-//    NSMutableString *filenamethumb;
-//    filenamethumb = @"%@/";
-//    NSMutableString *prefix;
-//    prefix = techniqueName;
-//    filenamethumb = [filenamethumb mutableCopy];
-//    [filenamethumb appendString: prefix];
-//    filenamethumb = [filenamethumb mutableCopy];
-//    [filenamethumb appendString: headtype];
-//    filenamethumb = [filenamethumb mutableCopy];
-//    [filenamethumb appendString: @".png"];
-    
-    NSMutableString *filenamethumb1 = @"%@/";
-    NSMutableString *prefix= techniqueName;
+    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+    NSMutableString *prefix= [techniqueName mutableCopy];
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
     filenamethumb1 = [filenamethumb1 mutableCopy];
@@ -147,34 +136,35 @@
     textToShare = self.labelToSave.text;
     self.labelToSave.alpha = 1.0;
     self.logo.alpha = 1.0;
+    
     UIImage * imageToShare = [self captureScreenRetina];
-    UIImage * logoToShare =  self.logo.image;
     NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
 
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
-    if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-        listPopover.delegate = self;
-        [listPopover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    }
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        
+
+    
         activityViewController.modalPresentationStyle = UIModalPresentationPopover;
         [self presentViewController:activityViewController animated: YES completion: nil];
         UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
         popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
         popoverPresentationController.sourceView = self.view;
         popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
-    }
+    
     self.labelToSave.alpha = 0.0;
     self.logo.alpha = 0.0;
+    
+    [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
+       
+        [self showAlertAfterImageSaved];
+        
+    }];
 }
 
 
 - (NSMutableString*)createFileName:(NSMutableString*)name prefix:(NSString*)prefix {
-    name = self.navigationItem.title;
+    name = [self.navigationItem.title mutableCopy];
     name = [name mutableCopy];
     [name appendString: prefix];
     name = [name mutableCopy];
@@ -186,24 +176,6 @@
 {
     self.logo.alpha = 0;
     self.labelToSave.alpha = 0;
-//    entryviewImage =  [self createFileName:entryviewImage prefix:@"EntryBig"];
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
-//    
-//    UIGraphicsBeginImageContext(self.view.bounds.size);
-//    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    NSData * data = UIImagePNGRepresentation(image);
-//    [data writeToFile:path atomically:YES];
-//    
-//    CGRect screenRect = [[UIScreen mainScreen] bounds];
-//    CGFloat screenWidth = screenRect.size.width;
-//    CGFloat screenHeight = screenRect.size.height;
-//    
-//    CGRect rect = CGRectMake(self.imageLeft.frame.origin.x, self.imageLeft.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-//    
     UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     
@@ -226,11 +198,36 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
-//
-//-(void)setImageForButton:(UIImage*)img{
-//    NSLog(@"EntryView setting img");
-//    self.imageLeft.image = img;
-//}
+-(void)showAlertAfterImageSaved{
+     UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:@"All Done"
+                                 message:@"Your diagrams was saved!"
+                                 preferredStyle:UIAlertControllerStyleAlert];
+
+    //Add Buttons
+
+//    UIAlertAction* yesButton = [UIAlertAction
+//                                actionWithTitle:@"Yes"
+//                                style:UIAlertActionStyleDefault
+//                                handler:^(UIAlertAction * action) {
+//                                    //Handle your yes please button action here
+//                                 //   [self clearAllData];
+//                                }];
+
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Ok"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action) {
+                                   //Handle no, thanks button
+                               }];
+
+    //Add your buttons to alert controller
+
+   // [alert addAction:yesButton];
+    [alert addAction:noButton];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item{
 //    self.imageLeft.backgroundColor = [UIColor colorNamed:@"grey"];

@@ -53,9 +53,10 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"setLightModeAsDefaultFromVersion601"]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"setLightModeAsDefaultTest"]) {
         [self setLightModeAsDefault];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultFromVersion601"];
+        [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultTest"];
    }
     [self getCurrentMode];
     
@@ -168,6 +169,11 @@
     [prefs setBool:YES forKey:@"Light"];
     [prefs setBool:NO forKey:@"Dark"];
     [prefs synchronize];
+}
+-(void)saveWidthOfLinesToDefaults:(float)x forKey:(NSString *)key {
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setFloat:x forKey:key];
+    [userDefaults synchronize];
 }
 -(void) createAndCheckDatabase
 

@@ -85,9 +85,9 @@
         txtField = [[UITextField alloc] initWithFrame:CGRectMake(cvFrame.origin.x + 40, cvFrame.origin.y + 70, cvFrame.size.width - 80, 30)];
         [[UITextField appearance] setTintColor:[UIColor colorNamed:@"orange"]];
         txtField.textAlignment = NSTextAlignmentCenter;
-        txtField.backgroundColor = [UIColor colorWithRed:215.0/255.0 green:213.0/255.0 blue:215.0/255.0 alpha:1.0];
-        txtField.borderStyle = UITextBorderStyleRoundedRect;
-       // txtField.layer.borderColor = [UIColor colorNamed:@"orange"].CGColor;
+        txtField.backgroundColor = [UIColor colorNamed:@"textfieldbg"];
+     //   txtField.borderStyle = UITextBorderStyleRoundedRect;
+       // txtField.layer.borderColor = [UIColor colorNamed:@"textfieldbg"].CGColor;
        // txtField.layer.borderWidth=1.0;
 
         txtField.layer.cornerRadius = 3;
