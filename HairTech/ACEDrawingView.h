@@ -101,6 +101,8 @@ typedef enum {
     CGPoint bufferEndPoint;
     int cycle;
     
+    CGPoint pointBegin;
+    CGPoint pointEnd;
 }
 @property NSMutableArray * bufferOfLayers;
 

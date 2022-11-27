@@ -1204,7 +1204,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
        // Technique *tech = [self.techniques objectAtIndex:[indexPath row]];
         HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename diagram" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" okBtnColor:[UIColor colorNamed:@"orange"] delegate:self];
     
-    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"grey"] titleColor: [UIColor colorNamed:@"textWhiteDeepBlue"] buttonViewColor:[UIColor colorNamed:@"grey"] buttonBGColor:[UIColor colorNamed:@"grey"] buttonTextColor: [UIColor colorNamed:@"textWhiteDeepBlue"]];
+    [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"whiteDark"] titleColor: [UIColor colorNamed:@"textWhiteDeepBlue"] buttonViewColor:[UIColor colorNamed:@"whiteDark"] buttonBGColor:[UIColor colorNamed:@"whiteDark"] buttonTextColor: [UIColor colorNamed:@"textWhiteDeepBlue"]];
     [hmPopUp showInView:self.view];
     [hmPopUp setTextFieldText:tech.techniquename];
         

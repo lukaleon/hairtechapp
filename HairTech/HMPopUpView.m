@@ -108,7 +108,7 @@
         [btnOk setTitle:okBtnTtl forState:UIControlStateNormal];
         [btnOk setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
 
-        btnOk.backgroundColor = [UIColor colorNamed:@"grey"];
+        btnOk.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         btnOk.titleLabel.textColor =clr;
         btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         btnOk.enabled = NO;
@@ -121,14 +121,14 @@
         
         [btnCancel setTitleColor:[UIColor colorNamed:@"textWhiteDeepBlue"] forState:UIControlStateNormal];
 
-        btnCancel.backgroundColor = [UIColor colorNamed:@"grey"];
+        btnCancel.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         btnCancel.titleLabel.textColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
         btnCancel.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         [containerView addSubview:btnCancel];
         [btnCancel addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
         
         middleView = [[UIView alloc] initWithFrame:CGRectMake(cvFrame.origin.x, separatorView.frame.origin.y + separatorView.frame.size.height, cvFrame.size.width, btnOk.frame.origin.y)];
-        middleView.backgroundColor = [UIColor colorNamed:@"grey"];
+        middleView.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         [containerView insertSubview:middleView belowSubview:txtField];
         
         presentDuration = DEFAULT_PRESENTATION_ANIMATION_DURATION;

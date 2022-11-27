@@ -258,6 +258,7 @@ UIColor* tempColor;
     }
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
+    pointBegin = currentPoint;
     startOfLine = currentPoint;
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine || self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
         self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
@@ -272,6 +273,13 @@ UIColor* tempColor;
     cycle = 0;
 }
 
+
+- (CGFloat)getDistanceBetweenStartCurrentPoints:(const CGPoint *)currentPoint {
+    CGFloat dx = pointBegin.x - currentPoint->x;
+    CGFloat dy= pointBegin.y - currentPoint->y;
+    CGFloat distance = sqrt(dx*dx + dy*dy);
+    return distance;
+}
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     
@@ -288,6 +296,10 @@ UIColor* tempColor;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
     CGPoint previousPoint = [touch previousLocationInView:self];
+    CGFloat distance = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
+    if(distance == 0){
+        return;
+    }
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
     //    if (currentPoint.x > self.frame.size.width || currentPoint.x < 0 || currentPoint.y < 0 || currentPoint.y > self.frame.size.height){
@@ -305,7 +317,7 @@ UIColor* tempColor;
             
         } else {
             
-            [self.delegate disableZoomWhenTouchesMoved];
+           // [self.delegate disableZoomWhenTouchesMoved];
             self.selectedLayer.isSelected = NO;
             [self removeCircles];
             [self detectNearestPoint:&previousPoint]; // Detect nearest point to connnect to
@@ -421,6 +433,7 @@ UIColor* tempColor;
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"Touches ended");
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     cycle = 0;
     [self hideLoupe];
@@ -495,9 +508,13 @@ UIColor* tempColor;
             }
         }
     }
-    [self.delegate enableZoomWhenTouchesMoved];
+  //  [self.delegate enableZoomWhenTouchesMoved];
 }
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    
+    [self touchesEnded:touches withEvent:event];
 
+}
 - (void)setEraserSelected:(BOOL)eraserSelected
 {
     _eraserSelected = eraserSelected;
@@ -789,7 +806,7 @@ UIColor* tempColor;
     gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuOnTextView:)];
     [self.userResizableView addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.numberOfTapsRequired = 1;
-    //gestureRecognizer.cancelsTouchesInView = NO;
+//    gestureRecognizer.cancelsTouchesInView = NO;
     //[gestureRecognizer setDelegate:self];
     
     gestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenuForTextView)];
@@ -1460,16 +1477,16 @@ UIColor* tempColor;
 
 ///////////////////////////////////////////////////////////////////////////////////
 
--(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    // make sure a point is recorded
-    // [self touchesEnded:touches withEvent:event];
-    [self.eraserPointer removeFromSuperview];
-    
-    [self.touchTimer invalidate];
-    [self.magnifierView setHidden:YES];
-    [self.Ruler setHidden:YES];
-}
+//-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    // make sure a point is recorded
+//    // [self touchesEnded:touches withEvent:event];
+//    [self.eraserPointer removeFromSuperview];
+//
+//    [self.touchTimer invalidate];
+//    [self.magnifierView setHidden:YES];
+//    [self.Ruler setHidden:YES];
+//}
 
 -(void)updateImage
 {

@@ -200,10 +200,19 @@
 }
 -(void)showAlertAfterImageSaved{
      UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle:@"All Done"
+                                 alertControllerWithTitle:@""
                                  message:@"Your diagrams was saved!"
-                                 preferredStyle:UIAlertControllerStyleAlert];
-
+                                 preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Your diagrams was saved!"];
+    NSRange fullRange = NSMakeRange(0, hogan.length);
+    [hogan addAttribute:NSFontAttributeName
+                  value:[UIFont fontWithName:@"AvenirNext-DemiBold" size:16]
+                  range:fullRange];
+    [alert setValue:hogan forKey:@"attributedMessage"];
+    
+    alert.view.tintColor = [UIColor colorNamed:@"orange"];
+    
     //Add Buttons
 
 //    UIAlertAction* yesButton = [UIAlertAction
@@ -220,7 +229,6 @@
                                handler:^(UIAlertAction * action) {
                                    //Handle no, thanks button
                                }];
-
     //Add your buttons to alert controller
 
    // [alert addAction:yesButton];
