@@ -90,6 +90,7 @@
     }
 }
 
+
 - (void)configure
 {
     if(!_isTextSelected){
@@ -105,23 +106,23 @@
     
     NSLog(@"LINE WIDTH %f " , [self loadFloatFromUserDefaultsForKey:@"lineWidth"]);
     
-   
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 1.6 ){
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:1.600000] )
+    {
         [self button1Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 2.4 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:2.400000] )
     {
         [self button2Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 4.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:3.600000] )
     {
         [self button3Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 6.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:4.80000] )
     {
         [self button4Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == 10.0 )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:6.600000] )
     {
         [self button5Select];
     }
@@ -354,7 +355,7 @@ else {
     CGFloat screenPartitionIdx;
    // NSLog(@"SCREEN PARTIOTION IDX %f", screenPartitionIdx);
     CGFloat originOfButtons;
-    if (IDIOM == IPAD){
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         screenPartitionIdx = sizeRect.size.width / 14;
         originOfButtons = screenPartitionIdx * 2;
     } else {
@@ -507,6 +508,7 @@ else {
 */
 
 -(void)button1Select{
+    NSLog(@"buttonWidth 1 slected");
     [widthButton1 setSelected:YES];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:NO];
@@ -537,7 +539,8 @@ else {
 }
 
 -(void)button2Select{
-    
+    NSLog(@"buttonWidth 2 slected");
+
     [widthButton1 setSelected:NO];
     [widthButton2 setSelected:YES];
     [widthButton3 setSelected:NO];
@@ -568,6 +571,8 @@ else {
 }
 
 -(void)button3Select{
+    NSLog(@"buttonWidth 3 slected");
+
     [widthButton1 setSelected:NO];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:YES];
@@ -658,42 +663,54 @@ else {
     [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
+- (float)getRoundedFloat:(CGFloat)value{
+    
+    float new = [[NSString stringWithFormat:@"%.4f",value]floatValue];
+    return new;
+}
+
 - (void)buttonTapped:(UIButton *)sender
 {
     switch(sender.tag){
     case 0:{
         NSLog(@"Photo1");
         [self button1Select];
-        [delegate sliderDidSelectWidth:1.6];
-        [self saveFloatToUserDefaults:1.6 forKey:@"lineWidth"];
+        float new = [self getRoundedFloat:1.600000];
+        [delegate sliderDidSelectWidth:new];
+        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
     case 1:{
         NSLog(@"Photo2");
         [self button2Select];
-        [delegate sliderDidSelectWidth:2.4];
-        [self saveFloatToUserDefaults:2.4 forKey:@"lineWidth"];
+        float new = [self getRoundedFloat:2.400000];
+        [delegate sliderDidSelectWidth:new];
+        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
     case 2:{
         NSLog(@"Photo3");
         [self button3Select];
-        [delegate sliderDidSelectWidth:4.0];
-        [self saveFloatToUserDefaults:4.0 forKey:@"lineWidth"];
+        float new = [self getRoundedFloat:3.600000];
+
+        [delegate sliderDidSelectWidth:new];
+        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
     case 3:{
         NSLog(@"Photo4");
         [self button4Select];
-        [delegate sliderDidSelectWidth:6.0];
-        [self saveFloatToUserDefaults:6.0 forKey:@"lineWidth"];
+        float new = [self getRoundedFloat:4.800000];
+        [delegate sliderDidSelectWidth:new];
+        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
     case 4:{
         NSLog(@"Photo5");
         [self button5Select];
-        [delegate sliderDidSelectWidth:10.0];
-        [self saveFloatToUserDefaults:10.0 forKey:@"lineWidth"];
+        float new = [self getRoundedFloat:6.600000];
+        [delegate sliderDidSelectWidth:new];
+        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
 }

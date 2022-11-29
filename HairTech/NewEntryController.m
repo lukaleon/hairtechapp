@@ -19,6 +19,8 @@
     [self captureScreenRetinaOnLoad];
 }
 
+
+
 -(void)viewDidLoad{
     NSLog(@"technique name %@", self.techniqueName);
     self.imageLeft.image = [self loadImages:@"thumb1"];
@@ -31,53 +33,14 @@
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareButton;
     
-    UITapGestureRecognizer * tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapRight = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapTop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapFront = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapBack = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    [self.imageLeft addGestureRecognizer:tapLeft];
-    [self.imageRight addGestureRecognizer:tapRight];
-    [self.imageTop addGestureRecognizer:tapTop];
-    [self.imageFront addGestureRecognizer:tapFront];
-    [self.imageBack addGestureRecognizer:tapBack];
-    
-  //  if (!self.isFirstTime){
-//        self.imageLeft.image = self.imageL;
-//        self.imageRight.image = self.imageR;
-//        self.imageTop.image = self.imageT;
-//        self.imageFront.image = self.imageF;
-//        self.imageBack.image = self.imageB;
-   //}
-//    if (self.isFirstTime && [self.techniqueType isEqualToString:@"version22"]){
-//        self.imageLeft.image = [UIImage imageNamed:@"lefthead_s"];
-//        self.imageRight.image =  [UIImage imageNamed:@"righthead_s"];
-//        self.imageTop.image =  [UIImage imageNamed:@"tophead_s"];
-//        self.imageFront.image =  [UIImage imageNamed:@"fronthead_s"];
-//        self.imageBack.image =[UIImage imageNamed:@"backhead_s"];
-//    }
-//    if ( [self.techniqueType isEqualToString:@"men22"]){
-//        self.imageLeft.image = [UIImage imageNamed:@"lefthead"];
-//        self.imageRight.image =  [UIImage imageNamed:@"righthead"];
-//        self.imageTop.image =  [UIImage imageNamed:@"tophead"];
-//        self.imageFront.image =  [UIImage imageNamed:@"fronthead_ms"];
-//        self.imageBack.image =[UIImage imageNamed:@"backhead_ms"];
-//    }
-    
-//    self.imageLeft.image = self.imageL;
-//    self.imageRight.image = self.imageR;
-//    self.imageTop.image = self.imageT;
-//    self.imageFront.image = self.imageF;
-//    self.imageBack.image = self.imageB;
+    [self setupgestureRecognizers];
+    [self registerNotifications];
 }
 
-
-
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
- 
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self.toolbar removeFromSuperview];
 }
-
 
 -(UIImage*)loadImages:(NSString*)headtype
 {
@@ -90,7 +53,6 @@
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: @".png"];
     
-    NSLog(@"print %@", filenamethumb1);
     
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
@@ -127,6 +89,25 @@
     [self.navigationController pushViewController: newDrawVC animated:YES];
 }
 
+- (void)setupgestureRecognizers {
+    UITapGestureRecognizer * tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapRight = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapTop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapFront = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapBack = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    
+    [self.imageLeft addGestureRecognizer:tapLeft];
+    [self.imageRight addGestureRecognizer:tapRight];
+    [self.imageTop addGestureRecognizer:tapTop];
+    [self.imageFront addGestureRecognizer:tapFront];
+    [self.imageBack addGestureRecognizer:tapBack];
+}
+
+- (void)registerNotifications {
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"didEnterBackground" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"appDidTerminate" object:nil];
+}
 
 
 - (void)share:(id)sender{
@@ -156,8 +137,9 @@
     self.logo.alpha = 0.0;
     
     [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
-       
-        [self showAlertAfterImageSaved];
+    [self setupBottomToolBar];
+
+       // [self showAlertAfterImageSaved];
         
     }];
 }
@@ -198,43 +180,149 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
--(void)showAlertAfterImageSaved{
-     UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle:@""
-                                 message:@"Your diagrams was saved!"
-                                 preferredStyle:UIAlertControllerStyleActionSheet];
+//-(void)showAlertAfterImageSaved{
+//     UIAlertController * alert = [UIAlertController
+//                                 alertControllerWithTitle:@""
+//                                 message:@"Your diagrams was saved to gallery!"
+//                                 preferredStyle:UIAlertControllerStyleActionSheet];
+//
+//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Your diagrams was saved to gallery!"];
+//    NSRange fullRange = NSMakeRange(0, hogan.length);
+//    [hogan addAttribute:NSFontAttributeName
+//                  value:[UIFont fontWithName:@"AvenirNext-DemiBold" size:16]
+//                  range:fullRange];
+//    [alert setValue:hogan forKey:@"attributedMessage"];
+//
+//    alert.view.tintColor = [UIColor colorNamed:@"orange"];
+//
+//    //Add Buttons
+//
+////    UIAlertAction* yesButton = [UIAlertAction
+////                                actionWithTitle:@"Yes"
+////                                style:UIAlertActionStyleDefault
+////                                handler:^(UIAlertAction * action) {
+////                                    //Handle your yes please button action here
+////                                 //   [self clearAllData];
+////                                }];
+//
+//    UIAlertAction* noButton = [UIAlertAction
+//                               actionWithTitle:@"Ok"
+//                               style:UIAlertActionStyleDefault
+//                               handler:^(UIAlertAction * action) {
+//                                   //Handle no, thanks button
+//                               }];
+//    //Add your buttons to alert controller
+//
+//   // [alert addAction:yesButton];
+//    [alert addAction:noButton];
+//
+//    [self presentViewController:alert animated:YES completion:nil];
+//}
+
+
+- (void)setupBottomToolBar {
+    CGFloat startOfToolbar;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfToolbar = 100;
+    }else {
+        startOfToolbar = 10;
+    }
     
-    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Your diagrams was saved!"];
-    NSRange fullRange = NSMakeRange(0, hogan.length);
-    [hogan addAttribute:NSFontAttributeName
-                  value:[UIFont fontWithName:@"AvenirNext-DemiBold" size:16]
-                  range:fullRange];
-    [alert setValue:hogan forKey:@"attributedMessage"];
+    CGRect rect = CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height , self.view.frame.size.width - startOfToolbar * 2, 55);
+    self.toolbar = [[UIView alloc]initWithFrame:rect];
+    self.toolbar.alpha = 1.0f;
+    [self.toolbar setBackgroundColor:[UIColor colorNamed:@"orange"]];
+    [self.toolbar.layer setCornerRadius:15.0f];
+    [super viewDidLoad];
+    self.toolbar.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.toolbar.layer.shadowOffset = CGSizeMake(0,0);
+    self.toolbar.layer.shadowRadius = 8.0f;
+    self.toolbar.layer.shadowOpacity = 0.2f;
+    self.toolbar.layer.masksToBounds = NO;
+    self.toolbar.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.toolbar.bounds cornerRadius:self.toolbar.layer.cornerRadius].CGPath;
+    [self addInfoButtonOnToolbar];
+    [self.view addSubview:self.toolbar];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+        
+        self.toolbar.frame =  CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height - 80, self.view.frame.size.width - startOfToolbar * 2, 55);
+                     }];
+    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+                                                       target:self
+                                                     selector:@selector(hideAlertView:)
+                                                     userInfo:nil
+                                                      repeats:NO];
+}
+
+- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX width:(CGFloat)btnWidth yAxe:(CGFloat)yAxe
+{
+    SEL selectorNew = NSSelectorFromString(selector);
+     UIButton * button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button addTarget:self
+               action:selectorNew
+     forControlEvents:UIControlEventTouchUpInside];
+    button.adjustsImageWhenHighlighted = NO;
+    [button setTitle:@"OK" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:16];
+    button.backgroundColor = [UIColor whiteColor];
+    [button setTintColor:[UIColor colorNamed:@"orange"]];
+    button.frame = CGRectMake(startX ,yAxe, btnWidth, 30);
+    button.layer.cornerRadius = 15;
+    button.layer.masksToBounds = YES;
+    button.layer.borderWidth = 0.0f;
+    return button;
+}
+-(UILabel*)addInfoLabel:(NSString*)string startX:(CGFloat)startX font:(CGFloat)fntSize width:(CGFloat)width{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, width,50)];
+    CGPoint newCenter = CGPointMake(startX + 5 , self.toolbar.frame.size.height / 2);
+    label.center = newCenter;
+    label.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fntSize];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.text = string;
+    return label;
+}
+
+-(void)addInfoButtonOnToolbar{    
+    CGRect sizeRect = [UIScreen mainScreen].bounds;
+    CGFloat originOfLabel;
+    CGFloat fntSize;
+    CGFloat width;
+    CGFloat iPadDist;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        fntSize = 16;
+        width = 335;
+        iPadDist = 30;
+        
+    } else {
+        fntSize = 14;
+        width = 300;
+        iPadDist = 8;
+    }
+    originOfLabel = sizeRect.size.width / 2.8;
+    self.infoLabel = [self addInfoLabel:@"Your diagrams was exported" startX:originOfLabel font:fntSize width:width];
+    [self.toolbar addSubview:self.infoLabel];
     
-    alert.view.tintColor = [UIColor colorNamed:@"orange"];
+    self.okButton =  [self fontButton:@"hideAlertView:" imageName1:@"info_icon_new.png" imageName2:@"info_icon_new.png" startX:self.infoLabel.frame.origin.x + self.infoLabel.frame.size.width - 40  width: 60 yAxe:self.toolbar.frame.size.height - 42];
+   [self.toolbar addSubview:self.okButton];
     
-    //Add Buttons
+}
+-(void)hideAlertView:(UIButton*)button{
+    CGFloat startOfToolbar;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfToolbar = 100;
+    }else {
+        startOfToolbar = 10;
+    }
+        [UIView animateWithDuration:0.3
+                         animations:^{
+            
+            self.toolbar.frame =  CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height, self.view.frame.size.width - startOfToolbar * 2, 55);
+  }];
 
-//    UIAlertAction* yesButton = [UIAlertAction
-//                                actionWithTitle:@"Yes"
-//                                style:UIAlertActionStyleDefault
-//                                handler:^(UIAlertAction * action) {
-//                                    //Handle your yes please button action here
-//                                 //   [self clearAllData];
-//                                }];
-
-    UIAlertAction* noButton = [UIAlertAction
-                               actionWithTitle:@"Ok"
-                               style:UIAlertActionStyleDefault
-                               handler:^(UIAlertAction * action) {
-                                   //Handle no, thanks button
-                               }];
-    //Add your buttons to alert controller
-
-   // [alert addAction:yesButton];
-    [alert addAction:noButton];
-
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item{

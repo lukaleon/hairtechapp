@@ -330,7 +330,7 @@
     if (indexPath.section == 0)
     {
        CGSize newSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds)/3.55,(CGRectGetHeight ([UIScreen mainScreen].bounds) / 3.55));
-        if (IDIOM == IPAD){
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
             return newSize.height;
         }else {
             return 200;
@@ -388,7 +388,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGSize newSize;
-    if(IDIOM == IPAD){
+    if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         newSize = CGSizeMake(CGRectGetWidth(collectionView.frame)/3.55,(CGRectGetHeight (collectionView.frame)-4));
     }else
     {
@@ -400,7 +400,7 @@
 
 -(UIFont*)fontSizeiPad:(CGFloat)ipadSize iPhone:(CGFloat)iphoneSize{
     UIFont * font;
-    if (IDIOM == IPAD){
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:ipadSize];
     }else{
     font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:iphoneSize];

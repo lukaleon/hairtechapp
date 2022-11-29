@@ -435,6 +435,10 @@ UIColor* tempColor;
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     NSLog(@"Touches ended");
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
+    unsigned long count = [[event allTouches] count];
+    if (count > 1) {
+        return; // return amount of fingers touched right now
+    }
     cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {

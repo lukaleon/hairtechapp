@@ -33,6 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic)  UIImage *imageB;
 @property BOOL isFirstTime;
 @property (weak, nonatomic) IBOutlet UIView *screenShotView;
+@property (strong, nonatomic)  IBOutlet UIView * toolbar;
+@property (strong, nonatomic) IBOutlet UILabel * infoLabel;
+@property (strong, nonatomic) IBOutlet UIButton * okButton;
+@property (strong, nonatomic) NSTimer *touchTimer;
 
 
 //-(void)setImagesForLeft:(UIImage*)left rigth:(UIImage*)right top:(UIImage*) front:(UIImage*)front back:(UIImage*)back;

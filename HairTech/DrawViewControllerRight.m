@@ -2320,7 +2320,7 @@ self.previewImageView.layer.sublayers = nil;
     CGFloat fntSize;
     CGFloat width;
     CGFloat iPadDist;
-    if (IDIOM == IPAD){
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         fntSize = 16;
         width = 335;
         iPadDist = 30;

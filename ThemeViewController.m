@@ -170,7 +170,7 @@
 }
 -(UIFont*)fontSizeiPad:(CGFloat)ipadSize iPhone:(CGFloat)iphoneSize{
     UIFont * font;
-    if (IDIOM == IPAD){
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:ipadSize];
     }else{
     font =  [UIFont fontWithName:@"AvenirNext-DemiBold" size:iphoneSize];

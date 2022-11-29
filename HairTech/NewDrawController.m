@@ -7,8 +7,6 @@
 //
 
 #import "NewDrawController.h"
-#define IDIOM    UI_USER_INTERFACE_IDIOM()
-#define IPAD     UIUserInterfaceIdiomPad
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -32,6 +30,8 @@
 }
 
 
+
+
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
@@ -43,7 +43,8 @@
     [self setupNavigationBarItems];
     [self.img setImage:[UIImage imageNamed:self.headtype]];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
+ 
+    [self registerNotifications];
   
     /* Setup toolBar and toolButoons */
     toolButtons = @[self.penTool, self.curveTool, self.dashTool, self.arrowTool,self.lineTool,self.eraserTool,self.textTool];
@@ -70,7 +71,6 @@
 //    textColor = [UIColor blackColor];
     self.fontSizeVC = 15;
     if([self loadGridAppearanceToDefaults]){
-        NSLog(@"IMG frame width %f frame height %f",self.img.frame.size.width, self.img.frame.size.height);
         [self performSelector:@selector(showOrHideGrid)];
     }
     }
@@ -107,7 +107,7 @@
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
     [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
-    if(IDIOM == IPAD){
+    if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     [scrollView setZoomScale:1.7 animated:YES];
     }
 }
@@ -257,6 +257,11 @@
     return self.drawingView;
 }
 
+- (void)registerNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"didEnterBackground" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
+}
 
 
 #pragma mark NAvigation Bar And Share Setup
@@ -737,7 +742,6 @@ return YES;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        self.popoverController = nil;
     }
     
     
@@ -749,7 +753,6 @@ return YES;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        self.popoverController = nil;
     }
     
     if (self.dashTool.selected == YES){
@@ -760,7 +763,6 @@ return YES;
          self.dashTool.backgroundColor = dashColor;
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        self.popoverController = nil;
     }
     
     if(self.arrowTool.selected == YES){
@@ -771,7 +773,6 @@ return YES;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        self.popoverController = nil;
     }
     if(self.lineTool.selected == YES){
         [self extractRGBforLine:[GzColors colorFromHex:hexColor]];
@@ -781,7 +782,6 @@ return YES;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        self.popoverController = nil;
     }
 }
 
@@ -919,7 +919,7 @@ return YES;
             curveToggleIsOn = nil;
             //dashLineCount = 0;
             [self makeButtonDeselected];
-            self.arrowTool.selected=YES;
+            self.arrowTool.selected = YES;
             self.arrowTool.backgroundColor = arrowColor;
             [self.drawingView setEraserSelected:NO];
             self.drawingView.lineColor = arrowColor;
@@ -937,7 +937,7 @@ return YES;
             [self makeButtonDeselected];
             curveToggleIsOn = nil;
             //dashLineCount = 0;
-            self.lineTool.selected=YES;
+            self.lineTool.selected = YES;
             [self.drawingView setEraserSelected:NO];
             self.lineTool.backgroundColor = lineColor;
             
@@ -1077,7 +1077,7 @@ return YES;
    // self.drawingView.backgroundColor = [UIColor whiteColor];
 
     
-    NSMutableString * fileToSave = self.techniqueName;
+    NSMutableString * fileToSave = [self.techniqueName mutableCopy];
     fileToSave = [fileToSave mutableCopy];
     [fileToSave appendString: headtype];
     fileToSave = [fileToSave mutableCopy];
@@ -1089,6 +1089,8 @@ return YES;
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     [thumbdata writeToFile:thumbpath atomically:YES];
+    self.drawingView.backgroundColor = [UIColor whiteColor];
+
     return newImage;
 }
 
@@ -1118,32 +1120,42 @@ return YES;
     }
     return newImage;
 }
+-(void)screenShotNotification{
+    [self saveColorsToDefaults];
+    [self removeGrid];
+    [self.drawingView removeCircles]; //remove control circles when selected
+    [self.drawingView removeTextViewFrame]; //create text layer when closing window
+    [self screentShot:self.headtype];
+    if([self loadGridAppearanceToDefaults]){
+        [self performSelector:@selector(showOrHideGrid)];
+    }
+}
 
 -(UIImage*)screenShotForSharing{
     NSLog(@"screenshot");
-    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, NO, [UIScreen mainScreen].scale);
+    [self removeGrid];
+    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, self.drawingView.opaque, 3.0);
     // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
 }
+
 - (void)share{
     NSString *textToShare;
     textToShare = [NSString stringWithFormat:@""];
     UIImage *imageToShare;
     imageToShare = [self screenShotForSharing];
+    if([self loadGridAppearanceToDefaults]){
+        [self performSelector:@selector(showOrHideGrid)];
+    }
     NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
     
     activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
-    if (SYSTEM_VERSION_LESS_THAN(@"9.0")) {
-        UIPopoverController * listPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-        listPopover.delegate = self;
-        [listPopover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    }
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+   
         
         activityViewController.modalPresentationStyle = UIModalPresentationPopover;
         [self presentViewController:activityViewController animated: YES completion: nil];
@@ -1151,7 +1163,10 @@ return YES;
         popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
         popoverPresentationController.sourceView = self.view;
         popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
-    }
+    
+        [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
+            [self setupNotificationToolbar];
+    }];
 }
 
 -(void)undoPressed{
@@ -1168,5 +1183,111 @@ return YES;
 {
     [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
+}
+
+#pragma mark Sharing image
+
+- (void)setupNotificationToolbar {
+    CGFloat startOfToolbar;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfToolbar = 100;
+    }else {
+        startOfToolbar = 10;
+    }
+    
+    CGRect rect = CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height , self.view.frame.size.width - startOfToolbar * 2, 55);
+    self.toolbarNotification = [[UIView alloc]initWithFrame:rect];
+    self.toolbarNotification.alpha = 1.0f;
+    [self.toolbarNotification setBackgroundColor:[UIColor colorNamed:@"orange"]];
+    [self.toolbarNotification.layer setCornerRadius:15.0f];
+    self.toolbarNotification.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.toolbarNotification.layer.shadowOffset = CGSizeMake(0,0);
+    self.toolbarNotification.layer.shadowRadius = 8.0f;
+    self.toolbarNotification.layer.shadowOpacity = 0.2f;
+    self.toolbarNotification.layer.masksToBounds = NO;
+    self.toolbarNotification.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.toolbarNotification.bounds cornerRadius:self.toolbarNotification.layer.cornerRadius].CGPath;
+    [self addInfoButtonOnToolbar];
+    [self.view addSubview:self.toolbarNotification];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+        
+        self.toolbarNotification.frame =  CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height - 80, self.view.frame.size.width - startOfToolbar * 2, 55);
+                     }];
+    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+                                                       target:self
+                                                     selector:@selector(hideAlertView:)
+                                                     userInfo:nil
+                                                      repeats:NO];
+}
+
+- (UIButton*)fontButton:(NSString*)selector imageName1:(NSString*)imgName imageName2:(NSString*)imgName2 startX:(CGFloat)startX width:(CGFloat)btnWidth yAxe:(CGFloat)yAxe
+{
+    SEL selectorNew = NSSelectorFromString(selector);
+     UIButton * button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button addTarget:self
+               action:selectorNew
+     forControlEvents:UIControlEventTouchUpInside];
+    button.adjustsImageWhenHighlighted = NO;
+    [button setTitle:@"OK" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:16];
+    button.backgroundColor = [UIColor whiteColor];
+    [button setTintColor:[UIColor colorNamed:@"orange"]];
+    button.frame = CGRectMake(startX ,yAxe, btnWidth, 30);
+    button.layer.cornerRadius = 15;
+    button.layer.masksToBounds = YES;
+    button.layer.borderWidth = 0.0f;
+    return button;
+}
+-(UILabel*)addInfoLabel:(NSString*)string startX:(CGFloat)startX font:(CGFloat)fntSize width:(CGFloat)width{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, width,50)];
+    CGPoint newCenter = CGPointMake(startX + 5 , self.toolbar.frame.size.height / 2);
+    label.center = newCenter;
+    label.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fntSize];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.text = string;
+    return label;
+}
+
+-(void)addInfoButtonOnToolbar{
+    CGRect sizeRect = [UIScreen mainScreen].bounds;
+    CGFloat originOfLabel;
+    CGFloat fntSize;
+    CGFloat width;
+    CGFloat iPadDist;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        fntSize = 16;
+        width = 335;
+        iPadDist = 30;
+        
+    } else {
+        fntSize = 14;
+        width = 300;
+        iPadDist = 8;
+    }
+    originOfLabel = sizeRect.size.width / 2.8;
+    self.infoLabel = [self addInfoLabel:@"Your diagrams was exported" startX:originOfLabel font:fntSize width:width];
+    [self.toolbarNotification addSubview:self.infoLabel];
+    
+    self.okButton =  [self fontButton:@"hideAlertView:" imageName1:@"info_icon_new.png" imageName2:@"info_icon_new.png" startX:self.infoLabel.frame.origin.x + self.infoLabel.frame.size.width - 40  width: 60 yAxe:self.toolbarNotification.frame.size.height - 42];
+   [self.toolbarNotification addSubview:self.okButton];
+    
+}
+-(void)hideAlertView:(UIButton*)button{
+    CGFloat startOfToolbar;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfToolbar = 100;
+    }else {
+        startOfToolbar = 10;
+    }
+        [UIView animateWithDuration:0.3
+                         animations:^{
+            
+            self.toolbarNotification.frame =  CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height, self.view.frame.size.width - startOfToolbar * 2, 55);
+  }];
+
 }
 @end

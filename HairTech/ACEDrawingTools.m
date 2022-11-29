@@ -181,7 +181,7 @@ CGPoint scalarMult(CGPoint a, double sc) {
     CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
     CGContextSetLineCap(context, kCGLineCapRound);
     
-    if ( IDIOM == IPAD ) {
+    if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
          CGContextSetLineWidth(context,  self.lineWidthNew
 );
     }
@@ -226,7 +226,7 @@ CGPoint scalarMult(CGPoint a, double sc) {
     
 	CGContextSetStrokeColorWithColor(ctx, self.lineColor.CGColor);
     
-    if ( IDIOM == IPAD ) {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
         //CGContextSetLineWidth(ctx, 2.8);
         CGContextSetLineWidth(ctx, self.lineWidthNew);
     }
@@ -311,7 +311,7 @@ CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     
     
-    if ( IDIOM == IPAD ) {
+    if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
         CGContextSetLineWidth(ctx, self.lineWidthNew);
     }
     else{
@@ -1259,7 +1259,7 @@ CAShapeLayer *shapelayer;
     [self.lineColor setStroke];
     [self setLineWidth:30.0];
     self.eraserWidth = 30.0;
-    if ( IDIOM == IPAD ) {
+    if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
           [self setLineWidth:30.0];
     }
     else{
@@ -1279,7 +1279,7 @@ CAShapeLayer *shapelayer;
    // NSLog(@"ERASER IN PROGRESS - 3");
 
     [self.lineColor setStroke];
-    if ( IDIOM == IPAD ) {
+    if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
         [self setLineWidth:30.0];
         self.eraserWidth = 30.0;
     }

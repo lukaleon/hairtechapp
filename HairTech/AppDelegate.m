@@ -111,8 +111,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    
-   // [[NSNotificationCenter defaultCenter] postNotificationName:@"didEnterBackground" object:self];
+    NSLog(@"enter background");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didEnterBackground" object:self];
    
     /*UIApplication *app = [UIApplication sharedApplication];
     [[NSNotificationCenter defaultCenter]
@@ -136,8 +136,11 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    NSLog(@"Saving on terminating");
-    [self.myviewdelegate saveImageWhenterminate];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"appDidTerminate" object:self];
+
+    //NSLog(@"Saving on terminating");
+    //[self.myviewdelegate saveImageWhenterminate];
     
    
     
@@ -189,49 +192,5 @@
     
     NSError *err = nil;
     success = [fileManager copyItemAtPath:databasePathFromApp toPath:databasePath error:&err];
-    
-    
-    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-    
-    
-    
-//
-//    BOOL success;
-//    FMDatabase *db = [FMDatabase databaseWithPath:databasePath];
-//    if (![db open])
-//    {
-//        NSLog(@"open failed");
-//        return;
-//    }
-//    if (![db columnExists:@"placeName" inTableWithName:@"MYPLACES"])
-//    {
-//        success = [db executeUpdate:@"ALTER TABLE MYPLACES ADD COLUMN placeName TEXT"];
-//        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
-//    }
-//    NSString *insertSQL = @"INSERT INTO  MYPLACES  (placeID, placeName)  VALUES (?, ?)";
-//    success = [db executeUpdate:insertSQL, placeIDValue, placeNameValue];
-//    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
-//    [db close];
-//
 }
-
-
-
-/*
--(void) createAndCheckDatabase
-
-{
-BOOL success;
-NSFileManager *fileManager = [NSFileManager defaultManager];
-success = [fileManager fileExistsAtPath:self.databasePath];
-
-if(success) return;
-
-//else move database into documents folder
-NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath]
-                                 stringByAppendingPathComponent:@"Technique.db"];
-
-[fileManager copyItemAtPath:databasePathFromApp toPath:self.databasePath error:nil];
-}
-*/
 @end

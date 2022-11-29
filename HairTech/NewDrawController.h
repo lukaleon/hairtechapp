@@ -71,6 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)pencilPressed:(id)sender;
 - (IBAction)eraserPressed:(id)sender;
 
+@property (strong, nonatomic)  IBOutlet UIView * toolbarNotification;
+@property (strong, nonatomic) IBOutlet UILabel * infoLabel;
+@property (strong, nonatomic) IBOutlet UIButton * okButton;
+
+@property (strong, nonatomic) NSTimer *touchTimer;
 @property (nonatomic, strong) AMPopTip *popTipLine;
 @property (nonatomic, strong) AMPopTip *popTipCurve;
 @property (nonatomic, strong) WEPopoverController *popoverController;
