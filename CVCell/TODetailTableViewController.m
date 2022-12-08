@@ -12,9 +12,8 @@
 #import "TORoundedTableViewCell.h"
 #import "TORoundedTableViewCapCell.h"
 #import "WhatsNewController.h"
-
-#define IDIOM    UI_USER_INTERFACE_IDIOM()
-#define IPAD     UIUserInterfaceIdiomPad
+#import "PageViewController.h"
+#import "ContainerViewController.h"
 
 #define SECTIONID_CollectionView 0
 #define SECTIONID_General 1
@@ -38,7 +37,7 @@
     self.tableView.tableFooterView = [self addFooterTitle];
     
     sectionOneItems = @[@"Help", @"Rate our app", @"Report an issue", @"Give us your feedback"];
-    sectionTwoItems = @[@"Follow us", @"Visit our web site"];
+    sectionTwoItems = @[@"Follow us on Instagram", @"Visit our web site"];
     sectionThemeItems = @[@"Auto", @"Light", @"Dark"];
     self.themeButtonArray = [NSMutableArray new];
     arrayOfCellIndexes = [NSMutableArray new];
@@ -222,58 +221,50 @@
 {
     if (indexPath.section == SECTIONID_General && indexPath.row == 0){
         WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"themeview"];
-      //  whatsnew.label.text = @"This is hairtech app";
+        //  whatsnew.label.text = @"This is hairtech app";
         whatsnew.view.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         [self.navigationController pushViewController:whatsnew animated:YES];
-    }
-    
-    /*NSLog(@"section %ld",(long)indexPath.section);
-    NSLog(@"row %ld",(long)indexPath.row);
-    if (indexPath.section == SECTIONID_Theme){
-        if (indexPath.row == 0){
-            UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryCheckmark;
-            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryNone;
-            [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryNone;
-            // [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-        }
-    if (indexPath.row == 1 ) {
-        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryCheckmark;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryNone;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryNone;
-        //[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
-    if (indexPath.row == 2 ){
-        UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:2]].accessoryType = UITableViewCellAccessoryCheckmark;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:0]].accessoryType = UITableViewCellAccessoryNone;
-        [self.tableView cellForRowAtIndexPath:[arrayOfCellIndexes objectAtIndex:1]].accessoryType = UITableViewCellAccessoryNone;
         
-    }*/
-//}
+        
+    }
   /*  if ( indexPath.section == 2 && indexPath.row == 0 ) {
-//        UIApplication *application = [UIApplication sharedApplication];
-//        NSURL *URL = [NSURL URLWithString:@"http://instagram.com/hairtechapp"];
-//        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
-//            if (success) {
-//                 NSLog(@"Opened url");
-//            }
-//        }];
-
-       // [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
-    if ( indexPath.section == 2 && indexPath.row == 1 ) {
+}
+   */ if ( indexPath.section == 2 && indexPath.row == 1 ) {
         
-//        UIApplication *application = [UIApplication sharedApplication];
-//        NSURL *URL = [NSURL URLWithString:@"http://hairtechapp.com"];
-//        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
-//            if (success) {
-//                NSLog(@"Opened url");
-//            }
-//        }];
-        //[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }*/
+        UIApplication *application = [UIApplication sharedApplication];
+        NSURL *URL = [NSURL URLWithString:@"https://apps.apple.com/us/app/hairtech-head-sheets/id625740630?action=write-review"];
+        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+            if (success) {
+                NSLog(@"Opened url");
+            }
+        }];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    if ( indexPath.section == SECTIONID_Follow && indexPath.row == 0 ) {
+//        WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
+//        [self.navigationController presentViewController:whatsnew animated:YES completion:nil];
+//        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        UIApplication *application = [UIApplication sharedApplication];
+              NSURL *URL = [NSURL URLWithString:@"http://instagram.com/hairtechapp"];
+              [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+                  if (success) {
+                       NSLog(@"Opened url");
+                  }
+              }];
+
+              [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }
+    if ( indexPath.section == 3 && indexPath.row == 1 ) {
+        UIApplication *application = [UIApplication sharedApplication];
+        NSURL *URL = [NSURL URLWithString:@"https://hairtechapp.com"];
+        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+            if (success) {
+                NSLog(@"Opened url");
+            }
+        }];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
 }
 
 #pragma mark - General Table View Configuration -
@@ -359,7 +350,12 @@
         if (indexPath.row == 0){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
             cell.label.text = @"How to use Hairtechapp";
-            //cell.image.image = [UIImage imageNamed:@"ht_logo_new"];
+            cell.image.image = [UIImage imageNamed:@"preview_cell1"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"cellBg"];
+            [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
+            [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
+
+
         }
         if (indexPath.row == 1){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
@@ -378,11 +374,15 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
+//    WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
     collectionCell *cell = (collectionCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    whatsnew.view.backgroundColor = cell.contentView.backgroundColor;
-    whatsnew.label.text = @"This is hairtech app";
-    [self presentViewController:whatsnew animated:YES completion:nil];
+//    whatsnew.view.backgroundColor = cell.contentView.backgroundColor;
+//    whatsnew.label.text = @"This is hairtech app";
+//      ContainerViewController *pageview = [self.storyboard instantiateViewControllerWithIdentifier:@"containervc"];
+//      pageview.modalPresentationStyle = UIModalPresentationFullScreen;
+//    pageview.view.backgroundColor = cell.contentView.backgroundColor;
+//
+//     [self.navigationController presentViewController:pageview animated:YES completion:nil];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

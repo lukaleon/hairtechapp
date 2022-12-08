@@ -17,6 +17,11 @@
 #import "Cell.h"
 #import "NewEntryController.h"
 
+typedef enum {
+    Selected,
+    View,
+} Mode;
+
 @class EntryViewController;
 @class NewEntryController;
 @class ViewControllerDelegate;
@@ -37,10 +42,11 @@
     
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;
-
-
+    NSIndexPath * indexOfSelectedCell;
+    NSUInteger indexForDelete;
 }
-
+@property (nonatomic,strong) UIButton *addHeadsheet;
+@property  BOOL isSelectionActivated;
 
 @property (weak, nonatomic) IBOutlet UIImageView *shadowLayer;
 
@@ -84,4 +90,7 @@
 - (void)openSubView;
 @property (weak, nonatomic) id<ViewControllerDelegate>delegate1;
 @property BOOL *tapcopy;
+
+@property (nonatomic, assign) Mode collectionMode;
+
 @end

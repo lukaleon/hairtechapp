@@ -5,54 +5,48 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SpringboardLayoutAttributes.h" // TO UNCOMMENT LATER
 #import "AppDelegate.h"
+#import "HapticHelper.h"
 static UIImage *deleteButtonImg;
 
 @implementation Cell
 
+@synthesize checkItem;
+@synthesize checker;
+@synthesize isCheckHidden;
 
     - (id)initWithCoder:(NSCoder *)aDecoder
     {
         self = [super initWithCoder:aDecoder];
         if (self)
         {
-           // self.backgroundColor = [UIColor colorNamed:@"grey"];
-            
-          //  [self.layer setMasksToBounds:NO];
-            //[self.layer setBorderWidth:3.0f];
-          //  [self.layer setBackgroundColor:[[UIColor clearColor]CGColor]];
-           // [self.layer setCornerRadius:15.0f];
-            //[self.layer setOpacity:1.0f];
-            
-//            [self.layer setShadowOffset:CGSizeMake(0, 8)];
-//            [self.layer setShadowColor:[[UIColor blackColor] CGColor]];
-//            [self.layer setShadowRadius:24.0f];
-//            [self.layer setShadowOpacity:0.25];
-            
-           // [self.cell_menu_btn setBackgroundImage:[UIImage imageNamed:@"btn_cell_menu_fl.png"] forState:UIControlStateNormal];
-            /*
-            self.barImage =[[UIImageView alloc] initWithFrame:CGRectMake(self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height/9)];
-            //self.eraserPointer.image=[UIImage imageNamed:@"eraser_pointer.png"];
-            self.barImage.backgroundColor = [UIColor colorWithRed:50.0f/255.0f green:50.0f/255.0f blue:50.0f/255.0f alpha:0.02f];
-            
-            [self addSubview:self.barImage];
-            */
-          self.renameBtn.enabled=NO;
-          self.deleteBtn.enabled=NO;
-                    
+          self.renameBtn.enabled = NO;
+            self.deleteBtn.enabled = NO;
             tapCount = 1;
+            self.editView.hidden = YES;
         }
-        
-        
     return self;
 }
 
-
-- (void)setColor:(UIColor *)color {
-  //  [self.dateLabel setBackgroundColor:color];
+-(void)prepareForReuse {
+    [super prepareForReuse];
+    self.selected = NO;
 }
 
+-(void)setIsCheckHidden:(BOOL)isCheckHidden{
+    checkItem.hidden = isCheckHidden;    
+}
 
+-(void)setCheckItem:(UIImageView *)checkImage{
+    checkItem = checkImage;
+}
+- (void)setIsHidden:(BOOL)isHidden
+{
+    NSLog(@"set hiddden NO");
+    self.editView.hidden = isHidden;
+}
 
+- (void)setColor:(UIColor *)color {
+}
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     
@@ -97,18 +91,7 @@ static UIImage *deleteButtonImg;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showPop"
      object:self];
-
-    
 }
-
-- (void)addOrangeLayer{
-    UIView *temp = [[UIView alloc] initWithFrame:self.image.frame];
-    temp.layer.cornerRadius = 15;
-    temp.backgroundColor = [UIColor colorNamed:@"grey"];
-    temp.alpha = 0.3;
-    [self addSubview:temp];
-}
-
 - (void)deletePressed{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.cellNameForDelete = self.dateLabel.text;

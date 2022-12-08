@@ -221,11 +221,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     [self.collectionView  reloadData];
- 
+    [self setupNavigationBar];
+    self.isSelectionActivated = NO;
 }
-
-
-
 
 -(void)openInfoController{
     
@@ -235,56 +233,38 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 - (void)addNewTechniqueButton {
-    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button addTarget:self
+    self.addHeadsheet = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.addHeadsheet addTarget:self
                action:@selector(openSubView:)
      forControlEvents:UIControlEventTouchUpInside];
-    button.backgroundColor = [UIColor clearColor];
-    button.adjustsImageWhenHighlighted = NO;
+    self.addHeadsheet.backgroundColor = [UIColor clearColor];
+    self.addHeadsheet.adjustsImageWhenHighlighted = NO;
     UIImage *img = [UIImage imageNamed:@"addnewtech.png"];
-    [button setImage:img forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"addnewtech.png"] forState:UIControlStateHighlighted];
+    [self.addHeadsheet setImage:img forState:UIControlStateNormal];
+    [self.addHeadsheet setImage:[UIImage imageNamed:@"addnewtech.png"] forState:UIControlStateHighlighted];
    // [button setBackgroundColor:[UIColor whiteColor]];
-    button.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
+    self.addHeadsheet.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/2 - 25,
                               self.view.frame.origin.y + self.view.frame.size.height - 100, 50 , 50);
-    button.layer.masksToBounds = YES;
-    button.layer.cornerRadius = button.frame.size.height / 2;
-
-
-    [self.view addSubview:button];
+    self.addHeadsheet.layer.masksToBounds = YES;
+    self.addHeadsheet.layer.cornerRadius = self.addHeadsheet.frame.size.height / 2;
+    [self.view addSubview:self.addHeadsheet];
 }
 
-- (void)setupNavigationBar {
-    UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [leftCustomButton addTarget:self
-                         action:@selector(openInfoController)
-               forControlEvents:UIControlEventTouchUpInside];
-    [leftCustomButton.widthAnchor constraintEqualToConstant:30].active = YES;
-    [leftCustomButton.heightAnchor constraintEqualToConstant:30].active = YES;
-    
-    [leftCustomButton setImage:[UIImage imageNamed:@"info_b.png"] forState:UIControlStateNormal];
-    UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
-    self.navigationItem.leftBarButtonItems = @[leftButtonItem];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
-    
-    UIButton *sort = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [sort addTarget:self
-             action:@selector(changeMode)
-   forControlEvents:UIControlEventTouchUpInside];
-    [sort.widthAnchor constraintEqualToConstant:30].active = YES;
-    [sort.heightAnchor constraintEqualToConstant:30].active = YES;
-    [sort setImage:[UIImage imageNamed:@"sort.png"] forState:UIControlStateNormal];
-    [sort setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-    
-    
-    UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithCustomView:sort];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:sortBtn, nil];
+- (void)setupNavigationBar{
+    [self setupInfoButton:@"info_b.png" selector:@"openInfoController"];
+    [self setupRightNavigationItem:@"Select" selector:@"selectionActivated"];
+    if(self.techniques.count > 0 ){
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
+    else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
 }
+
 
 -(void)viewDidLoad
-{
-   // [self getCurrentMode];
+{    [self setupLongPressGestures];
+
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
@@ -293,7 +273,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         appearance.shadowColor =  [UIColor clearColor];
         appearance.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorNamed:@"textWhiteDeepBlue"], NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:18]};
         self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance =appearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
         [self.navigationController prefersStatusBarHidden];
  
 
@@ -312,12 +292,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(receiveTestNotification3:)
                                                  name:@"showDeletePop"
                                                object:nil];
-
-   self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
+    
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     self.navigationItem.title = @"Collection";
 
-    [self setupNavigationBar];
     // Bottom Border
     [super viewDidLoad];
     [self.sidemenuButton setAlpha:0];
@@ -339,7 +318,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     tap=NO;
     [self populateCustomers];
     [self addNewTechniqueButton];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(openEntry)
                                                  name:@"openEntry"
@@ -352,12 +330,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(populateAndReload)
                                                  name:@"populate"
                                                object:nil];
-
-    
-    
 }
-
-
 
 
 /************************ NEW CODE ******************************/
@@ -422,10 +395,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 }
 -(void)viewDidDisappear{
-}
-
-- (void)viewDidUnload {
     
+}
+- (void)viewDidUnload {
     [self setEditButtonOutlet:nil];
     [self setCollectionView:nil];
     [super viewDidUnload];
@@ -570,7 +542,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -599,15 +570,120 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         NSLog(@"Gesture Swipe Handled");
     }
 }
+#pragma mark LongPressGesture
+
+- (void)setupLongPressGestures{
+     longpresscell = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pressCell:)];
+    longpresscell.minimumPressDuration = 0.3;
+    [self.collectionView addGestureRecognizer:longpresscell];
+}
+- (void)pressCell:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan){
+        return;
+    }
+        CGPoint p = [gestureRecognizer locationInView:self.collectionView];
+        NSIndexPath * indexPath = [self.collectionView indexPathForItemAtPoint:p];
+        indexOfSelectedCell = indexPath;
+        
+        if(indexPath == nil){
+            NSLog(@"couldn't find index");
+        }else {
+            Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            longpresscell.enabled = NO;
+            [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+            
+            [self selectCell:cell];
+            indexOfSelectedCell = indexPath;
+            [self selectionActivatedFromLongPress];
+        }
+}
+-(void)selectionActivated{
+    self.isSelectionActivated = YES;
+    self.navigationItem.title = @"";
+    [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
+   // [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+    self.navigationItem.leftBarButtonItem = nil;
+    self.addHeadsheet.hidden = YES;
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+    [self.collectionView reloadData];
+}
+-(void)selectionActivatedFromLongPress{
+    self.isSelectionActivated = YES;
+    self.navigationItem.title = @"";
+    [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
+    [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+    //self.navigationItem.leftBarButtonItem = nil;
+    self.addHeadsheet.hidden = YES;
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+}
+
+-(void)setupRightNavigationItem:(NSString*)btnTitle selector:(NSString*)method{
+    SEL selectorNew = NSSelectorFromString(method);
+
+    UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc]initWithTitle:btnTitle style:UIBarButtonItemStylePlain target:self action:selectorNew];
+    NSDictionary * barButtonApperance = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-DemiBold" size:16.0], NSForegroundColorAttributeName: [UIColor colorNamed:@"textWhiteDeepBlue"]};
+    [sortBtn setTitleTextAttributes:barButtonApperance forState:UIControlStateNormal];
+    [sortBtn setTitleTextAttributes:barButtonApperance forState:UIControlStateHighlighted];
+    [sortBtn setTitleTextAttributes:barButtonApperance forState:UIControlStateSelected];
+    self.navigationItem.rightBarButtonItem = sortBtn;
+}
+-(void)setupInfoButton:(NSString*)imgName selector:(NSString*)method{
+    SEL selectorNew = NSSelectorFromString(method);
+
+    UIButton *leftCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [leftCustomButton addTarget:self
+                         action:selectorNew
+               forControlEvents:UIControlEventTouchUpInside];
+    [leftCustomButton.widthAnchor constraintEqualToConstant:40].active = YES;
+    [leftCustomButton.heightAnchor constraintEqualToConstant:40].active = YES;
+    [leftCustomButton setImage:[UIImage imageNamed:imgName] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *rename = [[UIBarButtonItem alloc]initWithTitle:@"Rename" style:UIBarButtonItemStylePlain target:self action:@selector(renameTechnique)];
+    NSDictionary * barButtonApperance = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-DemiBold" size:16.0], NSForegroundColorAttributeName: [UIColor colorNamed:@"textWhiteDeepBlue"]};
+    [rename setTitleTextAttributes:barButtonApperance forState:UIControlStateNormal];
+    [rename setTitleTextAttributes:barButtonApperance forState:UIControlStateHighlighted];
+    [rename setTitleTextAttributes:barButtonApperance forState:UIControlStateSelected];
+    UIBarButtonItem * leftButtonItem =[[UIBarButtonItem alloc] initWithCustomView:leftCustomButton];
+
+    if([method isEqualToString:@"showConfirmationPopOver"]){
+        self.navigationItem.leftBarButtonItems = @[leftButtonItem, rename];
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    }
+    else {
+
+        self.navigationItem.leftBarButtonItems = @[leftButtonItem];
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    }
+   
+}
+
+-(void)renameTechnique{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"showPop"
+     object:self];
+}
+
+-(void)removeOrangeLayer{
+    self.addHeadsheet.hidden = NO;
+    self.navigationItem.rightBarButtonItems = nil;
+    [self setupInfoButton:@"info_b.png" selector:@"openInfoController"];
+    self.isSelectionActivated = NO;
+    [self cancelCellSelection];
+    [self setupRightNavigationItem:@"Select" selector:@"selectionActivated"];
+}
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
-    [cell hideBar];
-    UISwipeGestureRecognizer* gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userDidSwipe:)];
-    [gestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
-    [cell addGestureRecognizer:gestureRecognizer];
     
+    if(self.isSelectionActivated){
+        [cell setIsCheckHidden:NO];
+    }
+    else {
+        [cell setIsCheckHidden:YES];
+    }
+    
+    [cell hideBar];
         cell.contentView.backgroundColor = [UIColor whiteColor];
         [cell.contentView.layer setCornerRadius:15.0f];
         cell.clipsToBounds = YES;
@@ -657,7 +733,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         cell.image.frame = CGRectMake(0, -10, cell.frame.size.width , cell.frame.size.height);         //[cell.contentView.layer setCornerRadius:15.0f];
     // }
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(renamePressed:)];
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(renamePressed:)];
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
     cell.dateLabel.userInteractionEnabled = YES;
@@ -669,6 +745,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     else {
        // cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
         cell.viewModeLabel.alpha = 0;
+    }
+    
+    if ([cv.indexPathsForSelectedItems containsObject:indexPath]) {
+        [cv selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        // Select Cell
+        [self selectCell:cell];
+        indexOfSelectedCell = indexPath;
+        [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
+        [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+
+    }
+    else {
+        // Set cell to non-highlight
+        [self selectCell:cell];
+
     }
     return cell;
 }
@@ -690,8 +781,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             }
     }
 
-
-
+-(void)renamePressed:(UITapGestureRecognizer *)gestureRecognizer{
+    CGPoint tapPoint = [gestureRecognizer locationInView:self.collectionView];
+    indexOfSelectedCell = [self.collectionView indexPathForItemAtPoint:tapPoint];
+    NSLog(@"rename");
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"showPop"
+     object:self];
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -703,7 +800,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableString *prefix= technique.techniqueimagethumb1;
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
-
+    
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
@@ -727,7 +824,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableString *prefix3= technique.techniqueimagethumb3;
     filenamethumb3 = [filenamethumb3 mutableCopy];
     [filenamethumb3 appendString: prefix3];
-
+    
     NSArray *sysPaths3 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory3 = [sysPaths3 objectAtIndex:0];
     NSString *filePath3 = [NSString stringWithFormat:filenamethumb3, docDirectory3];
@@ -760,49 +857,89 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.image4 = tempimage4;
     self.image5 = tempimage5;
     
-    
-    NSLog(@"technique name version %@", technique.date);
-    if(![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
-        
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        appDelegate.myGlobalName = technique.techniquename;
-        self.sendImagenameToControllers = technique.techniquename;
-        appDelegate.globalDate = technique.date;
-        entryVC.stringFromTextfield = self.sendImagenameToControllers;
-        
-        entryVC.entryImage1 = self.image1;
-        entryVC.entryImage2 = self.image2;
-        entryVC.entryImage3 = self.image3;
-        entryVC.entryImage4 = self.image4;
-        entryVC.entryImage5 = self.image5;
-        entryVC.appVersion = technique.date;
-        
-        Cell *cell = [collectionView  cellForItemAtIndexPath:indexPath];
-        UIColor *fillColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-        entryVC.navigationItem.title = technique.techniquename;
+    Cell *cell = (Cell *)[collectionView  cellForItemAtIndexPath:indexPath];
+    if(!self.isSelectionActivated){
+        if(![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
+            
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            appDelegate.myGlobalName = technique.techniquename;
+            self.sendImagenameToControllers = technique.techniquename;
+            appDelegate.globalDate = technique.date;
+            entryVC.stringFromTextfield = self.sendImagenameToControllers;
+            
+            entryVC.entryImage1 = self.image1;
+            entryVC.entryImage2 = self.image2;
+            entryVC.entryImage3 = self.image3;
+            entryVC.entryImage4 = self.image4;
+            entryVC.entryImage5 = self.image5;
+            entryVC.appVersion = technique.date;
+            
+            entryVC.navigationItem.title = technique.techniquename;
+            cell.contentView.layer.cornerRadius = 15.0f;
+            [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
+            [self.navigationController pushViewController: entryVC animated:YES];
+        }
+        if([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
+            // NSLog(@"FILENAME %@",filenamethumb1);
+            [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
+            newEntryVC.isFirstTime = NO;
+            newEntryVC.navigationItem.title = technique.techniquename;
+            newEntryVC.techniqueName = technique.techniquename;
+            newEntryVC.techniqueType = technique.date;
+            newEntryVC.imageL = self.image1;
+            newEntryVC.imageR = self.image2;
+            newEntryVC.imageT = self.image3;
+            newEntryVC.imageF = self.image4;
+            newEntryVC.imageB = self.image5;
+            
+            [self.navigationController pushViewController: newEntryVC animated:YES];
+        }
+    }
+    else {
+        //cell.checkItem.hidden = NO;
+        [self selectCell:cell];
+        indexOfSelectedCell = indexPath;
+        [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
+        [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+    }
+}
 
-       // cell.contentView.backgroundColor =  [UIColor colorNamed:@"w"];
-        cell.contentView.layer.cornerRadius = 15.0f;
-        [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
-        [self.navigationController pushViewController: entryVC animated:YES];
-    }
-    if([technique.date isEqualToString:@"version22"] || [technique.date isEqualToString:@"men22"]){
-       // NSLog(@"FILENAME %@",filenamethumb1);
-        [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
-        newEntryVC.isFirstTime = NO;
-        newEntryVC.navigationItem.title = technique.techniquename;
-        newEntryVC.techniqueName = technique.techniquename;
-        newEntryVC.techniqueType = technique.date;
-        newEntryVC.imageL = self.image1;
-        newEntryVC.imageR = self.image2;
-        newEntryVC.imageT = self.image3;
-        newEntryVC.imageF = self.image4;
-        newEntryVC.imageB = self.image5;
-      
-        [self.navigationController pushViewController: newEntryVC animated:YES];
-    }
-    }
 
+ -(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+     Cell * cell = (Cell *)[collectionView cellForItemAtIndexPath:indexPath];
+     [self selectCell:cell];
+}
+
+
+-(void)selectCell:(Cell*)cell {
+
+        if (cell.selected){
+            [cell setIsHidden:NO];
+            cell.checker.hidden = NO;
+
+        }else {
+            [cell setIsHidden:YES];
+            cell.checker.hidden = YES;
+
+        }
+
+}
+-(void)cancelCellSelection{
+    self.navigationItem.title = @"Collection";
+
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForSelectedItems]) {
+        [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
+        Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        [cell setIsHidden:YES];
+        longpresscell.enabled = YES;
+    }
+        for (NSInteger row = 0; row < [self.collectionView numberOfItemsInSection:0]; row++) {
+            Cell * cell2 =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
+        cell2.checkItem.hidden = YES;
+            cell2.checker.hidden = YES;
+    }
+}
 -(void)openSubView:(id)sender
     {
 //       MySubView *mysubview  = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
@@ -1012,32 +1149,35 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
+//        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
     
-        __block NSUInteger index = NSUIntegerMax;
+//        __block NSUInteger index = NSUIntegerMax;
+//
+//        [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
+//            //if([technique.techniquename isEqualToString:appDelegate.cellNameForDelete])
+//            if(idx == indexOfSelectedCell)
+//            {
+//                index = idx;
+//                *stop = YES;
+//            }
+//        }];
         
-        [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
-            if([technique.techniquename isEqualToString:appDelegate.cellNameForDelete])
-            {
-                index = idx;
-                *stop = YES;
-            }
-        }];
+        Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexOfSelectedCell];
+        [self selectCell:cell];
         
-        Technique *technique = [self.techniques objectAtIndex:index];
+        Technique *technique = [self.techniques objectAtIndex:indexOfSelectedCell.row];
         FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
         [db deleteCustomer:technique];
-        NSLog(@"Techniques count = %d",self.techniques.count);
-        
         [self removeImage:technique.techniquename];
-
         [self populateCustomers];
-        NSLog(@"Techniques count = %d",self.techniques.count);
         [[self collectionView ] reloadData];
         [self checkArrayCount];
-
-
+        
+        if(self.techniques.count == 0){
+            [self removeOrangeLayer];
+            self.navigationItem.rightBarButtonItem.enabled = NO;
+        }
     } else {
        // [ self.editButtonOutlet setEnabled:YES];
 
@@ -1187,21 +1327,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     if ([[notification name] isEqualToString:@"showPop"])
     {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
-        __block NSUInteger index = NSUIntegerMax;
-        
-        [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
-            if([technique.techniquename isEqualToString:appDelegate.cellNameForDelete])
-            {
-                index = idx;
-                *stop = YES;
-            }
-        }];
-        renameIndexPath = index;
+//        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
+//        __block NSUInteger index = NSUIntegerMax;
+//
+//        [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
+//            if([technique.techniquename isEqualToString:appDelegate.cellNameForDelete])
+//            {
+//                index = idx;
+//                *stop = YES;
+//            }
+//        }];
+//        renameIndexPath = index;
 
-        Technique *tech = [self.techniques objectAtIndex:index];
-       // Technique *tech = [self.techniques objectAtIndex:[indexPath row]];
+        //Technique *tech = [self.techniques objectAtIndex:index];
+        Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
         HMPopUpView *hmPopUp = [[HMPopUpView alloc] initWithTitle:@"Rename diagram" okButtonTitle:@"Ok" cancelButtonTitle:@"Cancel" okBtnColor:[UIColor colorNamed:@"orange"] delegate:self];
     
     [hmPopUp configureHMPopUpViewWithBGColor:[UIColor colorNamed:@"whiteDark"] titleColor: [UIColor colorNamed:@"textWhiteDeepBlue"] buttonViewColor:[UIColor colorNamed:@"whiteDark"] buttonBGColor:[UIColor colorNamed:@"whiteDark"] buttonTextColor: [UIColor colorNamed:@"textWhiteDeepBlue"]];

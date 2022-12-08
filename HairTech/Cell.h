@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 //#import "ViewController.h"
+
+
 @class Cell;
 @protocol CellDelegate <NSObject>
 @optional
@@ -18,11 +20,18 @@
 @interface Cell : UICollectionViewCell///<ViewControllerDelegate>
 {
     int tapCount;
-
-UIImageView *transparentImage;
+    IBOutlet UILongPressGestureRecognizer *longPressCell;
+    
+    UIImageView *transparentImage;
 }
-@property (nonatomic) BOOL isDispensed;
+@property  NSIndexPath * idx;
+- (void)setIsHidden:(BOOL)isHidden;
+@property (nonatomic)  BOOL isCheckHidden;
+@property (nonatomic, weak) IBOutlet UIView *editView;
+@property (nonatomic, weak) IBOutlet UIImageView *checkItem;
+@property (nonatomic, weak) IBOutlet UIImageView *checker;
 
+@property (nonatomic) BOOL isDispensed;
 @property (nonatomic, strong) UIButton *deleteButton; // TO UNCOMMENT LATER
 
 @property (weak, nonatomic) IBOutlet UIImageView *transparentImage;
@@ -49,6 +58,8 @@ UIImageView *transparentImage;
 - (IBAction)deletePressed:(id)sender;
 -(void)showBar;
 -(void)hideBar;
+-(void)addOrangeLayer;
+-(void)removeOrangeLayer;
 
 @property (weak, nonatomic) NSIndexPath *indexOfCell;
 @property (weak, nonatomic) IBOutlet UIImageView *iconTag;

@@ -109,7 +109,7 @@
         [btnOk setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
 
         btnOk.backgroundColor = [UIColor colorNamed:@"whiteDark"];
-        btnOk.titleLabel.textColor =clr;
+        btnOk.titleLabel.textColor = clr;
         btnOk.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
         btnOk.enabled = NO;
         btnOk.alpha = 1;
