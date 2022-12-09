@@ -828,7 +828,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="273" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="white" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXu-Lq-dvW">
-                                <rect key="frame" x="0.0" y="51" width="1020" height="1307"/>
+                                <rect key="frame" x="0.0" y="51" width="1020" height="1315"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="grey"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" sectionInsetReference="safeArea" id="xUo-g8-Vbk">
@@ -886,21 +886,21 @@
                                                     <color key="textColor" name="deepblue"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IeQ-GM-4VG">
-                                                    <rect key="frame" x="205" y="345" width="34" height="34"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                <view hidden="YES" alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wv-gI-zeq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="263" height="395"/>
+                                                    <color key="backgroundColor" name="orangeForCell"/>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IeQ-GM-4VG">
+                                                    <rect key="frame" x="205" y="6" width="34" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <color key="tintColor" name="deepblue"/>
-                                                    <state key="normal" image="trash_edited">
+                                                    <state key="normal" image="cell_btn">
                                                         <color key="titleColor" systemColor="systemGray2Color"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="showEditMenu:" destination="7DT-Vp-VQc" eventType="touchUpInside" id="Ytn-Jr-YZe"/>
                                                     </connections>
                                                 </button>
-                                                <view hidden="YES" alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wv-gI-zeq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="263" height="395"/>
-                                                    <color key="backgroundColor" name="orangeForCell"/>
-                                                </view>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checker_bg" translatesAutoresizingMaskIntoConstraints="NO" id="DTo-3b-RwS">
                                                     <rect key="frame" x="210" y="14" width="21" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -2818,6 +2818,7 @@
         <image name="backhead_s" width="400" height="534"/>
         <image name="btn_apply.png" width="120" height="120"/>
         <image name="btn_loadingView.png" width="205" height="40"/>
+        <image name="cell_btn" width="120" height="120"/>
         <image name="checker" width="63" height="63"/>
         <image name="checker_bg" width="63" height="63"/>
         <image name="curveDashNew.png" width="40" height="40"/>
@@ -2849,7 +2850,6 @@
         <image name="textNew_white.png" width="40" height="40"/>
         <image name="toolbar_proba.png" width="256" height="334"/>
         <image name="tophead_s" width="400" height="534"/>
-        <image name="trash_edited" width="120" height="120"/>
         <image name="undo.png" width="69" height="68"/>
         <image name="undoNew.png" width="40" height="40"/>
         <image name="view_mode" width="180" height="36"/>

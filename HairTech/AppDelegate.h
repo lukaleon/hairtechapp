@@ -73,5 +73,7 @@
 @property (nonatomic,retain) NSString *globalDate;
 @property (nonatomic,retain) NSString *cellNameForDelete;
 -(void)changeTheme;
+@property (strong, nonatomic) NSIndexPath *cellPath;
+
 
 @end

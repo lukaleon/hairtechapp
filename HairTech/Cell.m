@@ -78,27 +78,27 @@ static UIImage *deleteButtonImg;
 
 }
 - (IBAction)showEditMenu:(id)sender {
-  //  [self addOrangeLayer];
-
-    [self deletePressed];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.cellPath = self.cellIndex;
+    [self deleteAndRenamePressed];
     
 }
 - (IBAction)renamePressed:(id)sender {
-    //[self hideBar];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.cellNameForDelete = self.dateLabel.text;
+//    appDelegate.cellNameForDelete = self.dateLabel.text;
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showPop"
      object:self];
 }
-- (void)deletePressed{
+- (void)deleteAndRenamePressed{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.cellNameForDelete = self.dateLabel.text;
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showDeletePop"
      object:self];
+    
 }
 -(void)showBar{
      [self.menuBar setBackgroundColor:[UIColor whiteColor]];

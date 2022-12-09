@@ -64,6 +64,6 @@
 @property (weak, nonatomic) NSIndexPath *indexOfCell;
 @property (weak, nonatomic) IBOutlet UIImageView *iconTag;
 @property (weak, nonatomic) IBOutlet UILabel *viewModeLabel;
-
+@property NSIndexPath * cellIndex;
 @end
 

@@ -223,6 +223,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self.collectionView  reloadData];
     [self setupNavigationBar];
     self.isSelectionActivated = NO;
+    longpresscell.enabled = YES;
 }
 
 -(void)openInfoController{
@@ -599,7 +600,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 -(void)selectionActivated{
     self.isSelectionActivated = YES;
-    self.navigationItem.title = @"";
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
    // [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     self.navigationItem.leftBarButtonItem = nil;
@@ -609,7 +609,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 -(void)selectionActivatedFromLongPress{
     self.isSelectionActivated = YES;
-    self.navigationItem.title = @"";
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
     [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     //self.navigationItem.leftBarButtonItem = nil;
@@ -719,13 +718,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
     cell.image.image = tempimage;
-   
-   //  if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ) {
-         
-      //   [cell.dateLabel setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
-        // [cell.contentView.layer setCornerRadius:15.0f];
-         
-    // }else{
+    cell.cellIndex = indexPath;
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
@@ -782,12 +775,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
 
 -(void)renamePressed:(UITapGestureRecognizer *)gestureRecognizer{
+    
     CGPoint tapPoint = [gestureRecognizer locationInView:self.collectionView];
     indexOfSelectedCell = [self.collectionView indexPathForItemAtPoint:tapPoint];
-    NSLog(@"rename");
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"showPop"
-     object:self];
+    Cell * cell = (Cell*)[self.collectionView cellForItemAtIndexPath:indexOfSelectedCell];
+    NSLog(@"rename preseed %@", cell.dateLabel);
+    if(!self.isSelectionActivated){
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"showPop"
+         object:self];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1139,7 +1136,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)showConfirmationPopOver
 {
 
-    actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
+    actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Delete" otherButtonTitles:@"Rename",@"Cancel", nil];
     actionSheet.delegate = self;
     //[actionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     [actionSheet showInView:self.view];
@@ -1149,7 +1146,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-//        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
 //        NSLog(@"AppDelegate MYGlobalNameREAL = %@",appDelegate.cellNameForDelete);
     
 //        __block NSUInteger index = NSUIntegerMax;
@@ -1173,12 +1171,27 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self populateCustomers];
         [[self collectionView ] reloadData];
         [self checkArrayCount];
-        
+        self.navigationItem.leftBarButtonItems = nil;
+
         if(self.techniques.count == 0){
             [self removeOrangeLayer];
             self.navigationItem.rightBarButtonItem.enabled = NO;
         }
-    } else {
+        
+    }
+    if (buttonIndex == 1 )
+    {
+        NSLog(@"Rename pressed");
+    
+        if(!self.isSelectionActivated)
+        {
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            indexOfSelectedCell = appDelegate.cellPath;
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"showPop"
+             object:self];
+        }
+    }else {
        // [ self.editButtonOutlet setEnabled:YES];
 
         for (Cell *cell in [self.collectionView visibleCells]) {
@@ -1187,7 +1200,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
       //  isDeletionModeActive = NO;
        MyCustomLayout *layout = (MyCustomLayout *)self.collectionView.collectionViewLayout;
        [layout invalidateLayout];
-        self.navigationItem.title=@"Collection";
         [self.addTechnique setEnabled:YES];
         [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:YES];
    }
@@ -1388,7 +1400,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)renameTechniqueDelegate:(NSString*)txtField{
    
-    Technique *technique = [self.techniques objectAtIndex:renameIndexPath];
+    Technique *technique = [self.techniques objectAtIndex:indexOfSelectedCell.row];
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db deleteCustomer:technique];
     [self populateCustomers];
@@ -1446,6 +1458,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [db insertCustomer:technique];
     [self populateCustomers];
     [self.collectionView reloadData];
+    self.navigationItem.leftBarButtonItems = nil;
+
 }
 
 
