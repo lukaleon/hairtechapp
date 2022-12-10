@@ -50,6 +50,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *menuBar;
 @property (weak, nonatomic) IBOutlet UIImageView *menuBarExpanded;
 @property (weak, nonatomic) IBOutlet UIButton *cell_menu_btn;
+@property (weak, nonatomic) IBOutlet UIButton *cell_rename_btn;
+
 
 @property (weak, nonatomic) IBOutlet UIButton *renameBtn;
 @property (weak, nonatomic) IBOutlet UIButton *deleteBtn;

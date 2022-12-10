@@ -610,8 +610,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)selectionActivatedFromLongPress{
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
-    [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
-    //self.navigationItem.leftBarButtonItem = nil;
+    //[self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+    self.navigationItem.leftBarButtonItem = nil;
     self.addHeadsheet.hidden = YES;
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
 }
@@ -897,7 +897,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self selectCell:cell];
         indexOfSelectedCell = indexPath;
         [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
-        [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+       // [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
         [HapticHelper generateFeedback:FeedbackType_Impact_Light];
     }
 }
@@ -914,16 +914,20 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         if (cell.selected){
             [cell setIsHidden:NO];
             cell.checker.hidden = NO;
+            cell.cell_menu_btn.hidden = NO;
+            cell.cell_rename_btn.hidden = NO;
 
         }else {
             [cell setIsHidden:YES];
             cell.checker.hidden = YES;
+            cell.cell_menu_btn.hidden = YES;
+            cell.cell_rename_btn.hidden = YES;
+
 
         }
 
 }
 -(void)cancelCellSelection{
-    self.navigationItem.title = @"Collection";
 
     for (NSIndexPath *indexPath in [self.collectionView indexPathsForSelectedItems]) {
         [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
@@ -935,6 +939,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             Cell * cell2 =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
         cell2.checkItem.hidden = YES;
             cell2.checker.hidden = YES;
+            cell2.cell_menu_btn.hidden = YES;
+            cell2.cell_rename_btn.hidden = YES;
+            longpresscell.enabled = YES;
     }
 }
 -(void)openSubView:(id)sender
@@ -1136,7 +1143,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)showConfirmationPopOver
 {
 
-    actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Delete" otherButtonTitles:@"Rename",@"Cancel", nil];
+    actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
     actionSheet.delegate = self;
     //[actionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     [actionSheet showInView:self.view];
@@ -1178,19 +1185,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             self.navigationItem.rightBarButtonItem.enabled = NO;
         }
         
-    }
-    if (buttonIndex == 1 )
-    {
-        NSLog(@"Rename pressed");
-    
-        if(!self.isSelectionActivated)
-        {
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            indexOfSelectedCell = appDelegate.cellPath;
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"showPop"
-             object:self];
-        }
     }else {
        // [ self.editButtonOutlet setEnabled:YES];
 
