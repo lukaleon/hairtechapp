@@ -35,10 +35,8 @@ typedef enum {
 -(void)setImagesInEC:(ViewController*)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5;
 @end
 
-@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate>{
+@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, CellDelegate>{
    // buttonImage *buttonImageClass;
-    
-    
     
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;

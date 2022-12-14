@@ -14,7 +14,7 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewEntryController
-@synthesize techniqueName;
+@synthesize techniqueNameID;
 -(void)viewDidAppear:(BOOL)animated{
     [self captureScreenRetinaOnLoad];
 }
@@ -22,7 +22,7 @@
 
 
 -(void)viewDidLoad{
-    NSLog(@"technique name %@", self.techniqueName);
+    NSLog(@"technique name %@", techniqueNameID);
     self.imageLeft.image = [self loadImages:@"thumb1"];
     self.imageRight.image = [self loadImages:@"thumb2"];
     self.imageTop.image = [self loadImages:@"thumb3"];
@@ -45,7 +45,7 @@
 -(UIImage*)loadImages:(NSString*)headtype
 {
     NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-    NSMutableString *prefix= [techniqueName mutableCopy];
+    NSMutableString *prefix= [techniqueNameID mutableCopy];
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
     filenamethumb1 = [filenamethumb1 mutableCopy];
@@ -66,7 +66,7 @@
     NSInteger myViewTag = sender.view.tag;
     NewDrawController *newDrawVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewDrawController"];
     newDrawVC.delegate = self;
-    newDrawVC.techniqueName = self.techniqueName;
+    newDrawVC.techniqueName = techniqueNameID;
     switch (myViewTag) {
         case 1:
             newDrawVC.headtype = @"lefthead";
@@ -113,7 +113,7 @@
 - (void)share:(id)sender{
     NSString *textToShare;
     textToShare = [NSString stringWithFormat:@""];
-    self.labelToSave.text = self.techniqueName;
+    self.labelToSave.text = self.techniqueNameID;
     textToShare = self.labelToSave.text;
     self.labelToSave.alpha = 1.0;
     self.logo.alpha = 1.0;
@@ -146,7 +146,6 @@
 
 
 - (NSMutableString*)createFileName:(NSMutableString*)name prefix:(NSString*)prefix {
-    name = [self.navigationItem.title mutableCopy];
     name = [name mutableCopy];
     [name appendString: prefix];
     name = [name mutableCopy];
@@ -163,7 +162,7 @@
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    entryviewImageSmall =  [self createFileName:entryviewImageSmall prefix:@"Entry"];
+    entryviewImageSmall =  [self createFileName:[techniqueNameID mutableCopy] prefix:@"Entry"];
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];

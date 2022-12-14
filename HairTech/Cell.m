@@ -91,6 +91,15 @@ static UIImage *deleteButtonImg;
      postNotificationName:@"showPop"
      object:self];
 }
+
+
+-(IBAction)sharePressed:(id)sender{
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"shareDiagram"
+     object:self];
+    
+}
 - (void)deleteAndRenamePressed{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.cellNameForDelete = self.dateLabel.text;

@@ -277,8 +277,19 @@
           [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
 }
 
+- (NSString*)createNameFromUUID:(NSString*)filetype identifier:(NSString*)uuidTemp {
+    NSMutableString * newString = [uuidTemp mutableCopy];
+    newString = [newString mutableCopy];
+    [newString appendString:filetype];
+    newString = [newString mutableCopy];
+    [newString appendString:@".png"];
+    return newString;
+}
+
 -(void)closeSubViewManually
 {
+    uuid = [[NSUUID UUID] UUIDString];
+    NSLog(@"uuid = %@", uuid);
     
     pressedOkButton=YES;
     pressedOk = YES;
@@ -291,6 +302,7 @@
     viewcontroller.label.text=self.textField.text;
     viewcontroller.delegate1=self;
     appDelegate.NameForTechnique = self.textField.text;
+    appDelegate.uniqueID = uuid;
     [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
     
     if([appDelegate.globalDate isEqualToString:@"version22"]){
@@ -304,136 +316,25 @@
     appDelegate.checkwindow = 1;
     appDelegate.checkEntrywindow = 1;
     appDelegate.OkButtonInSubView = 1;
-    appDelegate.checkvalue=0;
+    appDelegate.checkvalue = 0;
     
-    self.convertedLabel =self.textField.text;
-    
-    NSMutableString *bfcol =@"Entry";
-    foothumb_0 =self.convertedLabel;
-    foothumb_0 = [self.convertedLabel mutableCopy];
-    [foothumb_0 appendString:bfcol];
-    foothumb_0= [foothumb_0 mutableCopy];
-    [foothumb_0 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_0);
-    
-    /////-----------Name for  thumbimage1 ---------------//////////
-    
-    self.convertedLabel =self.textField.text;
-    
-    NSMutableString *bf1 =@"thumb1";
-    foothumb_1 =self.convertedLabel;
-    foothumb_1 = [self.convertedLabel mutableCopy];
-    [foothumb_1 appendString:bf1];
-    foothumb_1= [foothumb_1 mutableCopy];
-    [foothumb_1 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_1);
-    /////-----------Name for  thumbimage2 ---------------//////////
-    
-    self.convertedLabel =self.textField.text;
-    
-    NSMutableString *bf2 =@"thumb2";
-    foothumb_2 =self.convertedLabel;
-    foothumb_2 = [self.convertedLabel mutableCopy];
-    [foothumb_2 appendString:bf2];
-    foothumb_2= [foothumb_2 mutableCopy];
-    [foothumb_2 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_2);
-    
-    /////-----------Name for  thumbimage3 ---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bf3 =@"thumb3";
-    foothumb_3 =self.convertedLabel;
-    foothumb_3 = [self.convertedLabel mutableCopy];
-    [foothumb_3 appendString:bf3];
-    foothumb_3= [foothumb_3 mutableCopy];
-    [foothumb_3 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_3);
-    
-    /////-----------Name for  thumbimage1 ---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bf4 =@"thumb4";
-    foothumb_4 =self.convertedLabel;
-    foothumb_4 = [self.convertedLabel mutableCopy];
-    [foothumb_4 appendString:bf4];
-    foothumb_4= [foothumb_4 mutableCopy];
-    [foothumb_4 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_4);
-    
-    /////-----------Name for  thumbimage5 ---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bf5 =@"thumb5";
-    foothumb_5 =self.convertedLabel;
-    foothumb_5 = [self.convertedLabel mutableCopy];
-    [foothumb_5 appendString:bf5];
-    foothumb_5= [foothumb_5 mutableCopy];
-    [foothumb_5 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foothumb_5);
-    
-    /////-----------Name for  bigimage1 ---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bfb1 =@"big1";
-    foobig1 =self.convertedLabel;
-    foobig1 = [self.convertedLabel mutableCopy];
-    [foobig1 appendString:bfb1];
-    foobig1= [foobig1 mutableCopy];
-    [foobig1 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foobig1);
-    
-    /////-----------Name for  bigimage2---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bfb2 =@"big2";
-    foobig2 =self.convertedLabel;
-    foobig2 = [self.convertedLabel mutableCopy];
-    [foobig2 appendString:bfb2];
-    foobig2= [foobig2 mutableCopy];
-    [foobig2 appendString:@".png"];
-    NSLog(@"Результат in vc: %@.",foobig2);
-    
-    /////-----------Name for  bigimage3---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bfb3 =@"big3";
-    foobig3 =self.convertedLabel;
-    foobig3 = [self.convertedLabel mutableCopy];
-    [foobig3 appendString:bfb3];
-    foobig3= [foobig3 mutableCopy];
-    [foobig3 appendString:@".png"];
-    NSLog(@"Результат: %@.",foobig3);
-    
-    /////-----------Name for  bigimage4---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bfb4 =@"big4";
-    foobig4 =self.convertedLabel;
-    foobig4 = [self.convertedLabel mutableCopy];
-    [foobig4 appendString:bfb4];
-    foobig4= [foobig4 mutableCopy];
-    [foobig4 appendString:@".png"];
-    NSLog(@"Результат: %@.",foobig4);
-    
-    /////-----------Name for  bigimage5---------------//////////
-    self.convertedLabel =self.textField.text;
-    NSMutableString *bfb5 =@"big5";
-    foobig5 =self.convertedLabel;
-    foobig5 = [self.convertedLabel mutableCopy];
-    [foobig5 appendString:bfb5];
-    foobig5= [foobig5 mutableCopy];
-    [foobig5 appendString:@".png"];
-    NSLog(@"Результат: %@.",foobig5);
-    
+
+   
     Technique *technique = [[Technique alloc] init];
     technique.techniquename = self.textField.text;
-    NSLog(@"MALEFEMALE %@ ", self.maleOrFemale);
     technique.date = self.maleOrFemale; // newest version
-    technique.techniqueimage = foothumb_0;
-    technique.techniqueimagethumb1=foothumb_1;
-    technique.techniqueimagethumb2=foothumb_2;
-    technique.techniqueimagethumb3=foothumb_3;
-    technique.techniqueimagethumb4=foothumb_4;
-    technique.techniqueimagethumb5=foothumb_5;
-    technique.techniqueimagebig1=foobig1;
-    technique.techniqueimagebig2=foobig2;
-    technique.techniqueimagebig3=foobig3;
-    technique.techniqueimagebig4=foobig4;
-    technique.techniqueimagebig5=foobig5;
+    technique.techniqueimage = [self createNameFromUUID:@"Entry" identifier:uuid];
+    technique.techniqueimagethumb1 = [self createNameFromUUID:@"thumb1" identifier:uuid];
+    technique.techniqueimagethumb2 = [self createNameFromUUID:@"thumb2" identifier:uuid];
+    technique.techniqueimagethumb3 = [self createNameFromUUID:@"thumb3" identifier:uuid];
+    technique.techniqueimagethumb4 = [self createNameFromUUID:@"thumb4" identifier:uuid];
+    technique.techniqueimagethumb5 = [self createNameFromUUID:@"thumb5" identifier:uuid];
+    technique.techniqueimagebig1 = [self createNameFromUUID:@"big1" identifier:uuid];
+    technique.techniqueimagebig2 = [self createNameFromUUID:@"big2" identifier:uuid];
+    technique.techniqueimagebig3 = [self createNameFromUUID:@"big3" identifier:uuid];
+    technique.techniqueimagebig4 = [self createNameFromUUID:@"big4" identifier:uuid];
+    technique.techniqueimagebig5 = [self createNameFromUUID:@"big5" identifier:uuid];
+    technique.uniqueId = uuid;
 
     if(![self validate:technique])
     {
@@ -444,13 +345,11 @@
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db insertCustomer:technique];
     
-   
-    
-    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"lefthead"]];
-    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"righthead"]];
-    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"tophead"]];
-    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"fronthead"]];
-    [self createJSON:[self createFileNameJSON:technique.techniquename headtype:@"backhead"]];
+    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"lefthead"]];
+    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"righthead"]];
+    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"tophead"]];
+    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"fronthead"]];
+    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"backhead"]];
 
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"populate"
@@ -472,9 +371,11 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *appFile = [documentsDirectory stringByAppendingPathComponent:filename];
+    NSString* str = @"[]";
+    NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
-        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
+        [[NSFileManager defaultManager] createFileAtPath:appFile contents:data attributes:nil];
     }
 }
 -(NSMutableString *)createFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
@@ -569,12 +470,13 @@
 
 -(void)copyXFiles
 {
-    NSMutableString * cellImage = [self createFileName:self.textField.text prefix:@"Entry.png"];
-    NSMutableString * filenamethumb1 = [self createFileName:self.textField.text prefix:@"thumb1.png"];
-    NSMutableString * filenamethumb2 = [self createFileName:self.textField.text prefix:@"thumb2.png"];
-    NSMutableString * filenamethumb3 = [self createFileName:self.textField.text prefix:@"thumb3.png"];
-    NSMutableString * filenamethumb4 = [self createFileName:self.textField.text prefix:@"thumb4.png"];
-    NSMutableString * filenamethumb5 = [self createFileName:self.textField.text prefix:@"thumb5.png"];
+
+    NSMutableString * cellImage = [self createFileName:uuid prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self createFileName:uuid prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self createFileName:uuid prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self createFileName:uuid prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self createFileName:uuid prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self createFileName:uuid prefix:@"thumb5.png"];
     
     [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
     [self copyFileFromBundleToDocs:@"lefthead_s.png"];
@@ -595,12 +497,12 @@
 
 -(void)copyXFilesMEN
 {
-    NSMutableString * cellImage = [self createFileName:self.textField.text prefix:@"Entry.png"];
-    NSMutableString * filenamethumb1 = [self createFileName:self.textField.text prefix:@"thumb1.png"];
-    NSMutableString * filenamethumb2 = [self createFileName:self.textField.text prefix:@"thumb2.png"];
-    NSMutableString * filenamethumb3 = [self createFileName:self.textField.text prefix:@"thumb3.png"];
-    NSMutableString * filenamethumb4 = [self createFileName:self.textField.text prefix:@"thumb4.png"];
-    NSMutableString * filenamethumb5 = [self createFileName:self.textField.text prefix:@"thumb5.png"];
+    NSMutableString * cellImage = [self createFileName:uuid prefix:@"Entry.png"];
+    NSMutableString * filenamethumb1 = [self createFileName:uuid prefix:@"thumb1.png"];
+    NSMutableString * filenamethumb2 = [self createFileName:uuid prefix:@"thumb2.png"];
+    NSMutableString * filenamethumb3 = [self createFileName:uuid prefix:@"thumb3.png"];
+    NSMutableString * filenamethumb4 = [self createFileName:uuid prefix:@"thumb4.png"];
+    NSMutableString * filenamethumb5 = [self createFileName:uuid prefix:@"thumb5.png"];
     
     [self copyFileFromBundleToDocs:@"men-full-11.png"];
     [self copyFileFromBundleToDocs:@"lefthead_ms.png"];

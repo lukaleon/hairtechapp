@@ -8,7 +8,6 @@
 
 #import "FMDBDataAccess.h"
 
-
 @implementation FMDBDataAccess
 
 
@@ -18,11 +17,13 @@
     
     [db open];
     
-    BOOL success = [db executeUpdate:[NSString stringWithFormat:@"UPDATE TECHNIQUES SET TECHNIQUENAME = '%@', DATA = '%@',TECHNIQUEIMAGE = '%@',TECHNIQUENAMETHUMB1 = '%@',TECHNIQUENAMETHUMB2 = '%@',TECHNIQUENAMETHUMB3 = '%@',TECHNIQUENAMETHUMB4 = '%@',TECHNIQUENAMETHUMB5 = '%@',TECHNIQUENAMEBIG1 = '%@',TECHNIQUENAMEBIG2 = '%@',TECHNIQUENAMEBIG3 = '%@',TECHNIQUENAMEBIG4 = '%@',TECHNIQUENAMEBIG5 = '%@',", customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5]];
+    BOOL success = [db executeUpdate:[NSString stringWithFormat:@"UPDATE TECHNIQUES SET TECHNIQUENAME = '%@', DATA = '%@',TECHNIQUEIMAGE = '%@',TECHNIQUENAMETHUMB1 = '%@',TECHNIQUENAMETHUMB2 = '%@',TECHNIQUENAMETHUMB3 = '%@',TECHNIQUENAMETHUMB4 = '%@',TECHNIQUENAMETHUMB5 = '%@',TECHNIQUENAMEBIG1 = '%@',TECHNIQUENAMEBIG2 = '%@',TECHNIQUENAMEBIG3 = '%@',TECHNIQUENAMEBIG4 = '%@',TECHNIQUENAMEBIG5 = '%@' ", customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5]];
+    
+
     
     [db close];
     
-    return success; 
+    return success;
 }
 
 
@@ -40,7 +41,14 @@
 
     
     BOOL success =   [db executeUpdate:@"DELETE FROM TECHNIQUES WHERE id = ?",[NSNumber numberWithInt:customer.techniqueId]];
+//BOOL success=[db executeUpdate:@"DELETE FROM theTable WHERE id = ?", [NSNumber numberWithInt:myObject.id]]
+    
+    //[NSString stringWithFormat:@"DELETE FROM TECHNIQUES WHERE TECHNIQUENAME IS '%s'",[technique.techniquename UTF8String]]];
 
+    
+    
+    //[db executeUpdate:@"DELETE FROM theTable WHERE id = ?", [NSNumber numberWithInt:myObject.id]];
+    
     [db close];
     
     return success;
@@ -51,40 +59,26 @@ return YES;
 -(BOOL) insertCustomer:(Technique *) customer
 {
     // insert customer into database
+    BOOL success;
     
     FMDatabase *db = [FMDatabase databaseWithPath:[Utility getDatabasePath]];
-    [db open];
     
-    BOOL success =  [db executeUpdate:@"INSERT INTO TECHNIQUES (TECHNIQUENAME,DATE,TECHNIQUEIMAGE,TECHNIQUENAMETHUMB1,TECHNIQUENAMETHUMB2,TECHNIQUENAMETHUMB3,TECHNIQUENAMETHUMB4,TECHNIQUENAMETHUMB5,TECHNIQUENAMEBIG1,TECHNIQUENAMEBIG2,TECHNIQUENAMEBIG3,TECHNIQUENAMEBIG4,TECHNIQUENAMEBIG5) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);",
-                     customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5, nil];
+    [db open];
+    if (![db columnExists:@"UUID" inTableWithName:@"TECHNIQUES"])
+    {
+        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN UUID TEXT"];
+        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
+    }
+    
+    success =  [db executeUpdate:@"INSERT INTO TECHNIQUES (TECHNIQUENAME,DATE,TECHNIQUEIMAGE,TECHNIQUENAMETHUMB1,TECHNIQUENAMETHUMB2,TECHNIQUENAMETHUMB3,TECHNIQUENAMETHUMB4,TECHNIQUENAMETHUMB5,TECHNIQUENAMEBIG1,TECHNIQUENAMEBIG2,TECHNIQUENAMEBIG3,TECHNIQUENAMEBIG4,TECHNIQUENAMEBIG5,UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+                     customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5,customer.uniqueId, nil];
     
     [db close];
     
-    return success; 
+    return success;
     
-    return YES; 
+    return YES;
 }
-
-//-(void)insertColumn:(Technique*)customer{
-//    BOOL success;
-//     
-//    FMDatabase *db = [FMDatabase databaseWithPath:[Utility getDatabasePath]];
-//    if (![db open])
-//    {
-//        NSLog(@"open failed");
-//        return;
-//    }
-//    if (![db columnExists:@"version" inTableWithName:@"TECHNIQUES"])
-//    {
-//        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN version TEXT"];
-//        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
-//    }
-////    NSString *insertSQL = @"INSERT INTO TECHNIQUES (version) VALUE (?)";
-////    success = [db executeUpdate:insertSQL,customer.version];
-////    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
-//     
-//    [db close];
-//}
 
 -(NSMutableArray *) getCustomers
 {
@@ -96,9 +90,8 @@ return YES;
     
    // FMResultSet *results = [db executeQuery:@"SELECT * FROM customers"];
     
-//    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY DATE DESC "];
-    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY TECHNIQUENAME ASC"]; 
-
+    
+    FMResultSet *results = [db executeQuery:@"SELECT * FROM TECHNIQUES ORDER BY TECHNIQUENAME"];
   
     while([results next])
 
@@ -106,6 +99,7 @@ return YES;
         Technique *technique = [[Technique alloc] init];
         
         technique.techniqueId = [results intForColumn:@"id"];
+        
         technique.techniquename = [results stringForColumn:@"TECHNIQUENAME"];
         technique.date = [results stringForColumn:@"DATE"];
         technique.techniqueimage = [results stringForColumn:@"TECHNIQUEIMAGE"];
@@ -119,6 +113,7 @@ return YES;
         technique.techniqueimagebig3 = [results stringForColumn:@"TECHNIQUENAMEBIG3"];
         technique.techniqueimagebig4 = [results stringForColumn:@"TECHNIQUENAMEBIG4"];
         technique.techniqueimagebig5 = [results stringForColumn:@"TECHNIQUENAMEBIG5"];
+        technique.uniqueId = [results stringForColumn:@"UUID"];
         [techniques addObject:technique];
         
     }
@@ -129,8 +124,7 @@ return YES;
 
 }
 
-
--(void)insertColumnTime{
+-(void)insertColumnUUID:(NSString*)uniqueID{
     BOOL success;
 
     FMDatabase *db = [FMDatabase databaseWithPath:[Utility getDatabasePath]];
@@ -140,17 +134,18 @@ return YES;
         return;
     }
 
-    if (![db columnExists:@"time" inTableWithName:@"TECHNIQUES"])
+    if (![db columnExists:@"UUID" inTableWithName:@"TECHNIQUES"])
     {
-        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN time TEXT"];
+        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN UUID TEXT"];
         NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
     }
 
-//    NSString *insertSQL = @"INSERT INTO  TECHNIQUES  (time)  VALUES (?)";
-//    success = [db executeUpdate:insertSQL, @"2022"];
-//    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
-
+    NSString *insertSQL = @"INSERT INTO  TECHNIQUES  (uuid)  VALUES (?)";
+    success = [db executeUpdate:insertSQL, uniqueID];
+    NSAssert(success, @"insert failed: %@", [db lastErrorMessage]);
     [db close];
     
 }
+ 
 @end
+

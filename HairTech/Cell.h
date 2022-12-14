@@ -13,11 +13,12 @@
 @class Cell;
 @protocol CellDelegate <NSObject>
 @optional
-- (void)showPopover;
+-(void)showPopover;
+-(void)shareDiagram;
 @end
 
 
-@interface Cell : UICollectionViewCell///<ViewControllerDelegate>
+@interface Cell : UICollectionViewCell//<ViewControllerDelegate>
 {
     int tapCount;
     IBOutlet UILongPressGestureRecognizer *longPressCell;
@@ -55,8 +56,9 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *renameBtn;
 @property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
+@property (weak, nonatomic) IBOutlet UIButton *shareBtn;
+-(IBAction)sharePressed:(id)sender;
 - (IBAction)renamePressed:(id)sender;
-
 - (IBAction)deletePressed:(id)sender;
 -(void)showBar;
 -(void)hideBar;

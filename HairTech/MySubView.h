@@ -36,6 +36,7 @@
     NSString *nameForExistFile;
     NSMutableString *exfoothumb;
     ViewController *viewcontroller;
+    NSString * uuid;
     
 }
 

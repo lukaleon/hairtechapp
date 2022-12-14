@@ -32,6 +32,7 @@
 		4071B5F128DA172100CCC9C3 /* penNew_White.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5EF28DA172100CCC9C3 /* penNew_White.png */; };
 		4071B5F428DA1AC300CCC9C3 /* textNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F228DA1AC300CCC9C3 /* textNew_white.png */; };
 		4071B5F528DA1AC300CCC9C3 /* textNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F328DA1AC300CCC9C3 /* textNew.png */; };
+		40729CCB294A038800F64E38 /* 120.png in Resources */ = {isa = PBXBuildFile; fileRef = 40729CCA294A038700F64E38 /* 120.png */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
 		407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B702750033600BA0474 /* ASValuePopUpView.m */; };
 		407FB90228F17FA000371E24 /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90028F17FA000371E24 /* undoNew.png */; };
@@ -445,6 +446,7 @@
 		4071B5EF28DA172100CCC9C3 /* penNew_White.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = penNew_White.png; sourceTree = "<group>"; };
 		4071B5F228DA1AC300CCC9C3 /* textNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew_white.png; sourceTree = "<group>"; };
 		4071B5F328DA1AC300CCC9C3 /* textNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew.png; sourceTree = "<group>"; };
+		40729CCA294A038700F64E38 /* 120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 120.png; path = Images.xcassets/AppIcon.appiconset/120.png; sourceTree = "<group>"; };
 		407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
 		407D4B6F2750033600BA0474 /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
 		407D4B702750033600BA0474 /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
@@ -1885,6 +1887,7 @@
 				40BC7FA328E58EAE00F7364A /* book.json */,
 				B46561A320BD6D5B00BF5BB9 /* Default-568@2x.png */,
 				B46561A220BD6D5300BF5BB9 /* Default.png */,
+				40729CCA294A038700F64E38 /* 120.png */,
 				B46561A420BD6D6300BF5BB9 /* Default@2x.png */,
 				CEB7E75B1649A62A0099C14C /* hairtech-Prefix.pch */,
 				B401CA0C1B049C7200596292 /* Technique.db */,
@@ -2057,6 +2060,7 @@
 				B4EB2BC72374150A00F149C6 /* men-iphone7-left.png in Resources */,
 				407FB91528F8944A00371E24 /* lineNew.png in Resources */,
 				B4EB2BC82374150A00F149C6 /* men-iphone7-back.png in Resources */,
+				40729CCB294A038800F64E38 /* 120.png in Resources */,
 				B46493FC17026F1100A5CDF6 /* instruments_bar.png in Resources */,
 				4071B5EB28DA0FB400CCC9C3 /* curveDashNew.png in Resources */,
 				B4649401170273ED00A5CDF6 /* line_default.png in Resources */,

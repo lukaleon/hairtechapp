@@ -1833,7 +1833,6 @@ UIColor* tempColor;
     NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
     [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
-    NSLog(documentsDirectory);
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
         [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];

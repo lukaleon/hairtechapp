@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *imageTop;
 @property (weak, nonatomic) IBOutlet UIImageView *imageFront;
 @property (weak, nonatomic) IBOutlet UIImageView *imageBack;
-@property (assign, nonatomic) NSString * techniqueName;
+@property (assign, nonatomic) NSString * techniqueNameID;
 @property (assign, nonatomic) NSString * techniqueType;
 @property (weak, nonatomic)  UIImage *imageL;
 @property (weak, nonatomic)  UIImage *imageR;

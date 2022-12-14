@@ -75,5 +75,7 @@
 -(void)changeTheme;
 @property (strong, nonatomic) NSIndexPath *cellPath;
 
-
+@property (strong,nonatomic) NSString * uniqueID;
+@property (strong, nonatomic) NSDictionary * dict;
+@property (strong, nonatomic) UIImage * imageBtn;
 @end

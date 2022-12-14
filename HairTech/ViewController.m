@@ -114,7 +114,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)viewDidAppear:(BOOL)animated
 {
     
-    NSLog(@"DDDIIIDDDDAPPPEARA");
+    NSLog(@"View did appear");
 
     [super viewDidAppear:animated];
     
@@ -137,7 +137,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         // [prefs synchronize];
     }	// Do any additional setup after loading the view.
     else if(countValue == 1)
-        
     {
     }
     
@@ -293,6 +292,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(receiveTestNotification3:)
                                                  name:@"showDeletePop"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(shareDiagram)
+                                                 name:@"shareDiagram"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(setupButtonImageFromAppDelegate)
+                                                 name:@"setButtonImageFromAppDelegate"
+                                               object:nil];
     
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -300,25 +307,24 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     // Bottom Border
     [super viewDidLoad];
-    [self.sidemenuButton setAlpha:0];
+    [self.sidemenuButton setAlpha:1];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
 
     self.techniques = [[NSMutableArray alloc] init];
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-   // [db insertColumnTime];  INSERT INTO TABLE COLUMN 
     self.techniques = [db getCustomers];
-    self.menuViewController = [[DEMOMenuViewController alloc] init];
-    self.menuViewController.ViewController = self;
-    [self.toolbar_view setClipsToBounds:YES];
-//    self.toolbar_view.backgroundColor = mycolor2;
+
     
+    
+    [self.toolbar_view setClipsToBounds:YES];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tapRecognizer.delegate=self;
-      i=0;
-    tap=NO;
+    i = 0;
+    tap = NO;
     [self populateCustomers];
     [self addNewTechniqueButton];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(openEntry)
                                                  name:@"openEntry"
@@ -364,9 +370,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     NSString *homeDir = NSHomeDirectory();
     NSLog(@"%@",homeDir);
-    
     self.techniques = [[NSMutableArray alloc] init];
-    
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     self.techniques = [db getCustomers];
      
@@ -374,9 +378,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)MySubViewController:(MySubView *) controller didAddCustomer:(Technique *) technique
 {
-    
-    NSLog(@"addCustomerViewController");
-    
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db insertCustomer:technique];
     [self populateCustomers];
@@ -388,20 +389,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 
 -(void)populateAndReload{
-    NSLog(@"xxx PopulateAndReload");
     [self populateCustomers];
     [self.collectionView reloadData];
-    
-
-
 }
 -(void)viewDidDisappear{
     
-}
-- (void)viewDidUnload {
-    [self setEditButtonOutlet:nil];
-    [self setCollectionView:nil];
-    [super viewDidUnload];
 }
 
 - (void)dealloc
@@ -495,12 +487,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)openEntry
 {
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSLog(@"xxx OPEN ENTRY VIEW CONTROLLER %lu", (unsigned long)self.techniques.count);
-
     __block NSUInteger index = NSUIntegerMax;
     [self.techniques enumerateObjectsUsingBlock: ^ (Technique* technique, NSUInteger idx, BOOL* stop) {
-        if([technique.techniquename isEqualToString:appDelegate.NameForTechnique])
+        if([technique.uniqueId isEqualToString:appDelegate.uniqueID])
         {
             index = idx;
             *stop = YES;
@@ -513,7 +502,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     
-          
 //    if(![technique.date isEqualToString:@"version22"]){
 //        entryViewController.appVersion = technique.date;
 //        appDelegate.myGlobalName = technique.techniquename;
@@ -532,7 +520,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSLog(@"technique type %@", technique.date);
     newEntryVC.isFirstTime = YES;
     newEntryVC.navigationItem.title = technique.techniquename;
-    newEntryVC.techniqueName = technique.techniquename;
+    newEntryVC.techniqueNameID = technique.uniqueId;
     newEntryVC.techniqueType = technique.date;
     [self.navigationController pushViewController:newEntryVC animated:YES];
 }
@@ -544,7 +532,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     [super didReceiveMemoryWarning];
 }
-
 
 #pragma mark -Collection View methods
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
@@ -592,20 +579,24 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexPath];
             longpresscell.enabled = NO;
             [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
-            
             [self selectCell:cell];
             indexOfSelectedCell = indexPath;
             [self selectionActivatedFromLongPress];
+            
+            
         }
 }
+
+
 -(void)selectionActivated{
+
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
-   // [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     self.navigationItem.leftBarButtonItem = nil;
     self.addHeadsheet.hidden = YES;
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
     [self.collectionView reloadData];
+    
 }
 -(void)selectionActivatedFromLongPress{
     self.isSelectionActivated = YES;
@@ -613,6 +604,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     //[self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     self.navigationItem.leftBarButtonItem = nil;
     self.addHeadsheet.hidden = YES;
+    for (NSInteger row = 0; row < [self.collectionView numberOfItemsInSection:0]; row++) {
+        Cell * cell =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
+        [cell setIsCheckHidden:NO];
+    }
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
 }
 
@@ -671,11 +666,130 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self setupRightNavigationItem:@"Select" selector:@"selectionActivated"];
 }
 
+#pragma mark SHARING
+-(void)shareDiagram{
+    Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
+  //  NSLog(@"filename %@", tech.uniqueId);
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:@"diagram.htapp"];
+    NSData * data = [self dataOfType:filePath error:nil imageName:tech.uniqueId fileName:tech.techniquename];
+    
+    // Save it into file system
+    [data writeToFile:filePath atomically:YES];
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+
+    //NSURL * url = [docDirectory URLForResource:@"diagram" withExtension:@"htapp"];
+
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: @[url] applicationActivities:nil];
+    [self presentViewController:activityViewController animated: YES completion: nil];
+}
+
+//-(NSMutableString*)imageNamesToShare:(NSString*)imgName headtype:(NSString*)headtype{
+//    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+//    NSMutableString *prefix= [imgName mutableCopy];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: prefix];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: headtype];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: @".png"];
+//
+//    return filenamethumb1;
+//}
+
+-(UIImage*)imageToArchive:(NSString*)fileName headtype:(NSString*)headtype{
+    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+    NSMutableString *prefix= [fileName mutableCopy];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: prefix];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: headtype];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: @".png"];
+    
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
+    UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
+    return tempimage;
+}
+
+-(NSDictionary*)JSONtoArchive:(NSString*)fileName headtype:(NSString*)headtype{
+    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+    NSMutableString *prefix= [fileName mutableCopy];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: prefix];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: headtype];
+    filenamethumb1 = [filenamethumb1 mutableCopy];
+    [filenamethumb1 appendString: @".json"];
+    
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
+   
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    return json;
+}
+
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name{
+    NSError *error = nil;
+    NSLog(@"filename %@", imageName);
+
+    UIImage * fileName1 = [self imageToArchive:imageName headtype:@"thumb1"];
+    UIImage * fileName2 = [self imageToArchive:imageName headtype:@"thumb2"];
+    UIImage * fileName3 = [self imageToArchive:imageName headtype:@"thumb3"];
+    UIImage * fileName4 = [self imageToArchive:imageName headtype:@"thumb4"];
+    UIImage * fileName5 = [self imageToArchive:imageName headtype:@"thumb5"];
+    
+    NSDictionary * fileNameJSON1 = [self JSONtoArchive:imageName headtype:@"lefthead"];
+    NSDictionary * fileNameJSON2 = [self JSONtoArchive:imageName headtype:@"righthead"];
+    NSDictionary * fileNameJSON3 = [self JSONtoArchive:imageName headtype:@"tophead"];
+    NSDictionary * fileNameJSON4 = [self JSONtoArchive:imageName headtype:@"fronthead"];
+    NSDictionary * fileNameJSON5 = [self JSONtoArchive:imageName headtype:@"backhead"];
+    
+    NSString * filename = name;
+    
+    if ([typeName isEqualToString:typeName]) {
+        //Create a Dictionary
+        NSMutableDictionary *dictToSave = [NSMutableDictionary dictionary];
+        [dictToSave setObject:fileName1  forKey:@"image1"];
+        [dictToSave setObject:fileName2  forKey:@"image2"];
+        [dictToSave setObject:fileName3  forKey:@"image3"];
+        [dictToSave setObject:fileName4  forKey:@"image4"];
+        [dictToSave setObject:fileName5  forKey:@"image5"];
+        
+        [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
+        [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
+        [dictToSave setObject:fileNameJSON3  forKey:@"jsonTop"];
+        [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
+        [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
+
+        [dictToSave setObject:filename forKey:@"name"];
+          //Return the archived data
+        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+    }
+    //Don't generate an error
+    outError = NULL;
+    return nil;
+}
+
+-(void)setupButtonImageFromAppDelegate{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [self.sidemenuButton setImage:appDelegate.imageBtn forState:UIControlStateNormal];
+}
+
+#pragma mark Collection View Delegate Methods
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
     
-    if(self.isSelectionActivated){
+    if(self.isSelectionActivated)
+    {
         [cell setIsCheckHidden:NO];
     }
     else {
@@ -697,9 +811,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 //        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
     cell.dateLabel.text = technique.techniquename;
+    NSMutableString *prefix;
+ 
+    if(technique.uniqueId == NULL){
+            prefix = [technique.techniquename mutableCopy];
+    }else {
+        prefix = [technique.uniqueId mutableCopy];
+    }
 
-    NSMutableString *filenamethumb = @"%@/";
-    NSMutableString *prefix = technique.techniquename;
+    NSMutableString *filenamethumb = [@"%@/" mutableCopy];
     filenamethumb = [filenamethumb mutableCopy];
     [filenamethumb appendString: prefix];
     filenamethumb = [filenamethumb mutableCopy];
@@ -707,6 +827,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     filenamethumb = [filenamethumb mutableCopy];
     [filenamethumb appendString: @".png"];
    
+    NSLog(@"file name unique %@", filenamethumb );
   //  if ([technique.techniquename isEqualToString:@"BB"]){
     
     if ([technique.techniquename isEqualToString:tempstring]){
@@ -714,7 +835,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSLog(@"",docDirectory);
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
     cell.image.image = tempimage;
@@ -793,8 +913,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     Technique *technique = [self.techniques objectAtIndex:[indexPath row]];
     
-    NSMutableString *filenamethumb1 = @"%@/";
-    NSMutableString *prefix= technique.techniqueimagethumb1;
+    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+    NSMutableString *prefix= [technique.techniqueimagethumb1 mutableCopy];
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
     
@@ -881,7 +1001,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             [HapticHelper generateFeedback:FeedbackType_Impact_Medium ];
             newEntryVC.isFirstTime = NO;
             newEntryVC.navigationItem.title = technique.techniquename;
-            newEntryVC.techniqueName = technique.techniquename;
+            newEntryVC.techniqueNameID = technique.uniqueId;
             newEntryVC.techniqueType = technique.date;
             newEntryVC.imageL = self.image1;
             newEntryVC.imageR = self.image2;
@@ -893,7 +1013,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         }
     }
     else {
-        //cell.checkItem.hidden = NO;
+       // cell.checkItem.hidden = NO;
         [self selectCell:cell];
         indexOfSelectedCell = indexPath;
         [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
@@ -916,12 +1036,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell.checker.hidden = NO;
             cell.cell_menu_btn.hidden = NO;
             cell.cell_rename_btn.hidden = NO;
+            cell.shareBtn.hidden = NO;
 
         }else {
             [cell setIsHidden:YES];
             cell.checker.hidden = YES;
             cell.cell_menu_btn.hidden = YES;
             cell.cell_rename_btn.hidden = YES;
+            cell.shareBtn.hidden = YES;
 
 
         }
@@ -941,6 +1063,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell2.checker.hidden = YES;
             cell2.cell_menu_btn.hidden = YES;
             cell2.cell_rename_btn.hidden = YES;
+            cell2.shareBtn.hidden = YES;
+
             longpresscell.enabled = YES;
     }
 }
@@ -1174,7 +1298,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         Technique *technique = [self.techniques objectAtIndex:indexOfSelectedCell.row];
         FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
         [db deleteCustomer:technique];
-        [self removeImage:technique.techniquename];
+        if(technique.uniqueId == NULL){
+            [self removeImage:technique.techniquename];
+        }else {
+            [self removeImage:technique.uniqueId];
+        }
         [self populateCustomers];
         [[self collectionView ] reloadData];
         [self checkArrayCount];
@@ -1202,9 +1330,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)checkArrayCount
 {
-    NSLog(@"Array count  = %lu", arrayOfTechnique.count);
-
-    
     if (arrayOfTechnique.count==0)
     {
 
@@ -1399,56 +1524,58 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [db deleteCustomer:technique];
     [self populateCustomers];
     NSLog(@"techme %@", technique.techniqueimagethumb1);
-
-    NSMutableString * filenamethumb = [self getNameOnRenaming:txtField prefix:@"Entry.png"];
-    NSMutableString * filenamethumb1 = [self getNameOnRenaming:txtField prefix:@"thumb1.png"];
-    NSMutableString * filenamethumb2 = [self getNameOnRenaming:txtField prefix:@"thumb2.png"];
-    NSMutableString * filenamethumb3 = [self getNameOnRenaming:txtField prefix:@"thumb3.png"];
-    NSMutableString * filenamethumb4 = [self getNameOnRenaming:txtField prefix:@"thumb4.png"];
-    NSMutableString * filenamethumb5 = [self getNameOnRenaming:txtField prefix:@"thumb5.png"];
-    NSMutableString * filenamebig1 = [self getNameOnRenaming:txtField prefix:@"big1.png"];
-    NSMutableString * filenamebig2 = [self getNameOnRenaming:txtField prefix:@"big2.png"];
-    NSMutableString * filenamebig3 = [self getNameOnRenaming:txtField prefix:@"big3.png"];
-    NSMutableString * filenamebig4 = [self getNameOnRenaming:txtField prefix:@"big4.png"];
-    NSMutableString * filenamebig5 = [self getNameOnRenaming:txtField prefix:@"big5.png"];
-    NSMutableString * json_l = [self getNameOnRenaming:txtField prefix:@"lefthead.json"];
-    NSMutableString * json_r = [self getNameOnRenaming:txtField prefix:@"righthead.json"];
-    NSMutableString * json_t = [self getNameOnRenaming:txtField prefix:@"tophead.json"];
-    NSMutableString * json_f = [self getNameOnRenaming:txtField prefix:@"fronthead.json"];
-    NSMutableString * json_b = [self getNameOnRenaming:txtField prefix:@"backhead.json"];
-
-    [self changeFileName:technique.techniquename to:txtField];
-    [self changeFileName:technique.techniqueimage to:filenamethumb];
-    [self changeFileName:technique.techniqueimagethumb1 to:filenamethumb1];
-    [self changeFileName:technique.techniqueimagethumb2 to:filenamethumb2];
-    [self changeFileName:technique.techniqueimagethumb3 to:filenamethumb3];
-    [self changeFileName:technique.techniqueimagethumb4 to:filenamethumb4];
-    [self changeFileName:technique.techniqueimagethumb5 to:filenamethumb5];
-    [self changeFileName:technique.techniqueimagebig1 to:filenamebig1];
-    [self changeFileName:technique.techniqueimagebig2 to:filenamebig2];
-    [self changeFileName:technique.techniqueimagebig3 to:filenamebig3];
-    [self changeFileName:technique.techniqueimagebig4 to:filenamebig4];
-    [self changeFileName:technique.techniqueimagebig5 to:filenamebig5];
-    
-    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"lefthead.json"] to:json_l];
-    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"righthead.json"] to:json_r];
-    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"tophead.json"] to:json_t];
-    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"fronthead.json"] to:json_f];
-    [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"backhead.json"] to:json_b];
-    
-    technique.techniquename = txtField;
-    technique.techniqueimage = filenamethumb;
-    technique.techniqueimagethumb1 = filenamethumb1;
-    technique.techniqueimagethumb2 = filenamethumb2;
-    technique.techniqueimagethumb3 = filenamethumb3;
-    technique.techniqueimagethumb4 = filenamethumb4;
-    technique.techniqueimagethumb5 = filenamethumb5;
-    technique.techniqueimagebig1 = filenamebig1;
-    technique.techniqueimagebig2 = filenamebig2;
-    technique.techniqueimagebig3 = filenamebig3;
-    technique.techniqueimagebig4 = filenamebig4;
-    technique.techniqueimagebig5 = filenamebig5;
-    
+    if(technique.uniqueId == NULL){
+        NSMutableString * filenamethumb = [self getNameOnRenaming:txtField prefix:@"Entry.png"];
+        NSMutableString * filenamethumb1 = [self getNameOnRenaming:txtField prefix:@"thumb1.png"];
+        NSMutableString * filenamethumb2 = [self getNameOnRenaming:txtField prefix:@"thumb2.png"];
+        NSMutableString * filenamethumb3 = [self getNameOnRenaming:txtField prefix:@"thumb3.png"];
+        NSMutableString * filenamethumb4 = [self getNameOnRenaming:txtField prefix:@"thumb4.png"];
+        NSMutableString * filenamethumb5 = [self getNameOnRenaming:txtField prefix:@"thumb5.png"];
+        NSMutableString * filenamebig1 = [self getNameOnRenaming:txtField prefix:@"big1.png"];
+        NSMutableString * filenamebig2 = [self getNameOnRenaming:txtField prefix:@"big2.png"];
+        NSMutableString * filenamebig3 = [self getNameOnRenaming:txtField prefix:@"big3.png"];
+        NSMutableString * filenamebig4 = [self getNameOnRenaming:txtField prefix:@"big4.png"];
+        NSMutableString * filenamebig5 = [self getNameOnRenaming:txtField prefix:@"big5.png"];
+        NSMutableString * json_l = [self getNameOnRenaming:txtField prefix:@"lefthead.json"];
+        NSMutableString * json_r = [self getNameOnRenaming:txtField prefix:@"righthead.json"];
+        NSMutableString * json_t = [self getNameOnRenaming:txtField prefix:@"tophead.json"];
+        NSMutableString * json_f = [self getNameOnRenaming:txtField prefix:@"fronthead.json"];
+        NSMutableString * json_b = [self getNameOnRenaming:txtField prefix:@"backhead.json"];
+        
+        [self changeFileName:technique.techniquename to:txtField];
+        [self changeFileName:technique.techniqueimage to:filenamethumb];
+        [self changeFileName:technique.techniqueimagethumb1 to:filenamethumb1];
+        [self changeFileName:technique.techniqueimagethumb2 to:filenamethumb2];
+        [self changeFileName:technique.techniqueimagethumb3 to:filenamethumb3];
+        [self changeFileName:technique.techniqueimagethumb4 to:filenamethumb4];
+        [self changeFileName:technique.techniqueimagethumb5 to:filenamethumb5];
+        [self changeFileName:technique.techniqueimagebig1 to:filenamebig1];
+        [self changeFileName:technique.techniqueimagebig2 to:filenamebig2];
+        [self changeFileName:technique.techniqueimagebig3 to:filenamebig3];
+        [self changeFileName:technique.techniqueimagebig4 to:filenamebig4];
+        [self changeFileName:technique.techniqueimagebig5 to:filenamebig5];
+        
+        [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"lefthead.json"] to:json_l];
+        [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"righthead.json"] to:json_r];
+        [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"tophead.json"] to:json_t];
+        [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"fronthead.json"] to:json_f];
+        [self changeFileName:[self getNameOnRenaming:technique.techniquename prefix:@"backhead.json"] to:json_b];
+        
+        technique.techniquename = txtField;
+        technique.techniqueimage = filenamethumb;
+        technique.techniqueimagethumb1 = filenamethumb1;
+        technique.techniqueimagethumb2 = filenamethumb2;
+        technique.techniqueimagethumb3 = filenamethumb3;
+        technique.techniqueimagethumb4 = filenamethumb4;
+        technique.techniqueimagethumb5 = filenamethumb5;
+        technique.techniqueimagebig1 = filenamebig1;
+        technique.techniqueimagebig2 = filenamebig2;
+        technique.techniqueimagebig3 = filenamebig3;
+        technique.techniqueimagebig4 = filenamebig4;
+        technique.techniqueimagebig5 = filenamebig5;
+    }else {
+        technique.techniquename = txtField;
+    }
     [db insertCustomer:technique];
     [self populateCustomers];
     [self.collectionView reloadData];
@@ -1512,6 +1639,5 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
     return fileExist;
 }
-
 
 @end

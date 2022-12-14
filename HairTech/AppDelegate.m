@@ -61,7 +61,7 @@
     [self getCurrentMode];
     
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-    ViewController *controller = (ViewController *)navigationController.topViewController;
+    //ViewController *controller = (ViewController *)navigationController.topViewController;
     navigationController.navigationBar.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     [[UINavigationBar appearance] setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
   
@@ -147,6 +147,67 @@
           // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
+
+        if ([url.scheme isEqualToString:@"file"] && [url.pathExtension isEqualToString:@"htapp"]) {
+            NSLog(@"OPEN FILE %@", url);
+            
+            self.dict = options;
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            if([self readFromData:data ofType:@"diagram.htapp" error:nil]){
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"setButtonImageFromAppDelegate" object:self];
+            }
+
+            return YES;
+            
+        }
+    return NO;
+}
+- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName
+error:(NSError **)outError {
+    if ([typeName isEqualToString:typeName]) {
+        NSDictionary *readDict =
+        [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+        
+        UIImage *image1 = [readDict objectForKey:@"image1"];
+        NSDictionary * dict = [readDict objectForKey:@"jsonLeft"];
+        NSString * fileName = [readDict objectForKey:@"name"];
+        NSLog(@"file name %@", fileName);
+        [self writeStringToFile:dict];
+        
+//        NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//        NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+//        NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:@"diag2.png"];
+//        NSData * thumbdata = UIImagePNGRepresentation(image1);
+//        [thumbdata writeToFile:thumbpath atomically:YES];
+
+        self.imageBtn = image1;
+        NSLog(@"image name %@", image1);
+//        image1text = [readDict objectForKey:@"Image1Text"];
+//        image2 = [readDict objectForKey:@"Image2"];
+//        image2text = [readDict objectForKey:@"Image2Text"];
+//        image3 = [readDict objectForKey:@"Image3"];
+//        image3text = [readDict objectForKey:@"Image3Text"];
+    }
+    outError = NULL;
+    return YES;
+}
+- (void)writeStringToFile:(NSDictionary*)arr {
+    NSError * error;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"file.json"];
+    NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
+    [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
+        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
+    }
+    
+}
+
 - (void)getCurrentMode {
     NSLog(@"current mode ");
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -181,7 +242,6 @@
 -(void) createAndCheckDatabase
 
 {
-    NSLog(@"createAndcheckDataBase");
     BOOL success;
     
     NSFileManager *fileManager = [NSFileManager defaultManager];

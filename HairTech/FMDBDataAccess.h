@@ -24,7 +24,7 @@
 -(BOOL) insertCustomer:(Technique *) customer;
 -(BOOL) deleteCustomer:(Technique *) customer;
 -(BOOL) updateCustomer:(Technique *) customer;
--(void)insertColumnTime;
+-(void) insertColumnUUID:(NSString*)uniqueID;
 //-(void) insertColumn:(Technique *) customer;
 
 @end
