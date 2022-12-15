@@ -297,8 +297,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                                  name:@"shareDiagram"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setupButtonImageFromAppDelegate)
-                                                 name:@"setButtonImageFromAppDelegate"
+                                             selector:@selector(insertExportedDataFromAppDelegate)
+                                                 name:@"insertExportedDataFromAppDelegate"
                                                object:nil];
     
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -307,7 +307,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     // Bottom Border
     [super viewDidLoad];
-    [self.sidemenuButton setAlpha:1];
+    [self.sidemenuButton setAlpha:0];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
 
     self.techniques = [[NSMutableArray alloc] init];
@@ -670,11 +670,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)shareDiagram{
     Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
   //  NSLog(@"filename %@", tech.uniqueId);
+    NSMutableString * exportingFileName = [tech.uniqueId mutableCopy];
+    [exportingFileName appendString:@".htapp"];
 
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:@"diagram.htapp"];
-    NSData * data = [self dataOfType:filePath error:nil imageName:tech.uniqueId fileName:tech.techniquename];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    NSData * data = [self dataOfType:filePath error:nil imageName:tech.uniqueId fileName:exportingFileName techniqueName:tech.techniquename maleOrFemale:tech.date];
     
     // Save it into file system
     [data writeToFile:filePath atomically:YES];
@@ -735,7 +737,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     return json;
 }
 
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name{
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
     NSError *error = nil;
     NSLog(@"filename %@", imageName);
 
@@ -744,6 +746,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     UIImage * fileName3 = [self imageToArchive:imageName headtype:@"thumb3"];
     UIImage * fileName4 = [self imageToArchive:imageName headtype:@"thumb4"];
     UIImage * fileName5 = [self imageToArchive:imageName headtype:@"thumb5"];
+    UIImage * fileNameEntry = [self imageToArchive:imageName headtype:@"Entry"];
+
     
     NSDictionary * fileNameJSON1 = [self JSONtoArchive:imageName headtype:@"lefthead"];
     NSDictionary * fileNameJSON2 = [self JSONtoArchive:imageName headtype:@"righthead"];
@@ -751,16 +755,23 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSDictionary * fileNameJSON4 = [self JSONtoArchive:imageName headtype:@"fronthead"];
     NSDictionary * fileNameJSON5 = [self JSONtoArchive:imageName headtype:@"backhead"];
     
-    NSString * filename = name;
+    NSString * filename = imageName;
+    NSString * techName = techniqueName;
+    NSString * maleOrFemale = maleOrFem;
+
+
     
     if ([typeName isEqualToString:typeName]) {
         //Create a Dictionary
         NSMutableDictionary *dictToSave = [NSMutableDictionary dictionary];
-        [dictToSave setObject:fileName1  forKey:@"image1"];
-        [dictToSave setObject:fileName2  forKey:@"image2"];
-        [dictToSave setObject:fileName3  forKey:@"image3"];
-        [dictToSave setObject:fileName4  forKey:@"image4"];
-        [dictToSave setObject:fileName5  forKey:@"image5"];
+        
+        [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
+
+        [dictToSave setObject:fileName1  forKey:@"imageLeft"];
+        [dictToSave setObject:fileName2  forKey:@"imageRight"];
+        [dictToSave setObject:fileName3  forKey:@"imageTop"];
+        [dictToSave setObject:fileName4  forKey:@"imageFront"];
+        [dictToSave setObject:fileName5  forKey:@"imageBack"];
         
         [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
         [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
@@ -768,7 +779,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
         [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
 
+        [dictToSave setObject:techName forKey:@"techniqueName"];
         [dictToSave setObject:filename forKey:@"name"];
+        [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
+
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
     }
@@ -777,9 +791,43 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     return nil;
 }
 
--(void)setupButtonImageFromAppDelegate{
+- (NSString*)createNameFromUUID:(NSString*)filetype identifier:(NSString*)uuidTemp {
+    NSMutableString * newString = [uuidTemp mutableCopy];
+    newString = [newString mutableCopy];
+    [newString appendString:filetype];
+    newString = [newString mutableCopy];
+    [newString appendString:@".png"];
+    return newString;
+}
+-(void)insertExportedDataFromAppDelegate{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [self.sidemenuButton setImage:appDelegate.imageBtn forState:UIControlStateNormal];
+    NSString * uuid = appDelegate.idFromImportedFile;
+    Technique *technique = [[Technique alloc] init];
+    technique.techniquename = appDelegate.nameFromImportedFile;
+    technique.date = appDelegate.maleFemaleFromImportedFile; // newest version
+    technique.techniqueimage = [self createNameFromUUID:@"Entry" identifier:uuid];
+    technique.techniqueimagethumb1 = [self createNameFromUUID:@"thumb1" identifier:uuid];
+    technique.techniqueimagethumb2 = [self createNameFromUUID:@"thumb2" identifier:uuid];
+    technique.techniqueimagethumb3 = [self createNameFromUUID:@"thumb3" identifier:uuid];
+    technique.techniqueimagethumb4 = [self createNameFromUUID:@"thumb4" identifier:uuid];
+    technique.techniqueimagethumb5 = [self createNameFromUUID:@"thumb5" identifier:uuid];
+    technique.techniqueimagebig1 = [self createNameFromUUID:@"big1" identifier:uuid];
+    technique.techniqueimagebig2 = [self createNameFromUUID:@"big2" identifier:uuid];
+    technique.techniqueimagebig3 = [self createNameFromUUID:@"big3" identifier:uuid];
+    technique.techniqueimagebig4 = [self createNameFromUUID:@"big4" identifier:uuid];
+    technique.techniqueimagebig5 = [self createNameFromUUID:@"big5" identifier:uuid];
+    technique.uniqueId = uuid;
+
+    if(![self validate:technique])
+    {
+        [Utility showAlert:@"Error" message:@"Validation Failed!"];
+        return;
+    }
+
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    [db insertCustomer:technique];
+    [self populateAndReload];
+    
 }
 
 #pragma mark Collection View Delegate Methods

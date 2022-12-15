@@ -154,9 +154,9 @@
             
             self.dict = options;
             NSData *data = [NSData dataWithContentsOfURL:url];
-            if([self readFromData:data ofType:@"diagram.htapp" error:nil]){
+            if([self readFromData:data ofType:@"file.htapp" error:nil]){
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"setButtonImageFromAppDelegate" object:self];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
             }
 
             return YES;
@@ -164,40 +164,93 @@
         }
     return NO;
 }
+- (NSMutableString *)generateJSONFileNames:(NSString*)headtype uniqeId:(NSString*)uniqueIdentifier {
+    
+    NSMutableString * importJsonName = [uniqueIdentifier mutableCopy];
+    [importJsonName  appendString:headtype];
+    importJsonName = [importJsonName mutableCopy];
+    [importJsonName appendString:@".json"];
+    return importJsonName;
+}
+
+- (NSMutableString *)generateImageFileNames:(NSString*)headtype uniqeId:(NSString*)uniqueIdentifier {
+    
+    NSMutableString * importJsonName = [uniqueIdentifier mutableCopy];
+    [importJsonName  appendString:headtype];
+    importJsonName = [importJsonName mutableCopy];
+    [importJsonName appendString:@".png"];
+    return importJsonName;
+}
+
+
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName
 error:(NSError **)outError {
     if ([typeName isEqualToString:typeName]) {
         NSDictionary *readDict =
         [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
         
-        UIImage *image1 = [readDict objectForKey:@"image1"];
-        NSDictionary * dict = [readDict objectForKey:@"jsonLeft"];
-        NSString * fileName = [readDict objectForKey:@"name"];
-        NSLog(@"file name %@", fileName);
-        [self writeStringToFile:dict];
+        UIImage *imageEntry = [readDict objectForKey:@"imageEntry"];
         
-//        NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-//        NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-//        NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:@"diag2.png"];
-//        NSData * thumbdata = UIImagePNGRepresentation(image1);
-//        [thumbdata writeToFile:thumbpath atomically:YES];
+        UIImage *imageLeft = [readDict objectForKey:@"imageLeft"];
+        UIImage *imageRight = [readDict objectForKey:@"imageRight"];
+        UIImage *imageTop = [readDict objectForKey:@"imageTop"];
+        UIImage *imageFront = [readDict objectForKey:@"imageFront"];
+        UIImage *imageBack = [readDict objectForKey:@"imageBack"];
 
-        self.imageBtn = image1;
-        NSLog(@"image name %@", image1);
-//        image1text = [readDict objectForKey:@"Image1Text"];
-//        image2 = [readDict objectForKey:@"Image2"];
-//        image2text = [readDict objectForKey:@"Image2Text"];
-//        image3 = [readDict objectForKey:@"Image3"];
-//        image3text = [readDict objectForKey:@"Image3Text"];
+        NSDictionary * dictLeft = [readDict objectForKey:@"jsonLeft"];
+        NSDictionary * dictRight = [readDict objectForKey:@"jsonRight"];
+        NSDictionary * dictTop = [readDict objectForKey:@"jsonTop"];
+        NSDictionary * dictFront = [readDict objectForKey:@"jsonFront"];
+        NSDictionary * dictBack = [readDict objectForKey:@"jsonBack"];
+
+        NSString * unID = [readDict objectForKey:@"name"];
+        NSString * techName = [readDict objectForKey:@"techniqueName"];
+        NSString * maleFemale = [readDict objectForKey:@"maleFemale"];
+
+        
+        NSLog(@"file name for this diagram %@", techName);
+        // Generate new file name for JSON files
+        NSString * uuid = [[NSUUID UUID] UUIDString];
+
+        NSMutableString * importJsonNameLeft = [self generateJSONFileNames:@"lefthead" uniqeId:uuid];
+        NSMutableString * importJsonNameRight = [self generateJSONFileNames:@"rightead" uniqeId:uuid];
+        NSMutableString * importJsonNameTop = [self generateJSONFileNames:@"tophead" uniqeId:uuid];
+        NSMutableString * importJsonNameFront = [self generateJSONFileNames:@"fronthead" uniqeId:uuid];
+        NSMutableString * importJsonNameBack = [self generateJSONFileNames:@"backhead" uniqeId:uuid];
+        
+        NSMutableString * importImageNameLeft = [self generateImageFileNames:@"thumb1" uniqeId:uuid];
+        NSMutableString * importImageNameRight = [self generateImageFileNames:@"thumb2" uniqeId:uuid];
+        NSMutableString * importImageNameTop = [self generateImageFileNames:@"thumb3" uniqeId:uuid];
+        NSMutableString * importImageNameFront = [self generateImageFileNames:@"thumb4" uniqeId:uuid];
+        NSMutableString * importImageNameBack = [self generateImageFileNames:@"thumb5" uniqeId:uuid];
+        NSMutableString * importImageNameEntry = [self generateImageFileNames:@"Entry" uniqeId:uuid];
+
+        
+        [self writeStringToFile:dictLeft fileName:importJsonNameLeft];
+        [self writeStringToFile:dictRight fileName:importJsonNameRight];
+        [self writeStringToFile:dictTop fileName:importJsonNameTop];
+        [self writeStringToFile:dictFront fileName:importJsonNameFront];
+        [self writeStringToFile:dictBack fileName:importJsonNameBack];
+
+        [self writeImageToFile:imageLeft fileName:importImageNameLeft];
+        [self writeImageToFile:imageRight fileName:importImageNameRight];
+        [self writeImageToFile:imageTop fileName:importImageNameTop];
+        [self writeImageToFile:imageFront fileName:importImageNameFront];
+        [self writeImageToFile:imageBack fileName:importImageNameBack];
+        [self writeImageToFile:imageEntry fileName:importImageNameEntry];
+        
+        self.nameFromImportedFile = techName;
+        self.idFromImportedFile = uuid;
+        self.maleFemaleFromImportedFile = maleFemale;
     }
     outError = NULL;
     return YES;
 }
-- (void)writeStringToFile:(NSDictionary*)arr {
+- (void)writeStringToFile:(NSDictionary*)arr fileName:(NSString*)fileName{
     NSError * error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"file.json"];
+    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:fileName];
     NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
     [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
@@ -206,6 +259,14 @@ error:(NSError **)outError {
         [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
     }
     
+}
+
+- (void)writeImageToFile:(UIImage*)image fileName:(NSString*)fileName {
+    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileName];
+    NSData * thumbdata = UIImagePNGRepresentation(image);
+    [thumbdata writeToFile:thumbpath atomically:YES];
 }
 
 - (void)getCurrentMode {

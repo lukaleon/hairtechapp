@@ -76,6 +76,12 @@
 @property (strong, nonatomic) NSIndexPath *cellPath;
 
 @property (strong,nonatomic) NSString * uniqueID;
+@property (strong,nonatomic) NSString * nameFromImportedFile;
+@property (strong,nonatomic) NSString * idFromImportedFile;
+@property (strong,nonatomic) NSString * maleFemaleFromImportedFile;
+
 @property (strong, nonatomic) NSDictionary * dict;
 @property (strong, nonatomic) UIImage * imageBtn;
+
+
 @end
