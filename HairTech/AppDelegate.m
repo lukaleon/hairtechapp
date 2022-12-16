@@ -213,7 +213,7 @@ error:(NSError **)outError {
         NSString * uuid = [[NSUUID UUID] UUIDString];
 
         NSMutableString * importJsonNameLeft = [self generateJSONFileNames:@"lefthead" uniqeId:uuid];
-        NSMutableString * importJsonNameRight = [self generateJSONFileNames:@"rightead" uniqeId:uuid];
+        NSMutableString * importJsonNameRight = [self generateJSONFileNames:@"righthead" uniqeId:uuid];
         NSMutableString * importJsonNameTop = [self generateJSONFileNames:@"tophead" uniqeId:uuid];
         NSMutableString * importJsonNameFront = [self generateJSONFileNames:@"fronthead" uniqeId:uuid];
         NSMutableString * importJsonNameBack = [self generateJSONFileNames:@"backhead" uniqeId:uuid];
@@ -246,6 +246,8 @@ error:(NSError **)outError {
     outError = NULL;
     return YES;
 }
+
+
 - (void)writeStringToFile:(NSDictionary*)arr fileName:(NSString*)fileName{
     NSError * error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);

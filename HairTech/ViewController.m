@@ -802,6 +802,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)insertExportedDataFromAppDelegate{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString * uuid = appDelegate.idFromImportedFile;
+    
     Technique *technique = [[Technique alloc] init];
     technique.techniquename = appDelegate.nameFromImportedFile;
     technique.date = appDelegate.maleFemaleFromImportedFile; // newest version
@@ -828,6 +829,29 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [db insertCustomer:technique];
     [self populateAndReload];
     
+    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
+     
+    newEntryVC.isFirstTime = NO;
+    newEntryVC.navigationItem.title = technique.techniquename;
+    newEntryVC.techniqueNameID = technique.uniqueId;
+    newEntryVC.techniqueType = technique.date;
+    newEntryVC.imageL = self.image1;
+    newEntryVC.imageR = self.image2;
+    newEntryVC.imageT = self.image3;
+    newEntryVC.imageF = self.image4;
+    newEntryVC.imageB = self.image5;
+    
+    [self.navigationController pushViewController:newEntryVC animated:YES];
+}
+
+-(NSString*)fileCreationDate:(NSString*)path{
+    NSDictionary* fileAttribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    NSDate *date = [fileAttribs objectForKey:NSFileCreationDate]; //or NSFileModificationDate
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateStyle:NSDateFormatterMediumStyle]; // day, Full month and year
+    [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
+    NSString *dateString = [df stringFromDate:date];
+    return dateString;
 }
 
 #pragma mark Collection View Delegate Methods
@@ -858,6 +882,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         cell.layer.masksToBounds = NO;
 //        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
+ 
     cell.dateLabel.text = technique.techniquename;
     NSMutableString *prefix;
  
@@ -885,8 +910,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
+    
+    
     cell.image.image = tempimage;
     cell.cellIndex = indexPath;
+    cell.viewModeLabel.text =  [self fileCreationDate:filePath];
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
@@ -901,11 +929,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     if (![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
         cell.image.frame = CGRectMake(0, -20, cell.frame.size.width , cell.frame.size.height);
-        cell.viewModeLabel.alpha = 0;
+     //   cell.viewModeLabel.alpha = 0;
+        cell.newVersionDiagram = NO;
     }
     else {
+        cell.newVersionDiagram = YES;
+
        // cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
-        cell.viewModeLabel.alpha = 0;
+        //cell.viewModeLabel.alpha = 0;
     }
     
     if ([cv.indexPathsForSelectedItems containsObject:indexPath]) {
@@ -1023,9 +1054,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.image5 = tempimage5;
     
     Cell *cell = (Cell *)[collectionView  cellForItemAtIndexPath:indexPath];
+    
     if(!self.isSelectionActivated){
         if(![technique.date isEqualToString:@"version22"] && ![technique.date isEqualToString:@"men22"]){
-            
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             appDelegate.myGlobalName = technique.techniquename;
             self.sendImagenameToControllers = technique.techniquename;
@@ -1061,7 +1092,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         }
     }
     else {
-       // cell.checkItem.hidden = NO;
+        // cell.checkItem.hidden = NO;
         [self selectCell:cell];
         indexOfSelectedCell = indexPath;
         [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
@@ -1084,7 +1115,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell.checker.hidden = NO;
             cell.cell_menu_btn.hidden = NO;
             cell.cell_rename_btn.hidden = NO;
-            cell.shareBtn.hidden = NO;
+            if(cell.newVersionDiagram == YES){
+                cell.shareBtn.hidden = NO;
+            }
 
         }else {
             [cell setIsHidden:YES];
@@ -1571,7 +1604,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db deleteCustomer:technique];
     [self populateCustomers];
-    NSLog(@"techme %@", technique.techniqueimagethumb1);
+    
     if(technique.uniqueId == NULL){
         NSMutableString * filenamethumb = [self getNameOnRenaming:txtField prefix:@"Entry.png"];
         NSMutableString * filenamethumb1 = [self getNameOnRenaming:txtField prefix:@"thumb1.png"];
@@ -1627,8 +1660,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [db insertCustomer:technique];
     [self populateCustomers];
     [self.collectionView reloadData];
-    self.navigationItem.leftBarButtonItems = nil;
-
+    //self.navigationItem.leftBarButtonItems = nil;
 }
 
 

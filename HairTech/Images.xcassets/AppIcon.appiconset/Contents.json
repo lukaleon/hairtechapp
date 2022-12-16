@@ -1,37 +1,37 @@
 {
   "images" : [
     {
-      "filename" : "icon-40.png",
+      "filename" : "Group@2x 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-60.png",
+      "filename" : "Group 1.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-59.png",
+      "filename" : "Group@2x 2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-87.jpg",
+      "filename" : "Group 2.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-80.png",
+      "filename" : "Group@2x 3.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "icon-120.png",
+      "filename" : "Group 3.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
@@ -49,37 +49,37 @@
       "size" : "60x60"
     },
     {
-      "filename" : "icon-21.jpg",
+      "filename" : "Group 4.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-41.png",
+      "filename" : "Group@2x 4.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-30.png",
+      "filename" : "Group 5.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-58.png",
+      "filename" : "Group@2x 5.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-42.png",
+      "filename" : "Group 6.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
-      "filename" : "icon-81.png",
+      "filename" : "Group@2x 6.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
@@ -97,13 +97,13 @@
       "size" : "76x76"
     },
     {
-      "filename" : "icon-167.jpg",
+      "filename" : "Group-7.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "icon-1024.jpg",
+      "filename" : "Group-8.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

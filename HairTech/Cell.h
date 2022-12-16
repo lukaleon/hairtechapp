@@ -69,5 +69,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *iconTag;
 @property (weak, nonatomic) IBOutlet UILabel *viewModeLabel;
 @property NSIndexPath * cellIndex;
+@property  BOOL newVersionDiagram;
+
 @end
 
