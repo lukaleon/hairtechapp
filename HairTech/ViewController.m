@@ -818,6 +818,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     technique.techniqueimagebig4 = [self createNameFromUUID:@"big4" identifier:uuid];
     technique.techniqueimagebig5 = [self createNameFromUUID:@"big5" identifier:uuid];
     technique.uniqueId = uuid;
+    technique.dateOfCreation = [self currentDate];
 
     if(![self validate:technique])
     {
@@ -844,16 +845,28 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self.navigationController pushViewController:newEntryVC animated:YES];
 }
 
--(NSString*)fileCreationDate:(NSString*)path{
+-(NSString*)currentDateFromFilePath:(NSString*)path{
+    NSString * deviceLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
     NSDictionary* fileAttribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     NSDate *date = [fileAttribs objectForKey:NSFileCreationDate]; //or NSFileModificationDate
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    NSLocale * locale = [[NSLocale alloc] initWithLocaleIdentifier:deviceLanguage];
+    [df setLocale:locale];
+
+    [df setDateStyle:NSDateFormatterMediumStyle]; // day, Full month and year
+    [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
+    NSString *dateString = [df stringFromDate:date];
+    return dateString;
+}
+-(NSString*)currentDate{
+    
+    NSDate *date = [NSDate date];
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateStyle:NSDateFormatterMediumStyle]; // day, Full month and year
     [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
     NSString *dateString = [df stringFromDate:date];
     return dateString;
 }
-
 #pragma mark Collection View Delegate Methods
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -872,20 +885,20 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         cell.contentView.backgroundColor = [UIColor whiteColor];
         [cell.contentView.layer setCornerRadius:15.0f];
         cell.clipsToBounds = YES;
-        
         cell.contentView.layer.masksToBounds = YES;
-    
         cell.layer.shadowColor = [UIColor blackColor].CGColor;
         cell.layer.shadowOffset = CGSizeMake(0,0);
         cell.layer.shadowRadius = 3.0f;
         cell.layer.shadowOpacity = 0.1f;
         cell.layer.masksToBounds = NO;
+    
 //        cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
+    
     Technique *technique = [self.techniques objectAtIndex:indexPath.row];
  
     cell.dateLabel.text = technique.techniquename;
     NSMutableString *prefix;
- 
+
     if(technique.uniqueId == NULL){
             prefix = [technique.techniquename mutableCopy];
     }else {
@@ -914,7 +927,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     cell.image.image = tempimage;
     cell.cellIndex = indexPath;
-    cell.viewModeLabel.text =  [self fileCreationDate:filePath];
+    cell.viewModeLabel.text = [self currentDateFromFilePath:filePath];
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
@@ -935,7 +948,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     else {
         cell.newVersionDiagram = YES;
 
-       // cell.image.frame = CGRectMake(0, 20, cell.frame.size.width , cell.frame.size.height);
+       cell.image.frame = CGRectMake(0, -15, cell.frame.size.width , cell.frame.size.height);
         //cell.viewModeLabel.alpha = 0;
     }
     
@@ -951,7 +964,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     else {
         // Set cell to non-highlight
         [self selectCell:cell];
-
+        
     }
     return cell;
 }
@@ -986,72 +999,33 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    EntryViewController *entryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
-    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
-    Technique *technique = [self.techniques objectAtIndex:[indexPath row]];
+-(UIImage*)loadImages:(NSString*)prefix{
     
     NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-    NSMutableString *prefix= [technique.techniqueimagethumb1 mutableCopy];
+    //NSMutableString *prefix = [prefix mutableCopy];
     filenamethumb1 = [filenamethumb1 mutableCopy];
     [filenamethumb1 appendString: prefix];
     
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
-    UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
-    
-    /////---------Delegate image to EntryViewController button2 ---------/////////
-    NSMutableString *filenamethumb2 = @"%@/";
-    NSMutableString *prefix2= technique.techniqueimagethumb2;
-    filenamethumb2 = [filenamethumb2 mutableCopy];
-    [filenamethumb2 appendString: prefix2];
-    
-    
-    NSArray *sysPaths2 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory2 = [sysPaths2 objectAtIndex:0];
-    NSString *filePath2 = [NSString stringWithFormat:filenamethumb2, docDirectory2];
-    UIImage *tempimage2 = [[UIImage alloc] initWithContentsOfFile:filePath2];
-    
-    NSLog(@"DOCDIRECTORY %@.",docDirectory2);
-    
-    NSMutableString *filenamethumb3 = @"%@/";
-    NSMutableString *prefix3= technique.techniqueimagethumb3;
-    filenamethumb3 = [filenamethumb3 mutableCopy];
-    [filenamethumb3 appendString: prefix3];
-    
-    NSArray *sysPaths3 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory3 = [sysPaths3 objectAtIndex:0];
-    NSString *filePath3 = [NSString stringWithFormat:filenamethumb3, docDirectory3];
-    UIImage *tempimage3 = [[UIImage alloc] initWithContentsOfFile:filePath3];
-    
-    NSMutableString *filenamethumb4 = @"%@/";
-    NSMutableString *prefix4= technique.techniqueimagethumb4;
-    filenamethumb4 = [filenamethumb4 mutableCopy];
-    [filenamethumb4 appendString: prefix4];
-    
-    NSArray *sysPaths4 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory4 = [sysPaths4 objectAtIndex:0];
-    NSString *filePath4 = [NSString stringWithFormat:filenamethumb4, docDirectory4];
-    UIImage *tempimage4 = [[UIImage alloc] initWithContentsOfFile:filePath4];
-    
-    /////---------Delegate image to EntryViewController buttonBackHead---------/////////
-    NSMutableString *filenamethumb5 = @"%@/";
-    NSMutableString *prefix5= technique.techniqueimagethumb5;
-    filenamethumb5 = [filenamethumb5 mutableCopy];
-    [filenamethumb5 appendString: prefix5];
-    
-    NSArray *sysPaths5 = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory5 = [sysPaths5 objectAtIndex:0];
-    NSString *filePath5 = [NSString stringWithFormat:filenamethumb5, docDirectory5];
-    UIImage *tempimage5 = [[UIImage alloc] initWithContentsOfFile:filePath5];
-    
-    self.image1 = tempimage;
-    self.image2 = tempimage2;
-    self.image3 = tempimage3;
-    self.image4 = tempimage4;
-    self.image5 = tempimage5;
+    UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
+    NSLog(@"DOCDIRECTORY %@.",docDirectory);
+    return image;
+}
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    EntryViewController *entryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EntryViewController"];
+    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
+    Technique *technique = [self.techniques objectAtIndex:[indexPath row]];
+        
+    self.image1 = [self loadImages:technique.techniqueimagethumb1];
+    self.image2 = [self loadImages:technique.techniqueimagethumb2];
+    self.image3 = [self loadImages:technique.techniqueimagethumb3];
+    self.image4 = [self loadImages:technique.techniqueimagethumb4];
+    self.image5 = [self loadImages:technique.techniqueimagethumb5];
     
     Cell *cell = (Cell *)[collectionView  cellForItemAtIndexPath:indexPath];
     

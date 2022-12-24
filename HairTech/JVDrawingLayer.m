@@ -44,6 +44,7 @@
         self.trackArray = [[NSMutableArray alloc] init];
         self.arrayOfCircles = [NSMutableArray array];
         self.editedLine = NO;
+        _zoomIndex = 1.0;
        // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
         
 
@@ -68,11 +69,14 @@
 
         self.opacity = 1;
     }
-    
-//    if ((self.type != JVDrawingTypeGraffiti || self.type != JVDrawingTypeText) &&  !isSelected){
-//        
-//    }
 }
+
+-(void)setZoomIndex:(CGFloat)zoom{
+    _zoomIndex = zoom;
+    NSLog(@"zoom index  = %f", _zoomIndex);
+}
+
+
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path
 {
   
@@ -110,37 +114,62 @@
         
         
         if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
+            JVDRAWINGBUFFERFORCURVE = 16;
             if(self.editedLine){
             self.midP = self.controlPointOfCurve;
             } else {
                 self.midP = midPoint(self.startPoint, self.endPoint);
             }
+                
+            CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+            JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
+            if (JVDRAWINGBUFFERFORLINE > 16){
+                JVDRAWINGBUFFERFORLINE = 16;
+            }
+            if (JVDRAWINGBUFFERFORLINE <= 4){
+                JVDRAWINGBUFFERFORLINE = 4;
+            }
+            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORLINE,  _zoomIndex );
+
                 CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
                 CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
                 CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
         
                 CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
-                if (diffrence <= JVDRAWINGBUFFER || distanceStart <= JVDRAWINGBUFFER || distanceEnd <= JVDRAWINGBUFFER) {
+                if (diffrence <= JVDRAWINGBUFFERFORCURVE || distanceStart <= JVDRAWINGBUFFERFORCURVE || distanceEnd <= JVDRAWINGBUFFERFORCURVE) {
                     CGFloat min = MIN(distanceStart, distanceEnd);
-                    if (MIN(min, 2*JVDRAWINGBUFFER) == min) {
+                    if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
                         if (min == distanceStart) return JVDrawingTouchHead;
                         if (min == distanceEnd) return JVDrawingTouchEnd;
                     
                     }
                 };
-        if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFER)
-        return JVDrawingTouchMid;
+       // if ([self distanceBetweenStartPoint:self.midP endPoint:point] < JVDRAWINGBUFFERFORCURVE)
+            CGFloat min = MIN(distanceStart, distanceCtr);
+            CGFloat min2 = MIN(distanceEnd, distanceCtr);
+
+            if (min == distanceCtr || min2 == distanceCtr) {
+                return JVDrawingTouchMid;}
         
         }
+        CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+            JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
+        if (JVDRAWINGBUFFERFORLINE > 16){
+            JVDRAWINGBUFFERFORLINE = 16;
+        }
+        if (JVDRAWINGBUFFERFORLINE <= 4){
+            JVDRAWINGBUFFERFORLINE = 4;
+        }
+        NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORLINE,  _zoomIndex );
         
         CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
         CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
         CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
 
         CGFloat diffrence = distanceStart + distanceEnd - distance;
-        if (diffrence <= JVDRAWINGBUFFER || distanceStart <= JVDRAWINGBUFFER || distanceEnd <= JVDRAWINGBUFFER) {
+        if (diffrence <= JVDRAWINGBUFFERFORLINE || distanceStart <= JVDRAWINGBUFFERFORLINE || distanceEnd <= JVDRAWINGBUFFERFORLINE) {
             CGFloat min = MIN(distanceStart, distanceEnd);
-            if (MIN(min, 2*JVDRAWINGBUFFER) == min) {
+            if (MIN(min, 2*JVDRAWINGBUFFERFORLINE) == min) {
                 if (min == distanceStart) return JVDrawingTouchHead;
                 if (min == distanceEnd) return JVDrawingTouchEnd;
             } else {
@@ -481,15 +510,12 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
 - (UIBezierPath *)createCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length  {
     NSLog(@"create curved line ");
     
-    NSLog(@"MID X %f, MID Y %f", midPt.x, midPt.y);
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:startPoint];
     [path addQuadCurveToPoint:endPoint controlPoint:midPoint(startPoint, endPoint)];
     self.controlPointOfCurve = midPoint(startPoint, endPoint);
     return path;
-    
 
-    
 }
 
 - (UIBezierPath *)editCurvedLineWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint  midPoint:(CGPoint)midPt length:(CGFloat)length {

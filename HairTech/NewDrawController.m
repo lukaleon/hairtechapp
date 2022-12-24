@@ -90,17 +90,13 @@
     scrollView.frame = newFrame;
     scrollView.delegate = self;
     scrollView.minimumZoomScale = 0.5;
-    scrollView.maximumZoomScale = 5.0;
-   // scrollView.contentSize = self.drawingView.frame.size;
-
+    scrollView.maximumZoomScale = 6.0;
     scrollView.panGestureRecognizer.minimumNumberOfTouches = 2;
-    NSLog(@"Scroll View frame width %f frame height %f",scrollView.frame.size.width, scrollView.frame.size.height);
 }
 - (void)setupDrawingView {
     CGFloat newHeightIdx = (self.view.frame.size.height - self.drawingView.frame.size.height) / 4;
     CGPoint newCenter = CGPointMake(self.view.center.x, scrollView.center.y - newHeightIdx);
     CGFloat zoomIdx = self.view.frame.size.height / self.drawingView.frame.size.height;
-    NSLog(@"zoooooooom %f", zoomIdx);
     self.drawingView.center = newCenter;
     self.drawingView.delegate = self;
     self.drawingView.editMode = NO;
@@ -1134,11 +1130,21 @@ return YES;
 -(UIImage*)screenShotForSharing{
     NSLog(@"screenshot");
     [self removeGrid];
-    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, self.drawingView.opaque, 3.0);
-    // [self drawViewHierarchyInRect:self.viewForImg.bounds afterScreenUpdates:YES];
+    
+    
+    
+    CGFloat rescale = 2.0;
+    CGSize resize = CGSizeMake(self.drawingView.frame.size.width * rescale, self.drawingView.frame.size.height * rescale);
+    UIGraphicsBeginImageContextWithOptions(resize, NO, 0);
+    CGContextScaleCTM(UIGraphicsGetCurrentContext(), rescale, rescale);
     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+//    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, self.drawingView.opaque, 3.0);
+//    [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
     return newImage;
 }
 
@@ -1165,7 +1171,12 @@ return YES;
         popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
     
         [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
-            [self setupNotificationToolbar];
+            if (!completed) {
+                return;
+                }
+            else {
+                [self setupNotificationToolbar];
+            }
     }];
 }
 
@@ -1229,7 +1240,7 @@ return YES;
      forControlEvents:UIControlEventTouchUpInside];
     button.adjustsImageWhenHighlighted = NO;
     [button setTitle:@"OK" forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:16];
+    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
     button.backgroundColor = [UIColor whiteColor];
     [button setTintColor:[UIColor colorNamed:@"orange"]];
     button.frame = CGRectMake(startX ,yAxe, btnWidth, 30);

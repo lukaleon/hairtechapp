@@ -18,4 +18,6 @@
 @property (nonatomic, strong) NSString *techniqueimagebig3;
 @property (nonatomic, strong) NSString *techniqueimagebig4;
 @property (nonatomic, strong) NSString *techniqueimagebig5;
+@property (nonatomic, strong) NSString * dateOfCreation;
+
 @end

@@ -61,7 +61,7 @@
     if ((self = [super initWithFrame:frame])) {
 
         self.frame = frame;
-        [self setFont:[UIFont fontWithName:@"Helvetica" size:fontSize]];
+        [self setFont:[UIFont fontWithName:@"HelveticaNeue" size:fontSize]];
         self.textColor = [UIColor blackColor];
         self.backgroundColor = [UIColor clearColor];
         self.textAlignment = NSTextAlignmentCenter;

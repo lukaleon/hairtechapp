@@ -69,9 +69,14 @@ return YES;
         success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN UUID TEXT"];
         NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
     }
+    if (![db columnExists:@"DATECREATED" inTableWithName:@"TECHNIQUES"])
+    {
+        success = [db executeUpdate:@"ALTER TABLE TECHNIQUES ADD COLUMN DATECREATED TEXT"];
+        NSAssert(success, @"alter table failed: %@", [db lastErrorMessage]);
+    }
     
-    success =  [db executeUpdate:@"INSERT INTO TECHNIQUES (TECHNIQUENAME,DATE,TECHNIQUEIMAGE,TECHNIQUENAMETHUMB1,TECHNIQUENAMETHUMB2,TECHNIQUENAMETHUMB3,TECHNIQUENAMETHUMB4,TECHNIQUENAMETHUMB5,TECHNIQUENAMEBIG1,TECHNIQUENAMEBIG2,TECHNIQUENAMEBIG3,TECHNIQUENAMEBIG4,TECHNIQUENAMEBIG5,UUID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
-                     customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5,customer.uniqueId, nil];
+    success =  [db executeUpdate:@"INSERT INTO TECHNIQUES (TECHNIQUENAME,DATE,TECHNIQUEIMAGE,TECHNIQUENAMETHUMB1,TECHNIQUENAMETHUMB2,TECHNIQUENAMETHUMB3,TECHNIQUENAMETHUMB4,TECHNIQUENAMETHUMB5,TECHNIQUENAMEBIG1,TECHNIQUENAMEBIG2,TECHNIQUENAMEBIG3,TECHNIQUENAMEBIG4,TECHNIQUENAMEBIG5,UUID,DATECREATED) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+                     customer.techniquename,customer.date,customer.techniqueimage,customer.techniqueimagethumb1,customer.techniqueimagethumb2,customer.techniqueimagethumb3,customer.techniqueimagethumb4,customer.techniqueimagethumb5,customer.techniqueimagebig1,customer.techniqueimagebig2,customer.techniqueimagebig3,customer.techniqueimagebig4,customer.techniqueimagebig5,customer.uniqueId, customer.dateOfCreation, nil];
     
     [db close];
     
@@ -114,6 +119,8 @@ return YES;
         technique.techniqueimagebig4 = [results stringForColumn:@"TECHNIQUENAMEBIG4"];
         technique.techniqueimagebig5 = [results stringForColumn:@"TECHNIQUENAMEBIG5"];
         technique.uniqueId = [results stringForColumn:@"UUID"];
+        technique.dateOfCreation = [results stringForColumn:@"DATECREATED"];
+
         [techniques addObject:technique];
         
     }

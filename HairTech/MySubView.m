@@ -335,6 +335,7 @@
     technique.techniqueimagebig4 = [self createNameFromUUID:@"big4" identifier:uuid];
     technique.techniqueimagebig5 = [self createNameFromUUID:@"big5" identifier:uuid];
     technique.uniqueId = uuid;
+    technique.dateOfCreation = [self currentDate];
 
     if(![self validate:technique])
     {
@@ -365,7 +366,14 @@
      postNotificationName:@"openEntry"
      object:self];
 }
-
+-(NSString*)currentDate{
+    NSDate *date = [NSDate date];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateStyle:NSDateFormatterMediumStyle]; // day, Full month and year
+    [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
+    NSString *dateString = [df stringFromDate:date];
+    return dateString;
+}
 
 - (void)createJSON:(NSMutableString*)filename{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);

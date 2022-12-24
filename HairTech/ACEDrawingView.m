@@ -31,12 +31,15 @@
 
 @interface ACEDrawingView ()
 
-@property (nonatomic, assign) BOOL isFirstTouch;//区分点击与滑动手势
-@property (nonatomic, assign) JVDrawingTouch isMoveLayer;//区分移动还是创建path 如果移动 移动哪里
-@property (nonatomic, strong) JVDrawingLayer *drawingLayer;//当前创建的path
-@property (nonatomic, strong) JVDrawingLayer *selectedLayer;//当前选中的path
+@property (nonatomic, assign) BOOL isFirstTouch;
+@property (nonatomic, assign) JVDrawingTouch isMoveLayer;
+@property (nonatomic, strong) JVDrawingLayer *drawingLayer;
+@property (nonatomic, strong) JVDrawingLayer *selectedLayer;
 @property (nonatomic, strong) JVDrawingLayer *temporaryLayer;
-@property (nonatomic, strong) NSMutableArray *layerArray;//当前创建的path集合
+@property (nonatomic, strong) JVDrawingLayer *temporaryLayerForFliping;
+@property (nonatomic, strong) NSMutableArray *layerArray;
+
+
 
 
 
@@ -164,6 +167,218 @@ UIColor* tempColor;
             //            NSLog(@"layerArray   %lu", self.layerArray.count );
         }
     }
+}
+-(CGFloat)findAngleOfLine:(CGPoint)start end:(CGPoint)end{
+    CGFloat f = [self pointPairToBearingDegrees:start secondPoint:end];
+    return f;
+}
+- (void)createCopyOfLayer:(JVDrawingLayer*)selectedL{
+    
+    CGPoint startPointOffset;
+    CGPoint endPointOffset;
+    CGPoint controlPointOffset;
+    CGFloat  dist;
+
+    
+    CGFloat f = [self findAngleOfLine:selectedL.startPoint end:selectedL.endPoint];
+    
+    if (((f<=60)&&(f>=30) )|| ((f<=240)&&(f>=210)) ){
+        startPointOffset = CGPointMake(selectedL.startPoint.x + 20, selectedL.startPoint.y);
+        endPointOffset = CGPointMake(selectedL.endPoint.x + 20, selectedL.endPoint.y);
+        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 20, selectedL.controlPointOfCurve.y );
+    }
+    else {
+        startPointOffset = CGPointMake(selectedL.startPoint.x + 12, selectedL.startPoint.y + 12);
+        endPointOffset = CGPointMake(selectedL.endPoint.x + 12, selectedL.endPoint.y + 12);
+        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 12, selectedL.controlPointOfCurve.y + 12);
+    }
+    if (selectedL.type == JVDrawingTypeText){
+        startPointOffset = CGPointMake(selectedL.startPoint.x + 25, selectedL.startPoint.y + 25);
+        endPointOffset = CGPointMake(selectedL.endPoint.x + 25, selectedL.endPoint.y + 25);
+    }
+    // Calculate duplication by axis for Arrow Tool
+    if (selectedL.type == JVDrawingTypeArrow){
+        if((selectedL.startPoint.x < selectedL.endPoint.x) && (selectedL.startPoint.y == selectedL.endPoint.y)){
+             dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+            endPointOffset = CGPointMake(selectedL.endPoint.x + dist, selectedL.endPoint.y );
+        }
+        if((selectedL.startPoint.x > selectedL.endPoint.x) && (selectedL.startPoint.y == selectedL.endPoint.y)){
+             dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+            endPointOffset = CGPointMake(selectedL.endPoint.x - dist, selectedL.endPoint.y );
+        }
+        if((selectedL.startPoint.y < selectedL.endPoint.y) && (selectedL.startPoint.x == selectedL.endPoint.x)){
+             dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+            endPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y + dist);
+        }
+        if((selectedL.startPoint.y > selectedL.endPoint.y) && (selectedL.startPoint.x == selectedL.endPoint.x)){
+             dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+            endPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y - dist);
+        }
+    }
+    
+        if (JVDrawingTypeText != selectedL.type ){
+            self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:startPointOffset endPoint:endPointOffset type:selectedL.type  lineWidth:selectedL.lineWidth lineColor:selectedL.lineColor_ controlPoint:selectedL.controlPoint grafittiPoints:selectedL.pointArray];
+            if(JVDrawingTypeGraffiti == selectedL.type ){
+                for(int i = 0; i < selectedL.pointArray.count;i++){
+                    [self.drawingLayer movePathWithEndPoint:CGPointFromString([selectedL.pointArray objectAtIndex:i])];
+                }
+                
+            } if (JVDrawingTypeCurvedLine == selectedL.type || JVDrawingTypeCurvedDashLine == selectedL.type ){
+                BOOL selected;
+                if (CGPointEqualToPoint(controlPointOffset,midsPoint(startPointOffset, endPointOffset))){
+                    selected = NO;
+                } else {
+                    selected = YES;
+                }
+                [self.drawingLayer movePathWithEndPoint:endPointOffset];
+                [self.drawingLayer moveCurvedLinePathWithStartPoint:startPointOffset endPoint:endPointOffset midPoint:controlPointOffset isSelected:selected];
+                //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
+                
+            }
+            else {
+                [self.drawingLayer movePathWithEndPoint:endPointOffset];
+            }
+        } else {
+            
+            CGRect rect = CGRectMake(startPointOffset.x, startPointOffset.y, selectedL.width, selectedL.height);
+            self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:startPointOffset
+                                                                        frame:rect
+                                                                         text:selectedL.text
+                                                                         type:selectedL.type
+                                                                    lineWidth:selectedL.lineWidth
+                                                                    lineColor:selectedL.lineColor_
+                                                                     fontSize:selectedL.fontSize
+                                                                   isSelected:NO];
+        }
+        if(endPointOffset.x != 0 && endPointOffset.y !=0){
+            [self.layer addSublayer:self.drawingLayer];
+            [self.layerArray addObject:self.drawingLayer];
+            //            NSLog(@"layerArray   %lu", self.layerArray.count );
+        }
+    //}
+}
+
+- (void)reflectLayer:(JVDrawingLayer*)selectedL{
+    
+    CGPoint startPointOffset;
+    CGPoint endPointOffset;
+    CGPoint controlPointOffset;
+    CGPoint alphaPoint;
+    CGFloat  dist;
+    
+    
+   // CGFloat f = [self findAngleOfLine:selectedL.startPoint end:selectedL.endPoint];
+//
+//    if (((f<=60)&&(f>=30) )|| ((f<=240)&&(f>=210)) ){
+//        startPointOffset = CGPointMake(selectedL.startPoint.x + 20, selectedL.startPoint.y);
+//        endPointOffset = CGPointMake(selectedL.endPoint.x + 20, selectedL.endPoint.y);
+//        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 20, selectedL.controlPointOfCurve.y );
+//    }
+//    else {
+//        startPointOffset = CGPointMake(selectedL.startPoint.x + 12, selectedL.startPoint.y + 12);
+//        endPointOffset = CGPointMake(selectedL.endPoint.x + 12, selectedL.endPoint.y + 12);
+//        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 12, selectedL.controlPointOfCurve.y + 12);
+//    }
+//    if (selectedL.type == JVDrawingTypeText){
+//        startPointOffset = CGPointMake(selectedL.startPoint.x + 25, selectedL.startPoint.y + 25);
+//        endPointOffset = CGPointMake(selectedL.endPoint.x + 25, selectedL.endPoint.y + 25);
+//    }
+//    if(JVDrawingTypeArrow == selectedL.type){
+//        if(selectedL.startPoint.x == selectedL.endPoint.x &&  selectedL.startPoint.y > selectedL.endPoint.y){
+//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+//            startPointOffset = CGPointMake(selectedL.startPoint.x,selectedL.endPoint.y + dist + 3  );
+//            endPointOffset = CGPointMake(selectedL.startPoint.x, startPointOffset.y + dist);
+//        }
+//    }
+//    else {
+//        if(selectedL.startPoint.x > selectedL.endPoint.x){
+//            alphaPoint = CGPointMake(selectedL.endPoint.x, selectedL.startPoint.y);
+//            dist = hypot((selectedL.startPoint.x - alphaPoint.x), (selectedL.startPoint.y - alphaPoint.y));
+//            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+//            endPointOffset = CGPointMake(alphaPoint.x - dist, alphaPoint.y);
+//        }
+//        if(selectedL.startPoint.x < selectedL.endPoint.x){
+//            alphaPoint = CGPointMake(selectedL.endPoint.x, selectedL.startPoint.y);
+//            dist = hypot((selectedL.startPoint.x - alphaPoint.x), (selectedL.startPoint.y - alphaPoint.y));
+//            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
+//            endPointOffset = CGPointMake(alphaPoint.x + dist, alphaPoint.y);
+//        }
+//        if(selectedL.startPoint.x == selectedL.endPoint.x){
+//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+//            startPointOffset = selectedL.endPoint;
+//            endPointOffset = CGPointMake(selectedL.endPoint.x + dist, selectedL.endPoint.y);
+//        }
+//        if(selectedL.startPoint.y == selectedL.endPoint.y){
+//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+//            startPointOffset = selectedL.endPoint;
+//            endPointOffset = CGPointMake(selectedL.endPoint.x , selectedL.endPoint.y + dist);
+//        }
+//}
+    
+    
+//    if(selectedL.startPoint.x != selectedL.endPoint.x || selectedL.startPoint.y != selectedL.endPoint.y ){
+//
+//    }
+    if(selectedL.startPoint.x == selectedL.endPoint.x ){
+        CGPoint middle = midsPoint(selectedL.startPoint, selectedL.endPoint);
+        dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+        startPointOffset = CGPointMake(middle.x + (dist/2), middle.y);
+        endPointOffset = CGPointMake(middle.x - (dist/2), middle.y);
+    }
+        else if (selectedL.startPoint.y == selectedL.endPoint.y ){
+            
+            CGPoint middle = midsPoint(selectedL.startPoint, selectedL.endPoint);
+            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
+            startPointOffset = CGPointMake(middle.x , middle.y+ (dist/2));
+            endPointOffset = CGPointMake(middle.x , middle.y- (dist/2));
+         } else {
+        startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.startPoint.y);
+        endPointOffset = CGPointMake(selectedL.startPoint.x, selectedL.endPoint.y);
+    }
+    
+        if (JVDrawingTypeText != selectedL.type ){
+            self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:startPointOffset endPoint:endPointOffset type:selectedL.type  lineWidth:selectedL.lineWidth lineColor:selectedL.lineColor_ controlPoint:selectedL.controlPoint grafittiPoints:selectedL.pointArray];
+            if(JVDrawingTypeGraffiti == selectedL.type ){
+                for(int i = 0; i < selectedL.pointArray.count;i++){
+                    [self.drawingLayer movePathWithEndPoint:CGPointFromString([selectedL.pointArray objectAtIndex:i])];
+                }
+                
+            } if (JVDrawingTypeCurvedLine == selectedL.type || JVDrawingTypeCurvedDashLine == selectedL.type ){
+                BOOL selected;
+                if (CGPointEqualToPoint(controlPointOffset,midsPoint(startPointOffset, endPointOffset))){
+                    selected = NO;
+                } else {
+                    selected = YES;
+                }
+                [self.drawingLayer movePathWithEndPoint:endPointOffset];
+                [self.drawingLayer moveCurvedLinePathWithStartPoint:startPointOffset endPoint:endPointOffset midPoint:controlPointOffset isSelected:selected];
+                //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
+                
+            }
+            else {
+                [self.drawingLayer movePathWithEndPoint:endPointOffset];
+            }
+        } else {
+            
+            CGRect rect = CGRectMake(startPointOffset.x, startPointOffset.y, selectedL.width, selectedL.height);
+            self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:startPointOffset
+                                                                        frame:rect
+                                                                         text:selectedL.text
+                                                                         type:selectedL.type
+                                                                    lineWidth:selectedL.lineWidth
+                                                                    lineColor:selectedL.lineColor_
+                                                                     fontSize:selectedL.fontSize
+                                                                   isSelected:NO];
+        }
+        if(endPointOffset.x != 0 && endPointOffset.y !=0){
+            [self.layer addSublayer:self.drawingLayer];
+            [self.layerArray addObject:self.drawingLayer];
+            //            NSLog(@"layerArray   %lu", self.layerArray.count );
+        }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -343,6 +558,8 @@ UIColor* tempColor;
             }
             if (self.selectedLayer.type == JVDrawingTypeGraffiti) {
                 [self.selectedLayer moveGrafiitiPathPreviousPoint:previousPoint currentPoint:currentPoint];
+                self.magnifierView.hidden = YES;
+                  
                 // Curved line creating and moving
             } else if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine) {
                 switch (self.isMoveLayer) {
@@ -400,8 +617,9 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
-                        if (self.magnifierView.hidden == NO){
-                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
+                            if (self.magnifierView.hidden == NO ){
+                                self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
+                                            
                         }
                         break;
                         
@@ -458,7 +676,6 @@ UIColor* tempColor;
         if (self.isMoveLayer) {
             [self updateAllPoints];
             [self storeDataInJson];
-            
             [self.selectedLayer addToTrack];
         }
         if (self.isFirstTouch) {
@@ -470,6 +687,7 @@ UIColor* tempColor;
                     if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
                         [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                         layerHasBeenPicked = YES;
+
                         if (layer == self.selectedLayer && !menuVisible) {
                             // the layer is already selected; show the menu
                             [self showMenu];
@@ -480,6 +698,8 @@ UIColor* tempColor;
                             [self hideMenu];
                             // draw new selection
                             [self selectLayer:layer];
+                            [layer setZoomIndex:self.zoomFactor];
+
                             
                         }
                         break;
@@ -512,6 +732,7 @@ UIColor* tempColor;
             }
         }
     }
+
   //  [self.delegate enableZoomWhenTouchesMoved];
 }
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -600,6 +821,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
     else if (JVDrawingTypeText == self.type){
+      
         self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
@@ -654,6 +876,7 @@ UIColor* tempColor;
 }
 #pragma mark ZOOM IN / OUT METHODS
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
+
     [self.touchTimer invalidate];
     [self.magnifierView setHidden:YES];
     
@@ -704,33 +927,42 @@ UIColor* tempColor;
     }else{
         middlePoint = midsPoint(self.selectedLayer.startPmoving, self.selectedLayer.endPmoving);
     }
+    
     if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine){
         
         //rectOfMenu = CGRectMake(self.selectedLayer.midPmoving.x,self.selectedLayer.midPmoving.y,0,0) ;
         
         rectOfMenu = CGRectMake(self.selectedLayer.midP.x,self.selectedLayer.midP.y,0,0) ;
         
-    } else {
+    } else if(self.selectedLayer.type == JVDrawingTypeGraffiti ) {
+        rectOfMenu = CGRectMake(self.selectedLayer.startPoint.x, self.selectedLayer.startPoint.y, 0, 0);
+    }
+    else {
         rectOfMenu = CGRectMake(middlePoint.x, middlePoint.y, 0, 0);
         
     }
-    if (@available(iOS 13.0, *)) {
-        NSLog(@"IOS ABOVE 13");
         [self becomeFirstResponder];
         menu = [UIMenuController sharedMenuController];
+    if(self.selectedLayer.type == JVDrawingTypeText || self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine)
+    {
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+        [menu showMenuFromView:self rect:rectOfMenu];
+    }
+    if (self.selectedLayer.type == JVDrawingTypeDashedLine || self.selectedLayer.type == JVDrawingTypeLine || self.selectedLayer.type == JVDrawingTypeArrow){
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)],[[UIMenuItem alloc] initWithTitle:@"Flip" action:@selector(reflectLine)]];
+    [menu showMenuFromView:self rect:rectOfMenu];
+    }
+    else {
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
         [menu showMenuFromView:self rect:rectOfMenu];
-    } else {
-        
-        UIMenuController *menu = [UIMenuController sharedMenuController];
-        menu.menuItems = @[
-            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
-        [menu setTargetRect:rectOfMenu inView:self];
-        [menu setMenuVisible:YES animated:YES];
     }
     menuVisible = YES;
+
 }
+
 -(void)hideMenu {
     
     if (menu.isMenuVisible) {
@@ -738,6 +970,49 @@ UIColor* tempColor;
     }
     menuVisible = NO;
 }
+#pragma mark Duplicate
+
+-(void)duplicateLine{
+    if(textViewSelected){
+        [self removeTextViewFrame]; //create text layer when closing window
+        [self createCopyOfLayer:[self.layerArray lastObject]];
+
+    }else{
+        [self createCopyOfLayer:self.selectedLayer];
+        [self storeDataInJson];
+        [self fetchData:self.fileNameInside];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
+        [self.delegate updateButtonStatus];
+        [self removeCircles];
+
+        if (JVDrawingTypeCurvedLine == self.drawingLayer.type || JVDrawingTypeCurvedDashLine == self.drawingLayer.type ){
+            [self selectLayer:[self.layerArray lastObject]];
+        }
+        [self.drawingLayer addToTrack];
+    }
+    
+}
+
+-(void)reflectLine{
+   
+    if (self.selectedLayer.type == JVDrawingTypeDashedLine || self.selectedLayer.type == JVDrawingTypeLine || self.selectedLayer.type == JVDrawingTypeArrow ){
+        self.temporaryLayerForFliping = self.selectedLayer;
+        [self revoke];
+        [self reflectLayer:self.temporaryLayerForFliping    ];
+        [self storeDataInJson];
+        [self fetchData:self.fileNameInside];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
+        [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
+        [self.delegate updateButtonStatus];
+        [self removeCircles];
+        [self.drawingLayer addToTrack];
+    }
+
+}
+
+
+
 #pragma mark Add Text View
 
 -(void)editTextView{
@@ -839,21 +1114,13 @@ UIColor* tempColor;
                                    self.userResizableView.frame.origin.y ,
                                    0, 0);
     if (self.textViewNew.isFirstResponder != YES){
-        if (@available(iOS 13.0, *)) {
-            NSLog(@"IOS ABOVE 13");
+        
             [self becomeFirstResponder];
             menuForTextView = [UIMenuController sharedMenuController];
             menuForTextView.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)]];
+                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
             [menuForTextView showMenuFromView:self rect:rectOfMenu];
-        } else {
-            
-            menuForTextView = [UIMenuController sharedMenuController];
-            menuForTextView.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)],[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)] ];
-            [menuForTextView setTargetRect:rectOfMenu inView:self];
-            [menuForTextView setMenuVisible:YES animated:YES];
-        }
+        
     }
     
 }
@@ -1408,19 +1675,16 @@ UIColor* tempColor;
 
 - (void)showLoupe2:(NSTimer*)timer
 {
-    NSLog(@"SHOW LOUPE");
-    if (self.magnifierView == nil) {
-        self.magnifierView = [[CHMagnifierView alloc] init];
-        self.magnifierView.viewToMagnify = self.window;
-        /* TEMPORARY INACTIVE  */
-        // self.Ruler = [[Ruler alloc] init];
-        //self.Ruler.viewToShowRuler = self;
-        
+    if(self.selectedLayer.type != JVDrawingTypeGraffiti){
+        if (self.magnifierView == nil) {
+            self.magnifierView = [[CHMagnifierView alloc] init];
+            self.magnifierView.viewToMagnify = self.window;
+        }
+        self.magnifierView.pointToMagnify = pointForLoupe;
+        //self.Ruler.pointToShowRuler = pointForLoupe;
+        //[self.Ruler makeKeyAndVisible];
+        [self.magnifierView makeKeyAndVisible];
     }
-    self.magnifierView.pointToMagnify = pointForLoupe;
-    //self.Ruler.pointToShowRuler = pointForLoupe;
-    //[self.Ruler makeKeyAndVisible];
-    [self.magnifierView makeKeyAndVisible];
 }
 -(void)hideLoupe {
     [self.touchTimer invalidate];
@@ -1769,7 +2033,7 @@ UIColor* tempColor;
     double dist = hypot((firstPoint.x - currentPoint->x), (firstPoint.y - currentPoint->y));
     CGFloat f = [self pointPairToBearingDegrees:firstPoint secondPoint:*currentPoint];
     
-    if ((f<=48)&&(f>=42)&&dist>15){
+    if ((f<=48)&&(f>=42)&&dist>10){
         double angle =   0.785398163;
         double endX = cos(angle) * dist + firstPoint.x;
         double endY = sin(angle) * dist + firstPoint.y;
@@ -1780,44 +2044,50 @@ UIColor* tempColor;
             performed45 = true;
         }
     }else{ performed45 = false;}
-    if ((f<=138)&&(f>=132)&&dist>15){
+    if ((f<=138)&&(f>=132)&&dist>10){
         double angle =   2.35619449;
         double endX = cos(angle) * dist + firstPoint.x;
         double endY = sin(angle) * dist + firstPoint.y;
         *currentPoint = CGPointMake(endX, endY);
         if(!performed135){
             [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            NSLog(@"HAPTIC PERFORM 135");
+
             performed135 = true;
         }
     }else{ performed135 = false;}
-    if ((f<=228)&&(f>=222)&&dist>15){
+    if ((f<=228)&&(f>=222)&&dist>10){
         double angle =   3.92699082;
         double endX = cos(angle) * dist +firstPoint.x;
         double endY = sin(angle) * dist + firstPoint.y;
         *currentPoint = CGPointMake(endX, endY);
         if(!performed225){
             [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            NSLog(@"HAPTIC PERFORM 225");
+
             performed225 = true;
         }
     }else{ performed225 = false;}
-    if ((f<=318)&&(f>=312)&&dist>15){
+    if ((f<=318)&&(f>=312)&&dist>10){
         double angle =   5.49778714;
         double endX = cos(angle) * dist + firstPoint.x;
         double endY = sin(angle) * dist + firstPoint.y;
         *currentPoint = CGPointMake(endX, endY);
         if(!performed315){
             [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+            NSLog(@"HAPTIC PERFORM 315");
+
             performed315 = true;
         }
     }else{ performed315 = false;}
-    if((currentPoint->x - firstPoint.x <= 6)&&(currentPoint->x - firstPoint.x >= -6)&&dist>15){
+    if((currentPoint->x - firstPoint.x <= 6)&&(currentPoint->x - firstPoint.x >= -6)&&dist>10){
         *currentPoint = CGPointMake(firstPoint.x, currentPoint->y);
         if(!performedX){
             [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
             performedX = true;
         }
     }else{ performedX = false;}
-    if((currentPoint->y - firstPoint.y <= 6)&&(currentPoint->y - firstPoint.y >= -6)&&dist>15){
+    if((currentPoint->y - firstPoint.y <= 6)&&(currentPoint->y - firstPoint.y >= -6)&&dist>10){
         *currentPoint = CGPointMake(currentPoint->x, firstPoint.y);
         if(!performedY){
             [HapticHelper generateFeedback:FeedbackType_Impact_Light ];

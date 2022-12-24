@@ -15,6 +15,7 @@
 #import "PageViewController.h"
 #import "ContainerViewController.h"
 
+
 #define SECTIONID_CollectionView 0
 #define SECTIONID_General 1
 #define SECTIONID_GetStarted 2
@@ -224,12 +225,14 @@
         //  whatsnew.label.text = @"This is hairtech app";
         whatsnew.view.backgroundColor = [UIColor colorNamed:@"whiteDark"];
         [self.navigationController pushViewController:whatsnew animated:YES];
-        
-        
     }
-  /*  if ( indexPath.section == 2 && indexPath.row == 0 ) {
-}
-   */ if ( indexPath.section == 2 && indexPath.row == 1 ) {
+    
+    if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 0 ) {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    }
+
+    if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 1 ) {
         
         UIApplication *application = [UIApplication sharedApplication];
         NSURL *URL = [NSURL URLWithString:@"https://apps.apple.com/us/app/hairtech-head-sheets/id625740630?action=write-review"];
@@ -240,6 +243,14 @@
         }];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
+    
+    if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 2) {
+        [self sendEmail];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    }
+   
+
     if ( indexPath.section == SECTIONID_Follow && indexPath.row == 0 ) {
 //        WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
 //        [self.navigationController presentViewController:whatsnew animated:YES completion:nil];
@@ -266,7 +277,27 @@
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
+#pragma mark SEND MAIL
 
+-(void)sendEmail {
+        // From within your active view controller
+        if([MFMailComposeViewController canSendMail]) {
+            MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+            mailCont.mailComposeDelegate = self;        // Required to invoke mailComposeController when send
+        
+            [mailCont setSubject:@"Issue report"];
+            [mailCont setToRecipients:[NSArray arrayWithObject:@"hello@hairtechapp.com"]];
+            
+            NSString *emailBody = @"</p> <p><i>(Please, describe your problem in details. Attaching a screenshot or video showing the issue would help us better understand an issue.)</i></p><p><b>Hello Hairtechapp team. I'm having an issue with:</b>";
+
+            [mailCont setMessageBody:emailBody isHTML:YES];
+            [self presentViewController:mailCont animated:YES completion:nil];
+        }
+    }
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+        [controller dismissViewControllerAnimated:YES completion:nil];
+    }
 #pragma mark - General Table View Configuration -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

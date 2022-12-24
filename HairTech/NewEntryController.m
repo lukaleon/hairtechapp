@@ -31,6 +31,8 @@
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
+    
+//    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(flipImage)];
     self.navigationItem.rightBarButtonItem = shareButton;
     
     [self setupgestureRecognizers];
@@ -64,6 +66,14 @@
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
+    
+    CGPoint point = [sender locationInView:sender.view];
+    BOOL pointInside = false;
+    
+    if([self pointInside:point imageView:sender.view]){ // decrease touch area of uiimageview
+        pointInside = YES;
+    }
+    
     NewDrawController *newDrawVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewDrawController"];
     newDrawVC.delegate = self;
     newDrawVC.techniqueName = techniqueNameID;
@@ -86,7 +96,9 @@
         default:
             break;
     }
-    [self.navigationController pushViewController: newDrawVC animated:YES];
+    if(pointInside){
+        [self.navigationController pushViewController: newDrawVC animated:YES];
+    }
 }
 
 - (void)setupgestureRecognizers {
@@ -113,7 +125,7 @@
 - (void)share:(id)sender{
     NSString *textToShare;
     textToShare = [NSString stringWithFormat:@""];
-    self.labelToSave.text = self.techniqueNameID;
+    self.labelToSave.text = self.navigationItem.title;
     textToShare = self.labelToSave.text;
     self.labelToSave.alpha = 1.0;
     self.logo.alpha = 1.0;
@@ -137,7 +149,13 @@
     self.logo.alpha = 0.0;
     
     [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
-    [self setupBottomToolBar];
+        
+        if (!completed) {
+            return;
+            }
+        else {
+            [self setupBottomToolBar];
+        }
 
        // [self showAlertAfterImageSaved];
         
@@ -172,11 +190,16 @@
 }
 -(UIImage*)captureScreenRetina
 {
-    UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
+    CGFloat rescale = 2.0;
+    CGSize resize = CGSizeMake(self.screenShotView.frame.size.width * rescale, self.screenShotView.frame.size.height * rescale);
+
+    UIGraphicsBeginImageContextWithOptions(resize, self.screenShotView.opaque, 0);
+    CGContextScaleCTM(UIGraphicsGetCurrentContext(), rescale, rescale);
+
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
     return newImage;
 }
 //-(void)showAlertAfterImageSaved{
@@ -262,7 +285,7 @@
      forControlEvents:UIControlEventTouchUpInside];
     button.adjustsImageWhenHighlighted = NO;
     [button setTitle:@"OK" forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:16];
+    button.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
     button.backgroundColor = [UIColor whiteColor];
     [button setTintColor:[UIColor colorNamed:@"orange"]];
     button.frame = CGRectMake(startX ,yAxe, btnWidth, 30);
@@ -343,5 +366,24 @@
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item{
 //    self.imageBack.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageBack.image = item;
+}
+
+
+-(void)flipImage{
+    UIImage * flippedImage = [UIImage imageWithCGImage:self.imageLeft.image.CGImage
+                                                scale:self.imageLeft.image.scale
+                                          orientation:UIImageOrientationUpMirrored];
+    self.imageRight.image = flippedImage;
+}
+
+-(BOOL)pointInside:(CGPoint)point imageView:(UIView*)imgView
+{
+    CGRect newArea = CGRectMake(imgView.bounds.origin.x + 40, imgView.bounds.origin.y + 80, imgView.bounds.size.width-  80, imgView.bounds.size.height - 100);
+    
+//    UIView * tempView = [[UIView alloc]initWithFrame:newArea];
+//    tempView.backgroundColor = [UIColor colorNamed:@"orange"];
+//    [imgView addSubview:tempView];
+    
+    return CGRectContainsPoint(newArea, point);
 }
 @end

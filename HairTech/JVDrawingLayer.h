@@ -26,9 +26,12 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 @interface JVDrawingLayer : CAShapeLayer{
     
+    int JVDRAWINGBUFFERFORCURVE;
+    int JVDRAWINGBUFFERFORLINE;
+    CGFloat _zoomIndex;
 
 }
-
+-(void)setZoomIndex:(CGFloat)zoom;
 @property (nonatomic, assign) NSMutableArray * arrayOfLayerPoints;
 @property (nonatomic, assign) CGPoint startPointToConnect;
 @property (nonatomic, assign) CGPoint endPointToConnect;
@@ -58,7 +61,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 @property (nonatomic, assign) BOOL isVisible;
 @property (nonatomic, strong) NSMutableArray *arrayOfCircles;
-@property  CGFloat zoomFactor;
+@property  (nonatomic, assign )CGFloat zoomFactor;
 
 
 @property (nonatomic, assign) CAShapeLayer *circle1;

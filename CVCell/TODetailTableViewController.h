@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "tableCell.h"
 #import "collectionCell.h"
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h> 
 
-@interface TODetailTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
+@interface TODetailTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, MFMailComposeViewControllerDelegate>
 {
     NSArray * sectionName;
     NSUInteger rowsInSection;
