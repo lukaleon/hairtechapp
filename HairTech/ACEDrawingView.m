@@ -87,7 +87,7 @@
 @synthesize pointForRecognizer;
 @synthesize pan;
 @synthesize touchesForUpdate;
-
+@synthesize viewForDot;
 
 
 //@synthesize tapRecognizer;
@@ -821,7 +821,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
     else if (JVDrawingTypeText == self.type){
-      
+        [self.userResizableView setTextViewSelected:YES];
         self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
         CGRect rect = [self convertRect:layer.frame toView:self];
@@ -1011,9 +1011,98 @@ UIColor* tempColor;
 
 }
 
+#pragma mark Add Dot
 
+                /* THIS IS BLOCK OF METHODS TO ADD DOT DOT DOT DOT DOTLAYER */
+
+- (void)showMenuFromDot:(UITapGestureRecognizer*)sender {
+    CGRect rectOfMenu = CGRectMake(self.userResizableDotView.frame.origin.x +
+                                   (self.userResizableDotView.frame.size.width / 2),
+                                   self.userResizableDotView.frame.origin.y ,
+                                   0, 0);
+            menuForTextView = [UIMenuController sharedMenuController];
+            menuForTextView.menuItems = @[
+                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeDot)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateDot)]];
+            [menuForTextView showMenuFromView:self rect:rectOfMenu];
+}
+
+- (void)hideFrameFormDot:(UITapGestureRecognizer*)sender {
+ 
+}
+-(void)removeDot{
+    NSLog(@"Delete Dot");
+}
+-(void)duplicateDot{
+    NSLog(@"Duplicate Dot");
+}
+-(void)dotPosition:(SPUserResizableView*)rect  {
+    
+    viewForDot.bounds = rect.contentView.bounds;
+    CGRect newRect = rect.contentView.bounds;
+    CGFloat widthHeight = (newRect.size.width / 10) / 4;
+
+    NSLog(@" width %f height %f", newRect.size.width, newRect.size.height);
+    
+    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(newRect.size.width /2 - widthHeight, newRect.size.height/ 2 - widthHeight, newRect.size.width /10, newRect.size.height /10 )];
+    self.dot.path = circlePath.CGPath;
+}
+
+
+- (CAShapeLayer*)addDotLayer {
+    CGFloat centerX =  self.userResizableDotView.contentView.bounds.size.width/2;
+    CGFloat centerY =  self.userResizableDotView.contentView.bounds.size.height/2;
+    CGPoint center = CGPointMake(centerX, centerY);
+    CGRect rect = self.userResizableDotView.contentView.bounds;
+    CGFloat widthHeight = (rect.size.width / 10) / 4;
+    NSLog(@" center %f", widthHeight);
+    
+    self.dot = [CAShapeLayer layer];
+    UIBezierPath *circlePath=[UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x - widthHeight , center.y - widthHeight , rect.size.width /10, rect.size.height /10)];
+    
+    self.dot.path = circlePath.CGPath;
+    self.dot.fillColor = [UIColor blueColor].CGColor;
+    self.dot.opacity = 1.0;
+    self.dot.strokeColor = [UIColor blueColor].CGColor;
+    return self.dot;
+}
+
+-(void)addDotToView{
+    
+    NSLog(@"add dot");
+    self.userResizableDotView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(180, 250, 50, 50)];
+    UIView * viewForDot = [[UIView alloc]initWithFrame:self.userResizableDotView.bounds];
+   // viewForDot.backgroundColor = [UIColor yellowColor];
+    self.userResizableDotView.contentView = viewForDot;
+    [self.userResizableDotView setTextViewSelected:NO];
+    
+    [viewForDot.layer addSublayer:[self addDotLayer]];
+
+    self.userResizableDotView.delegate = self;
+    [self.userResizableDotView showEditingHandles];
+    currentlyEditingView = self.userResizableDotView;
+    lastEditedView = self.userResizableDotView;
+    [self addSubview:self.userResizableDotView];
+    
+    gestureRecognizerDot = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuFromDot:)];
+    [self.userResizableDotView addGestureRecognizer:gestureRecognizerDot];
+    gestureRecognizerDot.numberOfTapsRequired = 1;
+    
+    gestureRecognizerHidingDot = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFrameFormDot:)];
+    [self.userResizableDotView addGestureRecognizer:gestureRecognizerHidingDot];
+    gestureRecognizerHidingDot.numberOfTapsRequired = 1;
+//    gestureRecognizer.cancelsTouchesInView = NO;
+    //[gestureRecognizer setDelegate:self];
+    
+   
+
+}
 
 #pragma mark Add Text View
+
+                /* THIS IS BLOCK OF METHODS TO ADD TEXT TEXT TEXT TEXT  LAYER */
+
 
 -(void)editTextView{
     [self.textViewNew becomeFirstResponder];
@@ -1028,7 +1117,6 @@ UIColor* tempColor;
 -(void)hideTextViewFrame{
     self.textViewNew.layer.borderColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:0.0].CGColor;
     self.textViewNew.layer.borderWidth = 1.0;
-    
 }
 
 -(void)adjustRectWhenTextChanged:(CGRect)rect {
@@ -1067,6 +1155,8 @@ UIColor* tempColor;
         [self hideAndSaveTextViewWhenNewAdded];
     }
     self.userResizableView = [[SPUserResizableView alloc] initWithFrame:rect];
+    [self.userResizableView setTextViewSelected:YES];
+
     self.textViewNew  = [[TextViewCustom alloc] initWithFrame:rect font:fontSize text:text color:color];
     //[self.textViewNew passText:text color:color];
     self.userResizableView.center = center;
@@ -1140,7 +1230,6 @@ UIColor* tempColor;
         [self.delegate removeTextSettings];
         textViewSelected = NO;
         
-        
     } else {
         [self.textViewNew resignFirstResponder];
         self.textViewNew.userInteractionEnabled = NO;
@@ -1149,7 +1238,6 @@ UIColor* tempColor;
         [self.userResizableView removeFromSuperview];
         [self.delegate selectPreviousTool:self.previousType];
         [self.delegate removeTextSettings];
-        
     }
 }
 - (void)hideAndCreateTextLayer {

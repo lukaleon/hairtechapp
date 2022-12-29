@@ -91,8 +91,12 @@ typedef enum {
     
     CGFloat previousWidth;
     CGFloat previousHeight;
-    UITapGestureRecognizer *gestureRecognizer;
-    UITapGestureRecognizer *gestureRecognizer2;
+    UITapGestureRecognizer * gestureRecognizer;
+    UITapGestureRecognizer * gestureRecognizer2;
+    UITapGestureRecognizer * gestureRecognizerDot;
+
+    UITapGestureRecognizer * gestureRecognizerHidingDot;
+
     BOOL textViewSelected;
     CGPoint startOfLine;
     CGPoint currentPointOfLine;
@@ -104,8 +108,10 @@ typedef enum {
     CGPoint pointBegin;
     CGPoint pointEnd;
 }
-@property NSMutableArray * bufferOfLayers;
+@property CAShapeLayer * dot;
+@property UIView * viewForDot;
 
+@property NSMutableArray * bufferOfLayers;
 @property NSMutableString * fileNameInside;
 @property BOOL newAppVersion;
 @property (strong, nonatomic) NSMutableArray<LayersData *> *layers;
@@ -120,7 +126,11 @@ typedef enum {
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize;
 -(void)hideAndSaveTextViewWhenNewAdded;
 
+-(void)addDotToView;
+
 @property SPUserResizableView *userResizableView;
+@property SPUserResizableView *userResizableDotView;
+
 @property (nonatomic, retain) TextViewCustom * textViewNew;
 @property (nonatomic, assign) BOOL eraserSelected;
 @property (nonatomic, copy) void (^drawingLayerSelectedBlock)(BOOL isSelected);

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		400B02552916D11F007A7871 /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B02542916D11F007A7871 /* NameViewController.m */; };
+		400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400B6E8A295DBFAB0048F477 /* CloudKit.framework */; };
+		400B6E8F295DC27A0048F477 /* CloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B6E8D295DC27A0048F477 /* CloudKitManager.m */; };
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
@@ -413,6 +415,11 @@
 /* Begin PBXFileReference section */
 		400B02532916D11F007A7871 /* NameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NameViewController.h; sourceTree = "<group>"; };
 		400B02542916D11F007A7871 /* NameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NameViewController.m; sourceTree = "<group>"; };
+		400B6E89295DBE240048F477 /* hairtechRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechRelease.entitlements; path = hairtech/hairtechRelease.entitlements; sourceTree = "<group>"; };
+		400B6E8A295DBFAB0048F477 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		400B6E8C295DC1920048F477 /* hairtechDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechDebug.entitlements; path = hairtech/hairtechDebug.entitlements; sourceTree = "<group>"; };
+		400B6E8D295DC27A0048F477 /* CloudKitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudKitManager.m; sourceTree = "<group>"; };
+		400B6E8E295DC27A0048F477 /* CloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudKitManager.h; sourceTree = "<group>"; };
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
 		40163804291104A000C9D9C4 /* DrawViewControllerRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewControllerRight.h; sourceTree = "<group>"; };
 		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
@@ -936,6 +943,7 @@
 				B445C16D1664FFF900DD2315 /* QuartzCore.framework in Frameworks */,
 				B40F471F16641ACE004116EF /* libsqlite3.0.dylib in Frameworks */,
 				CEB7E74E1649A62A0099C14C /* UIKit.framework in Frameworks */,
+				400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */,
 				CEB7E7501649A62A0099C14C /* Foundation.framework in Frameworks */,
 				CEB7E7521649A62A0099C14C /* CoreGraphics.framework in Frameworks */,
 			);
@@ -959,6 +967,15 @@
 				B4F48D3A16D8272C0053D2D5 /* BackHeadViewController.m */,
 			);
 			name = DrawingViews;
+			sourceTree = "<group>";
+		};
+		400B6E90295DC2880048F477 /* CloudKitManager */ = {
+			isa = PBXGroup;
+			children = (
+				400B6E8E295DC27A0048F477 /* CloudKitManager.h */,
+				400B6E8D295DC27A0048F477 /* CloudKitManager.m */,
+			);
+			name = CloudKitManager;
 			sourceTree = "<group>";
 		};
 		40179E0028C6733C0090CB0C /* Frame */ = {
@@ -1800,6 +1817,8 @@
 		CEB7E73E1649A62A0099C14C = {
 			isa = PBXGroup;
 			children = (
+				400B6E8C295DC1920048F477 /* hairtechDebug.entitlements */,
+				400B6E89295DBE240048F477 /* hairtechRelease.entitlements */,
 				B4B5FE8817FD5370003755F6 /* Images.xcassets */,
 				CEB7E7531649A62A0099C14C /* HairTech */,
 				CEB7E74C1649A62A0099C14C /* Frameworks */,
@@ -1818,6 +1837,7 @@
 		CEB7E74C1649A62A0099C14C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				400B6E8A295DBFAB0048F477 /* CloudKit.framework */,
 				B41A9F0E213E48BF00B53A11 /* MapKit.framework */,
 				B43DF9F617454ECA00C36E02 /* OpenGLES.framework */,
 				B43B184C17F46404006C9052 /* Accelerate.framework */,
@@ -1855,6 +1875,7 @@
 				407FB91E28FE998900371E24 /* New Version */,
 				40C35FF12913EFB8005C22E6 /* EntryView */,
 				40C35FEF2913EF3C005C22E6 /* MySubView */,
+				400B6E90295DC2880048F477 /* CloudKitManager */,
 				B4FA974916680C1900F36E34 /* CollectionView */,
 				B434126716E61DF9003FAFA7 /* Color Popover */,
 				B4D82DA9165D762B0069D457 /* DrawControllers */,
@@ -2303,6 +2324,7 @@
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
+				400B6E8F295DC27A0048F477 /* CloudKitManager.m in Sources */,
 				4083669F293222CE00472CC8 /* AppDelegate.m in Sources */,
 				B4FA974D16680C4100F36E34 /* Cell.m in Sources */,
 				408366A5293BBF0F00472CC8 /* PageView.m in Sources */,
@@ -2491,6 +2513,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechDebug.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 6.1.0;
@@ -2530,6 +2553,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 6.1.0;

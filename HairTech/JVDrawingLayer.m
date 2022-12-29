@@ -122,14 +122,15 @@
             }
                 
             CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-            JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
-            if (JVDRAWINGBUFFERFORLINE > 16){
-                JVDRAWINGBUFFERFORLINE = 16;
+            
+            JVDRAWINGBUFFERFORCURVE = (lineLength / 8) / _zoomIndex ;
+            if (JVDRAWINGBUFFERFORCURVE > 16){
+                JVDRAWINGBUFFERFORCURVE = 16;
             }
-            if (JVDRAWINGBUFFERFORLINE <= 4){
-                JVDRAWINGBUFFERFORLINE = 4;
+            if (JVDRAWINGBUFFERFORCURVE <= 4){
+                JVDRAWINGBUFFERFORCURVE = 2;
             }
-            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORLINE,  _zoomIndex );
+            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORCURVE,  _zoomIndex );
 
                 CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
                 CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
@@ -141,17 +142,14 @@
                     if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
                         if (min == distanceStart) return JVDrawingTouchHead;
                         if (min == distanceEnd) return JVDrawingTouchEnd;
-                    
-                    }
-                };
-       // if ([self distanceBetweenStartPoint:self.midP endPoint:point] < JVDRAWINGBUFFERFORCURVE)
-            CGFloat min = MIN(distanceStart, distanceCtr);
-            CGFloat min2 = MIN(distanceEnd, distanceCtr);
-
-            if (min == distanceCtr || min2 == distanceCtr) {
-                return JVDrawingTouchMid;}
+                              
+                              }
+                          };
+                  if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFERFORCURVE)
+                  return JVDrawingTouchMid;
+                  
+                  }
         
-        }
         CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
             JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
         if (JVDRAWINGBUFFERFORLINE > 16){
@@ -175,10 +173,11 @@
             } else {
                 return JVDrawingTouchMid;
             }
+        }
         };
         
         
-    }
+    
     
     return NO;
 }

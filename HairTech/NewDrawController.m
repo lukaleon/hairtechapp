@@ -948,29 +948,30 @@ return YES;
             
             break;
         case 4:
-            [self.drawingView removeCircles];
-            curveToggleIsOn = nil;
-           // dashLineCount = 0;
-            [self makeButtonDeselected];
-            self.textTool.selected = YES;
-            [self.drawingView setEraserSelected:NO];
-            [self.drawingView enableGestures];
-            self.drawingView.type = JVDrawingTypeText;
-            self.drawingView.bufferType = JVDrawingTypeText;
-            self.drawingView.lineColor = textColor;
-            self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+//           [self.drawingView removeCircles];
+//            curveToggleIsOn = nil;
+//            [self makeButtonDeselected];
+//            self.textTool.selected = YES;
+//            [self.drawingView setEraserSelected:NO];
+//            [self.drawingView enableGestures];
+//            self.drawingView.type = JVDrawingTypeText;
+//            self.drawingView.bufferType = JVDrawingTypeText;
+//            self.drawingView.lineColor = textColor;
+//            self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+//            
+//            CGRect gripFrame = CGRectMake(0, 0, 70, 38);
+//            if (!textSelected){
+//                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
+//                [contentTextView setFontSizee:self.fontSizeVC];
+//                self.drawingView.textViewFontSize = self.fontSizeVC;
+//            }
+//            self.drawingView.textViewNew.delegate = self;
+//            if (contentTextView == nil){
+//                [self showTextColorsAndSize:textColor]; //??????????? atttention
+//                [contentTextView setFontSizee:self.fontSizeVC];
+//            }
             
-            CGRect gripFrame = CGRectMake(0, 0, 70, 38);
-            if (!textSelected){
-                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
-                [contentTextView setFontSizee:self.fontSizeVC];
-                self.drawingView.textViewFontSize = self.fontSizeVC;
-            }
-            self.drawingView.textViewNew.delegate = self;
-            if (contentTextView == nil){
-                [self showTextColorsAndSize:textColor]; //??????????? atttention
-                [contentTextView setFontSizee:self.fontSizeVC];
-            }
+            [self.drawingView addDotToView];
             break;
        case 5:
             curveToggleIsOn = nil;

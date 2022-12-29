@@ -16,6 +16,8 @@
 #import "HapticHelper.h"
 #import "NameViewController.h"
 #import "TODetailTableViewController.h"
+#import "CloudKitManager.h"
+
 //#import "Flurry.h"
 
 NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -263,7 +265,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 -(void)viewDidLoad
-{    [self setupLongPressGestures];
+{
+    database =  [[CKContainer containerWithIdentifier:@"iCloud.com.hair.hairtech"] publicCloudDatabase];
+
+    [self setupLongPressGestures];
 
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
@@ -484,6 +489,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     return tempimage5;
 }
 
+
+-(void)createRecordInCloudKit:(Technique*)technique{
+    __weak typeof(self) weakSelf = self;
+    NSMutableString * exportingFileName = [technique.uniqueId mutableCopy];
+    [exportingFileName appendString:@".htapp"];
+    
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    NSData * data = [self dataOfType:filePath error:nil imageName:technique.uniqueId fileName:exportingFileName techniqueName:technique.techniquename maleOrFemale:technique.date];
+    
+        [CloudKitManager createRecord:data recordID:technique.uniqueId
+                completionHandler:^(NSArray *results, NSError *error) {
+    }];
+}
 -(void)openEntry
 {
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -497,6 +517,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }];
 
     Technique *technique = [self.techniques objectAtIndex:index];
+    [self createRecordInCloudKit:technique];
+    
     indexpathtemp = NULL;
  //   [self fetchImages:index];
     
@@ -588,16 +610,44 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 
 
--(void)selectionActivated{
+-(void)saveToDatabase{
+    
+   
+   Technique *tech = [self.techniques objectAtIndex:0];
+  //  NSLog(@"filename %@", tech.uniqueId);
+    NSMutableString * exportingFileName = [tech.uniqueId mutableCopy];
+    [exportingFileName appendString:@".htapp"];
 
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+//    NSData * data = [self dataOfType:filePath error:nil imageName:tech.uniqueId fileName:exportingFileName techniqueName:tech.techniquename maleOrFemale:tech.date];
+//
+//
+//    CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Technique"];
+//    [record setValue:data forKey:@"technique"];
+//
+//    [database saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+//
+//        if(record != nil && error == nil){
+//            NSLog(@"Saved");
+//        }
+//    }];
+
+}
+
+
+-(void)selectionActivated{
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
     self.navigationItem.leftBarButtonItem = nil;
     self.addHeadsheet.hidden = YES;
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
     [self.collectionView reloadData];
-    
 }
+
+
+
 -(void)selectionActivatedFromLongPress{
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
@@ -1693,5 +1743,47 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
     return fileExist;
 }
+
+#pragma mark SYNCHRONIZATION
+
+- (void)updateData {
+    [self shouldAnimateIndicator:YES];
+    __weak typeof(self) weakSelf = self;
+    [CloudKitManager fetchAllTechniquesWithCompletionHandler:^(NSArray *results, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        if (error) {
+            if (error.code == 6) {
+                [strongSelf presentMessage:NSLocalizedString(@"Add Techniques from the default list. Database is empty", nil)];
+            } else {
+                [strongSelf presentMessage:error.userInfo[NSLocalizedDescriptionKey]];
+            }
+        } else {
+            strongSelf.fetchedTechniques = results;
+            [strongSelf.collectionView reloadData];
+        }
+        [strongSelf shouldAnimateIndicator:NO];
+    }];
+}
+
+
+- (void)shouldAnimateIndicator:(BOOL)animate {
+    if (animate) {
+        [self.indicatorView startAnimating];
+    } else {
+        [self.indicatorView stopAnimating];
+    }
+
+    self.collectionView.userInteractionEnabled = !animate;
+    self.navigationController.navigationBar.userInteractionEnabled = !animate;
+}
+- (void)presentMessage:(NSString *)msg {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CloudKit", nil)
+                                                    message:msg
+                                                   delegate:nil
+                                          cancelButtonTitle:NSLocalizedString(@"Ok", nil)
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 
 @end

@@ -27,7 +27,8 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerRightAnchorPoint =
 static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint = { 0.0, 0.0, 1.0, 0.0 };
 
 @interface SPGripViewBorderView : UIView
- 
+@property (nonatomic)  BOOL anchorsForText;
+
 @end
 
 @implementation SPGripViewBorderView
@@ -56,10 +57,12 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
 //    CGRect lowerRight = CGRectMake(self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
 //    CGRect lowerLeft = CGRectMake(0.0, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
 //    CGRect upperMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, 0.0, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
-   CGRect lowerMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
-    
+  // CGRect lowerMiddle = CGRectMake((self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize)/2, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
+  
     CGRect middleLeft = CGRectMake(0.0, (self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize)/2, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
     CGRect middleRight = CGRectMake(self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize, (self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize)/2, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
+    
+    CGRect lowerRight = CGRectMake(self.bounds.size.width - kSPUserResizableViewInteractiveBorderSize, self.bounds.size.height - kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize, kSPUserResizableViewInteractiveBorderSize);
     
     // (3) Create the gradient to paint the anchor points.
 //    CGFloat colors [] = {
@@ -72,22 +75,38 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     
     
     // (4) Set up the stroke for drawing the border of each of the anchor points.
-   
-
-    CGRect allPoints[8] = { middleLeft, middleRight };
-    for (NSInteger i = 0; i < 8; i++) {
-    CGRect currPoint = allPoints[i];
-    CGContextAddEllipseInRect(context, currPoint);
-    CGContextSetFillColorWithColor(context, [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor);
-        //CGContextClosePath(context);
-        
-        CGContextFillPath(context);
-        CGContextSetLineWidth(context, 1);
-        CGContextSetShadow(context, CGSizeMake(0, 0), 0.3);
-        CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextStrokePath(context);
-        
-       
+    if(self.anchorsForText){
+        CGRect allPoints[8] = { middleLeft, middleRight };
+        for (NSInteger i = 0; i < 8; i++) {
+            CGRect currPoint = allPoints[i];
+            CGContextAddEllipseInRect(context, currPoint);
+            CGContextSetFillColorWithColor(context, [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor);
+            //CGContextClosePath(context);
+            
+            CGContextFillPath(context);
+            CGContextSetLineWidth(context, 1);
+            CGContextSetShadow(context, CGSizeMake(0, 0), 0.3);
+            CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
+            CGContextStrokePath(context);
+            
+            
+        }
+    }else
+    {
+        CGRect allPoints[8] = { lowerRight };
+        for (NSInteger i = 0; i < 8; i++) {
+            CGRect currPoint = allPoints[i];
+            CGContextAddEllipseInRect(context, currPoint);
+            CGContextSetFillColorWithColor(context, [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor);
+            //CGContextClosePath(context);
+            
+            CGContextFillPath(context);
+            CGContextSetLineWidth(context, 1);
+            CGContextSetShadow(context, CGSizeMake(0, 0), 0.3);
+            CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
+            CGContextStrokePath(context);
+            
+        }
     }
 //     (5) Fill each anchor point using the gradient, then stroke the border.
 //    CGRect allPoints[8] = { middleLeft, middleRight };
@@ -147,6 +166,7 @@ static SPUserResizableViewAnchorPoint SPUserResizableViewLowerMiddleAnchorPoint 
     // Ensure the border view is always on top by removing it and adding it to the end of the subview list.
     [borderView removeFromSuperview];
     [self addSubview:borderView];
+    borderView.anchorsForText = _textViewSelected;
 }
 
 - (void)setFrame:(CGRect)newFrame {
@@ -172,24 +192,45 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 //    CGPointSPUserResizableViewAnchorPointPair upperLeft = { CGPointMake(0.0, 0.0), SPUserResizableViewUpperLeftAnchorPoint };
 //    CGPointSPUserResizableViewAnchorPointPair upperMiddle = { CGPointMake(self.bounds.size.width/2, 0.0), SPUserResizableViewUpperMiddleAnchorPoint };
 //    CGPointSPUserResizableViewAnchorPointPair upperRight = { CGPointMake(self.bounds.size.width, 0.0), SPUserResizableViewUpperRightAnchorPoint };
-    CGPointSPUserResizableViewAnchorPointPair middleRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height/2), SPUserResizableViewMiddleRightAnchorPoint };
-//    CGPointSPUserResizableViewAnchorPointPair lowerRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height), SPUserResizableViewLowerRightAnchorPoint };
+  
+    CGPointSPUserResizableViewAnchorPointPair lowerRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height), SPUserResizableViewLowerRightAnchorPoint };
   // CGPointSPUserResizableViewAnchorPointPair lowerMiddle = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height), SPUserResizableViewLowerMiddleAnchorPoint };
 //    CGPointSPUserResizableViewAnchorPointPair lowerLeft = { CGPointMake(0, self.bounds.size.height), SPUserResizableViewLowerLeftAnchorPoint };
+    CGPointSPUserResizableViewAnchorPointPair middleRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height/2), SPUserResizableViewMiddleRightAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair middleLeft = { CGPointMake(0, self.bounds.size.height/2), SPUserResizableViewMiddleLeftAnchorPoint };
     CGPointSPUserResizableViewAnchorPointPair centerPoint = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2), SPUserResizableViewNoResizeAnchorPoint };
+   
     
-    // (2) Iterate over each of the anchor points and find the one closest to the user's touch.
-    CGPointSPUserResizableViewAnchorPointPair allPoints[9] = {  middleLeft, middleRight, centerPoint };
-    CGFloat smallestDistance = MAXFLOAT; CGPointSPUserResizableViewAnchorPointPair closestPoint = centerPoint;
-    for (NSInteger i = 0; i < 9; i++) {
-        CGFloat distance = SPDistanceBetweenTwoPoints(touchPoint, allPoints[i].point);
-        if (distance < smallestDistance) { 
-            closestPoint = allPoints[i];
-            smallestDistance = distance;
+    if(_textViewSelected){
+        CGPointSPUserResizableViewAnchorPointPair allPoints[9] = {  middleLeft, middleRight, centerPoint };
+        
+        // (2) Iterate over each of the anchor points and find the one closest to the user's touch.
+        CGFloat smallestDistance = MAXFLOAT; CGPointSPUserResizableViewAnchorPointPair closestPoint = centerPoint;
+        for (NSInteger i = 0; i < 9; i++) {
+            CGFloat distance = SPDistanceBetweenTwoPoints(touchPoint, allPoints[i].point);
+            if (distance < smallestDistance) {
+                closestPoint = allPoints[i];
+                smallestDistance = distance;
+            }
+            
         }
+        return closestPoint.anchorPoint;
+
+    }else {
+        CGPointSPUserResizableViewAnchorPointPair allPoints[9] = {  lowerRight, centerPoint };
+        
+        // (2) Iterate over each of the anchor points and find the one closest to the user's touch.
+        CGFloat smallestDistance = MAXFLOAT; CGPointSPUserResizableViewAnchorPointPair closestPoint = centerPoint;
+        for (NSInteger i = 0; i < 9; i++) {
+            CGFloat distance = SPDistanceBetweenTwoPoints(touchPoint, allPoints[i].point);
+            if (distance < smallestDistance) {
+                closestPoint = allPoints[i];
+                smallestDistance = distance;
+            }
+        }
+        return closestPoint.anchorPoint;
+
     }
-    return closestPoint.anchorPoint;
 }
 
 - (BOOL)isResizing {
@@ -344,7 +385,13 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
  
     if ([self isResizing]) {
-        [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
+        if(_textViewSelected){
+            [self resizeUsingTouchLocation:[[touches anyObject] locationInView:self.superview]];
+        }else{
+            [self resizeUsingTouchLocationForDot:[[touches anyObject] locationInView:self.superview]];
+            [self.delegate dotPosition:self];
+
+        }
         
     } else {
         
@@ -360,5 +407,110 @@ typedef struct CGPointSPUserResizableViewAnchorPointPair {
     // [borderView release];
     //[super dealloc];
 }
+-(void)setTextViewSelected:(BOOL)textViewSelected{
+    
+    _textViewSelected = textViewSelected;
+    
+    NSLog(@"Text view selected = %@",textViewSelected ? @"Yes" : @"No");
 
+}
+
+
+- (void)resizeUsingTouchLocationForDot:(CGPoint)touchPoint {
+    // (1) Update the touch point if we're outside the superview.
+    if (self.preventsPositionOutsideSuperview) {
+        CGFloat border = kSPUserResizableViewGlobalInset + kSPUserResizableViewInteractiveBorderSize/2;
+        if (touchPoint.x < border) {
+            touchPoint.x = border;
+        }
+        if (touchPoint.x > self.superview.bounds.size.width - border) {
+            touchPoint.x = self.superview.bounds.size.width - border;
+        }
+        if (touchPoint.y < border) {
+            touchPoint.y = border;
+        }
+        if (touchPoint.y > self.superview.bounds.size.height - border) {
+            touchPoint.y = self.superview.bounds.size.height - border;
+        }
+    }
+    
+    // (2) Calculate the deltas using the current anchor point.
+    CGFloat deltaW = anchorPoint.adjustsW * (touchStart.x - touchPoint.x);
+    CGFloat deltaX = anchorPoint.adjustsX * (-1.0 * deltaW);
+    CGFloat deltaH = anchorPoint.adjustsH * (touchPoint.y - touchStart.y);
+    CGFloat deltaY = anchorPoint.adjustsY * (-1.0 * deltaH);
+    
+    // (3) Calculate the new frame.
+    CGFloat newX = self.frame.origin.x + deltaX;
+    CGFloat newY = self.frame.origin.y + deltaY;
+    CGFloat newWidth = self.frame.size.width + deltaW;
+    //CGFloat newHeight = self.frame.size.height + deltaH;
+    CGFloat newHeight = newWidth;
+    
+    // (4) If the new frame is too small, cancel the changes.
+    if (newWidth < self.minWidth) {
+        newWidth = self.frame.size.width;
+        newX = self.frame.origin.x;
+    }
+    if (newHeight < self.minHeight) {
+        newHeight = self.frame.size.height;
+        newY = self.frame.origin.y;
+    }
+    if(newWidth > 140){
+        newWidth = 140;
+        if(newHeight > 140){
+            newHeight = 140;
+        }
+    }
+    
+    // (5) Ensure the resize won't cause the view to move offscreen.
+    if (self.preventsPositionOutsideSuperview) {
+        if (newX < self.superview.bounds.origin.x) {
+            // Calculate how much to grow the width by such that the new X coordintae will align with the superview.
+            deltaW = self.frame.origin.x - self.superview.bounds.origin.x;
+            newWidth = self.frame.size.width + deltaW;
+            newX = self.superview.bounds.origin.x;
+        }
+        if (newX + newWidth > self.superview.bounds.origin.x + self.superview.bounds.size.width) {
+            newWidth = self.superview.bounds.size.width - newX;
+        }
+        if (newY < self.superview.bounds.origin.y) {
+            // Calculate how much to grow the height by such that the new Y coordintae will align with the superview.
+            deltaH = self.frame.origin.y - self.superview.bounds.origin.y;
+            newHeight = self.frame.size.height + deltaH;
+            newY = self.superview.bounds.origin.y;
+        }
+        if (newY + newHeight > self.superview.bounds.origin.y + self.superview.bounds.size.height) {
+            newHeight = self.superview.bounds.size.height - newY;
+        }
+    }
+    
+    self.frame = CGRectMake(newX, newY, newWidth, newHeight);
+    touchStart = touchPoint;
+}
+
+- (SPUserResizableViewAnchorPoint)anchorPointForTouchLocationDot:(CGPoint)touchPoint {
+    // (1) Calculate the positions of each of the anchor points.
+//    CGPointSPUserResizableViewAnchorPointPair upperLeft = { CGPointMake(0.0, 0.0), SPUserResizableViewUpperLeftAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair upperMiddle = { CGPointMake(self.bounds.size.width/2, 0.0), SPUserResizableViewUpperMiddleAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair upperRight = { CGPointMake(self.bounds.size.width, 0.0), SPUserResizableViewUpperRightAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair middleRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height/2), SPUserResizableViewMiddleRightAnchorPoint };
+    CGPointSPUserResizableViewAnchorPointPair lowerRight = { CGPointMake(self.bounds.size.width, self.bounds.size.height), SPUserResizableViewLowerRightAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair lowerMiddle = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height), SPUserResizableViewLowerMiddleAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair lowerLeft = { CGPointMake(0, self.bounds.size.height), SPUserResizableViewLowerLeftAnchorPoint };
+//    CGPointSPUserResizableViewAnchorPointPair middleLeft = { CGPointMake(0, self.bounds.size.height/2), SPUserResizableViewMiddleLeftAnchorPoint };
+    CGPointSPUserResizableViewAnchorPointPair centerPoint = { CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2), SPUserResizableViewNoResizeAnchorPoint };
+//
+    // (2) Iterate over each of the anchor points and find the one closest to the user's touch.
+    CGPointSPUserResizableViewAnchorPointPair allPoints[9] = {  lowerRight, centerPoint };
+    CGFloat smallestDistance = MAXFLOAT; CGPointSPUserResizableViewAnchorPointPair closestPoint = centerPoint;
+    for (NSInteger i = 0; i < 9; i++) {
+        CGFloat distance = SPDistanceBetweenTwoPoints(touchPoint, allPoints[i].point);
+        if (distance < smallestDistance) {
+            closestPoint = allPoints[i];
+            smallestDistance = distance;
+        }
+    }
+    return closestPoint.anchorPoint;
+}
 @end

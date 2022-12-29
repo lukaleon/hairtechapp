@@ -15,7 +15,7 @@
 #import "AppDelegate.h"
 #import "HelpViewController.h"
 #import "Cell.h"
-//#import "Flurry.h"
+#import "CloudKitManager.h"
 #import "Defines.h"
 
 
@@ -885,6 +885,7 @@ if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
         
         [self.navigationController popToViewController:self animated:YES];
  
+    
     
 }
 -(void) passItemBackFromRight:(DrawViewControllerRight *)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5

@@ -16,6 +16,9 @@
 #import "HMPopUpView.h"
 #import "Cell.h"
 #import "NewEntryController.h"
+#import <CloudKit/CloudKit.h>
+
+
 
 typedef enum {
     Selected,
@@ -42,7 +45,15 @@ typedef enum {
     NSUInteger *renameIndexPath;
     NSIndexPath * indexOfSelectedCell;
     NSUInteger indexForDelete;
+    
+    CKDatabase * database;
+
 }
+
+@property (nonatomic, strong) NSArray *fetchedTechniques;
+
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *indicatorView;
+
 @property (nonatomic,strong) UIButton *addHeadsheet;
 @property  BOOL isSelectionActivated;
 

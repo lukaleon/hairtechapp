@@ -19,13 +19,14 @@ typedef struct SPUserResizableViewAnchorPoint {
 @protocol SPUserResizableViewDelegate;
 @class SPGripViewBorderView;
 
-@interface SPUserResizableView : UIView {
+@interface SPUserResizableView : UIView  {
     SPGripViewBorderView *borderView;
     UIView *contentViewNew;
     CGPoint touchStart;
     CGFloat minWidth;
     CGFloat minHeight;
     CGFloat newHeight;
+    BOOL _textViewSelected;
     // Used to determine which components of the bounds we'll be modifying, based upon where the user's touch started.
     SPUserResizableViewAnchorPoint anchorPoint;
     BOOL textViewResponder;
@@ -33,6 +34,9 @@ typedef struct SPUserResizableViewAnchorPoint {
     
     //id <SPUserResizableViewDelegate> delegate;
 }
+
+
+-(void)setTextViewSelected:(BOOL)textViewSelected;
 
 @property (nonatomic, assign) id <SPUserResizableViewDelegate> delegate;
 
@@ -55,6 +59,7 @@ typedef struct SPUserResizableViewAnchorPoint {
 
 @optional
 
+-(void)dotPosition:(SPUserResizableView*)rect;
 // Called when the resizable view receives touchesBegan: and activates the editing handles.
 - (void)userResizableViewDidBeginEditing:(SPUserResizableView *)userResizableView;
 

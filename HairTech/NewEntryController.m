@@ -7,7 +7,7 @@
 //
 
 #import "NewEntryController.h"
-
+#import "CloudKitManager.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -366,8 +366,15 @@
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item{
 //    self.imageBack.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageBack.image = item;
+    
 }
 
+-(void)updateCloudDatabase{
+    [CloudKitManager updateRecordDataWithId:@"dsfsd" text:@"fdfsf" completionHandler:^(NSArray *results, NSError *error){
+        
+
+    }];
+}
 
 -(void)flipImage{
     UIImage * flippedImage = [UIImage imageWithCGImage:self.imageLeft.image.CGImage
