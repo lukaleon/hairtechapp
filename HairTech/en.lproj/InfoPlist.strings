@@ -1,2 +1,13 @@
-/* Localized versions of Info.plist keys */
+<key>NSUbiquitousContainers</key>
+    <dict>
+        <key>iCloud.com.hairtech.docs</key>
+        <dict>
+            <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+            <true/>
+            <key>NSUbiquitousContainerSupportedFolderLevels</key>
+            <string>Hairtechapp</string>
+            <key>NSUbiquitousContainerName</key>
+            <string>Hairtechapp</string>
+        </dict>
+    </dict>
 

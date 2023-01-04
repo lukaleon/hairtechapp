@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 #import "NameViewController.h"
+#import "Hairtech-Bridging-Header.h"
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -67,6 +68,9 @@
     self.textField.layer.cornerRadius = 8;
     
     arrayOfTechnique = [[NSMutableArray alloc]init];
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    arrayOfTechnique = [db getCustomers];
+
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.OkButtonInSubView=0;
     [self.imageOfheads.layer setShadowOffset:CGSizeMake(0, 2)];
@@ -173,18 +177,21 @@
 }
 
 -(BOOL)checkEnteredName{
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    foothumb1 = self.textField.text;
-    foothumb1 = [self.textField.text mutableCopy];
-    [foothumb1 appendString:bfcol1];
-    foothumb1= [foothumb1 mutableCopy];
-    [foothumb1 appendString:@".png"];
-    
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
-    NSString *foofile = [documentsPath stringByAppendingPathComponent:foothumb1];
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
-    return fileExist;
+    BOOL techniqueExist;
+    for(Technique * tech in arrayOfTechnique){
+        if([textField.text isEqual:tech.techniquename]){
+            techniqueExist = YES;
+            NSLog(@"technique exists");
+
+            break;
+        }
+        else {
+            techniqueExist = NO;
+            NSLog(@"technique NOT exists");
+        }
+    }
+    return techniqueExist;
+   
 }
 
 -(BOOL)checkNameLength{
@@ -416,7 +423,7 @@
     if([self checkEnteredName])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!"
-                                                        message:@"The technique with this name exists already"
+                                                        message:@"Diagram with this name exists"
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles: nil];
@@ -526,5 +533,7 @@
     [self changeFileName:@"fronthead_ms.png" to:filenamethumb4];
     [self changeFileName:@"backhead_ms.png" to:filenamethumb5];
 }
+
+
 
 @end

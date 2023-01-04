@@ -15,7 +15,6 @@
 #import "AppDelegate.h"
 #import "HelpViewController.h"
 #import "Cell.h"
-#import "CloudKitManager.h"
 #import "Defines.h"
 
 

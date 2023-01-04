@@ -7,7 +7,6 @@
 //
 
 #import "NewEntryController.h"
-#import "CloudKitManager.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -369,12 +368,7 @@
     
 }
 
--(void)updateCloudDatabase{
-    [CloudKitManager updateRecordDataWithId:@"dsfsd" text:@"fdfsf" completionHandler:^(NSArray *results, NSError *error){
-        
 
-    }];
-}
 
 -(void)flipImage{
     UIImage * flippedImage = [UIImage imageWithCGImage:self.imageLeft.image.CGImage

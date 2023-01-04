@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		400B02552916D11F007A7871 /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B02542916D11F007A7871 /* NameViewController.m */; };
 		400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400B6E8A295DBFAB0048F477 /* CloudKit.framework */; };
-		400B6E8F295DC27A0048F477 /* CloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B6E8D295DC27A0048F477 /* CloudKitManager.m */; };
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
 		4017DE2729278D3600F6D2E9 /* WhatsNewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4017DE2629278D3600F6D2E9 /* WhatsNewController.m */; };
+		40344681295F56B400390E20 /* MyDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 40344680295F56B400390E20 /* MyDocument.m */; };
 		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
 		4043E2D328DB7E0500BF9FF8 /* a-sm-tr.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */; };
 		4043E2D428DB7E0500BF9FF8 /* a-sm.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2D028DB7E0500BF9FF8 /* a-sm.png */; };
@@ -35,6 +35,8 @@
 		4071B5F428DA1AC300CCC9C3 /* textNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F228DA1AC300CCC9C3 /* textNew_white.png */; };
 		4071B5F528DA1AC300CCC9C3 /* textNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F328DA1AC300CCC9C3 /* textNew.png */; };
 		40729CCB294A038800F64E38 /* 120.png in Resources */ = {isa = PBXBuildFile; fileRef = 40729CCA294A038700F64E38 /* 120.png */; };
+		4079875829644C7B004C86ED /* LSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875429644C7A004C86ED /* LSDocument.m */; };
+		4079875929644C7B004C86ED /* LSFileWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875529644C7A004C86ED /* LSFileWrapper.m */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
 		407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B702750033600BA0474 /* ASValuePopUpView.m */; };
 		407FB90228F17FA000371E24 /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90028F17FA000371E24 /* undoNew.png */; };
@@ -418,8 +420,6 @@
 		400B6E89295DBE240048F477 /* hairtechRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechRelease.entitlements; path = hairtech/hairtechRelease.entitlements; sourceTree = "<group>"; };
 		400B6E8A295DBFAB0048F477 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		400B6E8C295DC1920048F477 /* hairtechDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechDebug.entitlements; path = hairtech/hairtechDebug.entitlements; sourceTree = "<group>"; };
-		400B6E8D295DC27A0048F477 /* CloudKitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudKitManager.m; sourceTree = "<group>"; };
-		400B6E8E295DC27A0048F477 /* CloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudKitManager.h; sourceTree = "<group>"; };
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
 		40163804291104A000C9D9C4 /* DrawViewControllerRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewControllerRight.h; sourceTree = "<group>"; };
 		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
@@ -427,6 +427,8 @@
 		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 		4017DE2529278D3600F6D2E9 /* WhatsNewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhatsNewController.h; sourceTree = "<group>"; };
 		4017DE2629278D3600F6D2E9 /* WhatsNewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhatsNewController.m; sourceTree = "<group>"; };
+		4034467F295F56B400390E20 /* MyDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyDocument.h; sourceTree = "<group>"; };
+		40344680295F56B400390E20 /* MyDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyDocument.m; sourceTree = "<group>"; };
 		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
 		403F27F928C352190092DA5D /* TextRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRect.m; sourceTree = "<group>"; };
 		4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "a-sm-tr.png"; sourceTree = "<group>"; };
@@ -454,6 +456,11 @@
 		4071B5F228DA1AC300CCC9C3 /* textNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew_white.png; sourceTree = "<group>"; };
 		4071B5F328DA1AC300CCC9C3 /* textNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew.png; sourceTree = "<group>"; };
 		40729CCA294A038700F64E38 /* 120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 120.png; path = Images.xcassets/AppIcon.appiconset/120.png; sourceTree = "<group>"; };
+		4079874329643C32004C86ED /* Hairtech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hairtech-Bridging-Header.h"; sourceTree = "<group>"; };
+		4079875429644C7A004C86ED /* LSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDocument.m; sourceTree = "<group>"; };
+		4079875529644C7A004C86ED /* LSFileWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSFileWrapper.m; sourceTree = "<group>"; };
+		4079875629644C7A004C86ED /* LSDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDocument.h; sourceTree = "<group>"; };
+		4079875729644C7A004C86ED /* LSFileWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSFileWrapper.h; sourceTree = "<group>"; };
 		407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
 		407D4B6F2750033600BA0474 /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
 		407D4B702750033600BA0474 /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
@@ -969,15 +976,6 @@
 			name = DrawingViews;
 			sourceTree = "<group>";
 		};
-		400B6E90295DC2880048F477 /* CloudKitManager */ = {
-			isa = PBXGroup;
-			children = (
-				400B6E8E295DC27A0048F477 /* CloudKitManager.h */,
-				400B6E8D295DC27A0048F477 /* CloudKitManager.m */,
-			);
-			name = CloudKitManager;
-			sourceTree = "<group>";
-		};
 		40179E0028C6733C0090CB0C /* Frame */ = {
 			isa = PBXGroup;
 			children = (
@@ -1085,6 +1083,41 @@
 				407FB91828F8955500371E24 /* pencil_white.png */,
 			);
 			path = "New Buttons";
+			sourceTree = "<group>";
+		};
+		4079874429643D28004C86ED /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				4079874329643C32004C86ED /* Hairtech-Bridging-Header.h */,
+				4079875229643D69004C86ED /* Extension */,
+				4079874D29643D53004C86ED /* Data */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
+		4079874D29643D53004C86ED /* Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		4079875229643D69004C86ED /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		4079875329644C63004C86ED /* File Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				4079875629644C7A004C86ED /* LSDocument.h */,
+				4079875429644C7A004C86ED /* LSDocument.m */,
+				4079875729644C7A004C86ED /* LSFileWrapper.h */,
+				4079875529644C7A004C86ED /* LSFileWrapper.m */,
+			);
+			path = "File Wrapper";
 			sourceTree = "<group>";
 		};
 		407D4B6D2750032300BA0474 /* Slider */ = {
@@ -1810,6 +1843,9 @@
 				B4FA974F16680CDA00F36E34 /* CellBackground.m */,
 				B4FA975116680D5D00F36E34 /* ViewController.h */,
 				40BC7FA728E7112A00F7364A /* ViewController.m */,
+				4034467F295F56B400390E20 /* MyDocument.h */,
+				40344680295F56B400390E20 /* MyDocument.m */,
+				4079875329644C63004C86ED /* File Wrapper */,
 			);
 			name = CollectionView;
 			sourceTree = "<group>";
@@ -1817,6 +1853,7 @@
 		CEB7E73E1649A62A0099C14C = {
 			isa = PBXGroup;
 			children = (
+				4079874429643D28004C86ED /* Swift */,
 				400B6E8C295DC1920048F477 /* hairtechDebug.entitlements */,
 				400B6E89295DBE240048F477 /* hairtechRelease.entitlements */,
 				B4B5FE8817FD5370003755F6 /* Images.xcassets */,
@@ -1875,7 +1912,6 @@
 				407FB91E28FE998900371E24 /* New Version */,
 				40C35FF12913EFB8005C22E6 /* EntryView */,
 				40C35FEF2913EF3C005C22E6 /* MySubView */,
-				400B6E90295DC2880048F477 /* CloudKitManager */,
 				B4FA974916680C1900F36E34 /* CollectionView */,
 				B434126716E61DF9003FAFA7 /* Color Popover */,
 				B4D82DA9165D762B0069D457 /* DrawControllers */,
@@ -2324,7 +2360,6 @@
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
-				400B6E8F295DC27A0048F477 /* CloudKitManager.m in Sources */,
 				4083669F293222CE00472CC8 /* AppDelegate.m in Sources */,
 				B4FA974D16680C4100F36E34 /* Cell.m in Sources */,
 				408366A5293BBF0F00472CC8 /* PageView.m in Sources */,
@@ -2335,6 +2370,7 @@
 				B445F671166DF15F00E38343 /* Technique.m in Sources */,
 				B419661D17F9D4DB003E9159 /* DEMOMenuViewController.m in Sources */,
 				40FCA47329268A050082D645 /* tableCell.m in Sources */,
+				40344681295F56B400390E20 /* MyDocument.m in Sources */,
 				407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */,
 				B4BBBBAF1AF36E0D00A9FA45 /* WEPopoverController.m in Sources */,
 				B43A5656167A6A3000D886C1 /* LoadingViewController.m in Sources */,
@@ -2346,6 +2382,7 @@
 				407FB92428FEABCA00371E24 /* NewDrawController.m in Sources */,
 				B401CA0B1B04798D00596292 /* FMDBDataAccess.m in Sources */,
 				B419661617F9CCC8003E9159 /* UIImage+REFrostedViewController.m in Sources */,
+				4079875829644C7B004C86ED /* LSDocument.m in Sources */,
 				B4F25E752142F929003091C2 /* CHMagnifierView.m in Sources */,
 				B4F48D3016D81DCE0053D2D5 /* FrontHeadViewController.m in Sources */,
 				4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */,
@@ -2371,6 +2408,7 @@
 				B429A75421CEEE4700F56F09 /* UITextView+PinchZoom.m in Sources */,
 				B41A9F0D213E3E8300B53A11 /* HapticHelper.m in Sources */,
 				B4364A9E176F714100466B0D /* TextViewCustom.m in Sources */,
+				4079875929644C7B004C86ED /* LSFileWrapper.m in Sources */,
 				40B79AE62922BB6D003A8680 /* TORoundedTableView.m in Sources */,
 				B4BBEEE91779C6E900FEBFC3 /* toolbar_view.m in Sources */,
 				40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */,
@@ -2432,6 +2470,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2486,6 +2525,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2536,7 +2576,8 @@
 				PRODUCT_NAME = hairtech;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CVCell/Swift/hairtech-Bridging-Header.h";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Swift/Hairtech-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2575,7 +2616,8 @@
 				PRODUCT_NAME = hairtech;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CVCell/Swift/hairtech-Bridging-Header.h";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Swift/Hairtech-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7s armv7";

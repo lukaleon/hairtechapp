@@ -260,7 +260,6 @@
 #pragma mark - PopUpView Button Actions
 - (void)acceptAction {
     
-    [self hide];
     
     if ([_hmDelegate respondsToSelector:@selector(popUpView:accepted:inputText:)]) {
     
@@ -272,7 +271,7 @@
     if([self.hmDelegate checkEnteredName:txtField.text])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!"
-                                                        message:@"The diagram with this name exists"
+                                                        message:@"Diagram with this name exists"
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles: nil];
@@ -283,6 +282,8 @@
     if(![self.hmDelegate checkEnteredName:txtField.text]){
         
     [self.hmDelegate renameTechniqueDelegate:txtField.text];
+        [self hide];
+
     }
 }
 

@@ -16,8 +16,9 @@
 #import "HapticHelper.h"
 #import "NameViewController.h"
 #import "TODetailTableViewController.h"
-#import "CloudKitManager.h"
-
+#import "MyDocument.h"
+#import "Hairtech-Bridging-Header.h"
+#import "LSFileWrapper.h"
 //#import "Flurry.h"
 
 NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -96,9 +97,27 @@ NSString *nameOfTechniqueforControllers;
 
 BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
+-(NSArray *)findFiles:(NSString *)extension
+{
+    NSMutableArray *matches = [[NSMutableArray alloc]init];
+    NSFileManager *manager = [NSFileManager defaultManager];
+
+    NSString *item;
+    NSArray *contents = [manager contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:nil];
+    for (item in contents)
+    {
+        if ([[item pathExtension]isEqualToString:extension])
+        {
+            [matches addObject:item];
+        }
+    }
+
+    return matches;
+}
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    
     NSLog(@"disapear");
 
        [self.collectionView removeGestureRecognizer:tapRecognizer];
@@ -115,6 +134,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)viewDidAppear:(BOOL)animated
 {
+
     
     NSLog(@"View did appear");
 
@@ -266,10 +286,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)viewDidLoad
 {
-    database =  [[CKContainer containerWithIdentifier:@"iCloud.com.hair.hairtech"] publicCloudDatabase];
+    NSLog(@"%@ files in dir", [self findFiles:@"htapp"]);
 
+
+    //database =  [[CKContainer containerWithIdentifier:@"iCloud.com.hair.hairtech"] publicCloudDatabase];
+    
     [self setupLongPressGestures];
-
+    
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
@@ -280,8 +303,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
         [self.navigationController prefersStatusBarHidden];
- 
-
+        
+        
     }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification:)
@@ -309,17 +332,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     self.navigationItem.title = @"Collection";
-
+    
     // Bottom Border
     [super viewDidLoad];
     [self.sidemenuButton setAlpha:0];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
-
+    
     self.techniques = [[NSMutableArray alloc] init];
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     self.techniques = [db getCustomers];
-
-    
     
     [self.toolbar_view setClipsToBounds:YES];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
@@ -342,6 +363,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(populateAndReload)
                                                  name:@"populate"
                                                object:nil];
+   // [self updateData];
+    
 }
 
 
@@ -490,20 +513,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 
 
--(void)createRecordInCloudKit:(Technique*)technique{
-    __weak typeof(self) weakSelf = self;
-    NSMutableString * exportingFileName = [technique.uniqueId mutableCopy];
-    [exportingFileName appendString:@".htapp"];
-    
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType:filePath error:nil imageName:technique.uniqueId fileName:exportingFileName techniqueName:technique.techniquename maleOrFemale:technique.date];
-    
-        [CloudKitManager createRecord:data recordID:technique.uniqueId
-                completionHandler:^(NSArray *results, NSError *error) {
-    }];
-}
+
 -(void)openEntry
 {
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -517,7 +527,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }];
 
     Technique *technique = [self.techniques objectAtIndex:index];
-    [self createRecordInCloudKit:technique];
+  //  [self createRecordInCloudKit:technique];
     
     indexpathtemp = NULL;
  //   [self fetchImages:index];
@@ -638,6 +648,40 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 -(void)selectionActivated{
+    
+//    //--------------------------Get data back from iCloud -----------------------------//
+//        id token = [[NSFileManager defaultManager] ubiquityIdentityToken];
+//        if (token == nil)
+//        {
+//            NSLog(@"ICloud Is not LogIn");
+//        }
+//        else
+//        {
+//            NSLog(@"ICloud Is LogIn");
+//
+//            NSError *error = nil;
+//            NSURL *ubiq = [[NSFileManager defaultManager]URLForUbiquityContainerIdentifier:nil];// in place of nil you can add your container name
+//            NSURL *ubiquitousPackage = [[ubiq URLByAppendingPathComponent:@"Documents"]URLByAppendingPathComponent:@"5FF7FCEE-D8DC-4264-98EE-B1E90F5F9D53.htapp"];
+//            BOOL isFileDounloaded = [[NSFileManager defaultManager]startDownloadingUbiquitousItemAtURL:ubiquitousPackage error:&error];
+//            if (isFileDounloaded) {
+//                NSLog(@"%d",isFileDounloaded);
+//                NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                //changing the file name as SampleData.zip is already present in doc directory which we have used for upload
+//                NSString* fileName = [NSString stringWithFormat:@"newfile.htapp"];
+//                NSString* fileAtPath = [documentsDirectory stringByAppendingPathComponent:fileName];
+//                NSData *dataFile = [NSData dataWithContentsOfURL:ubiquitousPackage];
+//                BOOL fileStatus = [dataFile writeToFile:fileAtPath atomically:NO];
+//                if (fileStatus) {
+//                    NSLog(@"success");
+//                }
+//            }
+//            else{
+//                NSLog(@"%d",isFileDounloaded);
+//            }
+//        }
+//
+//
+    
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
     self.navigationItem.leftBarButtonItem = nil;
@@ -718,6 +762,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 #pragma mark SHARING
 -(void)shareDiagram{
+   // LSFileWrapper* newDirectoryWrapper = [[LSFileWrapper alloc] initDirectory];
+    
+
     Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
   //  NSLog(@"filename %@", tech.uniqueId);
     NSMutableString * exportingFileName = [tech.uniqueId mutableCopy];
@@ -727,7 +774,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
     NSData * data = [self dataOfType:filePath error:nil imageName:tech.uniqueId fileName:exportingFileName techniqueName:tech.techniquename maleOrFemale:tech.date];
-    
+
     // Save it into file system
     [data writeToFile:filePath atomically:YES];
     NSURL * url = [NSURL fileURLWithPath:filePath];
@@ -736,20 +783,40 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: @[url] applicationActivities:nil];
     [self presentViewController:activityViewController animated: YES completion: nil];
+  // [self storeToCloud:data fileName:exportingFileName url:url];
 }
+/*
+-(void)storeToCloud:(NSData*)data fileName:(NSString*)fileName url:(NSURL*)url{
+    
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"5FF7FCEE-D8DC-4264-98EE-B1E90F5F9D53.htapp"];
+    NSURL *u = [[NSURL alloc] initFileURLWithPath:filePath];
+    NSData *data2 = [[NSData alloc] initWithContentsOfURL:u];
+    
+    //Get iCloud container URL
+    NSURL *ubiq = [[NSFileManager defaultManager]URLForUbiquityContainerIdentifier:nil];// in place of nil you can add your container name
+    //Create Document dir in iCloud container and upload/sync SampleData.zip
+      NSURL *ubiquitousPackage = [[ubiq URLByAppendingPathComponent:@"Documents"]URLByAppendingPathComponent:fileName];
+    ///  Mydoc = [[MyDocument alloc] initWithFileURL:ubiquitousPackage];
+     //Mydoc.zipDataContent = data;
+     
+     MyDocument *document = [[MyDocument alloc] initWithFileURL:ubiquitousPackage];
+     document.zipDataContent = data2;
 
-//-(NSMutableString*)imageNamesToShare:(NSString*)imgName headtype:(NSString*)headtype{
-//    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-//    NSMutableString *prefix= [imgName mutableCopy];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: prefix];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: headtype];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: @".png"];
-//
-//    return filenamethumb1;
-//}
+     [document saveToURL:[document fileURL] forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success)
+     {
+     if (success)
+     {
+     NSLog(@"SampleData.zip: Synced with icloud");
+     }
+     else
+     NSLog(@"SampleData.zip: Syncing FAILED with icloud");
+
+     }];
+     
+     
+    NSLog(@"%@", ubiq);
+}*/
 
 -(UIImage*)imageToArchive:(NSString*)fileName headtype:(NSString*)headtype{
     NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
@@ -849,12 +916,39 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [newString appendString:@".png"];
     return newString;
 }
+
+-(NSString*)techniqueNameFrom:(AppDelegate*)appDelegate{
+    
+    for(Technique * tech in self.techniques){
+        if([appDelegate.nameFromImportedFile isEqual:tech.techniquename]){
+        
+            NSString *lastChar = [tech.techniquename substringFromIndex:[tech.techniquename length] - 1];
+            
+            unichar c = [lastChar characterAtIndex:0];
+            NSCharacterSet *numericSet = [NSCharacterSet decimalDigitCharacterSet];
+            if ([numericSet characterIsMember:c]) {
+                
+                int myInt = [lastChar intValue];
+                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile substringToIndex:[appDelegate.nameFromImportedFile length] - 1];
+
+                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile stringByAppendingFormat:@"%d", myInt + 1];
+            }
+            else {
+                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile stringByAppendingFormat:@"%d", 1];
+            }
+        }
+    }
+    return appDelegate.nameFromImportedFile;
+}
+
 -(void)insertExportedDataFromAppDelegate{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString * uuid = appDelegate.idFromImportedFile;
     
+   
+    
     Technique *technique = [[Technique alloc] init];
-    technique.techniquename = appDelegate.nameFromImportedFile;
+    technique.techniquename = [self techniqueNameFrom:appDelegate];
     technique.date = appDelegate.maleFemaleFromImportedFile; // newest version
     technique.techniqueimage = [self createNameFromUUID:@"Entry" identifier:uuid];
     technique.techniqueimagethumb1 = [self createNameFromUUID:@"thumb1" identifier:uuid];
@@ -1403,11 +1497,18 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         Technique *technique = [self.techniques objectAtIndex:indexOfSelectedCell.row];
         FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
         [db deleteCustomer:technique];
+        
+       // [CloudKitManager removeRecordWithId:technique.uniqueId completionHandler:^(NSArray *results, NSError *error) {
+            //NSLog(@"Record removed");
+        //}];
+        
         if(technique.uniqueId == NULL){
             [self removeImage:technique.techniquename];
         }else {
             [self removeImage:technique.uniqueId];
         }
+        
+        
         [self populateCustomers];
         [[self collectionView ] reloadData];
         [self checkArrayCount];
@@ -1729,48 +1830,35 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 
 -(BOOL)checkEnteredName:(NSString*)txtField{
-    
-    NSMutableString *bfcol1 =@"thumb1";
-    rfoothumb1 = txtField;
-    rfoothumb1 = [txtField mutableCopy];
-    [rfoothumb1 appendString:bfcol1];
-    rfoothumb1= [rfoothumb1 mutableCopy];
-    [rfoothumb1 appendString:@".png"];
-    NSLog(@"Результат in textfield: %@.",rfoothumb1);
-    
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
-    NSString *foofile = [documentsPath stringByAppendingPathComponent:rfoothumb1];
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:foofile];
-    return fileExist;
+    BOOL techniqueExist;
+    for(Technique * tech in self.techniques){
+        if([txtField isEqual:tech.techniquename]){
+            techniqueExist = YES;
+            NSLog(@"technique exists");
+
+            break;
+        }
+        else {
+            techniqueExist = NO;
+            NSLog(@"technique NOT exists");
+        }
+    }
+    return techniqueExist;
 }
 
 #pragma mark SYNCHRONIZATION
 
-- (void)updateData {
-    [self shouldAnimateIndicator:YES];
-    __weak typeof(self) weakSelf = self;
-    [CloudKitManager fetchAllTechniquesWithCompletionHandler:^(NSArray *results, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        if (error) {
-            if (error.code == 6) {
-                [strongSelf presentMessage:NSLocalizedString(@"Add Techniques from the default list. Database is empty", nil)];
-            } else {
-                [strongSelf presentMessage:error.userInfo[NSLocalizedDescriptionKey]];
-            }
-        } else {
-            strongSelf.fetchedTechniques = results;
-            [strongSelf.collectionView reloadData];
-        }
-        [strongSelf shouldAnimateIndicator:NO];
-    }];
-}
 
 
 - (void)shouldAnimateIndicator:(BOOL)animate {
     if (animate) {
         [self.indicatorView startAnimating];
+      //  self.indicatorView.hidden = NO;
+
     } else {
         [self.indicatorView stopAnimating];
+        //self.indicatorView.hidden = YES;
+
     }
 
     self.collectionView.userInteractionEnabled = !animate;
