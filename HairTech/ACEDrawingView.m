@@ -120,9 +120,18 @@ UIColor* tempColor;
     }
     return self;
 }
+-(void)setMagnetActivated:(BOOL)activated{
+    _magnetActivated = activated;
+}
+-(void)setJsonData:(NSData*)jsonData{
+    _jsonData = jsonData;
+}
+-(void)setJsonKey:(NSString*)jsonKey{
+    _jsonKey = jsonKey;
+}
 
-- (void)loadDataFromJsonOnStart:(NSMutableString*)fileName{
-    [self fetchData:fileName]; //fetching data from json file
+- (void)loadDataFromJsonOnStart:(NSData*)jsonData{
+    [self fetchData:jsonData]; //fetching data from json file
     
     for(LayersData * layerData in self.arrayOfLayersForJSON){
         NSLog(@"COLOR LOADED FROM ARRAY %@", layerData.color);
@@ -412,10 +421,17 @@ UIColor* tempColor;
     return self;
 }
 
--(void)loadJSONData:(NSMutableString*)fileName{
+//-(void)loadJSONData:(NSMutableString*)fileName{
+//    self.backgroundColor = [UIColor whiteColor];
+//    self.fileNameInside = fileName;
+//    [self loadDataFromJsonOnStart:fileName]; //LOAADING DATA FROM JSON
+//    [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
+//}
+
+-(void)loadJSONData:(NSData*)jsonData {
     self.backgroundColor = [UIColor whiteColor];
-    self.fileNameInside = fileName;
-    [self loadDataFromJsonOnStart:fileName]; //LOAADING DATA FROM JSON
+    //self.fileNameInside = fileName;
+    [self loadDataFromJsonOnStart:jsonData]; //LOAADING DATA FROM JSON
     [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
 }
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
@@ -593,7 +609,9 @@ UIColor* tempColor;
                 
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
-                        [self autoPosition:&currentPoint basePoint:bufferEndPoint];
+                        if(_magnetActivated){
+                            [self autoPosition:&currentPoint basePoint:bufferEndPoint];
+                        }
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
@@ -613,7 +631,9 @@ UIColor* tempColor;
                         break;
                     case JVDrawingTouchEnd:
                         NSLog(@"MOVING END POINT");
-                        [self autoPosition:&currentPoint basePoint:bufferStartPoint];
+                        if(_magnetActivated){
+                            [self autoPosition:&currentPoint basePoint:bufferStartPoint];
+                        }
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
@@ -630,7 +650,9 @@ UIColor* tempColor;
         } else {
             NSLog(@"end of creation of line");
             if(self.drawingLayer.type != JVDrawingTypeGraffiti){
-                [self autoPosition:&currentPoint basePoint:self.firstTouch];
+                if(_magnetActivated){
+                    [self autoPosition:&currentPoint basePoint:self.firstTouch];
+                }
                 [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
             }
             if(self.drawingLayer.type == JVDrawingTypeCurvedLine || self.drawingLayer .type == JVDrawingTypeCurvedDashLine){
@@ -749,7 +771,7 @@ UIColor* tempColor;
 #pragma mark Points Detection
 - (void)detectNearestPoint:(CGPoint *)previousPoint {
     CGPoint discoveryPoint;
-    CGFloat tolerance = 7;
+    CGFloat tolerance = 5;
     // Had to Create these two arrays because there's no such thing as [NSDictionary objectAtIndex:]
     NSArray *pointsArray;
     CGFloat keyOfPointWithMinDistance = -1;
@@ -2184,18 +2206,26 @@ UIColor* tempColor;
     }else{performedY = false;}
 }
 - (void)writeStringToFile:(NSMutableArray*)arr {
-    NSError * error;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:self.fileNameInside];
-    NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
-    [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
+//    NSError * error;
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:self.fileNameInside];
+//    NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
+//    NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
+//    [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
+//
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
+//        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
+//    }
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
-        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
-    }
     
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:nil];
+    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    [tempDict setObject:jsonData  forKey:_jsonKey];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
@@ -2212,7 +2242,7 @@ UIColor* tempColor;
     NSMutableDictionary *layerProperties = [NSMutableDictionary dictionary];
     NSMutableDictionary *arrayOfPoint = [NSMutableDictionary dictionary];
     [arrayOfPoint setObject: stringArray forKey:@"points"];
-    if (layer.type !=JVDrawingTypeGraffiti){
+    if (layer.type != JVDrawingTypeGraffiti){
         layerProperties[@"startPoint"] = NSStringFromCGPoint(layer.startPoint);
         layerProperties[@"endPoint"] = NSStringFromCGPoint(layer.endPoint);
     }else{
@@ -2257,21 +2287,26 @@ UIColor* tempColor;
     return stringArray;
 }
 
--(void)fetchData:(NSMutableString*)fileName{
+-(void)fetchData:(NSData*)jsonData{
     
-    /* LOCAL FETCHING*/
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-    //NSLog(@"filepath %@", filePath);
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-    NSError *err;
-    if (err){
-        NSLog(@"Failed to serialize into JSON: %@", err);
-        return;
-    }
+//    /* LOCAL FETCHING*/
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+//    //NSLog(@"filepath %@", filePath);
+//    NSData *data = [NSData dataWithContentsOfFile:filePath];
+//    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+//    NSError *err;
+//    if (err){
+//        NSLog(@"Failed to serialize into JSON: %@", err);
+//        return;
+//    }
     
+    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    NSData * jsonDataFromDict = [tempDict objectForKey:_jsonKey];
+    
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonDataFromDict options:kNilOptions error:nil];
+
     NSMutableDictionary * props = [NSMutableDictionary dictionary];
     NSMutableDictionary * array = [NSMutableDictionary dictionary];
     if(json.count >0){
@@ -2406,5 +2441,12 @@ UIColor* tempColor;
  }] resume];
  
  }*/
+
+
+
+
+
+
+
 
 @end

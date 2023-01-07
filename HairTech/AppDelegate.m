@@ -57,6 +57,7 @@
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
         [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultTest"];
+        [self saveMagnetStateToDefaults:YES];
    }
     [self getCurrentMode];
     
@@ -260,7 +261,6 @@ error:(NSError **)outError {
     if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
         [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
     }
-    
 }
 
 - (void)writeImageToFile:(UIImage*)image fileName:(NSString*)fileName {
@@ -315,5 +315,12 @@ error:(NSError **)outError {
     
     NSError *err = nil;
     success = [fileManager copyItemAtPath:databasePathFromApp toPath:databasePath error:&err];
+}
+
+
+-(void)saveMagnetStateToDefaults:(BOOL)isVisible{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:isVisible  forKey:@"magnet"];
+    [prefs synchronize];
 }
 @end

@@ -37,6 +37,7 @@
 		40729CCB294A038800F64E38 /* 120.png in Resources */ = {isa = PBXBuildFile; fileRef = 40729CCA294A038700F64E38 /* 120.png */; };
 		4079875829644C7B004C86ED /* LSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875429644C7A004C86ED /* LSDocument.m */; };
 		4079875929644C7B004C86ED /* LSFileWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875529644C7A004C86ED /* LSFileWrapper.m */; };
+		4079875C29681FD8004C86ED /* TemporaryDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875B29681FD8004C86ED /* TemporaryDictionary.m */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
 		407D4B732750033600BA0474 /* ASValuePopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B702750033600BA0474 /* ASValuePopUpView.m */; };
 		407FB90228F17FA000371E24 /* undoNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 407FB90028F17FA000371E24 /* undoNew.png */; };
@@ -461,6 +462,8 @@
 		4079875529644C7A004C86ED /* LSFileWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSFileWrapper.m; sourceTree = "<group>"; };
 		4079875629644C7A004C86ED /* LSDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDocument.h; sourceTree = "<group>"; };
 		4079875729644C7A004C86ED /* LSFileWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSFileWrapper.h; sourceTree = "<group>"; };
+		4079875A29681FD8004C86ED /* TemporaryDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TemporaryDictionary.h; sourceTree = "<group>"; };
+		4079875B29681FD8004C86ED /* TemporaryDictionary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TemporaryDictionary.m; sourceTree = "<group>"; };
 		407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValueTrackingSlider.m; sourceTree = "<group>"; };
 		407D4B6F2750033600BA0474 /* ASValuePopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASValuePopUpView.h; sourceTree = "<group>"; };
 		407D4B702750033600BA0474 /* ASValuePopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASValuePopUpView.m; sourceTree = "<group>"; };
@@ -1138,6 +1141,8 @@
 				407FB92028FE99C300371E24 /* NewEntryController.m */,
 				407FB92228FEABCA00371E24 /* NewDrawController.h */,
 				407FB92328FEABCA00371E24 /* NewDrawController.m */,
+				4079875A29681FD8004C86ED /* TemporaryDictionary.h */,
+				4079875B29681FD8004C86ED /* TemporaryDictionary.m */,
 			);
 			name = "New Version";
 			sourceTree = "<group>";
@@ -2388,6 +2393,7 @@
 				4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */,
 				40B79AE92922BBA6003A8680 /* TODetailTableViewController.m in Sources */,
 				400B02552916D11F007A7871 /* NameViewController.m in Sources */,
+				4079875C29681FD8004C86ED /* TemporaryDictionary.m in Sources */,
 				4017DE2729278D3600F6D2E9 /* WhatsNewController.m in Sources */,
 				40DC4707284A143900509D4D /* Ruler.m in Sources */,
 				407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */,
@@ -2556,7 +2562,7 @@
 				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechDebug.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 6.1.0;
+				CURRENT_PROJECT_VERSION = 6.1.1;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2569,7 +2575,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 6.1.0;
+				MARKETING_VERSION = 6.1.1;
 				ONLY_ACTIVE_ARCH = NO;
 				"OTHER_LDFLAGS[arch=*]" = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
@@ -2597,7 +2603,7 @@
 				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 6.1.0;
+				CURRENT_PROJECT_VERSION = 6.1.1;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2610,7 +2616,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 6.1.0;
+				MARKETING_VERSION = 6.1.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
 				PRODUCT_NAME = hairtech;

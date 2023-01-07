@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;
-
+    NSMutableDictionary * temporaryDictionary;
 }
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
 @property (weak, nonatomic) IBOutlet UILabel *labelToSave;

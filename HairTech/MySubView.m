@@ -352,13 +352,17 @@
 
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     [db insertCustomer:technique];
+    [self saveDiagramToFile:uuid techniqueName:technique.techniquename maleOrFemale:technique.date];
     
-    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"lefthead"]];
-    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"righthead"]];
-    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"tophead"]];
-    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"fronthead"]];
-    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"backhead"]];
+//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"lefthead"]];
+//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"righthead"]];
+//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"tophead"]];
+//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"fronthead"]];
+//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"backhead"]];
+//
 
+    
+    
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"populate"
      object:self];
@@ -382,16 +386,16 @@
     return dateString;
 }
 
-- (void)createJSON:(NSMutableString*)filename{
+- (NSData*)createJSON:(NSMutableString*)filename{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *appFile = [documentsDirectory stringByAppendingPathComponent:filename];
     NSString* str = @"[]";
     NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
-        [[NSFileManager defaultManager] createFileAtPath:appFile contents:data attributes:nil];
-    }
+    return data;
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
+//        [[NSFileManager defaultManager] createFileAtPath:appFile contents:data attributes:nil];
+//    }
 }
 -(NSMutableString *)createFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
     NSMutableString * newString = [fileName mutableCopy];
@@ -486,27 +490,34 @@
 -(void)copyXFiles
 {
 
-    NSMutableString * cellImage = [self createFileName:uuid prefix:@"Entry.png"];
-    NSMutableString * filenamethumb1 = [self createFileName:uuid prefix:@"thumb1.png"];
-    NSMutableString * filenamethumb2 = [self createFileName:uuid prefix:@"thumb2.png"];
-    NSMutableString * filenamethumb3 = [self createFileName:uuid prefix:@"thumb3.png"];
-    NSMutableString * filenamethumb4 = [self createFileName:uuid prefix:@"thumb4.png"];
-    NSMutableString * filenamethumb5 = [self createFileName:uuid prefix:@"thumb5.png"];
-    
-    [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
-    [self copyFileFromBundleToDocs:@"lefthead_s.png"];
-    [self copyFileFromBundleToDocs:@"righthead_s.png"];
-    [self copyFileFromBundleToDocs:@"tophead_s.png"];
-    [self copyFileFromBundleToDocs:@"backhead_s.png"];
-    [self copyFileFromBundleToDocs:@"fronthead_s.png"];
-    
-    [self changeFileName:@"uiimage_cell_x.png" to:cellImage];
-    [self changeFileName:@"lefthead_s.png" to:filenamethumb1];
-    [self changeFileName:@"righthead_s.png" to:filenamethumb2];
-    [self changeFileName:@"tophead_s.png" to:filenamethumb3];
-    [self changeFileName:@"fronthead_s.png" to:filenamethumb4];
-    [self changeFileName:@"backhead_s.png" to:filenamethumb5];
-    
+//    [self storeImagesInDictionary:@"uiimage_cell_x.png"];
+//    [self storeImagesInDictionary:@"lefthead_s.png"];
+//    [self storeImagesInDictionary:@"righthead_s.png"];
+//    [self storeImagesInDictionary:@"tophead_s.png"];
+//    [self storeImagesInDictionary:@"backhead_s.png"];
+//    [self storeImagesInDictionary:@"fronthead_s.png"];
+//
+//    NSMutableString * cellImage = [self createFileName:uuid prefix:@"Entry.png"];
+//    NSMutableString * filenamethumb1 = [self createFileName:uuid prefix:@"thumb1.png"];
+//    NSMutableString * filenamethumb2 = [self createFileName:uuid prefix:@"thumb2.png"];
+//    NSMutableString * filenamethumb3 = [self createFileName:uuid prefix:@"thumb3.png"];
+//    NSMutableString * filenamethumb4 = [self createFileName:uuid prefix:@"thumb4.png"];
+//    NSMutableString * filenamethumb5 = [self createFileName:uuid prefix:@"thumb5.png"];
+//
+//    [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
+//    [self copyFileFromBundleToDocs:@"lefthead_s.png"];
+//    [self copyFileFromBundleToDocs:@"righthead_s.png"];
+//    [self copyFileFromBundleToDocs:@"tophead_s.png"];
+//    [self copyFileFromBundleToDocs:@"backhead_s.png"];
+//    [self copyFileFromBundleToDocs:@"fronthead_s.png"];
+//
+//    [self changeFileName:@"uiimage_cell_x.png" to:cellImage];
+//    [self changeFileName:@"lefthead_s.png" to:filenamethumb1];
+//    [self changeFileName:@"righthead_s.png" to:filenamethumb2];
+//    [self changeFileName:@"tophead_s.png" to:filenamethumb3];
+//    [self changeFileName:@"fronthead_s.png" to:filenamethumb4];
+//    [self changeFileName:@"backhead_s.png" to:filenamethumb5];
+//
 }
 /*--------------------------MEN_HEADS-------------------------*/
 
@@ -534,6 +545,118 @@
     [self changeFileName:@"backhead_ms.png" to:filenamethumb5];
 }
 
+-(void)saveDiagramToFile:(NSString*)techniqueName  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
 
+   // Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
+  //  NSLog(@"filename %@", tech.uniqueId);
+    NSMutableString * exportingFileName = [techniqueName mutableCopy];
+    [exportingFileName appendString:@".htapp"];
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    NSData * data = [self dataOfType:filePath error:nil imageName:techniqueName fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
+
+    // Save it into file system
+    [data writeToFile:filePath atomically:YES];
+   // NSURL * url = [NSURL fileURLWithPath:filePath];
+    
+//    [self createiCloudFolder];
+//    [self copyDocumentsToiCloudDrive];
+}
+
+//-(void)createiCloudFolder{
+//
+//    NSURL *iCloudDocumentsURL = [[[NSFileManager defaultManager]URLForUbiquityContainerIdentifier:nil] URLByAppendingPathComponent:@"Documents"];
+//
+//   if(![[NSFileManager defaultManager] fileExistsAtPath:iCloudDocumentsURL.path isDirectory:nil]){
+//        [[NSFileManager defaultManager] createDirectoryAtURL:iCloudDocumentsURL withIntermediateDirectories:YES attributes:nil error:nil];
+//       NSLog(@" create Directory");
+//
+//    }
+//
+//
+//   }
+//
+//-(void)copyDocumentsToiCloudDrive{
+//    NSArray * array = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+//    NSURL *localDocumentsURL = array[0];
+//
+//    NSError * error;
+//    NSURL * iCloudDocumentsURL =  [[[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil] URLByAppendingPathComponent:@"Documents"];
+////    [[NSFileManager defaultManager] removeItemAtURL:iCloudDocumentsURL error:&error];
+//[[NSFileManager defaultManager] copyItemAtURL:localDocumentsURL toURL:iCloudDocumentsURL error:&error];
+//
+//    NSLog(@"%@",error.localizedDescription);
+//
+//    }
+
+
+-(NSData*)storeJsonDataInDictionary{
+    NSString* str = @"[]";
+    NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    //NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    return data;
+}
+
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
+    NSError *error = nil;
+    NSLog(@"filename %@", imageName);
+
+    NSData * fileName1 = [self storeImagesInDictionary:@"lefthead_s"];
+    NSData * fileName2 = [self storeImagesInDictionary:@"righthead_s"];
+    NSData * fileName3 = [self storeImagesInDictionary:@"tophead_s"];
+    NSData * fileName4 = [self storeImagesInDictionary:@"fronthead_s"];
+    NSData * fileName5 = [self storeImagesInDictionary:@"backhead_s"];
+    NSData * fileNameEntry = [self storeImagesInDictionary:@"uiimage_cell_x"];
+
+    NSData * fileNameJSON1 = [self storeJsonDataInDictionary];
+    NSData * fileNameJSON2 = [self storeJsonDataInDictionary];
+    NSData * fileNameJSON3 = [self storeJsonDataInDictionary];
+    NSData * fileNameJSON4 = [self storeJsonDataInDictionary];
+    NSData * fileNameJSON5 = [self storeJsonDataInDictionary];
+    
+    NSString * filename = imageName;
+    NSString * techName = techniqueName;
+    NSString * maleOrFemale = maleOrFem;
+    
+    if ([typeName isEqualToString:typeName]) {
+        //Create a Dictionary
+        NSMutableDictionary *dictToSave = [NSMutableDictionary dictionary];
+        
+        [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
+        [dictToSave setObject:fileName1  forKey:@"imageLeft"];
+        [dictToSave setObject:fileName2  forKey:@"imageRight"];
+        [dictToSave setObject:fileName3  forKey:@"imageTop"];
+        [dictToSave setObject:fileName4  forKey:@"imageFront"];
+        [dictToSave setObject:fileName5  forKey:@"imageBack"];
+        
+        [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
+        [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
+        [dictToSave setObject:fileNameJSON3  forKey:@"jsonTop"];
+        [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
+        [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
+
+        [dictToSave setObject:techName forKey:@"techniqueName"];
+        [dictToSave setObject:filename forKey:@"name"];
+        [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
+
+          //Return the archived data
+        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+    }
+    //Don't generate an error
+    outError = NULL;
+    return nil;
+}
+
+
+-(NSData*)storeImagesInDictionary:(NSString*)imageToStore{
+
+    NSString* documentsDir = [[NSBundle mainBundle] pathForResource:imageToStore ofType:@"png"];
+    NSLog(@"documentsDir:%@",documentsDir);
+    UIImage * imgData = [UIImage imageWithContentsOfFile:documentsDir];
+    NSData * data = UIImagePNGRepresentation(imgData);
+    return data;
+}
 
 @end

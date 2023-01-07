@@ -34,7 +34,7 @@ typedef enum {
     SEL changer;
     
     CGRect screenRect;
- 
+    
     CGFloat screenHeight;
     
     CGPoint pointOfStart;
@@ -87,16 +87,16 @@ typedef enum {
     BOOL frameVisible;
     UIMenuController * menu;
     UIMenuController * menuForTextView;
-
+    
     
     CGFloat previousWidth;
     CGFloat previousHeight;
     UITapGestureRecognizer * gestureRecognizer;
     UITapGestureRecognizer * gestureRecognizer2;
     UITapGestureRecognizer * gestureRecognizerDot;
-
+    
     UITapGestureRecognizer * gestureRecognizerHidingDot;
-
+    
     BOOL textViewSelected;
     CGPoint startOfLine;
     CGPoint currentPointOfLine;
@@ -107,7 +107,16 @@ typedef enum {
     
     CGPoint pointBegin;
     CGPoint pointEnd;
+    
+    BOOL _magnetActivated;
+    NSData * _jsonData;
+    NSString * _jsonKey;
 }
+-(void)setJsonData:(NSData*)jsonData;
+-(void)setJsonKey:(NSString*)jsonKey;
+
+-(void)setMagnetActivated:(BOOL)activated;
+
 @property CAShapeLayer * dot;
 @property UIView * viewForDot;
 
@@ -291,7 +300,8 @@ typedef enum {
 
 -(void)removeCirclesOnZoomDelegate;
 -(void)bringArrowsToFront;
--(void)loadJSONData:(NSMutableString*)fileName;
+//-(void)loadJSONData:(NSMutableString*)fileName;
+-(void)loadJSONData:(NSData*)jsonData;
 @end
 
 #pragma mark -

@@ -7,6 +7,7 @@
 //
 
 #import "NewEntryController.h"
+#import "TemporaryDictionary.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -22,11 +23,19 @@
 
 -(void)viewDidLoad{
     NSLog(@"technique name %@", techniqueNameID);
-    self.imageLeft.image = [self loadImages:@"thumb1"];
-    self.imageRight.image = [self loadImages:@"thumb2"];
-    self.imageTop.image = [self loadImages:@"thumb3"];
-    self.imageFront.image = [self loadImages:@"thumb4"];
-    self.imageBack.image = [self loadImages:@"thumb5"];
+    self.imageLeft.image = [self openFileAtPath:techniqueNameID key:@"imageLeft" error:nil];
+    self.imageRight.image = [self openFileAtPath:techniqueNameID key:@"imageRight" error:nil];
+    self.imageTop.image = [self openFileAtPath:techniqueNameID key:@"imageTop" error:nil];
+    self.imageFront.image = [self openFileAtPath:techniqueNameID key:@"imageFront" error:nil];
+    self.imageBack.image = [self openFileAtPath:techniqueNameID key:@"imageBack" error:nil];
+
+
+//    self.imageLeft.image = [self loadImages:@"thumb1"];
+//    self.imageRight.image = [self loadImages:@"thumb2"];
+//    self.imageTop.image = [self loadImages:@"thumb3"];
+//    self.imageFront.image = [self loadImages:@"thumb4"];
+//    self.imageBack.image = [self loadImages:@"thumb5"];
+    
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
@@ -43,25 +52,70 @@
     [self.toolbar removeFromSuperview];
 }
 
--(UIImage*)loadImages:(NSString*)headtype
-{
-    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-    NSMutableString *prefix= [techniqueNameID mutableCopy];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: prefix];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: headtype];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: @".png"];
+/*-(NSDictionary*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
     
-    
+    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
-        NSData *data1 = [NSData dataWithContentsOfFile:filePath];
-    UIImage *tempimage = [UIImage imageWithData:data1];
-    return tempimage;
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+    NSDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+   
+        return [tempDict objectForKey:key];
+}*/
+
+-(UIImage*)openFileAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
+
+    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    UIImage * img = [UIImage imageWithData:[tempDict objectForKey:key]];
+
+    NSMutableDictionary* tempDictDefaults = [tempDict mutableCopy];
+    [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    return img;
+    
+    
+//    NSDictionary *readDict =
+//    [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+//
+//    UIImage *imageEntry = [readDict objectForKey:key];
+//    return imageEntry;
+    
 }
+
+//-(UIImage*)loadImages:(NSString*)headtype
+//{
+//    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
+//    NSMutableString *prefix= [techniqueNameID mutableCopy];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: prefix];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: headtype];
+//    filenamethumb1 = [filenamethumb1 mutableCopy];
+//    [filenamethumb1 appendString: @".png"];
+//
+//
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
+//        NSData *data1 = [NSData dataWithContentsOfFile:filePath];
+//    UIImage *tempimage = [UIImage imageWithData:data1];
+//    return tempimage;
+//}
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
@@ -78,19 +132,28 @@
     newDrawVC.techniqueName = techniqueNameID;
     switch (myViewTag) {
         case 1:
-            newDrawVC.headtype = @"lefthead";
+            newDrawVC.headtype = @"imageLeft";
+            newDrawVC.jsonType = @"jsonLeft";
             break;
         case 2:
-            newDrawVC.headtype = @"righthead";
+            newDrawVC.headtype = @"imageRight";
+            newDrawVC.jsonType = @"jsonRight";
+
             break;
         case 3:
-            newDrawVC.headtype = @"tophead";
+            newDrawVC.headtype = @"imageTop";
+            newDrawVC.jsonType = @"jsonTop";
+
             break;
         case 4:
-            newDrawVC.headtype = @"fronthead";
+            newDrawVC.headtype = @"imageFront";
+            newDrawVC.jsonType = @"jsonFront";
+
             break;
         case 5:
-            newDrawVC.headtype = @"backhead";
+            newDrawVC.headtype = @"imageBack";
+            newDrawVC.jsonType = @"jsonBack";
+
             break;
         default:
             break;
@@ -170,6 +233,15 @@
     return name;
 }
 
+-(void)storeImageInTempDictionary:(NSData*)imgData{
+    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    [tempDict setObject:imgData forKey:@"imageEntry"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self saveDiagramToFile:self.techniqueNameID];
+}
+
 -(UIImage*)captureScreenRetinaOnLoad
 {
     self.logo.alpha = 0;
@@ -184,7 +256,9 @@
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
-    [thumbdata writeToFile:thumbpath atomically:YES];
+    
+   // [thumbdata writeToFile:thumbpath atomically:YES];
+    [self storeImageInTempDictionary:thumbdata];
     return newImage;
 }
 -(UIImage*)captureScreenRetina
@@ -387,4 +461,30 @@
     
     return CGRectContainsPoint(newArea, point);
 }
+
+
+-(void)saveDiagramToFile:(NSString*)techniqueName{
+
+    NSMutableString * exportingFileName = [techniqueName mutableCopy];
+    [exportingFileName appendString:@".htapp"];
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    NSData * data = [self dataOfType];
+
+    // Save it into file system
+    [data writeToFile:filePath atomically:YES];
+   // NSURL * url = [NSURL fileURLWithPath:filePath];
+}
+
+- (NSData *)dataOfType{
+    NSError *error = nil;
+ 
+        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+
+          //Return the archived data
+        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+}
+
 @end

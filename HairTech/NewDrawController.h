@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet UIScrollView *scrollView;
     NSMutableArray * arrayOfGrids;
     UIButton * grid;
+    UIButton * magnet;
     NSArray * toolButtons;
     UIColor * penColor;
     UIColor * curveColor;
@@ -54,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSString * techniqueName;
 @property (nonatomic, assign) NSString * labelText;
 @property (nonatomic, assign) NSString * headtype;
+@property (nonatomic, assign) NSString * jsonType;
+
 @property (nonatomic, assign) IBOutlet UIImageView *img;
 @property (nonatomic, weak) IBOutlet ACEDrawingView *drawingView;
 // UIButtons
@@ -78,6 +81,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSTimer *touchTimer;
 @property (nonatomic, strong) AMPopTip *popTipLine;
 @property (nonatomic, strong) AMPopTip *popTipCurve;
+@property (nonatomic, strong) AMPopTip *magnetTip;
+
 @property (nonatomic, strong) WEPopoverController *popoverController;
 @property (weak, nonatomic) id<NewDrawControllerDelegate>delegate;
 @end

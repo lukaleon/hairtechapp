@@ -19,6 +19,7 @@
 #import "MyDocument.h"
 #import "Hairtech-Bridging-Header.h"
 #import "LSFileWrapper.h"
+#import "TemporaryDictionary.h"
 //#import "Flurry.h"
 
 NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -1013,6 +1014,27 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 #pragma mark Collection View Delegate Methods
 
+
+-(UIImage*)openFileAtPath:(NSString*)fileName error:(NSError **)outError {
+
+    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    
+//    NSDictionary *readDict =
+//    [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    TemporaryDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    UIImage * img = [UIImage imageWithData:[tempDict objectForKey:@"imageEntry"]];
+   // UIImage *imageEntry = [readDict objectForKey:@"imageEntry"];
+    return img;
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
@@ -1068,8 +1090,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSString *filePath = [NSString stringWithFormat:filenamethumb, docDirectory];
     UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
     
-    
-    cell.image.image = tempimage;
+    cell.image.image = [self openFileAtPath:technique.uniqueId error:nil];
+   // cell.image.image = tempimage;
     cell.cellIndex = indexPath;
     cell.viewModeLabel.text = [self currentDateFromFilePath:filePath];
 

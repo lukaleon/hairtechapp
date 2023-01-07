@@ -7,6 +7,7 @@
 //
 
 #import "NewDrawController.h"
+#import "TemporaryDictionary.h"
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -28,9 +29,6 @@
     }
     return self;
 }
-
-
-
 
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
@@ -73,6 +71,15 @@
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
     }
+    if([self loadMagnetStateToDefaults]){
+        [magnet setTintColor:[UIColor colorNamed:@"orange"]];
+        [self.drawingView setMagnetActivated:YES];
+    }
+    else {
+        [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+        [self.drawingView setMagnetActivated:NO];
+    }
+    
     }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -83,6 +90,8 @@
     [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     [self clearPageForClosing];
+    
+    [self saveDiagramToFile:self.techniqueName];
 }
 
 - (void)setupScrollView {
@@ -102,10 +111,45 @@
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
-    [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
+     
+    NSLog(@"%@ json type", self.techniqueName);
+    
+    //[self.drawingView loadJSONData:[self loadDictionaryFromPathWithKey:self.jsonType error:nil]];
+    [self.drawingView loadJSONData:[self openDictAtPath:self.techniqueName key:self.jsonType error:nil]];
+   // [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
     if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     [scrollView setZoomScale:1.7 animated:YES];
     }
+}
+
+//-(NSDictionary*)loadDictionaryFromPathWithKey:(NSString*)key error:(NSError **)outError {
+//
+//    NSDictionary * tempDict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"temporaryDictionary"];
+//    return [tempDict objectForKey:key];
+//
+//}
+-(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
+    
+//    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+//
+//    NSURL * url = [NSURL fileURLWithPath:filePath];
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//
+//    NSDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    NSDictionary * tempDict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"temporaryDictionary"];
+    NSData * jsonData = [tempDict objectForKey:key];
+    
+    [self.drawingView setJsonData: [tempDict objectForKey:key]];
+    [self.drawingView setJsonKey:key];
+    
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[tempDict objectForKey:key]
+//                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+//                                                         error:outError];
+    return jsonData;
+    
 }
 
 -(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
@@ -117,6 +161,7 @@
     NSLog(@"filename %@", newString);
     return newString;
 }
+
 - (void)setupLongPressGestures {
     longpressCurveTool = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressCurveTool:)];
     longpressCurveTool .minimumPressDuration = 0.2;
@@ -153,6 +198,23 @@
     self.popTipLine.offset = 2;
     self.popTipLine.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     self.popTipLine.shouldDismissOnTap = YES;
+  
+    self.magnetTip = [AMPopTip popTip];
+    self.magnetTip.shouldDismissOnTap = YES;
+    self.magnetTip.edgeMargin = 5;
+    self.magnetTip.offset = 2;
+    self.magnetTip.edgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    self.magnetTip.shouldDismissOnTap = YES;
+
+    
+    self.magnetTip.dismissHandler = ^{
+        NSLog(@"Dismiss!");
+        
+        [self.magnetTip showText:@"Long press to change color" direction:AMPopTipDirectionUp maxWidth:200 inView:self.view fromFrame:magnet.frame];
+        
+        
+    };
+    
 }
 
 
@@ -265,6 +327,7 @@
 - (void)setupNavigationBarItems {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
    
+    
     grid = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [grid addTarget:self
              action:@selector(showOrHideGrid)
@@ -273,9 +336,17 @@
     [grid.heightAnchor constraintEqualToConstant:30].active = YES;
     [grid setImage:[UIImage imageNamed:@"grid"] forState:UIControlStateNormal];
     //[grid setImage:[UIImage imageNamed:@"grid_sel"] forState:UIControlStateSelected];
-
     [grid setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-
+    
+    magnet = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [magnet addTarget:self
+             action:@selector(activateDisableMagnet)
+   forControlEvents:UIControlEventTouchUpInside];
+    [magnet.widthAnchor constraintEqualToConstant:30].active = YES;
+    [magnet.heightAnchor constraintEqualToConstant:30].active = YES;
+    [magnet setImage:[UIImage imageNamed:@"angle"] forState:UIControlStateNormal];
+    [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    
     
     UIButton *undo = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [undo addTarget:self
@@ -304,11 +375,12 @@
     [more setImage:[UIImage imageNamed:@"dots.png"] forState:UIControlStateNormal];
     [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
+    UIBarButtonItem * magnetBtn =[[UIBarButtonItem alloc] initWithCustomView:magnet];
     UIBarButtonItem * gridBtn =[[UIBarButtonItem alloc] initWithCustomView:grid];
     UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
     UIBarButtonItem * undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
     UIBarButtonItem * redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, gridBtn, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, gridBtn,magnetBtn, nil];
     [self updateButtonStatus];
 
 }
@@ -326,7 +398,7 @@
     UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear Page"
                                                      style:UIAlertActionStyleDestructive
                                                    handler:^(UIAlertAction *action){
-                                                    [self clearPage];
+                                                    [self showConfirmationAlertForClear];
                                                    }];
     UIAlertAction *button3 = [UIAlertAction actionWithTitle:@"Cancel"
                                                      style:UIAlertActionStyleCancel
@@ -349,7 +421,36 @@
         [self presentViewController:alertVC animated:true completion:nil];
     }
 }
-
+-(void)showConfirmationAlertForClear
+{
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Confirm" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+  
+    UIAlertAction *button2 = [UIAlertAction actionWithTitle:@"Clear Page"
+                                                     style:UIAlertActionStyleDestructive
+                                                   handler:^(UIAlertAction *action){
+                                                    [self clearPage];
+                                                   }];
+    UIAlertAction *button3 = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *action){
+                                                       //add code to make something happen once tapped
+                                                   }];
+  //  [button2 setValue:[[UIImage systemImageNamed:@"trash"]
+                     //  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+   // [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [alertVC addAction:button2];
+    [alertVC addAction:button3];
+    
+    UIBarButtonItem *item = [self.navigationItem.rightBarButtonItems objectAtIndex:0];
+        UIView *view = [item valueForKey:@"view"];
+    if(view){
+        [[alertVC popoverPresentationController] setSourceView:view];
+        [[alertVC popoverPresentationController] setSourceRect:view.frame];
+        [[alertVC popoverPresentationController] setPermittedArrowDirections:UIPopoverArrowDirectionUp];
+        [self presentViewController:alertVC animated:true completion:nil];
+    }
+    
+}
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
     return UIModalPresentationNone;
@@ -429,6 +530,24 @@
     }
     [arrayOfGrids removeAllObjects];
 }
+
+
+-(void)activateDisableMagnet{
+    if(![self loadMagnetStateToDefaults]){
+        [magnet setTintColor:[UIColor colorNamed:@"orange"]];
+        [self saveMagnetStateToDefaults:YES];
+        [self.drawingView setMagnetActivated:YES];
+
+    }
+    else {
+        [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+        [self saveMagnetStateToDefaults:NO];
+        [self.drawingView setMagnetActivated:NO];
+
+    }
+    
+}
+
 -(void)showOrHideGrid{
     if(arrayOfGrids.count == 0){
         [grid setTintColor:[UIColor colorNamed:@"orange"]];
@@ -453,6 +572,19 @@
     [prefs synchronize];
     return  isVisible;
 }
+
+-(void)saveMagnetStateToDefaults:(BOOL)isVisible{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:isVisible  forKey:@"magnet"];
+    [prefs synchronize];
+}
+-(BOOL)loadMagnetStateToDefaults{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    BOOL isVisible = [prefs boolForKey:@"magnet"];
+    [prefs synchronize];
+    return  isVisible;
+}
+
 
 -(void)saveColorsToDefaults{
     const CGFloat  *components2 = CGColorGetComponents(dashColor.CGColor);
@@ -1063,6 +1195,14 @@ return YES;
     scrollView.pinchGestureRecognizer.enabled = YES;
 }
 
+
+-(void)storeImageInTempDictionary:(NSData*)imgData{
+    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    [tempDict setObject:imgData forKey:self.headtype];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 - (UIImage *)getImageOfScreen:(NSString*)headtype {
     self.drawingView.backgroundColor = [UIColor clearColor];
 
@@ -1085,7 +1225,8 @@ return YES;
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
-    [thumbdata writeToFile:thumbpath atomically:YES];
+    [self storeImageInTempDictionary:thumbdata];
+    // [thumbdata writeToFile:thumbpath atomically:YES];
     self.drawingView.backgroundColor = [UIColor whiteColor];
 
     return newImage;
@@ -1095,23 +1236,23 @@ return YES;
     
     NSLog(@"screenshot");
     UIImage * newImage;
-    if([headtype isEqualToString:@"lefthead"]){
+    if([headtype isEqualToString:@"imageLeft"]){
         newImage = [self getImageOfScreen:@"thumb1"];
         [self.delegate passItemBackLeft:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"righthead"]){
+    if([headtype isEqualToString:@"imageRight"]){
         newImage = [self getImageOfScreen:@"thumb2"];
         [self.delegate passItemBackRight:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"tophead"]){
+    if([headtype isEqualToString:@"imageTop"]){
         newImage = [self getImageOfScreen:@"thumb3"];
         [self.delegate passItemBackTop:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"fronthead"]){
+    if([headtype isEqualToString:@"imageFront"]){
         newImage = [self getImageOfScreen:@"thumb4"];
         [self.delegate passItemBackFront:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"backhead"]){
+    if([headtype isEqualToString:@"imageBack"]){
         newImage = [self getImageOfScreen:@"thumb5"];
         [self.delegate passItemBackBack:self imageForButton:newImage];
     }
@@ -1131,21 +1272,10 @@ return YES;
 -(UIImage*)screenShotForSharing{
     NSLog(@"screenshot");
     [self removeGrid];
-    
-    
-    
-    CGFloat rescale = 2.0;
-    CGSize resize = CGSizeMake(self.drawingView.frame.size.width * rescale, self.drawingView.frame.size.height * rescale);
-    UIGraphicsBeginImageContextWithOptions(resize, NO, 0);
-    CGContextScaleCTM(UIGraphicsGetCurrentContext(), rescale, rescale);
+    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, self.drawingView.opaque, 3.0);
     [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
-//    UIGraphicsBeginImageContextWithOptions(self.drawingView.bounds.size, self.drawingView.opaque, 3.0);
-//    [self.drawingView.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
     return newImage;
 }
 
@@ -1302,4 +1432,32 @@ return YES;
   }];
 
 }
+
+
+
+-(void)saveDiagramToFile:(NSString*)techniqueName{
+
+    NSMutableString * exportingFileName = [techniqueName mutableCopy];
+    [exportingFileName appendString:@".htapp"];
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    NSData * data = [self dataOfType];
+
+    // Save it into file system
+    [data writeToFile:filePath atomically:YES];
+   // NSURL * url = [NSURL fileURLWithPath:filePath];
+}
+
+- (NSData *)dataOfType{
+    NSError *error = nil;
+ 
+        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+
+          //Return the archived data
+        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+}
+
+
 @end
