@@ -7,6 +7,23 @@
    Created by Alexander Prent on 27.07.2022.
    Copyright (c) 2022 Admin. All rights reserved.
 -->
+
+
+
 <plist version="1.0">
-<dict/>
+<dict>
+
+    <key>NSUbiquitousContainers</key>
+        <dict>
+            <key>iCloud.com.hairtech</key>
+            <dict>
+                <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+                <true/>
+                <key>NSUbiquitousContainerSupportedFolderLevels</key>
+                <string>Hairtechapp</string>
+                <key>NSUbiquitousContainerName</key>
+                <string>Hairtechapp</string>
+            </dict>
+        </dict>
+</dict>
 </plist>

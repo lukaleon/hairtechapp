@@ -14,20 +14,23 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewEntryController
-@synthesize techniqueNameID;
+//@synthesize techniqueNameID;
 -(void)viewDidAppear:(BOOL)animated{
     [self captureScreenRetinaOnLoad];
 }
 
 
-
+-(void)setTechniqueID:(NSString*)techId{
+    _techniqueNameID = techId;
+}
 -(void)viewDidLoad{
-    NSLog(@"technique name %@", techniqueNameID);
-    self.imageLeft.image = [self openFileAtPath:techniqueNameID key:@"imageLeft" error:nil];
-    self.imageRight.image = [self openFileAtPath:techniqueNameID key:@"imageRight" error:nil];
-    self.imageTop.image = [self openFileAtPath:techniqueNameID key:@"imageTop" error:nil];
-    self.imageFront.image = [self openFileAtPath:techniqueNameID key:@"imageFront" error:nil];
-    self.imageBack.image = [self openFileAtPath:techniqueNameID key:@"imageBack" error:nil];
+    
+    NSLog(@"technique name %@", _techniqueNameID);
+    self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
+    self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
+    self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
+    self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
+    self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
 
 
 //    self.imageLeft.image = [self loadImages:@"thumb1"];
@@ -129,7 +132,7 @@
     
     NewDrawController *newDrawVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewDrawController"];
     newDrawVC.delegate = self;
-    newDrawVC.techniqueName = techniqueNameID;
+    newDrawVC.techniqueName = _techniqueNameID;
     switch (myViewTag) {
         case 1:
             newDrawVC.headtype = @"imageLeft";
@@ -239,7 +242,7 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self saveDiagramToFile:self.techniqueNameID];
+    [self saveDiagramToFile:_techniqueNameID];
 }
 
 -(UIImage*)captureScreenRetinaOnLoad
@@ -251,7 +254,7 @@
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    entryviewImageSmall =  [self createFileName:[techniqueNameID mutableCopy] prefix:@"Entry"];
+    entryviewImageSmall =  [self createFileName:[_techniqueNameID mutableCopy] prefix:@"Entry"];
     NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
     NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
     NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];

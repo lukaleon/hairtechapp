@@ -16,7 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;
     NSMutableDictionary * temporaryDictionary;
+    NSString * _techniqueNameID;
 }
+-(void)setTechniqueID:(NSString*)techId;
+
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
 @property (weak, nonatomic) IBOutlet UILabel *labelToSave;
 @property (weak, nonatomic) IBOutlet UIImageView *imageLeft;
@@ -24,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *imageTop;
 @property (weak, nonatomic) IBOutlet UIImageView *imageFront;
 @property (weak, nonatomic) IBOutlet UIImageView *imageBack;
-@property (assign, nonatomic) NSString * techniqueNameID;
+//@property (assign, nonatomic) NSString * techniqueNameID;
 @property (assign, nonatomic) NSString * techniqueType;
 @property (weak, nonatomic)  UIImage *imageL;
 @property (weak, nonatomic)  UIImage *imageR;

@@ -47,6 +47,8 @@ typedef enum {
     NSUInteger indexForDelete;
     
     CKDatabase * database;
+    
+    NSMutableArray * filesArray;
 
 }
 
