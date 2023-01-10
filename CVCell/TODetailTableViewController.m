@@ -14,7 +14,7 @@
 #import "WhatsNewController.h"
 #import "PageViewController.h"
 #import "ContainerViewController.h"
-
+#import "OldCollectionView.h"
 
 #define SECTIONID_CollectionView 0
 #define SECTIONID_General 1
@@ -399,6 +399,7 @@
             cell.label.text = @"Archived diagrams";
             [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
             [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
+        
         }
     [cell.contentView.layer setCornerRadius:25.0];
     cell.clipsToBounds = YES;
@@ -407,15 +408,23 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    WhatsNewController *whatsnew = [self.storyboard instantiateViewControllerWithIdentifier:@"whatsnew"];
-    collectionCell *cell = (collectionCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    OldCollectionView *oldCollection = [self.storyboard instantiateViewControllerWithIdentifier:@"OldCollection"];
+    ContainerViewController *pageVc = [self.storyboard instantiateViewControllerWithIdentifier:@"containervc"];
+
+  //  collectionCell *cell = (collectionCell *)[collectionView cellForItemAtIndexPath:indexPath];
 //    whatsnew.view.backgroundColor = cell.contentView.backgroundColor;
 //    whatsnew.label.text = @"This is hairtech app";
 //      ContainerViewController *pageview = [self.storyboard instantiateViewControllerWithIdentifier:@"containervc"];
 //      pageview.modalPresentationStyle = UIModalPresentationFullScreen;
 //    pageview.view.backgroundColor = cell.contentView.backgroundColor;
-//
-//     [self.navigationController presentViewController:pageview animated:YES completion:nil];
+    
+    if(indexPath.row == 0){
+       [self.navigationController presentViewController:pageVc animated:YES completion:nil];
+    }
+    if(indexPath.row == 2){
+        [self.navigationController pushViewController:oldCollection animated:YES];
+    }
+
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -441,8 +450,12 @@
     return font;
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if([segue.identifier isEqualToString:@"showDetail"]) {
-      }
-}
+//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+//    if([segue.identifier isEqualToString:@"showDetail"]) {
+//
+//    }
+//    if([segue.identifier isEqualToString:@"showOldCollection"]) {
+//
+//    }
+//}
 @end

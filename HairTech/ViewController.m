@@ -16,13 +16,11 @@
 #import "HapticHelper.h"
 #import "NameViewController.h"
 #import "TODetailTableViewController.h"
-#import "MyDocument.h"
 #import "Hairtech-Bridging-Header.h"
-#import "LSFileWrapper.h"
 #import "TemporaryDictionary.h"
 //#import "Flurry.h"
 
-NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
+//NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
 NSString *nameOfTechniqueforControllers;
 
@@ -927,6 +925,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:indexPath.row] error:nil];
                 
         newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
+        [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
         [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
         newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
         

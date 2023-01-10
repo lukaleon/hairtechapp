@@ -74,7 +74,7 @@
         self.navigationItem.standardAppearance = appearance;
         self.navigationItem.scrollEdgeAppearance = appearance;
 
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(20, 40, 30, 30)];
     [more addTarget:self
              action:@selector(closeView)
    forControlEvents:UIControlEventTouchUpInside];
@@ -82,8 +82,9 @@
     [more.heightAnchor constraintEqualToConstant:30].active = YES;
     [more setImage:[UIImage imageNamed:@"Close"] forState:UIControlStateNormal];
     [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
-    self.navigationItem.leftBarButtonItem = moreBtn;
+//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+//    self.navigationItem.leftBarButtonItem = moreBtn;
+    [self.view addSubview:more];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
