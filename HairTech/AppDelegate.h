@@ -24,10 +24,11 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
     
-    
     //MyCustomLayout *mycustomLayout;
  // UIBarButtonItem *tempButton;
 }
+@property NSMutableArray * filesArrayAppDelegate;
+
 @property (weak, nonatomic) id<MyViewControllerDelegate>myviewdelegate;
 
 @property (weak,nonatomic)UIImage *imageToSend;

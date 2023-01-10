@@ -395,8 +395,10 @@
         }
         if (indexPath.row == 2){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"blueTest"];
-            cell.label.text = @"Great features inside";
-
+            cell.image.image = [UIImage imageNamed:@"Archive"];
+            cell.label.text = @"Archived diagrams";
+            [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
+            [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
         }
     [cell.contentView.layer setCornerRadius:25.0];
     cell.clipsToBounds = YES;

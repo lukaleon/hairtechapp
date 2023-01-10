@@ -1214,16 +1214,17 @@ return YES;
    // self.drawingView.backgroundColor = [UIColor whiteColor];
 
     
-    NSMutableString * fileToSave = [self.techniqueName mutableCopy];
-    fileToSave = [fileToSave mutableCopy];
-    [fileToSave appendString: headtype];
-    fileToSave = [fileToSave mutableCopy];
-    [fileToSave appendString: @".png"];
-    NSLog(@"screenshot nsme %@", fileToSave);
+//    NSMutableString * fileToSave = [self.techniqueName mutableCopy];
+//    fileToSave = [fileToSave mutableCopy];
+//    [fileToSave appendString: headtype];
+//    fileToSave = [fileToSave mutableCopy];
+//    [fileToSave appendString: @".png"];
+//    NSLog(@"screenshot nsme %@", fileToSave);
 
-    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];
+//    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+//    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileToSave];
+    
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     [self storeImageInTempDictionary:thumbdata];
     // [thumbdata writeToFile:thumbpath atomically:YES];

@@ -16,30 +16,27 @@
 @implementation NewEntryController
 //@synthesize techniqueNameID;
 -(void)viewDidAppear:(BOOL)animated{
+    NSLog(@"View Did Appear");
     [self captureScreenRetinaOnLoad];
 }
 
-
+-(void)viewWillAppear:(BOOL)animated{
+   
+    
+}
 -(void)setTechniqueID:(NSString*)techId{
     _techniqueNameID = techId;
 }
 -(void)viewDidLoad{
     
     NSLog(@"technique name %@", _techniqueNameID);
+    NSLog(@"View Did Load");
     self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
     self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
     self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
     self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
     self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
 
-
-//    self.imageLeft.image = [self loadImages:@"thumb1"];
-//    self.imageRight.image = [self loadImages:@"thumb2"];
-//    self.imageTop.image = [self loadImages:@"thumb3"];
-//    self.imageFront.image = [self loadImages:@"thumb4"];
-//    self.imageBack.image = [self loadImages:@"thumb5"];
-    
-    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     
@@ -236,9 +233,20 @@
     return name;
 }
 
+-(NSData*)imageFromButton:(UIImage*)img{
+    NSData * data = UIImagePNGRepresentation(img);
+    return data;
+}
 -(void)storeImageInTempDictionary:(NSData*)imgData{
+
     NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
     [tempDict setObject:imgData forKey:@"imageEntry"];
+    [tempDict setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
+    [tempDict setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
+    [tempDict setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
+    [tempDict setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
+    [tempDict setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
+    [tempDict setObject:[self currentDate] forKey:@"modificationDate"];
     
     [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -254,10 +262,10 @@
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    entryviewImageSmall =  [self createFileName:[_techniqueNameID mutableCopy] prefix:@"Entry"];
-    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
+//    entryviewImageSmall =  [self createFileName:[_techniqueNameID mutableCopy] prefix:@"Entry"];
+//    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
+//    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
+//    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     
    // [thumbdata writeToFile:thumbpath atomically:YES];
@@ -468,6 +476,8 @@
 
 -(void)saveDiagramToFile:(NSString*)techniqueName{
 
+    NSLog(@"Save Diagram To File Entry View");
+    
     NSMutableString * exportingFileName = [techniqueName mutableCopy];
     [exportingFileName appendString:@".htapp"];
 
@@ -489,5 +499,12 @@
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
 }
-
+-(NSString*)currentDate{
+    NSDate *date = [NSDate date];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateStyle:NSDateFormatterMediumStyle]; // day, Full month and year
+    [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
+    NSString *dateString = [df stringFromDate:date];
+    return dateString;
+}
 @end

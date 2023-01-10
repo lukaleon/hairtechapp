@@ -36,6 +36,7 @@ typedef enum {
 //- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
 //;
 -(void)setImagesInEC:(ViewController*)controller didFinishWithItem1:(UIImage*)item1 didFinishWithItem2:(UIImage*)item2 didFinishWithItem3:(UIImage*)item3 didFinishWithItem4:(UIImage*)item4 didFinishWithItem5:(UIImage*)item5;
+
 @end
 
 @interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, CellDelegate>{
@@ -49,9 +50,9 @@ typedef enum {
     CKDatabase * database;
     
     NSMutableArray * filesArray;
+    NSString * _fileNameForOpenEntry;
 
 }
-
 @property (nonatomic, strong) NSArray *fetchedTechniques;
 
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *indicatorView;

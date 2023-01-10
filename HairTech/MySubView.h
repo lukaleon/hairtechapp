@@ -25,6 +25,9 @@
 -(void)openEntry;
 -(void)refreshVC;
 
+-(void)setFileNameForOpenEntry:(NSString*)fileName;
+
+
 @end
 
 @interface MySubView :  UIViewController <UITextFieldDelegate>
@@ -39,7 +42,7 @@
     NSString * uuid;
     
 }
-
+@property NSMutableArray * filesArraysubView;
 @property (assign, nonatomic) NSString * maleOrFemale;
 @property (nonatomic,strong) Technique *techniqueAdd;
 

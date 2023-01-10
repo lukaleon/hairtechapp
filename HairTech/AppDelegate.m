@@ -49,7 +49,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+    [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
+
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
     
@@ -58,6 +59,7 @@
         [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
         [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultTest"];
         [self saveMagnetStateToDefaults:YES];
+        
    }
     [self getCurrentMode];
     
@@ -148,128 +150,122 @@
           // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(void)getArrayOfFilesInDirectory{
+    self.filesArrayAppDelegate = [NSMutableArray array];
+    NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
+    [self.filesArrayAppDelegate removeAllObjects];
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        if ([extension isEqualToString:@"htapp"]) {
+            [self.filesArrayAppDelegate addObject:filename];
+            NSLog(@"filename in appdelegate %@ ", filename );
+        }
+    }];
+    
+}
+-(NSMutableDictionary*)getImportedFileData:(NSData*)data error:(NSError **)outError {
+
+    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    return tempDict;
+}
+-(NSMutableDictionary*)openFileAtPath:(NSString*)fileName error:(NSError **)outError {
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+
+    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    return tempDict;
+}
+
+-(NSString*)getNamesOfTechniquesInFiles:(NSString*)techNameImported{
+    
+    
+            NSString *lastChar = [techNameImported substringFromIndex:[techNameImported length] - 1];
+
+            unichar c = [lastChar characterAtIndex:0];
+            NSCharacterSet *numericSet = [NSCharacterSet decimalDigitCharacterSet];
+            if ([numericSet characterIsMember:c]) {
+                
+                int myInt = [lastChar intValue];
+                techNameImported = [techNameImported substringToIndex:[techNameImported length] - 1];
+
+                techNameImported = [techNameImported stringByAppendingFormat:@"%d", myInt + 1];
+            }
+            else {
+                techNameImported = [techNameImported stringByAppendingFormat:@"%d", 1];
+            }
+    return techNameImported;
+}
+
+- (NSData *)dataOfType:(NSMutableDictionary*)dict{
+    NSError *error = nil;
+          //Return the archived data
+        return [NSKeyedArchiver archivedDataWithRootObject:dict requiringSecureCoding:NO error:&error];
+}
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
 
         if ([url.scheme isEqualToString:@"file"] && [url.pathExtension isEqualToString:@"htapp"]) {
-            NSLog(@"OPEN FILE %@", url);
             
+            NSString * fileName = [[url path] lastPathComponent];
             self.dict = options;
             NSData *data = [NSData dataWithContentsOfURL:url];
-            if([self readFromData:data ofType:@"file.htapp" error:nil]){
+            /* CHECK FILE NAME FOR EXISTANCE IN FOLDER */
+            
+            [self getArrayOfFilesInDirectory];
+            int i = 0;
+            NSMutableDictionary * dict = [self getImportedFileData:data error:nil];
+
+            for(NSString * name in self.filesArrayAppDelegate){
+                if([fileName isEqualToString:name]){
+                    NSLog(@"Name exists");
+
+                    NSString * newIDName = [[NSUUID UUID] UUIDString];
+                    NSMutableString * newIDWithExtension = [newIDName mutableCopy];
+                    [newIDWithExtension appendString:@".htapp"];
+                    fileName = newIDWithExtension;
+                    [dict setObject:newIDName forKey:@"uuid"];
+                    data = [self dataOfType:dict];
+
+                }else {
+                    NSLog(@"Name not exists");
+                }
+                NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArrayAppDelegate objectAtIndex:i] error:nil];
+
+                if([[dict objectForKey:@"techniqueName"] isEqualToString:[dictOfData objectForKey:@"techniqueName"]]){
+                    NSLog(@"Name is the same");
+                    NSString * newName = [self getNamesOfTechniquesInFiles:[dict objectForKey:@"techniqueName"]];
+                    [dict setObject:newName forKey:@"techniqueName"];
+                    data = [self dataOfType:dict];
+
+                }else {
+                    NSLog(@"Name is not the same");
+                }
+                i++;
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
             }
+                    
+            NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+            NSString *docDirectory = [sysPaths objectAtIndex:0];
+            NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+            [data writeToFile:filePath atomically:YES];
+                
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
 
             return YES;
             
         }
     return NO;
 }
-- (NSMutableString *)generateJSONFileNames:(NSString*)headtype uniqeId:(NSString*)uniqueIdentifier {
-    
-    NSMutableString * importJsonName = [uniqueIdentifier mutableCopy];
-    [importJsonName  appendString:headtype];
-    importJsonName = [importJsonName mutableCopy];
-    [importJsonName appendString:@".json"];
-    return importJsonName;
-}
-
-- (NSMutableString *)generateImageFileNames:(NSString*)headtype uniqeId:(NSString*)uniqueIdentifier {
-    
-    NSMutableString * importJsonName = [uniqueIdentifier mutableCopy];
-    [importJsonName  appendString:headtype];
-    importJsonName = [importJsonName mutableCopy];
-    [importJsonName appendString:@".png"];
-    return importJsonName;
-}
 
 
-- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName
-error:(NSError **)outError {
-    if ([typeName isEqualToString:typeName]) {
-        NSDictionary *readDict =
-        [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-        
-        UIImage *imageEntry = [readDict objectForKey:@"imageEntry"];
-        
-        UIImage *imageLeft = [readDict objectForKey:@"imageLeft"];
-        UIImage *imageRight = [readDict objectForKey:@"imageRight"];
-        UIImage *imageTop = [readDict objectForKey:@"imageTop"];
-        UIImage *imageFront = [readDict objectForKey:@"imageFront"];
-        UIImage *imageBack = [readDict objectForKey:@"imageBack"];
 
-        NSDictionary * dictLeft = [readDict objectForKey:@"jsonLeft"];
-        NSDictionary * dictRight = [readDict objectForKey:@"jsonRight"];
-        NSDictionary * dictTop = [readDict objectForKey:@"jsonTop"];
-        NSDictionary * dictFront = [readDict objectForKey:@"jsonFront"];
-        NSDictionary * dictBack = [readDict objectForKey:@"jsonBack"];
-
-        NSString * unID = [readDict objectForKey:@"name"];
-        NSString * techName = [readDict objectForKey:@"techniqueName"];
-        NSString * maleFemale = [readDict objectForKey:@"maleFemale"];
-
-        
-        NSLog(@"file name for this diagram %@", techName);
-        // Generate new file name for JSON files
-        NSString * uuid = [[NSUUID UUID] UUIDString];
-
-        NSMutableString * importJsonNameLeft = [self generateJSONFileNames:@"lefthead" uniqeId:uuid];
-        NSMutableString * importJsonNameRight = [self generateJSONFileNames:@"righthead" uniqeId:uuid];
-        NSMutableString * importJsonNameTop = [self generateJSONFileNames:@"tophead" uniqeId:uuid];
-        NSMutableString * importJsonNameFront = [self generateJSONFileNames:@"fronthead" uniqeId:uuid];
-        NSMutableString * importJsonNameBack = [self generateJSONFileNames:@"backhead" uniqeId:uuid];
-        
-        NSMutableString * importImageNameLeft = [self generateImageFileNames:@"thumb1" uniqeId:uuid];
-        NSMutableString * importImageNameRight = [self generateImageFileNames:@"thumb2" uniqeId:uuid];
-        NSMutableString * importImageNameTop = [self generateImageFileNames:@"thumb3" uniqeId:uuid];
-        NSMutableString * importImageNameFront = [self generateImageFileNames:@"thumb4" uniqeId:uuid];
-        NSMutableString * importImageNameBack = [self generateImageFileNames:@"thumb5" uniqeId:uuid];
-        NSMutableString * importImageNameEntry = [self generateImageFileNames:@"Entry" uniqeId:uuid];
-
-        
-        [self writeStringToFile:dictLeft fileName:importJsonNameLeft];
-        [self writeStringToFile:dictRight fileName:importJsonNameRight];
-        [self writeStringToFile:dictTop fileName:importJsonNameTop];
-        [self writeStringToFile:dictFront fileName:importJsonNameFront];
-        [self writeStringToFile:dictBack fileName:importJsonNameBack];
-
-        [self writeImageToFile:imageLeft fileName:importImageNameLeft];
-        [self writeImageToFile:imageRight fileName:importImageNameRight];
-        [self writeImageToFile:imageTop fileName:importImageNameTop];
-        [self writeImageToFile:imageFront fileName:importImageNameFront];
-        [self writeImageToFile:imageBack fileName:importImageNameBack];
-        [self writeImageToFile:imageEntry fileName:importImageNameEntry];
-        
-        self.nameFromImportedFile = techName;
-        self.idFromImportedFile = uuid;
-        self.maleFemaleFromImportedFile = maleFemale;
-    }
-    outError = NULL;
-    return YES;
-}
-
-
-- (void)writeStringToFile:(NSDictionary*)arr fileName:(NSString*)fileName{
-    NSError * error;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *appFile = [documentsDirectory stringByAppendingPathComponent:fileName];
-    NSData *jsonData2 = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData2 encoding:NSUTF8StringEncoding];
-    [[jsonString dataUsingEncoding:NSUTF8StringEncoding] writeToFile:appFile atomically:NO];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:appFile]) {
-        [[NSFileManager defaultManager] createFileAtPath:appFile contents:nil attributes:nil];
-    }
-}
-
-- (void)writeImageToFile:(UIImage*)image fileName:(NSString*)fileName {
-    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:fileName];
-    NSData * thumbdata = UIImagePNGRepresentation(image);
-    [thumbdata writeToFile:thumbpath atomically:YES];
-}
 
 - (void)getCurrentMode {
     NSLog(@"current mode ");

@@ -176,20 +176,68 @@
     }
 }
 
+-(void)getArrayOfFilesInDirectory{
+    self.filesArraysubView = [NSMutableArray array];
+    NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
+    [self.filesArraysubView removeAllObjects];
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        if ([extension isEqualToString:@"htapp"]) {
+            [self.filesArraysubView addObject:filename];
+            NSLog(@"filename in appdelegate %@ ", filename );
+        }
+    }];
+}
+
+-(NSMutableDictionary*)getImportedFileData:(NSData*)data error:(NSError **)outError {
+
+    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    return tempDict;
+}
+-(NSMutableDictionary*)openFileAtPath:(NSString*)fileName error:(NSError **)outError {
+
+    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+    NSString *docDirectory = [sysPaths objectAtIndex:0];
+    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+
+    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    return tempDict;
+}
+
 -(BOOL)checkEnteredName{
     BOOL techniqueExist;
-    for(Technique * tech in arrayOfTechnique){
-        if([textField.text isEqual:tech.techniquename]){
-            techniqueExist = YES;
-            NSLog(@"technique exists");
+    [self getArrayOfFilesInDirectory];
+    for(int i = 0; i < self.filesArraysubView.count; i++){
+        
+        NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArraysubView objectAtIndex:i] error:nil];
+        NSLog(@" technique name in array %@", [dictOfData objectForKey:@"techniqueName"]);
 
+        if([self.textField.text isEqualToString:[dictOfData objectForKey:@"techniqueName"]]){
+        techniqueExist = YES;
             break;
-        }
-        else {
-            techniqueExist = NO;
-            NSLog(@"technique NOT exists");
+        }else {
+        techniqueExist = NO;
+
         }
     }
+//    for(Technique * tech in arrayOfTechnique){
+//        if([textField.text isEqual:tech.techniquename]){
+//            techniqueExist = YES;
+//            NSLog(@"technique exists");
+//
+//            break;
+//        }
+//        else {
+//            techniqueExist = NO;
+//            NSLog(@"technique NOT exists");
+//        }
+//    }
     return techniqueExist;
    
 }
@@ -284,85 +332,22 @@
           [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
 }
 
-- (NSString*)createNameFromUUID:(NSString*)filetype identifier:(NSString*)uuidTemp {
-    NSMutableString * newString = [uuidTemp mutableCopy];
-    newString = [newString mutableCopy];
-    [newString appendString:filetype];
-    newString = [newString mutableCopy];
-    [newString appendString:@".png"];
-    return newString;
+- (NSString*)createNameFromUUID:(NSString*)uuid{
+    NSMutableString * fileName = [uuid mutableCopy];
+    [fileName appendString:@".htapp"];
+    return fileName;
 }
 
 -(void)closeSubViewManually
 {
     uuid = [[NSUUID UUID] UUIDString];
-    NSLog(@"uuid = %@", uuid);
+    [self saveDiagramToFile:uuid techniqueName:self.textField.text maleOrFemale:self.maleOrFemale];
     
-    pressedOkButton=YES;
-    pressedOk = YES;
-    [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    CGFloat screenHeight = screenRect.size.height;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    ViewController *viewcontroller = [[ViewController alloc]init];
-    viewcontroller.label.text=self.textField.text;
-    viewcontroller.delegate1=self;
-    appDelegate.NameForTechnique = self.textField.text;
-    appDelegate.uniqueID = uuid;
-    [self.delegate passItemBack:self didFinishWithItem:self.textField.text];
+    [[NSUserDefaults standardUserDefaults] setObject:[self createNameFromUUID:uuid] forKey:@"newCreatedFileName"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
-    if([appDelegate.globalDate isEqualToString:@"version22"]){
-                [self copyXFiles];
-    }
-    /*-----------------MEN_HEADS-----------------------*/
-    if([appDelegate.globalDate isEqualToString:@"men22"]){
-           [self copyXFilesMEN];
-       }
-    
-    appDelegate.checkwindow = 1;
-    appDelegate.checkEntrywindow = 1;
-    appDelegate.OkButtonInSubView = 1;
-    appDelegate.checkvalue = 0;
-    
+ 
 
-   
-    Technique *technique = [[Technique alloc] init];
-    technique.techniquename = self.textField.text;
-    technique.date = self.maleOrFemale; // newest version
-    technique.techniqueimage = [self createNameFromUUID:@"Entry" identifier:uuid];
-    technique.techniqueimagethumb1 = [self createNameFromUUID:@"thumb1" identifier:uuid];
-    technique.techniqueimagethumb2 = [self createNameFromUUID:@"thumb2" identifier:uuid];
-    technique.techniqueimagethumb3 = [self createNameFromUUID:@"thumb3" identifier:uuid];
-    technique.techniqueimagethumb4 = [self createNameFromUUID:@"thumb4" identifier:uuid];
-    technique.techniqueimagethumb5 = [self createNameFromUUID:@"thumb5" identifier:uuid];
-    technique.techniqueimagebig1 = [self createNameFromUUID:@"big1" identifier:uuid];
-    technique.techniqueimagebig2 = [self createNameFromUUID:@"big2" identifier:uuid];
-    technique.techniqueimagebig3 = [self createNameFromUUID:@"big3" identifier:uuid];
-    technique.techniqueimagebig4 = [self createNameFromUUID:@"big4" identifier:uuid];
-    technique.techniqueimagebig5 = [self createNameFromUUID:@"big5" identifier:uuid];
-    technique.uniqueId = uuid;
-    technique.dateOfCreation = [self currentDate];
-
-    if(![self validate:technique])
-    {
-        [Utility showAlert:@"Error" message:@"Validation Failed!"];
-        return;
-    }
-
-    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
-    [db insertCustomer:technique];
-    [self saveDiagramToFile:uuid techniqueName:technique.techniquename maleOrFemale:technique.date];
-    
-//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"lefthead"]];
-//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"righthead"]];
-//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"tophead"]];
-//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"fronthead"]];
-//    [self createJSON:[self createFileNameJSON:technique.uniqueId headtype:@"backhead"]];
-//
-
-    
-    
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"populate"
      object:self];
@@ -489,35 +474,6 @@
 
 -(void)copyXFiles
 {
-
-//    [self storeImagesInDictionary:@"uiimage_cell_x.png"];
-//    [self storeImagesInDictionary:@"lefthead_s.png"];
-//    [self storeImagesInDictionary:@"righthead_s.png"];
-//    [self storeImagesInDictionary:@"tophead_s.png"];
-//    [self storeImagesInDictionary:@"backhead_s.png"];
-//    [self storeImagesInDictionary:@"fronthead_s.png"];
-//
-//    NSMutableString * cellImage = [self createFileName:uuid prefix:@"Entry.png"];
-//    NSMutableString * filenamethumb1 = [self createFileName:uuid prefix:@"thumb1.png"];
-//    NSMutableString * filenamethumb2 = [self createFileName:uuid prefix:@"thumb2.png"];
-//    NSMutableString * filenamethumb3 = [self createFileName:uuid prefix:@"thumb3.png"];
-//    NSMutableString * filenamethumb4 = [self createFileName:uuid prefix:@"thumb4.png"];
-//    NSMutableString * filenamethumb5 = [self createFileName:uuid prefix:@"thumb5.png"];
-//
-//    [self copyFileFromBundleToDocs:@"uiimage_cell_x.png"];
-//    [self copyFileFromBundleToDocs:@"lefthead_s.png"];
-//    [self copyFileFromBundleToDocs:@"righthead_s.png"];
-//    [self copyFileFromBundleToDocs:@"tophead_s.png"];
-//    [self copyFileFromBundleToDocs:@"backhead_s.png"];
-//    [self copyFileFromBundleToDocs:@"fronthead_s.png"];
-//
-//    [self changeFileName:@"uiimage_cell_x.png" to:cellImage];
-//    [self changeFileName:@"lefthead_s.png" to:filenamethumb1];
-//    [self changeFileName:@"righthead_s.png" to:filenamethumb2];
-//    [self changeFileName:@"tophead_s.png" to:filenamethumb3];
-//    [self changeFileName:@"fronthead_s.png" to:filenamethumb4];
-//    [self changeFileName:@"backhead_s.png" to:filenamethumb5];
-//
 }
 /*--------------------------MEN_HEADS-------------------------*/
 
@@ -545,24 +501,18 @@
     [self changeFileName:@"backhead_ms.png" to:filenamethumb5];
 }
 
--(void)saveDiagramToFile:(NSString*)techniqueName  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
+-(void)saveDiagramToFile:(NSString*)uuid  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
 
-   // Technique *tech = [self.techniques objectAtIndex:[indexOfSelectedCell row]];
-  //  NSLog(@"filename %@", tech.uniqueId);
-    NSMutableString * exportingFileName = [techniqueName mutableCopy];
+   
+    NSMutableString * exportingFileName = [uuid mutableCopy];
     [exportingFileName appendString:@".htapp"];
 
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType:filePath error:nil imageName:techniqueName fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
-
+    NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
     // Save it into file system
     [data writeToFile:filePath atomically:YES];
-   // NSURL * url = [NSURL fileURLWithPath:filePath];
-    
-//    [self createiCloudFolder];
-//    [self copyDocumentsToiCloudDrive];
 }
 
 //-(void)createiCloudFolder{
@@ -599,9 +549,8 @@
     return data;
 }
 
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError uuid:(NSString*)uuid fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
     NSError *error = nil;
-    NSLog(@"filename %@", imageName);
 
     NSData * fileName1 = [self storeImagesInDictionary:@"lefthead_s"];
     NSData * fileName2 = [self storeImagesInDictionary:@"righthead_s"];
@@ -616,9 +565,13 @@
     NSData * fileNameJSON4 = [self storeJsonDataInDictionary];
     NSData * fileNameJSON5 = [self storeJsonDataInDictionary];
     
-    NSString * filename = imageName;
+    NSString * filename = uuid;
     NSString * techName = techniqueName;
     NSString * maleOrFemale = maleOrFem;
+    
+    NSString * creationDate = [self currentDate];
+    NSString * modificationDate = [self currentDate];
+
     
     if ([typeName isEqualToString:typeName]) {
         //Create a Dictionary
@@ -638,9 +591,11 @@
         [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
 
         [dictToSave setObject:techName forKey:@"techniqueName"];
-        [dictToSave setObject:filename forKey:@"name"];
+        [dictToSave setObject:filename forKey:@"uuid"];
         [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
-
+        [dictToSave setObject:creationDate forKey:@"creationDate"];
+        [dictToSave setObject:modificationDate forKey:@"modificationDate"];
+        
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
     }

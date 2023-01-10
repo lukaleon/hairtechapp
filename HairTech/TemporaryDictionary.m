@@ -29,7 +29,7 @@
         self.dictFront = [readDict objectForKey:@"jsonFront"];
         self.dictBack = [readDict objectForKey:@"jsonBack"];
     
-        self.unID = [readDict objectForKey:@"name"];
+        self.unID = [readDict objectForKey:@"uuid"];
         self.techName = [readDict objectForKey:@"techniqueName"];
         self.maleFemale = [readDict objectForKey:@"maleFemale"];
 
