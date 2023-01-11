@@ -71,5 +71,10 @@
 @property NSIndexPath * cellIndex;
 @property  BOOL newVersionDiagram;
 
+@property (weak, nonatomic) IBOutlet UIImageView *favorite;
+@property NSString * UUIDcell;
+@property BOOL isFavorite;
+
+
 @end
 

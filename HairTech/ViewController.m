@@ -18,6 +18,7 @@
 #import "TODetailTableViewController.h"
 #import "Hairtech-Bridging-Header.h"
 #import "TemporaryDictionary.h"
+#import "ReusableView.h"
 //#import "Flurry.h"
 
 //NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
@@ -301,7 +302,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [super viewDidLoad];
     [self.sidemenuButton setAlpha:0];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MY_CELL"];
-  
+   
+
     
     [self.toolbar_view setClipsToBounds:YES];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
@@ -757,38 +759,76 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             NSLog(@"filename %@ ", filename );
         }
     }];
-    [self sortArrayByAscendingName];
+    
+    [self sortCollectionViewFromSegments:[[NSUserDefaults standardUserDefaults] objectForKey:@"order"]];
+
+    
     [self.collectionView reloadData];
 }
+#pragma mark Sorting methods
 
--(void)sortArrayByAscendingName{
+-(void)sortCollectionView:(NSString*)key{
     
-    NSMutableArray * tempArray = [NSMutableArray array];
-    
-    for(int i = 0; i < filesArray.count; i++){
-    NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:i] error:nil];
-    [tempArray addObject:dictOfData];
-    }
-    /* sorting by Ascending name method */
-//    NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"techniqueName"
-//        ascending:NO];
-//    NSArray *sortDescriptors = [NSArray arrayWithObject:sortByName];
-//    NSArray *sortedArray = [tempArray sortedArrayUsingDescriptors:sortDescriptors];
-//
-    
-    NSArray * sortedArray;
-    
-    sortedArray = [self sortArrayByNameWithKey:[[NSUserDefaults standardUserDefaults] objectForKey:@"order"] andArray:tempArray];
-    
-    /* Creating new sordted array of file names*/
+    NSLog(@"SEGMENTED PERFORMED");
+    NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
     [filesArray removeAllObjects];
-    for(int i = 0; i < sortedArray.count; i++){
-        NSMutableDictionary * dictOfDataSorted = [sortedArray objectAtIndex:i];
-        NSMutableString * stringWithWxtension = [[dictOfDataSorted objectForKey:@"uuid"] mutableCopy];
-        [stringWithWxtension appendString:@".htapp"];
-        [filesArray addObject:stringWithWxtension];
-    }
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        if ([extension isEqualToString:@"htapp"]) {
+            [filesArray addObject:filename];
+            NSLog(@"filename %@ ", filename );
+        }
+    }];
+   
+
+    [self sortCollectionViewFromSegments:key];
+    [self.collectionView reloadData];
+
 }
+
+-(void)sortCollectionViewFromSegments:(NSString*)key{
+    NSMutableArray * tempArray = [NSMutableArray array];
+
+for(int i = 0; i < filesArray.count; i++){
+NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:i] error:nil];
+[tempArray addObject:dictOfData];
+}
+NSArray * sortedArray;
+
+sortedArray = [self sortArrayByNameWithKey:key andArray:tempArray];
+
+/* Creating new sordted array of file names*/
+[filesArray removeAllObjects];
+for(int i = 0; i < sortedArray.count; i++){
+    NSMutableDictionary * dictOfDataSorted = [sortedArray objectAtIndex:i];
+    NSMutableString * stringWithWxtension = [[dictOfDataSorted objectForKey:@"uuid"] mutableCopy];
+    [stringWithWxtension appendString:@".htapp"];
+    [filesArray addObject:stringWithWxtension];
+}
+
+}
+//-(void)sortArrayByAscendingName{
+//    
+//    NSMutableArray * tempArray = [NSMutableArray array];
+//    
+//    for(int i = 0; i < filesArray.count; i++){
+//    NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:i] error:nil];
+//    [tempArray addObject:dictOfData];
+//    }
+//    NSArray * sortedArray;
+//    
+//    sortedArray = [self sortArrayByNameWithKey:[[NSUserDefaults standardUserDefaults] objectForKey:@"order"] andArray:tempArray];
+//    
+//    /* Creating new sordted array of file names*/
+//    [filesArray removeAllObjects];
+//    for(int i = 0; i < sortedArray.count; i++){
+//        NSMutableDictionary * dictOfDataSorted = [sortedArray objectAtIndex:i];
+//        NSMutableString * stringWithWxtension = [[dictOfDataSorted objectForKey:@"uuid"] mutableCopy];
+//        [stringWithWxtension appendString:@".htapp"];
+//        [filesArray addObject:stringWithWxtension];
+//    }
+//}
 
 -(NSMutableArray *)sortArrayByNameWithKey:(NSString *)sortingKey andArray:(NSMutableArray *)unsortedArray{
     
@@ -805,6 +845,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         NSArray *descriptors = [NSArray arrayWithObjects: lastDescriptor, nil];
         sortedArray =  [unsortedArray sortedArrayUsingDescriptors:descriptors].mutableCopy;
     }
+    if ([sortingKey isEqualToString:@"favorite"]){
+        NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:sortingKey ascending:NO selector:@selector(compare:)];
+        NSArray *descriptors = [NSArray arrayWithObjects: lastDescriptor, nil];
+        sortedArray =  [unsortedArray sortedArrayUsingDescriptors:descriptors].mutableCopy;
+    }
+    
     return sortedArray.mutableCopy;
 }
 
@@ -829,15 +875,54 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     return tempDict;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *reusableview = nil;
+    
+    if (kind == UICollectionElementKindSectionHeader) {
+        self.headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
+//        NSString *title = [[NSString alloc]initWithFormat:@"Recipe Group #%i", indexPath.section + 1];
+//        headerView.title.text = title;
+//        UIImage *headerImage = [UIImage imageNamed:@"header_banner.png"];
+        //headerView.backgroundImage.image = headerImage;
+        self.headerView.delegate = self;
+
+        reusableview = self.headerView;
+    }
+ 
+    if (kind == UICollectionElementKindSectionFooter) {
+        UICollectionReusableView *footerview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
+ 
+        reusableview = footerview;
+    }
+        
+    return reusableview;
+}
+
+- (void)addGestureRecognizersToCell:(Cell *)cell {
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(renamePressed:)];
+    tapGestureRecognizer.numberOfTapsRequired = 1;
+    
+    UITapGestureRecognizer *tapFavorite = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(heartPressed:)];
+    tapFavorite.numberOfTapsRequired = 1;
+    [cell.favorite addGestureRecognizer:tapFavorite];
+    [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
+    cell.dateLabel.userInteractionEnabled = YES;
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:kCellID forIndexPath:indexPath];
     
     if(self.isSelectionActivated)
     {
+        [cell.favorite setHidden:YES];
+
         [cell setIsCheckHidden:NO];
     }
     else {
+        [cell.favorite setHidden:NO];
+
         [cell setIsCheckHidden:YES];
     }
     
@@ -859,22 +944,27 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     cell.image.image = [UIImage imageWithData:[dictOfData objectForKey:@"imageEntry"]];
     cell.dateLabel.text = [dictOfData objectForKey:@"techniqueName"];
-
     cell.cellIndex = indexPath;
     cell.viewModeLabel.text = [dictOfData objectForKey:@"creationDate"];
+    cell.UUIDcell = [dictOfData objectForKey:@"uuid"];
+    
+    if([[dictOfData objectForKey:@"favorite"] isEqualToString:@"favorite"]){
+        cell.isFavorite = YES;
+        [cell.favorite setImage:[UIImage imageNamed:@"star.fill"]];
+    }else {
+        cell.isFavorite = NO;
+
+        [cell.favorite setImage:[UIImage imageNamed:@"star.tr"]];
+    }
+    
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-    
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(renamePressed:)];
-    tapGestureRecognizer.numberOfTapsRequired = 1;
-    [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
-    cell.dateLabel.userInteractionEnabled = YES;
-    
-    cell.newVersionDiagram = YES;
 
-   cell.image.frame = CGRectMake(0, -15, cell.frame.size.width , cell.frame.size.height);
+    [self addGestureRecognizersToCell:cell];
+    cell.newVersionDiagram = YES;
+    cell.image.frame = CGRectMake(0, -15, cell.frame.size.width , cell.frame.size.height);
     
     if ([cv.indexPathsForSelectedItems containsObject:indexPath]) {
         [cv selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
@@ -911,6 +1001,39 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
          object:self];
     }
 }
+-(void)heartPressed:(UITapGestureRecognizer *)gestureRecognizer{
+    
+    CGPoint tapPoint = [gestureRecognizer locationInView:self.collectionView];
+    indexOfFavoriteCell = [self.collectionView indexPathForItemAtPoint:tapPoint];
+    Cell * cell = (Cell*)[self.collectionView cellForItemAtIndexPath:indexOfFavoriteCell];
+        
+    NSMutableString * filePath = [cell.UUIDcell mutableCopy];
+    [filePath appendString:@".htapp"];
+
+    NSMutableDictionary * dictOfData = [self openFileAtPath:filePath error:nil];
+
+    if(cell.isFavorite){
+        [dictOfData setObject:@"default" forKey:@"favorite"];
+        [cell.favorite setImage:[UIImage imageNamed:@"star.tr"]];
+    }else {
+        [dictOfData setObject:@"favorite" forKey:@"favorite"];
+        [cell.favorite setImage:[UIImage imageNamed:@"star.fill"]];
+    }
+    
+    NSMutableDictionary* tempDictDefaults = [dictOfData mutableCopy];
+    [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self saveDiagramToFile:[tempDictDefaults objectForKey:@"uuid"]];
+    [self reloadMyCollection];
+
+    
+    //    if(!self.isSelectionActivated){
+//        [[NSNotificationCenter defaultCenter]
+//         postNotificationName:@"showPop"
+//         object:self];
+//    }
+}
 
 
 
@@ -919,6 +1042,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     Cell *cell = (Cell *)[collectionView  cellForItemAtIndexPath:indexPath];
 
+    
     if(!self.isSelectionActivated){
         
         
@@ -932,7 +1056,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [self.navigationController pushViewController: newEntryVC animated:YES];
     }
     else{
-        
         [self selectCell:cell];
         indexOfSelectedCell = indexPath;
         [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
@@ -954,6 +1077,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell.checker.hidden = NO;
             cell.cell_menu_btn.hidden = NO;
             cell.cell_rename_btn.hidden = NO;
+            
             if(cell.newVersionDiagram == YES){
                 cell.shareBtn.hidden = NO;
             }
@@ -964,6 +1088,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell.cell_menu_btn.hidden = YES;
             cell.cell_rename_btn.hidden = YES;
             cell.shareBtn.hidden = YES;
+
         }
 
 }
@@ -974,6 +1099,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexPath];
         [cell setIsHidden:YES];
         longpresscell.enabled = YES;
+        [cell.favorite setHidden:NO];
     }
         for (NSInteger row = 0; row < [self.collectionView numberOfItemsInSection:0]; row++) {
             Cell * cell2 =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
@@ -984,6 +1110,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             cell2.shareBtn.hidden = YES;
 
             longpresscell.enabled = YES;
+            [cell2.favorite setHidden:NO];
     }
 }
 -(void)openSubView:(id)sender
@@ -1206,11 +1333,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self saveDiagramToFile:[tempDict objectForKey:@"uuid"]];
 }
+
+
 -(void)renameTechniqueDelegate:(NSString*)txtField{
     
     NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
     [tempDict setObject:txtField forKey:@"techniqueName"];
-    
     [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self saveDiagramToFile:[tempDict objectForKey:@"uuid"]];

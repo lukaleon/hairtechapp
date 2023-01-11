@@ -17,7 +17,7 @@
 #import "Cell.h"
 #import "NewEntryController.h"
 #import <CloudKit/CloudKit.h>
-
+#import "ReusableView.h"
 
 
 typedef enum {
@@ -39,12 +39,14 @@ typedef enum {
 
 @end
 
-@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, CellDelegate>{
+@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, ReusableViewDelegate ,CellDelegate>{
    // buttonImage *buttonImageClass;
     
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;
     NSIndexPath * indexOfSelectedCell;
+    NSIndexPath * indexOfFavoriteCell;
+
     NSUInteger indexForDelete;
     
     CKDatabase * database;
@@ -53,6 +55,7 @@ typedef enum {
     NSString * _fileNameForOpenEntry;
 
 }
+@property ReusableView *headerView;
 @property (nonatomic, strong) NSArray *fetchedTechniques;
 
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *indicatorView;

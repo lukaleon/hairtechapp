@@ -288,26 +288,19 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification:)
-                                                 name:@"showPop"
+                                                 name:@"showPopOld"
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveTestNotification2:)
-                                                 name:@"hideAllBars"
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(receiveTestNotification2:)
+//                                                 name:@"hideAllBars"
+//                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification3:)
-                                                 name:@"showDeletePop"
+                                                 name:@"showDeletePopOld"
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(shareDiagram)
-                                                 name:@"shareDiagram"
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(insertExportedDataFromAppDelegate)
-                                                 name:@"insertExportedDataFromAppDelegate"
-                                               object:nil];
+
     
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -668,7 +661,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [cell setIsCheckHidden:YES];
     }
     
-    [cell hideBar];
+    //[cell hideBar];
         cell.contentView.backgroundColor = [UIColor whiteColor];
         [cell.contentView.layer setCornerRadius:15.0f];
         cell.clipsToBounds = YES;
@@ -1313,19 +1306,19 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    
 }
 
-- (void) receiveTestNotification2:(NSNotification *)notification
-{
-    
-    if ([[notification name] isEqualToString:@"hideAllBars"])
-    {
-        
-        for (Cell *cell in [self.collectionView visibleCells]) {
-            [cell hideBar];
-        }
-        
-    }
-    
-}
+//- (void) receiveTestNotification2:(NSNotification *)notification
+//{
+//    
+//    if ([[notification name] isEqualToString:@"hideAllBars"])
+//    {
+//        
+//        for (Cell *cell in [self.collectionView visibleCells]) {
+//            [cell hideBar];
+//        }
+//        
+//    }
+//    
+//}
 
 
 - (void) receiveTestNotification3:(NSNotification *)notification

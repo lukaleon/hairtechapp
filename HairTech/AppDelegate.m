@@ -49,7 +49,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
 
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
@@ -59,6 +58,8 @@
         [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
         [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultTest"];
         [self saveMagnetStateToDefaults:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
+
         
    }
     [self getCurrentMode];

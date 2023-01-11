@@ -107,7 +107,7 @@ static UIImage *deleteButtonImg;
      postNotificationName:@"showDeletePopOld"
      object:self];
     
-}
+}/*
 -(void)showBar{
      [self.menuBar setBackgroundColor:[UIColor whiteColor]];
      [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
@@ -141,8 +141,8 @@ static UIImage *deleteButtonImg;
 //    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
 //    [self.cell_menu_btn.layer setCornerRadius:15.0];
     
-}
--(void)hideBar{
+}*/
+/*-(void)hideBar{
 //    [self.menuBar setBackgroundColor:[UIColor whiteColor]];
 //    [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];
 //    [self.renameBtn setBackgroundColor:[UIColor whiteColor]];
@@ -174,5 +174,5 @@ static UIImage *deleteButtonImg;
 //    [self.cell_menu_btn setBackgroundColor:[UIColor whiteColor]];
 //    [self.cell_menu_btn.layer setCornerRadius:15.0];
 
-}
+}*/
 @end

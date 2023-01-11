@@ -571,6 +571,7 @@
     
     NSString * creationDate = [self currentDate];
     NSString * modificationDate = [self currentDate];
+    NSString * favorite = @"default";
 
     
     if ([typeName isEqualToString:typeName]) {
@@ -595,6 +596,8 @@
         [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
         [dictToSave setObject:creationDate forKey:@"creationDate"];
         [dictToSave setObject:modificationDate forKey:@"modificationDate"];
+        [dictToSave setObject:favorite forKey:@"favorite"];
+
         
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];

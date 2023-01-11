@@ -69,6 +69,7 @@
 		40BC7FD528F0254F00F7364A /* eraserNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD328F0254F00F7364A /* eraserNew.png */; };
 		40BC7FD628F0254F00F7364A /* eraserNew_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 40BC7FD428F0254F00F7364A /* eraserNew_sel.png */; };
 		40D86A1A296D82F0009991A8 /* OldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D86A19296D82F0009991A8 /* OldCell.m */; };
+		40D86A1D296DE6FC009991A8 /* ReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D86A1C296DE6FC009991A8 /* ReusableView.m */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
 		40ED75A3293BCFA100059FE2 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40ED75A1293BCFA100059FE2 /* ContainerViewController.m */; };
 		40F46AFA291C1C9D00E7FC77 /* backhead_ms.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F46AF5291C1C9C00E7FC77 /* backhead_ms.png */; };
@@ -506,6 +507,8 @@
 		40BC7FD428F0254F00F7364A /* eraserNew_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = eraserNew_sel.png; path = "../../../../../Downloads/Untitled-2 2/eraserNew_sel.png"; sourceTree = "<group>"; };
 		40D86A18296D82F0009991A8 /* OldCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OldCell.h; sourceTree = "<group>"; };
 		40D86A19296D82F0009991A8 /* OldCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OldCell.m; sourceTree = "<group>"; };
+		40D86A1B296DE6FC009991A8 /* ReusableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReusableView.h; sourceTree = "<group>"; };
+		40D86A1C296DE6FC009991A8 /* ReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReusableView.m; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
 		40ED75A1293BCFA100059FE2 /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
@@ -1845,6 +1848,8 @@
 				B4FA974F16680CDA00F36E34 /* CellBackground.m */,
 				B4FA975116680D5D00F36E34 /* ViewController.h */,
 				40BC7FA728E7112A00F7364A /* ViewController.m */,
+				40D86A1B296DE6FC009991A8 /* ReusableView.h */,
+				40D86A1C296DE6FC009991A8 /* ReusableView.m */,
 				4079875329644C63004C86ED /* Older Version */,
 			);
 			name = CollectionView;
@@ -2405,6 +2410,7 @@
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,
 				B4188FBA171C7DBE0035785B /* ACEDrawingTools.m in Sources */,
+				40D86A1D296DE6FC009991A8 /* ReusableView.m in Sources */,
 				B4188FBB171C7DBE0035785B /* ACEDrawingView.m in Sources */,
 				B429A75421CEEE4700F56F09 /* UITextView+PinchZoom.m in Sources */,
 				B41A9F0D213E3E8300B53A11 /* HapticHelper.m in Sources */,

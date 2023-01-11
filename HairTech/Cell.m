@@ -23,9 +23,16 @@ static UIImage *deleteButtonImg;
             self.deleteBtn.enabled = NO;
             tapCount = 1;
             self.editView.hidden = YES;
+            
+            
         }
     return self;
 }
+
+//-(void)heartPressed:(UITapGestureRecognizer*)sender{
+//    NSLog(@"TAP GESTURE");
+//    self.favorite.image = [UIImage imageNamed:@"heart.tr"];
+//}
 
 -(void)prepareForReuse {
     [super prepareForReuse];
