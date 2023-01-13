@@ -39,8 +39,7 @@ static UIImage *deleteButtonImg;
     self.selected = NO;
 }
 
--(void)setIsCheckHidden:(BOOL)isCheckHidden{
-    checkItem.hidden = isCheckHidden;    
+-(void)setIsCheckHidden:(BOOL)isCheckHidden{    checkItem.hidden = isCheckHidden;    
 }
 
 -(void)setCheckItem:(UIImageView *)checkImage{

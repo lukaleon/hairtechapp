@@ -8,6 +8,7 @@
 
 #import "NewEntryController.h"
 #import "TemporaryDictionary.h"
+#import "NotesViewController.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -27,6 +28,37 @@
 -(void)setTechniqueID:(NSString*)techId{
     _techniqueNameID = techId;
 }
+- (void)addNavigationItems {
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+  //  UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
+    
+    //    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(flipImage)];
+    //self.navigationItem.rightBarButtonItem = shareButton;
+    
+    UIButton *addNote = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [addNote addTarget:self
+                action:@selector(addNotes)
+      forControlEvents:UIControlEventTouchUpInside];
+    [addNote.widthAnchor constraintEqualToConstant:30].active = YES;
+    [addNote.heightAnchor constraintEqualToConstant:30].active = YES;
+    [addNote setImage:[UIImage systemImageNamed:@"text.bubble"] forState:UIControlStateNormal];
+    [addNote setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    
+    UIButton *shareBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [addNote addTarget:self
+                action:@selector(share:)
+      forControlEvents:UIControlEventTouchUpInside];
+    [shareBtn.widthAnchor constraintEqualToConstant:30].active = YES;
+    [shareBtn.heightAnchor constraintEqualToConstant:30].active = YES;
+    [shareBtn setImage:[UIImage systemImageNamed:@"square.and.arrow.up"] forState:UIControlStateNormal];
+    [shareBtn setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    
+    UIBarButtonItem * note = [[UIBarButtonItem alloc] initWithCustomView:addNote];
+    UIBarButtonItem * share = [[UIBarButtonItem alloc] initWithCustomView:shareBtn];
+
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:share, note, nil];
+}
+
 -(void)viewDidLoad{
     
     NSLog(@"technique name %@", _techniqueNameID);
@@ -37,11 +69,8 @@
     self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
     self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
 
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
-    
-//    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(flipImage)];
-    self.navigationItem.rightBarButtonItem = shareButton;
+    [self addNavigationItems];
+
     
     [self setupgestureRecognizers];
     [self registerNotifications];
@@ -51,22 +80,6 @@
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
 }
-
-/*-(NSDictionary*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-    
-    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-    
-    NSURL * url = [NSURL fileURLWithPath:filePath];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    
-    NSDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-    
-   
-        return [tempDict objectForKey:key];
-}*/
 
 -(UIImage*)openFileAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
 
@@ -87,35 +100,9 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 
     return img;
-    
-    
-//    NSDictionary *readDict =
-//    [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-//
-//    UIImage *imageEntry = [readDict objectForKey:key];
-//    return imageEntry;
-    
+
 }
 
-//-(UIImage*)loadImages:(NSString*)headtype
-//{
-//    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-//    NSMutableString *prefix= [techniqueNameID mutableCopy];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: prefix];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: headtype];
-//    filenamethumb1 = [filenamethumb1 mutableCopy];
-//    [filenamethumb1 appendString: @".png"];
-//
-//
-//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-//    NSString *docDirectory = [sysPaths objectAtIndex:0];
-//    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
-//        NSData *data1 = [NSData dataWithContentsOfFile:filePath];
-//    UIImage *tempimage = [UIImage imageWithData:data1];
-//    return tempimage;
-//}
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
@@ -182,7 +169,31 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"didEnterBackground" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"appDidTerminate" object:nil];
 }
+-(void)addNotes{
+    
+    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    NSString * note = [dict objectForKey:@"note"];
+    
+    NotesViewController *  notesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"notes"];
+    if(note.length == 0||[note isEqualToString:@"(null)"]){
+    notesVC.textOfTextView = @"";
+    }else
+    {
+    notesVC.textOfTextView = note;
+    }
+    notesVC.delegate =self;
+    [self.navigationController presentViewController:notesVC animated:YES completion:nil];
+}
+-(void)saveNote:(NSString*)note{
+    
+    NSLog(@"%@ noteee ", note);
+    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    [dict setObject:note forKey:@"note"];
+    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"temporaryDictionary"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self saveDiagramToFile:_techniqueNameID];
 
+}
 
 - (void)share:(id)sender{
     NSString *textToShare;

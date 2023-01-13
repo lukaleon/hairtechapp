@@ -418,8 +418,14 @@ else {
             [[self.buttonCollection objectAtIndex:i] setSelected:NO];
             [line removeFromSuperlayer];
         }
-        [delegate colorPopoverControllerDidSelectColor:btn.hexColor];
-        [self indicateSelctedButton:btn];
+        
+        if(sender == [self.buttonCollection lastObject]){
+            [self.delegate colorPopoverWillShowColorWheel];
+        }
+        else{
+            [delegate colorPopoverControllerDidSelectColor:btn.hexColor];
+            [self indicateSelctedButton:btn];
+        }
     } else {
         for(int i=0; i< self.buttonCollection.count; i++) {
             [[self.buttonCollection objectAtIndex:i] setSelected:NO];

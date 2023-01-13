@@ -12,6 +12,7 @@
 #import "ColorViewController.h"
 #import "AMPopTip.h"
 #import "NewEntryController.h"
+#import "ColorWheelController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
@@ -25,8 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NewDrawController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate , UIScrollViewDelegate, UITextViewDelegate>
+@interface NewDrawController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate,ColorWheelControllerDelegate, UIScrollViewDelegate, UITextViewDelegate>
 {
+    
     ColorViewController *contentTextView;
     ColorViewController *contentViewController;
     IBOutlet UILongPressGestureRecognizer *longpressPenTool;

@@ -8,6 +8,7 @@
 
 #import "NewDrawController.h"
 #import "TemporaryDictionary.h"
+#import "ColorWheelController.h"
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -237,7 +238,7 @@
         if(![[toolButtons objectAtIndex:i] isSelected]){
             UIButton *btn = [toolButtons objectAtIndex:i];
             btn.backgroundColor = btnColor;
-            btn.layer.cornerRadius = 15.0;
+            btn.layer.cornerRadius = 12.0;
         }
     }
 }
@@ -860,6 +861,16 @@ return YES;
 //                            ((int)alpha),((int)red),((int)green),((int)blue)];
 //    return hexString;
 //}
+
+
+-(void)colorPopoverWillShowColorWheel{
+    NSLog(@"Show color wheel");
+    ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+    colorWheel.delegate = self;
+    [self presentViewController:colorWheel animated:YES completion:nil];
+    
+}
+
 
 -(void)colorPopoverControllerDidSelectColor:(NSString *)hexColor {
     if(self.penTool.selected == YES){

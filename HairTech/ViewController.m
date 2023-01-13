@@ -384,7 +384,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     
     _fileNameForOpenEntry  = [[NSUserDefaults standardUserDefaults] objectForKey:@"newCreatedFileName"];
+    [self copyFileToICloud:_fileNameForOpenEntry];
+
     [self getArrayOfFilesInDirectory];
+    
+//    [self copyFileToICloud:_fileNameForOpenEntry];
     
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
     NSMutableDictionary * dictOfData = [self openFileAtPath:_fileNameForOpenEntry error:nil];
@@ -461,7 +465,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 
 -(void)selectionActivated{
-
     self.isSelectionActivated = YES;
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
     self.navigationItem.leftBarButtonItem = nil;
@@ -747,7 +750,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 #pragma mark Collection View Delegate Methods
 
 -(void)getArrayOfFilesInDirectory{
-    
 
     NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
     [filesArray removeAllObjects];
@@ -761,7 +763,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }];
     
     [self sortCollectionViewFromSegments:[[NSUserDefaults standardUserDefaults] objectForKey:@"order"]];
-
     
     [self.collectionView reloadData];
 }
@@ -1033,6 +1034,7 @@ for(int i = 0; i < sortedArray.count; i++){
 //         postNotificationName:@"showPop"
 //         object:self];
 //    }
+    
 }
 
 
@@ -1248,7 +1250,7 @@ for(int i = 0; i < sortedArray.count; i++){
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,   YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
+    NSLog(@"%@ Documents", documentsDirectory);
     NSString *fullPath = [documentsDirectory stringByAppendingPathComponent:
                           [NSString stringWithFormat:@"%@",fileNameToDelete]];
     [fileManager removeItemAtPath:fullPath error:NULL];
@@ -1258,12 +1260,72 @@ for(int i = 0; i < sortedArray.count; i++){
     } else {
         NSLog(@"image removed: %@", fullPath);
     }
-    
-    NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
-    NSLog(@"Directory Contents:\n%@", [fileManager directoryContentsAtPath: appFolderPath]);
+
+//    NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
+//    NSLog(@"Directory Contents:\n%@", [fileManager directoryContentsAtPath: appFolderPath]);
+//    [self getArrayOfFilesInDirectory];
+
+    NSURL * fileURL = [NSURL fileURLWithPath:fullPath];
+    NSOperationQueue *q = [[NSOperationQueue alloc] init];
+
+    NSURL *localURL = [self iCloudPathToResource:fileNameToDelete];
+    NSArray * urlArray = @[localURL];
+
+    [self deleteItemsAtURLs:urlArray queue:q];
+    [self getArrayOfFilesInDirectory];
     [self getArrayOfFilesInDirectory];
 
 }
+
+//        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+- ( void )deleteItemsAtURLs: ( NSArray * )urls queue: ( NSOperationQueue * )queue
+    {
+        //assuming urls is an array of urls to be deleted
+        NSFileCoordinator   * coordinator;
+        NSMutableArray      * writingIntents;
+        NSURL               * url;
+
+        writingIntents = [ NSMutableArray arrayWithCapacity: urls.count ];
+
+        for( url in urls )
+        {
+            [ writingIntents addObject: [ NSFileAccessIntent writingIntentWithURL: url options: NSFileCoordinatorWritingForDeleting ] ];
+        }
+
+        coordinator = [ [ NSFileCoordinator alloc ] initWithFilePresenter: nil ];
+
+        [ coordinator coordinateAccessWithIntents: writingIntents
+                                            queue: queue
+                                       byAccessor: ^( NSError * error )
+         {
+             if( error )
+             {
+                 //handle
+                 return;
+             }
+             NSFileAccessIntent * intent;
+
+             error = nil;
+
+             for( intent in writingIntents )
+             {
+                 [ [ NSFileManager defaultManager ] removeItemAtURL: intent.URL error: &error ];
+                 if( error )
+                 {
+                     //handle
+                 }
+
+             }
+         }];
+    }
+
+-(NSURL*)ubiquitousDocumentsDirectoryURL {
+    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
+}
+-(NSURL*)ubiquitousContainerURL {
+    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+}
+
 
 - (IBAction)showSideMenu:(id)sender{
 [self.menuViewController presentFromViewController:self animated:YES completion:nil];
@@ -1449,6 +1511,66 @@ for(int i = 0; i < sortedArray.count; i++){
 
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+}
+
+
+
+#pragma mark STORE NEW FILE IN CLOUD
+
+- (void)copyFileToICloud:(NSString*)filePath {
+    // Let's get the root directory for storing the file on iCloud Drive
+    [self rootDirectoryForICloud:^(NSURL *ubiquityURL) {
+        NSLog(@"1. ubiquityURL = %@", ubiquityURL);
+        if (ubiquityURL) {
+
+                    // We also need the 'local' URL to the file we want to store
+                    NSURL *localURL = [self localPathForResource:filePath];
+                    NSLog(@"2. localURL = %@", localURL);
+
+                    // Now, append the local filename to the ubiquityURL
+                    ubiquityURL = [ubiquityURL URLByAppendingPathComponent:localURL.lastPathComponent];
+                    NSLog(@"3. ubiquityURL = %@", ubiquityURL);
+
+                    // And finish up the 'store' action
+                    NSError *error;
+            if (![[NSFileManager defaultManager] copyItemAtURL:localURL toURL:ubiquityURL error:&error]){
+//                          setUbiquitous:NO itemAtURL:localURL destinationURL:ubiquityURL error:&error]) {
+                        NSLog(@"Error occurred: %@", error);
+                    }
+                }
+        else {
+            NSLog(@"Could not retrieve a ubiquityURL");
+        }
+    }];
+}
+
+- (void)rootDirectoryForICloud:(void (^)(NSURL *))completionHandler {
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *rootDirectory = [[[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil]URLByAppendingPathComponent:@"Documents"];
+
+        if (rootDirectory) {
+            if (![[NSFileManager defaultManager] fileExistsAtPath:rootDirectory.path isDirectory:nil]) {
+                NSLog(@"Create directory");
+                [[NSFileManager defaultManager] createDirectoryAtURL:rootDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(rootDirectory);
+        });
+    });
+}
+- (NSURL *)localPathForResource:(NSString *)filePath{
+    NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *resourcePath = [documentsDirectory stringByAppendingPathComponent:filePath];
+    return [NSURL fileURLWithPath:resourcePath];
+}
+- (NSURL *)iCloudPathToResource:(NSString *)filePath{
+    NSURL *rootDirectory = [[[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil]URLByAppendingPathComponent:@"Documents"];
+    rootDirectory = [rootDirectory URLByAppendingPathComponent:filePath.lastPathComponent];
+
+    return rootDirectory;
 }
 
 @end

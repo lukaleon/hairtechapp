@@ -47,14 +47,10 @@
 
 @property (nonatomic, strong) UIBezierPath *currentPath;
 @property (nonatomic, strong) NSMutableArray *paths;
-
-
 @property (nonatomic, strong) NSMutableArray *pathArray;
 @property (nonatomic, strong) NSMutableArray *bufferArray;
 
 @property (nonatomic, strong) NSMutableArray *bufferOfPoints;
-
-
 @property (nonatomic, strong) id<ACEDrawingTool> currentTool;
 
 //@property (nonatomic,strong,readwrite) UIImage *image;
@@ -441,6 +437,24 @@ UIColor* tempColor;
     return sqrt((xDist * xDist) + (yDist * yDist));
 }
 
+- (void)revokeWhenZooming:(JVDrawingLayer*)layer {
+    [self hideMenu];
+   // [self.bufferOfLayers addObject:layer]; //Add layer to buffer array for redo
+    [self.layerArray removeObject:layer];
+    [layer removeFromSuperlayer];
+//    self.selectedLayer.isSelected = NO;
+    layer = nil;
+    self.drawingLayer = nil;
+    [self updateAllPoints];
+    [self storeDataInJson];
+    [self fetchData:self.fileNameInside];
+    NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
+    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
+    
+}
+
+
+
 - (void)revoke {
     [self hideMenu];
     [self.bufferOfLayers addObject:self.selectedLayer]; //Add layer to buffer array for redo
@@ -524,13 +538,16 @@ UIColor* tempColor;
     if (count > 1) {
         return; // return amount of fingers touched right now
     }
+    
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
     CGPoint previousPoint = [touch previousLocationInView:self];
     CGFloat distance = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
+    
     if(distance == 0){
         return;
     }
+    
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
     //    if (currentPoint.x > self.frame.size.width || currentPoint.x < 0 || currentPoint.y < 0 || currentPoint.y > self.frame.size.height){
@@ -606,7 +623,6 @@ UIColor* tempColor;
                 }
             }
             else {
-                
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
                         if(_magnetActivated){
@@ -676,14 +692,18 @@ UIColor* tempColor;
     NSLog(@"Touches ended");
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     unsigned long count = [[event allTouches] count];
-    if (count > 1) {
-        return; // return amount of fingers touched right now
-    }
+    
     cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
         //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
+        if (count > 1) {
+            [self revokeWhenZooming:[self.layerArray lastObject]];
+            return;
+        }
+        
+        
         [self storeDataInJson];
         [self fetchData:self.fileNameInside];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];

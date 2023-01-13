@@ -23,6 +23,8 @@
 @end
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
+    NSMetadataQuery *_query;
+
     
     //MyCustomLayout *mycustomLayout;
  // UIBarButtonItem *tempButton;

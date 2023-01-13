@@ -8,10 +8,11 @@
 
 #import "ViewController.h"
 #import "NewDrawController.h"
+#import "NotesViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NewEntryController : UIViewController
+@interface NewEntryController : UIViewController <NotesViewDelegate>
 {
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;

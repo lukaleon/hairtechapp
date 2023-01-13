@@ -18,6 +18,8 @@
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor;
 - (void)sliderDidSelectWidth:(CGFloat)lineWidth;
 - (void)addTextFromTextSettings;
+- (void)colorPopoverWillShowColorWheel;
+
 @end
 
 

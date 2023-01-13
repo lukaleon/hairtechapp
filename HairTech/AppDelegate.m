@@ -99,9 +99,89 @@
    [self createAndCheckDatabase];
    
     dashedCurve =NO;
- 
+    
+    
+    NSURL *ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+    NSString *filePath = ubiq.absoluteString;
+
+       if (ubiq) {
+           NSLog(@"AppDelegate: iCloud access!");
+           
+           [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
+           
+       } else {
+           NSLog(@"AppDelegate: No iCloud access (either you are using simulator or, if you are on your phone, you should check settings");
+       }
+    
+   // [self getAllFilesIniCloud];
     return YES;
 }
+
+-(void)getArrayOfFilesInCloud:(NSURL*)url{
+    NSArray * dirContents =
+          [[NSFileManager defaultManager] contentsOfDirectoryAtURL:url
+            includingPropertiesForKeys:@[]
+                               options:NSDirectoryEnumerationSkipsHiddenFiles
+                                 error:nil];
+    
+    NSLog(@"dir array %lu", dirContents.count);
+    for(NSString * name in dirContents){
+        NSLog(@"dir array %@", name);
+
+    }
+    NSOperationQueue *q = [[NSOperationQueue alloc] init];
+
+   // [self deleteItemsAtURLs:dirContents queue:q]; //delete item ia iCloud Dir
+}
+
+- ( void )deleteItemsAtURLs: ( NSArray * )urls queue: ( NSOperationQueue * )queue
+    {
+        //assuming urls is an array of urls to be deleted
+        NSFileCoordinator   * coordinator;
+        NSMutableArray      * writingIntents;
+        NSURL               * url;
+
+        writingIntents = [ NSMutableArray arrayWithCapacity: urls.count ];
+
+        for( url in urls )
+        {
+            [ writingIntents addObject: [ NSFileAccessIntent writingIntentWithURL: url options: NSFileCoordinatorWritingForDeleting ] ];
+        }
+        coordinator = [ [ NSFileCoordinator alloc ] initWithFilePresenter: nil ];
+        [ coordinator coordinateAccessWithIntents: writingIntents
+                                            queue: queue
+                                       byAccessor: ^( NSError * error )
+         {
+             if( error )
+             {
+                 //handle
+                 return;
+             }
+             NSFileAccessIntent * intent;
+
+             error = nil;
+
+             for( intent in writingIntents )
+             {
+                 [ [ NSFileManager defaultManager ] removeItemAtURL: intent.URL error: &error ];
+                 if( error )
+                 {
+                     //handle
+                 }
+
+             }
+         }];
+    }
+
+
+
+-(NSURL*)ubiquitousDocumentsDirectoryURL {
+    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
+}
+-(NSURL*)ubiquitousContainerURL {
+    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsPortrait(interfaceOrientation);

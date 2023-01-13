@@ -502,18 +502,54 @@
 }
 
 -(void)saveDiagramToFile:(NSString*)uuid  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
-
-   
+    
+    
     NSMutableString * exportingFileName = [uuid mutableCopy];
     [exportingFileName appendString:@".htapp"];
-
+    
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
     NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
     // Save it into file system
     [data writeToFile:filePath atomically:YES];
+    NSURL * url = [NSURL fileURLWithPath:filePath];
+    
+//    [[[NSFileManager alloc]init]setUbiquitous:YES itemAtURL:url destinationURL:[self ubiquitousDocumentsDirectoryURL] error:nil];
+   // [self copyFileToICloud:url];
 }
+
+
+
+//- (NSURL *)localPathForResource:(NSString *)resource ofType:(NSString *)type {
+//    NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+//    NSString *resourcePath = [[documentsDirectory stringByAppendingPathComponent:resource] stringByAppendingPathExtension:type];
+//    return [NSURL fileURLWithPath:resourcePath];
+//}
+
+
+
+-(NSURL*)ubiquitousContainerURL {
+    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+}
+-(NSURL*)ubiquitousDocumentsDirectoryURL {
+    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
+}
+
+-(void)copyToCloud:(NSURL*)url name:(NSString*)backupName{
+    NSFileManager *fm = [NSFileManager defaultManager];
+
+    NSURL *ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+
+    if (ubiq == nil) {
+        return;
+    }
+
+    NSError *theError = nil;
+
+    [fm setUbiquitous:true itemAtURL:url destinationURL:[[ubiq URLByAppendingPathComponent:@"Documents" isDirectory:true] URLByAppendingPathComponent:backupName] error:&theError];
+}
+
 
 //-(void)createiCloudFolder{
 //
@@ -572,6 +608,8 @@
     NSString * creationDate = [self currentDate];
     NSString * modificationDate = [self currentDate];
     NSString * favorite = @"default";
+    NSString * note = @"";
+
 
     
     if ([typeName isEqualToString:typeName]) {
@@ -597,6 +635,8 @@
         [dictToSave setObject:creationDate forKey:@"creationDate"];
         [dictToSave setObject:modificationDate forKey:@"modificationDate"];
         [dictToSave setObject:favorite forKey:@"favorite"];
+        [dictToSave setObject:note forKey:@"note"];
+
 
         
           //Return the archived data
