@@ -17,6 +17,7 @@
 		403D12C6297031C400156A05 /* CommentTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12C5297031C300156A05 /* CommentTextView.m */; };
 		403D12CB29708A0400156A05 /* ISColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12CA29708A0400156A05 /* ISColorWheel.m */; };
 		403D12CE29708AF800156A05 /* ColorWheelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12CD29708AF800156A05 /* ColorWheelController.m */; };
+		403D12D329734AF300156A05 /* ColorViewNew.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12D129734AF300156A05 /* ColorViewNew.m */; };
 		403F27FA28C352190092DA5D /* TextRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F27F928C352190092DA5D /* TextRect.m */; };
 		4043E2D328DB7E0500BF9FF8 /* a-sm-tr.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */; };
 		4043E2D428DB7E0500BF9FF8 /* a-sm.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2D028DB7E0500BF9FF8 /* a-sm.png */; };
@@ -440,6 +441,8 @@
 		403D12CA29708A0400156A05 /* ISColorWheel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISColorWheel.m; sourceTree = "<group>"; };
 		403D12CC29708AF800156A05 /* ColorWheelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorWheelController.h; sourceTree = "<group>"; };
 		403D12CD29708AF800156A05 /* ColorWheelController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorWheelController.m; sourceTree = "<group>"; };
+		403D12D129734AF300156A05 /* ColorViewNew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorViewNew.m; sourceTree = "<group>"; };
+		403D12D229734AF300156A05 /* ColorViewNew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorViewNew.h; sourceTree = "<group>"; };
 		403F27F828C352190092DA5D /* TextRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextRect.h; sourceTree = "<group>"; };
 		403F27F928C352190092DA5D /* TextRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRect.m; sourceTree = "<group>"; };
 		4043E2CF28DB7E0500BF9FF8 /* a-sm-tr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "a-sm-tr.png"; sourceTree = "<group>"; };
@@ -1456,6 +1459,8 @@
 				B434126B16E61E25003FAFA7 /* GzColors.m */,
 				B434126C16E61E25003FAFA7 /* ColorViewController.h */,
 				B434126D16E61E25003FAFA7 /* ColorViewController.m */,
+				403D12D229734AF300156A05 /* ColorViewNew.h */,
+				403D12D129734AF300156A05 /* ColorViewNew.m */,
 			);
 			name = "Color Popover";
 			sourceTree = "<group>";
@@ -2400,6 +2405,7 @@
 				B401CA041B04796E00596292 /* FMDatabaseAdditions.m in Sources */,
 				B419661717F9CCC8003E9159 /* UIView+REFrostedViewController.m in Sources */,
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
+				403D12D329734AF300156A05 /* ColorViewNew.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				403D12C6297031C400156A05 /* CommentTextView.m in Sources */,

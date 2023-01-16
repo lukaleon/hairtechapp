@@ -842,7 +842,7 @@ for(int i = 0; i < sortedArray.count; i++){
         sortedArray =  [unsortedArray sortedArrayUsingDescriptors:sortDescriptors].mutableCopy;
     }
     if ([sortingKey isEqualToString:@"creationDate"]){
-        NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:sortingKey ascending:YES selector:@selector(compare:)];
+        NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:sortingKey ascending:NO selector:@selector(compare:)];
         NSArray *descriptors = [NSArray arrayWithObjects: lastDescriptor, nil];
         sortedArray =  [unsortedArray sortedArrayUsingDescriptors:descriptors].mutableCopy;
     }

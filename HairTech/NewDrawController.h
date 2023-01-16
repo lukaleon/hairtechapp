@@ -13,6 +13,7 @@
 #import "AMPopTip.h"
 #import "NewEntryController.h"
 #import "ColorWheelController.h"
+#import "ColorViewNew.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NewDrawController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate,ColorWheelControllerDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface NewDrawController : UIViewController<WEPopoverControllerDelegate, UIPopoverControllerDelegate,ACEDrawingViewDelegate ,ColorViewControllerDelegate,ColorWheelControllerDelegate, UIScrollViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate, ColorViewNewdelegate>
 {
     
     ColorViewController *contentTextView;

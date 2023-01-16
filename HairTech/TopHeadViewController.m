@@ -646,7 +646,7 @@ return YES;
         [longpresspenbtn setDelaysTouchesBegan:YES];
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
         {
-            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.penExtract];
+            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.penExtract currentTool:@"Pen Tool"];
             contentViewController.delegate = self;
             contentViewController.currentPenColor = self.penExtract;
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -663,7 +663,7 @@ return YES;
     [longpressblackbtn setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blackExtract];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blackExtract currentTool:@"Curve Line  Tool"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blackExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -685,7 +685,8 @@ return YES;
     [longpressbluebtn setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blueExtract];        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.blueExtract currentTool:@"Line Tool"];
+        contentViewController.delegate = self;
         contentViewController.currentPenColor = self.blueExtract;
 
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -707,7 +708,7 @@ return YES;
     [longpressredbtn setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.redExtract];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.redExtract currentTool:@"Arrow Line Tool"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.redExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -733,7 +734,7 @@ return YES;
     [longpresslinebtn setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.lineExtract];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:self.lineExtract currentTool:@"Line Tool"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = self.lineExtract;
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
@@ -2187,7 +2188,7 @@ self.previewImageView.layer.sublayers = nil;
     contentTextView = nil;
 }
 -(void)showTextColorsAndSize:(UIColor*)color{
-    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color];
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color currentTool:@"Pen"];
     contentTextView.center = self.imageToolbar1.center;
     //contentTextView.currentPenColor = color;
     textSetterState = YES;

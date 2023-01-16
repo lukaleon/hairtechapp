@@ -53,15 +53,18 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"setLightModeAsDefaultTest"]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"colorTest2"]) {
+        [self addDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"setLightModeAsDefaultTest"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"colorTest2"];
         [self saveMagnetStateToDefaults:YES];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
+        [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
+        [self saveStartColorsToDefaults];
 
-        
    }
+
     [self getCurrentMode];
     
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
@@ -400,4 +403,36 @@
     [prefs setBool:isVisible  forKey:@"magnet"];
     [prefs synchronize];
 }
+
+-(NSArray*)addDefaultColors{
+    self.colorCollection = [NSArray arrayWithObjects:
+                            
+                            Black,
+                            RoyalBlue,
+                            Red,
+                            Green,
+                            DarkRed,
+                            DarkSlateGray,
+                           
+                            DeepPink,
+                            Purple,
+                            OrangeRed,
+                            Orange,
+                            DarkBlue,
+                            Yellow,
+                            nil];
+    return self.colorCollection;
+}
+
+-(void)saveStartColorsToDefaults{
+    [[NSUserDefaults standardUserDefaults] setObject:DarkSlateGray forKey:@"penToolColor"];
+    [[NSUserDefaults standardUserDefaults] setObject:RoyalBlue forKey:@"curveToolColor"];
+    [[NSUserDefaults standardUserDefaults] setObject:Green forKey:@"dashToolColor"];
+    [[NSUserDefaults standardUserDefaults] setObject:Red forKey:@"arrowToolColor"];
+    [[NSUserDefaults standardUserDefaults] setObject:RoyalBlue forKey:@"lineToolColor"];
+    [[NSUserDefaults standardUserDefaults] setObject:Black forKey:@"textToolColor"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
 @end

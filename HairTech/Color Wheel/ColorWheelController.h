@@ -14,14 +14,21 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol ColorWheelControllerDelegate
 -(void)disableDismissalRecognizers;
 @end
-@interface ColorWheelController : UIViewController <ISColorWheelDelegate>
+@interface ColorWheelController : UIViewController <ISColorWheelDelegate, UIAdaptivePresentationControllerDelegate>
 {
     ISColorWheel * _colorWheel;
     UISlider* _brightnessSlider;
     UIView* _wellView;
     UIButton * colorButton;
+    CAShapeLayer *line;
+
 }
+
+
 @property (weak, nonatomic) id<ColorWheelControllerDelegate> delegate;
+@property UIColor * startColor;
+@property NSMutableArray * colorCollection;
+@property(nonatomic, strong) NSMutableArray *buttonCollection;
 
 @end
 

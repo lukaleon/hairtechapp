@@ -9,6 +9,7 @@
 #import "NewDrawController.h"
 #import "TemporaryDictionary.h"
 #import "ColorWheelController.h"
+#import "ColorViewNew.h"
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -63,11 +64,6 @@
 
     /* */
     textSelected = NO;
-//    curveColor = [UIColor colorNamed:@"orange"];
-//    dashColor = [UIColor colorNamed:@"deepblue"];
-//    arrowColor = [UIColor redColor];
-//    lineColor = [UIColor blueColor];
-//    textColor = [UIColor blackColor];
     self.fontSizeVC = 15;
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
@@ -80,6 +76,10 @@
         [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
         [self.drawingView setMagnetActivated:NO];
     }
+    
+    
+  
+   
     
     }
 
@@ -391,6 +391,13 @@
 //    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Presenting the great... StackOverFlow!"];
 //    [hogan addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14.0] range:NSMakeRange(24, 11)];
 //    [alertVC setValue:hogan forKey:@"attributedTitle"];
+    
+    
+    UIAlertAction *showPalette = [UIAlertAction actionWithTitle:@"Color palette"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action){
+                                                   [self changeColorPalette];
+                                                   }];
     UIAlertAction *button = [UIAlertAction actionWithTitle:@"Share"
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction *action){
@@ -409,6 +416,7 @@
   //  [button2 setValue:[[UIImage systemImageNamed:@"trash"]
                      //  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
    // [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    [alertVC addAction:showPalette];
     [alertVC addAction:button];
     [alertVC addAction:button2];
     [alertVC addAction:button3];
@@ -452,7 +460,18 @@
     }
     
 }
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+
+-(void)changeColorPalette{
+    
+    NSLog(@"Show color wheel");
+   ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+    colorWheel.delegate = self;
+    //colorWheel.startColor = currentColor;
+    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:colorWheel animated:YES completion:nil];
+    
+}
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
     return UIModalPresentationNone;
 }
@@ -588,72 +607,32 @@
 
 
 -(void)saveColorsToDefaults{
-    const CGFloat  *components2 = CGColorGetComponents(dashColor.CGColor);
-    const CGFloat  *components3 = CGColorGetComponents(arrowColor.CGColor);
-    const CGFloat  *components4 = CGColorGetComponents(lineColor.CGColor);
-    const CGFloat  *components5 = CGColorGetComponents(curveColor.CGColor);
-    const CGFloat  *components6 = CGColorGetComponents(penColor.CGColor);
-
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    [prefs setFloat:components2[0]  forKey:@"cr2"];
-    [prefs setFloat:components2[1]  forKey:@"cg2"];
-    [prefs setFloat:components2[2]  forKey:@"cb2"];
-    [prefs setFloat:components2[3]  forKey:@"ca2"];
-    
-    [prefs setFloat:components3[0]  forKey:@"cr3"];
-    [prefs setFloat:components3[1]  forKey:@"cg3"];
-    [prefs setFloat:components3[2]  forKey:@"cb3"];
-    [prefs setFloat:components3[3]  forKey:@"ca3"];
-    
-    [prefs setFloat:components4[0]  forKey:@"cr4"];
-    [prefs setFloat:components4[1]  forKey:@"cg4"];
-    [prefs setFloat:components4[2]  forKey:@"cb4"];
-    [prefs setFloat:components4[3]  forKey:@"ca4"];
-    
-    [prefs setFloat:components5[0]  forKey:@"cr5"];
-    [prefs setFloat:components5[1]  forKey:@"cg5"];
-    [prefs setFloat:components5[2]  forKey:@"cb5"];
-    [prefs setFloat:components5[3]  forKey:@"ca5"];
-    
-    [prefs setFloat:components6[0]  forKey:@"cr6"];
-    [prefs setFloat:components6[1]  forKey:@"cg6"];
-    [prefs setFloat:components6[2]  forKey:@"cb6"];
-    [prefs setFloat:components6[3]  forKey:@"ca6"];
-    
-    [prefs synchronize];
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[self hexFromUIColor:penColor] forKey:@"penToolColor"];
+    [defaults setObject:[self hexFromUIColor:curveColor] forKey:@"curveToolColor"];
+    [defaults setObject:[self hexFromUIColor:dashColor] forKey:@"dashToolColor"];
+    [defaults setObject:[self hexFromUIColor:arrowColor] forKey:@"arrowToolColor"];
+    [defaults setObject:[self hexFromUIColor:lineColor]forKey:@"lineToolColor"];
+    [defaults setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
+    [defaults synchronize];
 }
+
+
 
 -(void)LoadColorsAtStart
 {
-    NSUserDefaults *prefers = [NSUserDefaults standardUserDefaults];
-    UIColor* tColor5 = [UIColor colorWithRed:[prefers floatForKey:@"cr5"] green:[prefers floatForKey:@"cg5"] blue:[prefers floatForKey:@"cb5"] alpha:[prefers floatForKey:@"ca5"]];
-    
-    UIColor* tColor2 = [UIColor colorWithRed:[prefers floatForKey:@"cr2"] green:[prefers floatForKey:@"cg2"] blue:[prefers floatForKey:@"cb2"] alpha:[prefers floatForKey:@"ca2"]];
-    
-    UIColor* tColor3 = [UIColor colorWithRed:[prefers floatForKey:@"cr3"] green:[prefers floatForKey:@"cg3"] blue:[prefers floatForKey:@"cb3"] alpha:[prefers floatForKey:@"ca3"]];
-    
-    UIColor* tColor4 = [UIColor colorWithRed:[prefers floatForKey:@"cr4"] green:[prefers floatForKey:@"cg4"] blue:[prefers floatForKey:@"cb4"] alpha:[prefers floatForKey:@"ca4"]];
-    
-    UIColor* tColor6 = [UIColor colorWithRed:[prefers floatForKey:@"cr6"] green:[prefers floatForKey:@"cg6"] blue:[prefers floatForKey:@"cb6"] alpha:[prefers floatForKey:@"ca6"]];
-    [prefers synchronize];
-    
-    [self extractRGBforBlack:tColor5];
-    [self extractRGBforBlue:tColor2];
-    [self extractRGBforRed:tColor3];
-    [self extractRGBforLine:tColor4];
-    [self extractRGBforPen:tColor6];
-    
-//    [self.colorBar1 setTextColor:self.blackExtract];
-//    [self.colorBar2 setTextColor:self.blueExtract];
-//    [self.colorBar3 setTextColor:self.redExtract];
-//    [self.colorBar4 setTextColor:self.lineExtract];
-//    [self.colorBar5 setTextColor:self.penExtract];
 
-    textColor = [self extractRGBforTextNew:[GzColors colorFromHex:@"0xFF292F40"]];
-    self.fontSizeVC = 15;
-    NSLog(@"I have extracted colors");
     
+    self.fontSizeVC = 15;
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+
+    penColor = [self colorFromHex:[defaults objectForKey:@"penToolColor"]];
+    curveColor = [self colorFromHex:[defaults objectForKey:@"curveToolColor"]];
+    dashColor = [self colorFromHex:[defaults objectForKey:@"dashToolColor"]];
+    arrowColor = [self colorFromHex:[defaults objectForKey:@"arrowToolColor"]];
+    lineColor = [self colorFromHex:[defaults objectForKey:@"lineToolColor"]];
+    textColor = [self colorFromHex:[defaults objectForKey:@"textToolColor"]];
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
@@ -707,12 +686,15 @@ return YES;
         [longpressPenTool setDelaysTouchesBegan:YES];
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
         {
-            contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:penColor];
+            
+            ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,154) isSelected:NO color:penColor currentTool:@"Pen Tool"];
             contentViewController.delegate = self;
-            contentViewController.currentPenColor = penColor;
+            contentViewController.currentPenColor = self.penTool.backgroundColor;
+
             self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
             self.popoverController.delegate = self;
-            [self.popoverController presentPopoverFromRect:CGRectMake(self.penTool.frame.origin.x,self.penTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+            [self.popoverController presentPopoverFromRect:CGRectMake(self.curveTool.frame.origin.x,self.penTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+            
         }
 }
 - (void)longPressCurveTool:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -721,11 +703,13 @@ return YES;
 //self.lineTool.selected = NO;
     longpressCurveTool.minimumPressDuration = 0.2;
     [longpressCurveTool setDelaysTouchesBegan:YES];
+    
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:curveColor];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,154) isSelected:NO color:curveColor currentTool:@"Curve Lite Tool"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = curveColor;
+
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
         [self.popoverController presentPopoverFromRect:CGRectMake(self.curveTool.frame.origin.x,self.curveTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
@@ -738,11 +722,13 @@ return YES;
     [longpressDashTool setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:dashColor];        contentViewController.delegate = self;
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,154) isSelected:NO color:dashColor currentTool:@"Dashed Line Tool"];
+        contentViewController.delegate = self;
         contentViewController.currentPenColor = dashColor;
 
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
+
         [self.popoverController presentPopoverFromRect:CGRectMake(self.dashTool.frame.origin.x,self.dashTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
 }
@@ -753,9 +739,11 @@ return YES;
     [longpressArrowTool setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:arrowColor];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,154) isSelected:NO color:arrowColor currentTool:@"Arrow Line"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = arrowColor;
+   
+
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
         [self.popoverController presentPopoverFromRect:CGRectMake(self.arrowTool.frame.origin.x,self.arrowTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
@@ -772,9 +760,10 @@ return YES;
     [longpressLineTool setDelaysTouchesBegan:YES];
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,120) isSelected:NO color:lineColor];
+        ColorViewController *contentViewController = [[ColorViewController alloc] initWithFrame:CGRectMake(0,0,240,154) isSelected:NO color:lineColor currentTool:@"Line Tool"];
         contentViewController.delegate = self;
         contentViewController.currentPenColor = lineColor;
+
         self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
         self.popoverController.delegate = self;
         [self.popoverController presentPopoverFromRect:CGRectMake(self.lineTool.frame.origin.x,self.lineTool.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
@@ -782,110 +771,54 @@ return YES;
 }
 #pragma mark Color Extraction
 
--(void)extractRGBforPen:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    penColor = tempcolor;
-}
 
 
--(void)extractRGBforBlue:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    dashColor = tempcolor;
-  
-}
-
--(void)extractRGBforBlack:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    curveColor = tempcolor;
-}
--(void)extractRGBforRed:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    arrowColor = tempcolor;
-}
-
--(void)extractRGBforLine:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    lineColor = tempcolor;
-}
-
--(void)extractRGBforText:(UIColor*)tempcolor
-{
-   CGFloat redtemp = 0.0;
-   CGFloat greentemp = 0.0;
-    CGFloat bluetemp = 0.0;
-    CGFloat alphatemp = 1.0;
+- (UIColor *)colorFromHex:(NSString *)hex {
     
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    textColor = tempcolor;
-}
--(UIColor*)extractRGBforTextNew:(UIColor*)tempcolor
-{
-    CGFloat redtemp = 0.0;
-    CGFloat greentemp = 0.0;
-     CGFloat bluetemp = 0.0;
-     CGFloat alphatemp = 1.0;
-    [tempcolor getRed:&redtemp green:&greentemp blue:&bluetemp alpha:&alphatemp];
-    return tempcolor;
-}
-
-
-//-(NSString *)UIColorToHexStringWithRed:(CGFloat*)myred green:(CGFloat*)mygreen blue:(CGFloat*)myblue  alpha:(CGFloat*)myalpha{
-//    
-//    
-//    NSString *hexString  = [NSString stringWithFormat:@"#%02x%02x%02x%02x",
-//                            ((int)alpha),((int)red),((int)green),((int)blue)];
-//    return hexString;
-//}
-
-
--(void)colorPopoverWillShowColorWheel{
-    NSLog(@"Show color wheel");
-    ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
-    colorWheel.delegate = self;
-    [self presentViewController:colorWheel animated:YES completion:nil];
     
+    unsigned rgbValue = 0;
+       NSScanner *scanner = [NSScanner scannerWithString:hex];
+       [scanner setScanLocation:1]; // bypass '#' character
+       [scanner scanHexInt:&rgbValue];
+       return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
+- (NSString *)hexFromUIColor:(UIColor *)color
+{
+    const CGFloat *components = CGColorGetComponents(color.CGColor);
+
+    CGFloat r = components[0];
+    CGFloat g = components[1];
+    CGFloat b = components[2];
+
+    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
+            lroundf(r * 255),
+            lroundf(g * 255),
+            lroundf(b * 255)];
+}
+
+-(void)preferredContentSizeDidChangeForChildContentContainer:(id <UIContentContainer>)container {
+    [super preferredContentSizeDidChangeForChildContentContainer:container];
+    [self setPreferredContentSize:container.preferredContentSize];
+}
 
 -(void)colorPopoverControllerDidSelectColor:(NSString *)hexColor {
     if(self.penTool.selected == YES){
-        [self extractRGBforPen:[GzColors colorFromHex:hexColor]];
+//        [self extractRGBforPen:[GzColors colorFromHex:hexColor]];
+        penColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypePen;
         self.drawingView.lineColor = penColor;
         self.penTool.backgroundColor = penColor;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
+        [self saveColorsToDefaults];
+
     }
     
     
     if(self.curveTool.selected == YES){
-        [self extractRGBforBlack:[GzColors colorFromHex:hexColor]];
+        curveColor =  [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeCurve;
         self.curveTool.backgroundColor = curveColor;
         self.drawingView.lineColor = curveColor;
@@ -895,7 +828,7 @@ return YES;
     }
     
     if (self.dashTool.selected == YES){
-        [self extractRGBforBlue:[GzColors colorFromHex:hexColor]];
+        dashColor = [self colorFromHex:hexColor];
         [self deselectInactioveButtons];
         self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
         self.drawingView.lineColor = dashColor;
@@ -905,7 +838,7 @@ return YES;
     }
     
     if(self.arrowTool.selected == YES){
-        [self extractRGBforRed:[GzColors colorFromHex:hexColor]];
+        arrowColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeArrow;
         self.drawingView.lineColor = arrowColor;
         self.arrowTool.backgroundColor = arrowColor;
@@ -914,7 +847,7 @@ return YES;
         [self.popoverController dismissPopoverAnimated:YES];
     }
     if(self.lineTool.selected == YES){
-        [self extractRGBforLine:[GzColors colorFromHex:hexColor]];
+        lineColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeLine;
         self.drawingView.lineColor = lineColor;
          self.lineTool.backgroundColor = lineColor;
@@ -1171,7 +1104,7 @@ return YES;
 }
 
 -(void)showTextColorsAndSize:(UIColor*)color{
-    contentTextView = [[ColorViewController alloc] initWithFrame:self.toolbar.bounds isSelected:YES color:color];
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.toolbar.bounds isSelected:YES color:color currentTool:@"Text Tool"];
     contentTextView.center = self.toolbar.center;
     //contentTextView.currentPenColor = color;
     textSetterState = YES;
@@ -1181,7 +1114,7 @@ return YES;
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");
-    [self extractRGBforText:[GzColors colorFromHex:hexColor]];
+//    [self extractRGBforText:[GzColors colorFromHex:hexColor]];
     self.drawingView.lineColor = textColor;
     self.textTool.backgroundColor = textColor;
     self.drawingView.textViewNew.textColor = textColor;

@@ -18,13 +18,13 @@
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor;
 - (void)sliderDidSelectWidth:(CGFloat)lineWidth;
 - (void)addTextFromTextSettings;
-- (void)colorPopoverWillShowColorWheel;
+- (void)colorPopoverWillShowColorWheel:(UIColor*)currentColor;
 
 @end
 
 
 
-@interface ColorViewController : UIView<ASValueTrackingSliderDelegate,ASValueTrackingSliderDataSource>{
+@interface ColorViewController : UIView <ASValueTrackingSliderDelegate,ASValueTrackingSliderDataSource>{
     
     id <ColorViewControllerDelegate> __weak delegate;
     
@@ -36,12 +36,23 @@
     
     BOOL textSelected;
     CAShapeLayer *line;
+    CAShapeLayer * circle;
     CGFloat lastColorButtonX;
     CGFloat lineCoordinateX;
-    
+    NSString * _currentToolName;
+    NSMutableArray * arrayOfCircles;
+    BOOL editMode;
     
 
 }
+@property(nonatomic, strong)  UIScrollView * scrollText;
+
+@property(nonatomic, strong)  UIButton * editBtn;
+@property(nonatomic, strong)  UILabel * currentTool;
+
+@property(nonatomic, strong)  ColorButton * startButton;
+
+
 @property( nonatomic, assign) CGFloat fontSizee;
 @property( nonatomic, assign) UIColor * currentTextColorForIndicator;
 
@@ -51,7 +62,7 @@
 @property (nonatomic, strong) IBOutlet UIButton * button2;
 @property (nonatomic, strong) IBOutlet UIButton * button3;
 
-- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected color:(UIColor*)currentColor;
+- (id)initWithFrame:(CGRect)frame isSelected:(BOOL)isSelected color:(UIColor*)currentColor currentTool:(NSString*)currentTool;
 @property (nonatomic, assign) BOOL isTextSelected;
 
 //@property(nonatomic, strong) UISlider *slider;
@@ -61,6 +72,8 @@
 
 @property (nonatomic, strong) NSArray *colorCollection;
 @property (nonatomic, strong) NSArray *colorCollectionForText;
+@property (nonatomic, strong) NSMutableArray *currentColorCollection;
+
 
 @property (nonatomic, weak) id <ColorViewControllerDelegate> delegate;
 
@@ -77,15 +90,13 @@
 @property (nonatomic, retain) IBOutlet UIButton *widthButton4;
 @property (nonatomic, retain) IBOutlet UIButton *widthButton5;
 
-@property UIColor* tColor1;
-@property UIColor* tColor2;
-@property UIColor* tColor3;
-@property UIColor* tColor4;
-@property UIColor* tColor5;
-@property UIColor* tColor6;;
+@property UIColor * penColor;
+@property UIColor * curveColor;
+@property UIColor * dashColor;
+@property UIColor * arrowColor;
+@property UIColor * lineColor;
 
 @property UIColor* currentPenColor;
-
 
 
 

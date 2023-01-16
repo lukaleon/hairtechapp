@@ -85,6 +85,7 @@
 
 @property (strong, nonatomic) NSDictionary * dict;
 @property (strong, nonatomic) UIImage * imageBtn;
+@property NSArray * colorCollection;
 
 
 @end

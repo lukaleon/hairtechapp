@@ -630,7 +630,7 @@ return YES;
 	//The popover is automatically dismissed if you click outside it, unless you return NO here
 	return YES;
 }
-- (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
+/*- (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
         [self saveColorsToDefaults];
         [self pencilPressed:[self.view viewWithTag:5]];
         penbtn.selected = YES;
@@ -737,7 +737,7 @@ return YES;
         [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     lineButton.selected=YES;
-}
+}*/
 -(void)extractRGBforPen:(UIColor*)tempcolor
 {
     
@@ -2185,7 +2185,7 @@ self.previewImageView.layer.sublayers = nil;
     contentTextView = nil;
 }
 -(void)showTextColorsAndSize:(UIColor*)color{
-    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color];
+    contentTextView = [[ColorViewController alloc] initWithFrame:self.imageToolbar1.bounds isSelected:YES color:color currentTool:@"Pen tool"];
     contentTextView.center = self.imageToolbar1.center;
     //contentTextView.currentPenColor = color;
     textSetterState = YES;

@@ -751,7 +751,7 @@ return YES;
         return  NO;
     }
 }
-- (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
+/*- (void)longPressHandlerPen:(UILongPressGestureRecognizer *)gestureRecognizer {
         [self saveColorsToDefaults];
         [self pencilPressed:[self.view viewWithTag:5]];
         penbtn.selected = YES;
@@ -858,7 +858,7 @@ return YES;
         [self.popoverController presentPopoverFromRect:CGRectMake(lineButton.frame.origin.x,lineButton.frame.origin.y - 5,0,0 ) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     lineButton.selected=YES;
-}
+}*/
 -(void)extractRGBforPen:(UIColor*)tempcolor
 {
     redtemp5 = 0.0; greentemp5= 0.0; bluetemp5 = 0.0; alphatemp5 = 1.0;
@@ -2108,7 +2108,7 @@ self.previewImageView.layer.sublayers = nil;
 }
 -(void)showTextColorsAndSize:(UIColor*)color{
     CGRect rect = CGRectMake(self.imageToolbar1.bounds.origin.x, self.imageToolbar1.bounds.origin.y, self.imageToolbar1.bounds.size.width, 60);
-    contentTextView = [[ColorViewController alloc] initWithFrame:rect isSelected:YES color:color];
+    contentTextView = [[ColorViewController alloc] initWithFrame:rect isSelected:YES color:color currentTool:@" Pen Tool"];
     CGPoint cntr = CGPointMake(self.imageToolbar1.center.x, self.imageToolbar1.center.y - 15);
     contentTextView.center = cntr;
     //contentTextView.currentPenColor = color;

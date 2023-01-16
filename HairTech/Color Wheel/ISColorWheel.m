@@ -140,6 +140,7 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
     
     _touchPoint = CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height / 2.0);
     
+    
     self.borderColor = [UIColor blackColor];
     self.borderWidth = 0.0;
     
@@ -291,6 +292,8 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
     return [UIColor colorWithRed:pixel.r / 255.0f green:pixel.g / 255.0f blue:pixel.b / 255.0f alpha:1.0];
 }
 
+
+
 - (void)setCurrentColor:(UIColor*)color
 {
     CGFloat h = 0.0;
@@ -313,6 +316,7 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
     
     [self setTouchPoint: point];
     [self updateImage];
+    
 }
 
 - (void)setBrightness:(CGFloat)brightness

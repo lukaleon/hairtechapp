@@ -45,8 +45,8 @@
     [addNote setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
     
     UIButton *shareBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [addNote addTarget:self
-                action:@selector(share:)
+    [shareBtn addTarget:self
+                action:@selector(share)
       forControlEvents:UIControlEventTouchUpInside];
     [shareBtn.widthAnchor constraintEqualToConstant:30].active = YES;
     [shareBtn.heightAnchor constraintEqualToConstant:30].active = YES;
@@ -195,7 +195,7 @@
 
 }
 
-- (void)share:(id)sender{
+- (void)share{
     NSString *textToShare;
     textToShare = [NSString stringWithFormat:@""];
     self.labelToSave.text = self.navigationItem.title;

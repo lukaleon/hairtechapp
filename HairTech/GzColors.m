@@ -1,4 +1,23 @@
-NSString * const AliceBlue = @"0xFFF0F8FF";
+
+
+NSString * const Black = @"#000000";
+NSString * const RoyalBlue = @"#1267D8";
+NSString * const Red = @"#F23738";
+NSString * const Green = @"#186C39";
+NSString * const DarkRed = @"#F29E03";
+NSString * const DarkSlateGray =@"#80007F";
+
+NSString * const DeepPink =  @"#1763A5";
+NSString * const Purple = @"#F23D5E";
+NSString * const OrangeRed =  @"#6399A6";
+NSString * const Orange = @"#FB8500";
+NSString * const DarkBlue = @"#534686";
+NSString * const Yellow = @"#67727A";
+
+
+
+
+ NSString * const AliceBlue = @"0xFFF0F8FF";
  NSString * const AntiqueWhite = @"0xFFFAEBD7";
  NSString * const Aqua = @"0xFF00FFFF";
  NSString * const Aquamarine = @"0xFF7FFFD4";
@@ -7,7 +26,7 @@ NSString * const AliceBlue = @"0xFFF0F8FF";
  NSString * const Bisque = @"0xFFFFE4C4";
  //NSString * const Black = @"0xFF411C59";
 //NSString * const Black = @"0xFF292F40";
-NSString * const Black = @"0xFF000000";
+//NSString * const Black = @"0xFF000000";
 
 
 NSString * const BlanchedAlmond = @"0xFFFFEBCD";
@@ -24,7 +43,7 @@ NSString * const BlanchedAlmond = @"0xFFFFEBCD";
  NSString * const Crimson = @"0xFFDC143C";
  NSString * const Cyan = @"0xFF00FFFF";
 
- NSString * const DarkBlue = @"0xFFF23D5E"; //PINK
+ //NSString * const DarkBlue = @"0xFFF23D5E"; //PINK
 
  NSString * const DarkCyan = @"0xFF008B8B";
  NSString * const DarkGoldenrod = @"0xFFB8860B";
@@ -39,17 +58,17 @@ NSString * const DarkKhaki = @"0xFFBDB76B";
  NSString * const DarkOrange = @"0xFFFF8C00";
  NSString * const DarkOrchid = @"0xFF9932CC";
 
- NSString * const DarkRed = @"0xFFF29F05";
+ //NSString * const DarkRed = @"0xFFF29F05";
 
  NSString * const DarkSalmon = @"0xFFE9967A";
  NSString * const DarkSeaGreen = @"0xFF8FBC8F";
  NSString * const DarkSlateBlue = @"0xFF483D8B"
 ;
- NSString * const DarkSlateGray = @"0XFF800080";
+// NSString * const DarkSlateGray = @"0XFF800080";
 
  NSString * const DarkTurquoise = @"0xFF00CED1";
  NSString * const DarkViolet = @"0xFF9400D3";
- NSString * const DeepPink = @"0xFF67737A";
+ //NSString * const DeepPink = @"0xFF67737A";
  NSString * const DeepSkyBlue = @"0xFF00BFFF";
  NSString * const DimGray = @"0xFF696969";
  NSString * const DodgerBlue = @"0xFF1E90FF";
@@ -63,7 +82,7 @@ NSString * const DarkKhaki = @"0xFFBDB76B";
  NSString * const Goldenrod = @"0xFFDAA520";
  NSString * const Gray = @"0xFF808080";
 
- NSString * const Green = @"0xFF239148";
+// NSString * const Green = @"0xFF239148";
 
  NSString * const GreenYellow = @"0xFFADFF2F";
  NSString * const Honeydew = @"0xFFF0FFF0";
@@ -113,9 +132,9 @@ NSString * const DarkKhaki = @"0xFFBDB76B";
  NSString * const Olive = @"0xFF808000";
  NSString * const OliveDrab = @"0xFF6B8E23";
 
- NSString * const Orange = @"0xFFBDBEBF";
+ //NSString * const Orange = @"0xFFBDBEBF";
 
- NSString * const OrangeRed = @"0xFF639AA6";
+ //NSString * const OrangeRed = @"0xFF639AA6";
 
  NSString * const Orchid = @"0xFFDA70D6";
  NSString * const PaleGoldenrod = @"0xFFEEE8AA";
@@ -128,13 +147,13 @@ NSString * const DarkKhaki = @"0xFFBDB76B";
  NSString * const Pink = @"0xFFFFC0CB";
  NSString * const Plum = @"0xFFDDA0DD";
  NSString * const PowderBlue = @"0xFFB0E0E6";
- NSString * const Purple = @"0xFFF2B90C";
+// NSString * const Purple = @"0xFFF2B90C";
 
- NSString * const Red = @"0xFFF23838";
+// NSString * const Red = @"0xFFF23838";
 
  NSString * const RosyBrown = @"0xFFBC8F8F";
 
- NSString * const RoyalBlue = @"0xFF1168D9";
+// NSString * const RoyalBlue = @"0xFF1168D9";
 
  NSString * const SaddleBrown = @"0xFF8B4513";
  NSString * const Salmon = @"0xFFFA8072";
@@ -159,22 +178,24 @@ NSString * const DarkKhaki = @"0xFFBDB76B";
  NSString * const Wheat = @"0xFFF5DEB3";
  NSString * const White = @"0xFFFFFFFF";
  NSString * const WhiteSmoke = @"0xFFF5F5F5";
- NSString * const Yellow = @"0xFF14ADAA"; //TURQOIS
+ //NSString * const Yellow = @"0xFF14ADAA"; //TURQOIS
  NSString * const YellowGreen = @"0xFF9ACD32";
-/*
-NSString * const Violet = @"0xFF411C59";
-NSString * const Turqois = @"0xFF14ADAA";
-NSString * const Yellow = @"0xFFF2B90C";
-NSString * const RedOrange = @"0xFFD94F38";
-NSString * const Dark = @"0xFF292F40";
-NSString * const GrayBlue = @"0xFF69788C";
-NSString * const Green = @"0xFF307360";
-NSString * const LightBlue = @"0xFF639AA6";
-NSString * const Red = @"0xFFA60A33";
-NSString * const LightGray = @"0xFFBDBEBF";
-NSString * const Gray = @"0xFF67737A";
-NSString * const Pink = @"0xFFF23D5E";
-*/
+
+//NSString * const Violet = @"0xFF411C59";
+//NSString * const Turqois = @"0xFF14ADAA";
+//NSString * const Yellow = @"0xFFF2B90C";
+//NSString * const RedOrange = @"0xFFD94F38";
+//NSString * const Dark = @"0xFF292F40";
+//NSString * const GrayBlue = @"0xFF69788C";
+//NSString * const Green = @"0xFF307360";
+//NSString * const LightBlue = @"0xFF639AA6";
+//NSString * const Red = @"0xFFA60A33";
+//NSString * const LightGray = @"0xFFBDBEBF";
+//NSString * const Gray = @"0xFF67737A";
+//NSString * const Pink = @"0xFFF23D5E";
+
+//
+
 
 #import "GzColors.h"
 
@@ -330,6 +351,9 @@ NSString * const Pink = @"0xFFF23D5E";
                             DarkSlateGray,
                             Black, nil];
 }
+
+
+
 
 -(NSArray *) allColorsAlphabeticOrder{
     return [NSArray arrayWithObjects:     AliceBlue,
@@ -519,35 +543,14 @@ NSString * const Pink = @"0xFFF23D5E";
 
 + (UIColor *) colorFromHex:(NSString *)hex {
     
-    NSString *colorString = [[hex uppercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] ;
-    if ([colorString length] < 6)
-        return [UIColor grayColor];
     
-    if ([colorString hasPrefix:@"0X"])
-        colorString = [colorString substringFromIndex:2];
-    else if ([colorString hasPrefix:@"#"])
-        colorString = [colorString substringFromIndex:1];
-    else if ([colorString length] != 6)
-        return  [UIColor grayColor];
+    unsigned rgbValue = 0;
+       NSScanner *scanner = [NSScanner scannerWithString:hex];
+       [scanner setScanLocation:1]; // bypass '#' character
+       [scanner scanHexInt:&rgbValue];
+       return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
     
-    NSRange range;
-    range.location = 2;
-    range.length = 2;
-    NSString *rString = [colorString substringWithRange:range];
-    range.location += 2;
-    NSString *gString = [colorString substringWithRange:range];
-    range.location += 2;
-    NSString *bString = [colorString substringWithRange:range];
     
-    unsigned int red, green, blue;
-    [[NSScanner scannerWithString:rString] scanHexInt:&red];
-    [[NSScanner scannerWithString:gString] scanHexInt:&green];
-    [[NSScanner scannerWithString:bString] scanHexInt:&blue];
-    
-    return [UIColor colorWithRed:((float) red / 255.0f)
-                           green:((float) green / 255.0f)
-                            blue:((float) blue / 255.0f)
-                           alpha:1.0f];
 }
 
 @end
