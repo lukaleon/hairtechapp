@@ -14,6 +14,8 @@
 #import "NewEntryController.h"
 #import "ColorWheelController.h"
 #import "ColorViewNew.h"
+#import "OverlayTransitioningDelegate.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
@@ -54,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
     
 }
 
+@property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;
 
 @property (nonatomic, assign) NSString * techniqueName;
 @property (nonatomic, assign) NSString * labelText;

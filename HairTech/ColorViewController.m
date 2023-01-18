@@ -294,6 +294,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+#pragma  mark Text View
 
 -(void)decreaseFontSize:(UIButton*)button{
     if (self.fontSizee >= 8 ){
@@ -370,14 +371,26 @@ else {
 -(void)loadColorButtonsForText{
     CGRect sizeRect = [UIScreen mainScreen].bounds;
     CGFloat screenPartitionIdx;
-   // NSLog(@"SCREEN PARTIOTION IDX %f", screenPartitionIdx);
+    CGFloat lastButtonStart;
+    CGFloat scrollWidth;
+    CGFloat scrollStart;
     CGFloat originOfButtons;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         screenPartitionIdx = sizeRect.size.width / 14;
         originOfButtons = screenPartitionIdx * 2;
+        lastButtonStart = screenPartitionIdx * 10.5;
+       
+        scrollWidth = screenPartitionIdx * 6;
+        scrollStart = screenPartitionIdx * 4.5;
+
     } else {
+        scrollWidth = 204;
         screenPartitionIdx = sizeRect.size.width / 11;
         originOfButtons = screenPartitionIdx / 2.4;
+        scrollStart = screenPartitionIdx * 3;
+        lastButtonStart = screenPartitionIdx * 9;
+
+
     }
     self.layer.cornerRadius = 15;
     //[self setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];
@@ -393,13 +406,13 @@ else {
     lineCoordinateX = self.rectView.center.x + screenPartitionIdx / 2;
     
     
-    scrollText = [[UIScrollView alloc] initWithFrame:CGRectMake(button2.frame.origin.x + 45, 0, 204, self.frame.size.height)];
-    scrollText.contentSize = CGSizeMake(204, 40);
+    scrollText = [[UIScrollView alloc] initWithFrame:CGRectMake(scrollStart, 0, scrollWidth, self.frame.size.height)];
+    scrollText.contentSize = CGSizeMake(scrollWidth, 40);
     [self addSubview:scrollText];
     [scrollText setScrollEnabled:YES];
 
-    CGFloat screenWidth = 410;
-    CGSize actualContentSize = CGSizeMake(410, 40);
+    CGFloat screenWidth = scrollWidth * 2;
+    CGSize actualContentSize = CGSizeMake(scrollWidth * 2, 40);
 
     [scrollText setContentSize:CGSizeMake(screenWidth, actualContentSize.height)];
     [scrollText setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
@@ -433,10 +446,11 @@ else {
             [self.buttonCollection addObject:colorButton];
             [scrollText addSubview:colorButton];
             lastColorButtonX = colorButton.frame.origin.x;
+            
         }
-   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:self.frame.size.width - (screenPartitionIdx + 8) width:28 yAxe:14];
     
-  
+   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastButtonStart width:28 yAxe:14];
+
     }
 
 

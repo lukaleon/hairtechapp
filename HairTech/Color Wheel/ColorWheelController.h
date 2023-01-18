@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
     UIView* _wellView;
     UIButton * colorButton;
     CAShapeLayer *line;
+    CGPoint initialTouchPoint;
+    CGPoint touchBegin;
+    CGRect btnRect;
 
 }
 

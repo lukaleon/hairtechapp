@@ -12,11 +12,14 @@
 
 @implementation  NameViewController
 -(void)viewDidLoad{
+
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@" " style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     [self setCloseButton];
     [self setAppearanceOfElements];
 }
+
+
 -(void)setCloseButton{
     UIButton *rightCustomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [rightCustomButton addTarget:self

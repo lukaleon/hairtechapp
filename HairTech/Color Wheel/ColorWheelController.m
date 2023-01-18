@@ -23,13 +23,23 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self addCloseButton];
+    // define a variable to store initial touch position
+    initialTouchPoint  = CGPointMake(0, 0);
+
+    
     self.colorCollection = [NSMutableArray array];
     self.buttonCollection = [NSMutableArray array];
     
     self.colorCollection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"colorCollection"]mutableCopy];
     
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panGestureAction:)];
+    
+    [self.view addGestureRecognizer:panGesture];
+
   
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     
@@ -40,7 +50,7 @@
     [self addRestoreButton];
     
     _colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(size.width / 3.4 - wheelSize.width / 3.4,
-                                                                 size.height * .4,
+                                                                 size.height * .05,
                                                                  wheelSize.width,
                                                                  wheelSize.height)];
     //_colorWheel.center = self.view.center;
@@ -48,11 +58,11 @@
     _colorWheel.continuous = true;
     [self.view addSubview:_colorWheel];
     
-    _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(size.width * .64,
-                                                                   size.height * .5,
+    _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(size.width * .62,
+                                                                   size.height * .15,
                                                                    size.width * .45,
                                                                    size.height * .1)];
-    _brightnessSlider.tintColor = [UIColor colorNamed:@"whiteDark"];
+    _brightnessSlider.tintColor = [UIColor colorNamed:@"cellBg"];
     _brightnessSlider.minimumValue = 0.0;
     _brightnessSlider.maximumValue = 1.0;
     _brightnessSlider.value = 1.0;
@@ -62,11 +72,11 @@
     CGAffineTransform trans = CGAffineTransformMakeRotation(M_PI * 1.5);
       _brightnessSlider.transform = trans;
     
-    [self addHorizontalLine:size.height * .7];
+    [self addHorizontalLine:size.height * .35];
     
     CGFloat newHeight = size.width * .17;
     _wellView = [[UIView alloc] initWithFrame:CGRectMake(size.width * .08,
-                                                         size.height * .73,
+                                                         size.height * .38,
                                                          size.width * .17,
                                                          newHeight)];
     _wellView.layer.backgroundColor =[GzColors colorFromHex:[self.colorCollection objectAtIndex:0]].CGColor;
@@ -75,12 +85,12 @@
     _wellView.layer.cornerRadius = 10.0;
     [self.view addSubview:_wellView];
     
-   [self addColorButtons:size.width * .35 height:size.height * .73];
+   [self addColorButtons:size.width * .35 height:size.height * .38];
     
     ColorButton * btn = [self.buttonCollection objectAtIndex:0];
     [self currentColorIndicator:btn];
     
-    [self addApplyButton:size.height * .82];
+    [self addApplyButton:size.height * .3];
     
 }
 
@@ -90,13 +100,13 @@
         for (int j=0; j<=5; j++) {
             
             ColorButton * colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
-            colorButton.frame = CGRectMake(width +(j*36), height +(i*36), 28, 28);
+            colorButton.frame = CGRectMake(width +(j*36), height +(i*36), 26, 26);
             [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
             colorButton.tag = colorNumber;
             [colorButton setSelected:NO];
             [colorButton setNeedsDisplay];
             [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-            colorButton.layer.cornerRadius = 14;
+            colorButton.layer.cornerRadius = 13;
             colorButton.layer.masksToBounds = YES;
             
             colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
@@ -112,9 +122,57 @@
 
         }
     }
-
-    
 }
+
+
+-(void)addCloseButton{
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 42, self.view.frame.origin.y + 10, 30, 30)];
+    [more addTarget:self
+             action:@selector(closeView:)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+   // [more setImage:[UIImage imageNamed:@"Close"] forState:UIControlStateNormal];
+    
+    CGFloat pts = [UIFont buttonFontSize];
+    UIImageSymbolConfiguration* conf = [UIImageSymbolConfiguration configurationWithPointSize:pts weight:UIImageSymbolWeightSemibold];
+    [more setImage:[UIImage systemImageNamed:@"xmark" withConfiguration:conf] forState:UIControlStateNormal];
+    [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+//    self.navigationItem.leftBarButtonItem = moreBtn;
+    [self.view addSubview:more];
+}
+
+-(void)addRestoreButton{
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.origin.x +12, self.view.frame.origin.y + 10, 30, 30)];
+    [more addTarget:self
+             action:@selector(showMenu)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    CGFloat pts = [UIFont buttonFontSize];
+    UIImageSymbolConfiguration* conf = [UIImageSymbolConfiguration configurationWithPointSize:pts weight:UIImageSymbolWeightSemibold];
+    [more setImage:[UIImage systemImageNamed:@"slider.horizontal.2.gobackward" withConfiguration:conf] forState:UIControlStateNormal];
+    
+    [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
+//    self.navigationItem.leftBarButtonItem = moreBtn;
+    btnRect = more.frame;
+    [self.view addSubview:more];
+}
+-(void)showMenu{
+    UIMenuController * menu = [UIMenuController sharedMenuController];
+    menu.menuItems = @[
+        [[UIMenuItem alloc] initWithTitle:@"Restore Color Set" action:@selector(restoreDefaultColors:)]];
+    [menu setArrowDirection:UIMenuControllerArrowUp];
+    [menu showMenuFromView:self.view rect:btnRect];
+}
+-(IBAction)closeView:(id)senxer{
+    
+    [self dismissViewControllerAnimated:true completion:nil];
+
+}
+
 - (void)addHorizontalLine:(CGFloat)y {
     CAShapeLayer *line = [CAShapeLayer layer];
     UIBezierPath *linePath=[UIBezierPath bezierPath];
@@ -129,7 +187,7 @@
 
 -(void)addApplyButton:(CGFloat)y{
     UIButton * applyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    applyBtn.frame = CGRectMake(self.view.frame.size.width / 2 - 60, y, 120, 40);
+    applyBtn.frame = CGRectMake(self.view.frame.size.width / 2 + 60, y, 120, 40);
     [applyBtn addTarget:self action:@selector(applyColorChange:) forControlEvents:UIControlEventTouchUpInside];
     [applyBtn setTitle:@"Replace color" forState:UIControlStateNormal];
     [applyBtn setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
@@ -231,17 +289,17 @@
         [colorBtn.layer addSublayer:line];
 }
 
--(void)addRestoreButton{
-    
-    UIButton * restore = [UIButton buttonWithType:UIButtonTypeCustom];
-    restore.frame = CGRectMake(self.view.frame.size.width / 2 - 60, 200, 120, 40);
-    [restore addTarget:self action:@selector(restoreDefaultColors:) forControlEvents:UIControlEventTouchUpInside];
-    [restore setTitle:@"Restore" forState:UIControlStateNormal];
-    [restore setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
-    restore.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
-
-    [self.view addSubview:restore];
-}
+//-(void)addRestoreButton{
+//
+//    UIButton * restore = [UIButton buttonWithType:UIButtonTypeCustom];
+//    restore.frame = CGRectMake(self.view.frame.size.width / 2 - 60, 200, 120, 40);
+//    [restore addTarget:self action:@selector(restoreDefaultColors:) forControlEvents:UIControlEventTouchUpInside];
+//    [restore setTitle:@"Restore" forState:UIControlStateNormal];
+//    [restore setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
+//    restore.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
+//
+//    [self.view addSubview:restore];
+//}
 
 -(IBAction)restoreDefaultColors:(id)sender{
     
@@ -277,5 +335,70 @@
     }
     
 }
+
+- (void)panGestureAction:(UIPanGestureRecognizer*)gesture {
     
+    CGPoint location = [gesture locationInView:self.view];
+    CGPoint locationInWindow = [gesture locationInView:self.view.window];
+    CGFloat frameStart;
+    CGPoint startPoint;
+    //    if (translation.x != 0 || translation.y != 0) {
+    //        double angle = atan2(fabs(translation.x), translation.y);
+    //        if (angle < M_PI / 8) {
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        initialTouchPoint = location;
+        
+        frameStart = self.view.frame.origin.y;
+        startPoint = locationInWindow;
+    }
+    if(gesture.state == UIGestureRecognizerStateChanged){
+        
+        NSLog(@"diff %f - %f", startPoint.y, location.y );
+        
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + (location.y - initialTouchPoint.y), self.view.frame.size.width, self.view.frame.size.height);
+              NSLog(@"origin Y %f", self.view.frame.origin.y);
+        //        //  NSLog(@"initial Y %f", initialTouchPoint.y);
+        //        NSLog(@"loc - init  %f", location.y - frameStart);
+        //
+        //
+        
+        if(self.view.frame.origin.y - (frameStart + 400)  > 300){
+            
+            [UIView animateWithDuration:2 animations:^{
+                self.view.frame = CGRectMake(self.view.frame.origin.x, 800, self.view.frame.size.width, self.view.frame.size.height);
+                
+            } completion:^(BOOL finished){
+                [self dismissViewControllerAnimated:true completion:nil];
+            }];
+            [self dismissViewControllerAnimated:true completion:nil];
+
+            
+            
+        }
+        if(self.view.frame.origin.y < 400){
+            self.view.frame = CGRectMake(self.view.frame.origin.x, 400, self.view.frame.size.width, self.view.frame.size.height);
+
+        }
+    }
+
+    if(gesture.state == UIGestureRecognizerStateEnded ){
+
+        [UIView animateWithDuration:0.25 animations:^{
+            self.view.frame = CGRectMake(self.view.frame.origin.x, 400, self.view.frame.size.width, self.view.frame.size.height);
+            
+        } completion:^(BOOL finished){
+        }];
+    }
+
+
+}
+
+
+
+
+//- (void)viewWillLayoutSubviews{
+//    [super viewWillLayoutSubviews];
+//    self.view.superview.bounds = CGRectMake(0, 0, self.view.frame.size.width, 300);
+//}
+//
 @end

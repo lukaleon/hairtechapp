@@ -27,6 +27,9 @@
 		4043E2DA28DCA4B500BF9FF8 /* addTextSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2D928DCA4B500BF9FF8 /* addTextSelected.png */; };
 		4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4043E2DC28E57D9F00BF9FF8 /* LayersData.m */; };
 		4043E2DF28E587F100BF9FF8 /* layersdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2DE28E587F100BF9FF8 /* layersdata.json */; };
+		4064748B2976B46100FC80B7 /* OverlayTransitioningDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474852976B46000FC80B7 /* OverlayTransitioningDelegate.m */; };
+		4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474872976B46100FC80B7 /* OverlayPresentationController.m */; };
+		4064748D2976B46100FC80B7 /* ControllerAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474882976B46100FC80B7 /* ControllerAnimator.m */; };
 		407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */; };
 		4071B5E428DA0BAE00CCC9C3 /* dashNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5E228DA0BAE00CCC9C3 /* dashNew.png */; };
 		4071B5E528DA0BAE00CCC9C3 /* dashNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5E328DA0BAE00CCC9C3 /* dashNew_white.png */; };
@@ -457,6 +460,12 @@
 		4043E2E128E5887B00BF9FF8 /* dragger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dragger.png; sourceTree = "<group>"; };
 		4043E2E228E5887B00BF9FF8 /* arrow_solid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_solid.png; sourceTree = "<group>"; };
 		4043E2E328E5887B00BF9FF8 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lastPoint.png; sourceTree = "<group>"; };
+		406474852976B46000FC80B7 /* OverlayTransitioningDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayTransitioningDelegate.m; sourceTree = "<group>"; };
+		406474862976B46100FC80B7 /* OverlayPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPresentationController.h; sourceTree = "<group>"; };
+		406474872976B46100FC80B7 /* OverlayPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayPresentationController.m; sourceTree = "<group>"; };
+		406474882976B46100FC80B7 /* ControllerAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerAnimator.m; sourceTree = "<group>"; };
+		406474892976B46100FC80B7 /* OverlayTransitioningDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayTransitioningDelegate.h; sourceTree = "<group>"; };
+		4064748A2976B46100FC80B7 /* ControllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerAnimator.h; sourceTree = "<group>"; };
 		407011CD28B4DFA4003CACB0 /* JVDrawingLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVDrawingLayer.m; sourceTree = "<group>"; };
 		407011CE28B4DFA4003CACB0 /* JVDrawingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVDrawingLayer.h; sourceTree = "<group>"; };
 		4071B5E228DA0BAE00CCC9C3 /* dashNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dashNew.png; sourceTree = "<group>"; };
@@ -1072,6 +1081,19 @@
 			name = buttons_other;
 			sourceTree = "<group>";
 		};
+		406474842976B44500FC80B7 /* Half Screen Modal */ = {
+			isa = PBXGroup;
+			children = (
+				4064748A2976B46100FC80B7 /* ControllerAnimator.h */,
+				406474882976B46100FC80B7 /* ControllerAnimator.m */,
+				406474862976B46100FC80B7 /* OverlayPresentationController.h */,
+				406474872976B46100FC80B7 /* OverlayPresentationController.m */,
+				406474892976B46100FC80B7 /* OverlayTransitioningDelegate.h */,
+				406474852976B46000FC80B7 /* OverlayTransitioningDelegate.m */,
+			);
+			name = "Half Screen Modal";
+			sourceTree = "<group>";
+		};
 		407011CC28B4DF95003CACB0 /* Layer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1180,6 +1202,7 @@
 				407FB92328FEABCA00371E24 /* NewDrawController.m */,
 				4079875A29681FD8004C86ED /* TemporaryDictionary.h */,
 				4079875B29681FD8004C86ED /* TemporaryDictionary.m */,
+				406474842976B44500FC80B7 /* Half Screen Modal */,
 				403D12C7297031C900156A05 /* Notes View */,
 			);
 			name = "New Version";
@@ -2385,6 +2408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				403F27FA28C352190092DA5D /* TextRect.m in Sources */,
+				4064748D2976B46100FC80B7 /* ControllerAnimator.m in Sources */,
 				CEB7E75A1649A62A0099C14C /* main.m in Sources */,
 				B401CA011B04796E00596292 /* FMDatabase.m in Sources */,
 				B4BBBBAD1AF36E0D00A9FA45 /* WEBlockingGestureRecognizer.m in Sources */,
@@ -2408,6 +2432,7 @@
 				403D12D329734AF300156A05 /* ColorViewNew.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
+				4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */,
 				403D12C6297031C400156A05 /* CommentTextView.m in Sources */,
 				4083669F293222CE00472CC8 /* AppDelegate.m in Sources */,
 				40D86A1A296D82F0009991A8 /* OldCell.m in Sources */,
@@ -2468,6 +2493,7 @@
 				B4FE27901BC6F2F90019530F /* HMPopUpView.m in Sources */,
 				40B79AEC2922BC0F003A8680 /* TORoundedTableViewCapCell.m in Sources */,
 				B4C4AFF8178BDD5D00C0F7EF /* UiPopoverListView.m in Sources */,
+				4064748B2976B46100FC80B7 /* OverlayTransitioningDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

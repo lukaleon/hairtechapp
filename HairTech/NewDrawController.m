@@ -10,6 +10,8 @@
 #import "TemporaryDictionary.h"
 #import "ColorWheelController.h"
 #import "ColorViewNew.h"
+#import "OverlayTransitioningDelegate.h"
+
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -463,14 +465,26 @@
 
 -(void)changeColorPalette{
     
-    NSLog(@"Show color wheel");
-   ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
-    colorWheel.delegate = self;
-    //colorWheel.startColor = currentColor;
-    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
-    [self presentViewController:colorWheel animated:YES completion:nil];
+//    NSLog(@"Show color wheel");
+//   ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+//    colorWheel.delegate = self;
+//
+////    colorWheel.startColor = currentColor;
+//    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
+//    [self presentViewController:colorWheel animated:YES completion:nil];
     
+
+ColorWheelController *controller = [[ColorWheelController alloc]init];
+[self prepareOverlay:controller];
+[self presentViewController:controller animated:true completion:nil];
 }
+
+- (void)prepareOverlay:(ColorWheelController*)viewController {
+    self.overlayDelegate = [[OverlayTransitioningDelegate alloc]init];
+viewController.transitioningDelegate = self.overlayDelegate;
+viewController.modalPresentationStyle = UIModalPresentationCustom;
+}
+
 -(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
 {
     return UIModalPresentationNone;
@@ -653,7 +667,31 @@ return YES;
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    //handle user taps text view to type text
+    
+    
+    CGPoint origin = [self.drawingView.textViewNew convertPoint:CGPointMake(self.drawingView.textViewNew.frame.origin.x, self.drawingView.textViewNew.frame.origin.y)  toView:self.view.window];
+    NSLog(@"pointY %f", origin.y);
+    if (origin.y > 500){
+        
+        [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:.3];
+            [UIView setAnimationBeginsFromCurrentState:TRUE];
+            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -200., self.view.frame.size.width, self.view.frame.size.height);
+
+            [UIView commitAnimations];
+        
+    }}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (self.view.frame.origin.y < 0){
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:.3];
+        [UIView setAnimationBeginsFromCurrentState:TRUE];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y +200., self.view.frame.size.width, self.view.frame.size.height);
+        
+        [UIView commitAnimations];
+    }
 }
 - (void)textViewDidChange:(UITextView *)txtView{
     float height = txtView.contentSize.height;
@@ -664,6 +702,9 @@ return YES;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
     [UITextView commitAnimations];
+    
+    
+ 
 }
 
 
@@ -1114,7 +1155,7 @@ return YES;
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");
-//    [self extractRGBforText:[GzColors colorFromHex:hexColor]];
+    textColor = [self colorFromHex:hexColor];
     self.drawingView.lineColor = textColor;
     self.textTool.backgroundColor = textColor;
     self.drawingView.textViewNew.textColor = textColor;

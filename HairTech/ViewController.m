@@ -481,9 +481,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     //[self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     self.navigationItem.leftBarButtonItem = nil;
     self.addHeadsheet.hidden = YES;
+
     for (NSInteger row = 0; row < [self.collectionView numberOfItemsInSection:0]; row++) {
         Cell * cell =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
         [cell setIsCheckHidden:NO];
+        [cell.favorite setHidden:YES];
+
     }
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
 }
