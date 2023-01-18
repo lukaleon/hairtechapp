@@ -48,9 +48,10 @@
 
 - (CGRect)frameOfPresentedViewInContainerView {
     // Calculate presented frame
+    
     CGSize size = self.containerView.bounds.size;
     size.height = size.height - 400;
-    return CGRectMake(0, 400, size.width, size.height);
+    return CGRectMake(0, self.presentedViewController.view.frame.size.height - 400, size.width, 400);
 }
 
 - (void)containerViewWillLayoutSubviews {

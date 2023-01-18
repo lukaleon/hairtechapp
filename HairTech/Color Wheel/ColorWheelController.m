@@ -9,8 +9,7 @@
 #import "ColorWheelController.h"
 #import "GzColors.h"
 #import "ColorButton.h"
-
-
+#import "HapticHelper.h"
 
 
 @implementation ColorWheelController
@@ -36,77 +35,148 @@
     
     self.colorCollection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"colorCollection"]mutableCopy];
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panGestureAction:)];
-    
-    [self.view addGestureRecognizer:panGesture];
-
+    if(!self.isIpad){
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panGestureAction:)];
+        panGesture.delegate = self;
+        [self.view addGestureRecognizer:panGesture];
+    }
   
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     
+    
     CGSize size = self.view.bounds.size;
     
-    CGSize wheelSize = CGSizeMake(size.width * .6, size.width * .6);
+    CGFloat screenPartitionIdx;
+    CGFloat screenPartitionWidth;
+
+    CGFloat colorButtonSize;
+    CGFloat distance;
+    CGFloat correctionIdx;
+    CGFloat fontSize;
+    CGFloat axeYLift;
+    CGFloat axeYforSE;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        screenPartitionIdx = size.height / 12;
+        screenPartitionWidth = size.width / 20;
+
+        colorButtonSize = 36;
+        distance = 60;
+        correctionIdx = 38;
+        fontSize = 18;
+        axeYLift = 120;
+        axeYforSE = 0;
+    
+    }else {
+        
+        screenPartitionIdx = size.height / 20;
+        screenPartitionWidth = size.width / 20;
+
+        colorButtonSize = 26;
+        distance = 36;
+        correctionIdx = 0;
+        fontSize = 14;
+        axeYforSE = 0;
+
+        
+        CGRect screenSize = [[UIScreen mainScreen] bounds];
+        NSLog(@" difffff %f",screenSize.size.height / screenSize.size.width);
+
+        if(screenSize.size.height / screenSize.size.width < 2){
+            axeYLift = 20;
+            axeYforSE = 20;
+
+            
+        }
+        else {
+            axeYLift = 0;
+
+        }
+    }
+    
+    CGSize wheelSize = CGSizeMake(size.width * .46, size.width * .46);
     
     [self addRestoreButton];
     
-    _colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(size.width / 3.4 - wheelSize.width / 3.4,
-                                                                 size.height * .05,
+    [self addHorizontalLine:size.height * .06];
+
+    /*_colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(size.width / 3.5 - wheelSize.width / 3.5,
+                                                                 size.height * .08,
                                                                  wheelSize.width,
-                                                                 wheelSize.height)];
+                                                                 wheelSize.height)];*/
+    _colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(screenPartitionWidth * 4,
+                                                                 screenPartitionIdx * 1.7 + axeYLift,
+                                                                 screenPartitionIdx * 4,
+                                                                 screenPartitionIdx * 4)];
+    
     //_colorWheel.center = self.view.center;
     _colorWheel.delegate = self;
     _colorWheel.continuous = true;
     [self.view addSubview:_colorWheel];
     
-    _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(size.width * .62,
-                                                                   size.height * .15,
-                                                                   size.width * .45,
-                                                                   size.height * .1)];
+   /* _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(size.width * .56,
+                                                                   size.height * .14,
+                                                                   size.width * .40,
+                                                                   size.height * .1)];*/
+    _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(screenPartitionWidth * 11,
+                                                                   screenPartitionIdx * 3.4 + axeYLift,
+                                                                   screenPartitionIdx * 3.5,
+                                                                   40 )];
+    
     _brightnessSlider.tintColor = [UIColor colorNamed:@"cellBg"];
     _brightnessSlider.minimumValue = 0.0;
     _brightnessSlider.maximumValue = 1.0;
     _brightnessSlider.value = 1.0;
     _brightnessSlider.continuous = true;
+//    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
+//    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateHighlighted];
+
     [_brightnessSlider addTarget:self action:@selector(changeBrightness:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_brightnessSlider];
+  
+    
+    
     CGAffineTransform trans = CGAffineTransformMakeRotation(M_PI * 1.5);
       _brightnessSlider.transform = trans;
+//    NSLog(@"slider %f, %f, %f, %f",_brightnessSlider.frame.origin.x, _brightnessSlider.frame.origin.y, _brightnessSlider.frame.size.width, _brightnessSlider.frame.size.height );
     
-    [self addHorizontalLine:size.height * .35];
     
-    CGFloat newHeight = size.width * .17;
-    _wellView = [[UIView alloc] initWithFrame:CGRectMake(size.width * .08,
-                                                         size.height * .38,
-                                                         size.width * .17,
-                                                         newHeight)];
-    _wellView.layer.backgroundColor =[GzColors colorFromHex:[self.colorCollection objectAtIndex:0]].CGColor;
+//    [self addHorizontalLine:size.height * .31];
+    [self addHorizontalLine:(screenPartitionIdx * 6.2) + axeYLift];
+    
+//    CGFloat newHeight = size.width * .16;
+    _wellView = [[UIView alloc] initWithFrame:CGRectMake(screenPartitionWidth * 2,
+                                                         screenPartitionIdx * 6.6 + axeYLift,
+                                                         (screenPartitionWidth * 3.4) - correctionIdx,
+                                                         (screenPartitionWidth) * 3.4 - correctionIdx)];
+    _wellView.layer.backgroundColor = [GzColors colorFromHex:[self.colorCollection objectAtIndex:0]].CGColor;
     _wellView.layer.borderColor = [UIColor blackColor].CGColor;
     _wellView.layer.borderWidth = 0.0;
     _wellView.layer.cornerRadius = 10.0;
     [self.view addSubview:_wellView];
     
-   [self addColorButtons:size.width * .35 height:size.height * .38];
+    [self addColorButtons:screenPartitionWidth * 7.2 height:(screenPartitionIdx * 6.6 ) + axeYLift buttonWidth:colorButtonSize distance:distance];
     
     ColorButton * btn = [self.buttonCollection objectAtIndex:0];
-    [self currentColorIndicator:btn];
-    
-    [self addApplyButton:size.height * .3];
+   // [self currentColorIndicator:btn];
+    [self buttonPushed:btn];
+    NSLog(@"axe %f", (screenPartitionIdx * 8.3) + axeYLift);
+    [self addApplyButtonX:(screenPartitionWidth * 7) + correctionIdx  startY:(screenPartitionIdx * 8.3) + axeYLift + axeYforSE fontSize:fontSize];
     
 }
 
--(void)addColorButtons:(CGFloat)width height:(CGFloat)height{
+-(void)addColorButtons:(CGFloat)x height:(CGFloat)height buttonWidth:(CGFloat)width distance:(CGFloat)distance{
     int colorNumber = 0;
     for (int i=0; i<=1; i++) {
         for (int j=0; j<=5; j++) {
             
             ColorButton * colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
-            colorButton.frame = CGRectMake(width +(j*36), height +(i*36), 26, 26);
+            colorButton.frame = CGRectMake(x +(j*distance), height +(i*distance), width, width);
             [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
             colorButton.tag = colorNumber;
             [colorButton setSelected:NO];
             [colorButton setNeedsDisplay];
             [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-            colorButton.layer.cornerRadius = 13;
+            colorButton.layer.cornerRadius = width / 2;
             colorButton.layer.masksToBounds = YES;
             
             colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
@@ -126,7 +196,17 @@
 
 
 -(void)addCloseButton{
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 42, self.view.frame.origin.y + 10, 30, 30)];
+    CGFloat startOfButton;
+    CGFloat startY;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfButton = 120;
+        startY = 18;
+    }else {
+        startOfButton = 42;
+        startY = 10;
+    }
+    
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - startOfButton, self.view.frame.origin.y + startY, 30, 30)];
     [more addTarget:self
              action:@selector(closeView:)
    forControlEvents:UIControlEventTouchUpInside];
@@ -144,7 +224,18 @@
 }
 
 -(void)addRestoreButton{
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.origin.x +12, self.view.frame.origin.y + 10, 30, 30)];
+    CGFloat startOfButton;
+    CGFloat startY;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startOfButton = 24;
+        startY = 18;
+
+    }else {
+        startOfButton = 12;
+        startY = 10;
+
+    }
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.origin.x + startOfButton, self.view.frame.origin.y + startY, 30, 30)];
     [more addTarget:self
              action:@selector(showMenu)
    forControlEvents:UIControlEventTouchUpInside];
@@ -185,25 +276,28 @@
     [self.view.layer addSublayer:line];
 }
 
--(void)addApplyButton:(CGFloat)y{
-    UIButton * applyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    applyBtn.frame = CGRectMake(self.view.frame.size.width / 2 + 60, y, 120, 40);
-    [applyBtn addTarget:self action:@selector(applyColorChange:) forControlEvents:UIControlEventTouchUpInside];
-    [applyBtn setTitle:@"Replace color" forState:UIControlStateNormal];
-    [applyBtn setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
-    applyBtn.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
+-(void)addApplyButtonX:(CGFloat)x startY:(CGFloat)y fontSize:(CGFloat)fonttSize{
+    self.applyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.applyBtn.frame = CGRectMake(x, y, 120, 40);
+    [self.applyBtn addTarget:self action:@selector(applyColorChange:) forControlEvents:UIControlEventTouchUpInside];
+    [self.applyBtn setTitle:@"Set color" forState:UIControlStateNormal];
+    [self.applyBtn setTitleColor:[UIColor colorNamed:@"textWhiteDeepBlue"] forState:UIControlStateNormal];
+    [self.applyBtn setTitleColor:[UIColor colorNamed:@"setColor"] forState:UIControlStateDisabled];
+    self.applyBtn.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fonttSize];
+    self.applyBtn.enabled = NO;
+    [self.view addSubview:self.applyBtn];
 
-    [self.view addSubview:applyBtn];
-
-    
 }
 -(IBAction)applyColorChange:(id)sender{
     
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+
     NSString * color =  [self hexStringFromColor:_wellView.backgroundColor];
     currentButton.backgroundColor = _wellView.backgroundColor;
     
     [self.colorCollection replaceObjectAtIndex:currentButton.tag withObject:color];
     NSLog(@"color %@" , color);
+    self.applyBtn.enabled = NO;
 }
 
 
@@ -222,12 +316,15 @@
 
 - (void)changeBrightness:(UISlider*)sender
 {
+    
     [_colorWheel setBrightness:_brightnessSlider.value];
     [_wellView setBackgroundColor:_colorWheel.currentColor];
+    self.applyBtn.enabled = YES;
 }
 
 - (void)colorWheelDidChangeColor:(ISColorWheel *)colorWheel
 {
+    self.applyBtn.enabled = YES;
     [_wellView setBackgroundColor:_colorWheel.currentColor];
 }
 - (void)colorWheelDidChangeColorOnMove:(ISColorWheel *)colorWheel
@@ -235,6 +332,7 @@
     [self.presentationController.presentedView.gestureRecognizers.firstObject setEnabled:NO];
    
     [_wellView setBackgroundColor:_colorWheel.currentColor];
+    self.applyBtn.enabled = YES;
 }
     // Do any additional setup after loading the view, typically from a nib.
 
@@ -247,8 +345,9 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)buttonPushed:(id)sender{
-    
+-(IBAction)buttonPushed:(id)sender{
+  
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
     
     ColorButton *btn = (ColorButton *)sender;
     
@@ -259,7 +358,8 @@
     
     [self indicateSelctedButton:btn];
     currentButton = btn;
-    
+    self.applyBtn.enabled = NO;
+
 }
 - (void)indicateSelctedButton:(ColorButton *)btn {
     btn.layer.borderWidth = 0.0f;
@@ -275,10 +375,10 @@
 {
         line = [CAShapeLayer layer];
         UIBezierPath *linePath=[UIBezierPath bezierPath];
-        [linePath moveToPoint: CGPointMake(10,14)];
-        [linePath addLineToPoint:CGPointMake(13,17)];
-        [linePath moveToPoint: CGPointMake(13,17)];
-        [linePath addLineToPoint:CGPointMake(18,12)];
+        [linePath moveToPoint: CGPointMake(9,13)];
+        [linePath addLineToPoint:CGPointMake(12,16)];
+        [linePath moveToPoint: CGPointMake(12,16)];
+        [linePath addLineToPoint:CGPointMake(17,11)];
         line.path=linePath.CGPath;
         line.fillColor = nil;
         line.lineCap = kCALineCapRound;
@@ -289,20 +389,9 @@
         [colorBtn.layer addSublayer:line];
 }
 
-//-(void)addRestoreButton{
-//
-//    UIButton * restore = [UIButton buttonWithType:UIButtonTypeCustom];
-//    restore.frame = CGRectMake(self.view.frame.size.width / 2 - 60, 200, 120, 40);
-//    [restore addTarget:self action:@selector(restoreDefaultColors:) forControlEvents:UIControlEventTouchUpInside];
-//    [restore setTitle:@"Restore" forState:UIControlStateNormal];
-//    [restore setTitleColor:[UIColor colorNamed:@"orange"] forState:UIControlStateNormal];
-//    restore.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:14];
-//
-//    [self.view addSubview:restore];
-//}
-
 -(IBAction)restoreDefaultColors:(id)sender{
     
+        self.applyBtn.enabled = NO;
        NSArray * defaultColors = [NSArray arrayWithObjects:
                                 
                                 Black,
@@ -346,6 +435,7 @@
     //        double angle = atan2(fabs(translation.x), translation.y);
     //        if (angle < M_PI / 8) {
     if(gesture.state == UIGestureRecognizerStateBegan){
+        
         initialTouchPoint = location;
         
         frameStart = self.view.frame.origin.y;
@@ -357,14 +447,11 @@
         
         self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + (location.y - initialTouchPoint.y), self.view.frame.size.width, self.view.frame.size.height);
               NSLog(@"origin Y %f", self.view.frame.origin.y);
-        //        //  NSLog(@"initial Y %f", initialTouchPoint.y);
-        //        NSLog(@"loc - init  %f", location.y - frameStart);
-        //
-        //
+       
         
-        if(self.view.frame.origin.y - (frameStart + 400)  > 300){
+        if(self.view.frame.origin.y - (frameStart + 400)  > 200){
             
-            [UIView animateWithDuration:2 animations:^{
+            [UIView animateWithDuration:0.5 animations:^{
                 self.view.frame = CGRectMake(self.view.frame.origin.x, 800, self.view.frame.size.width, self.view.frame.size.height);
                 
             } completion:^(BOOL finished){
@@ -395,10 +482,10 @@
 
 
 
-
 //- (void)viewWillLayoutSubviews{
 //    [super viewWillLayoutSubviews];
-//    self.view.superview.bounds = CGRectMake(0, 0, self.view.frame.size.width, 300);
+//    self.view.superview.bounds = CGRectMake(0, 0, 500, 600);
 //}
-//
+
+
 @end

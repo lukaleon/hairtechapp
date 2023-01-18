@@ -48,6 +48,12 @@
 }
 
 -(void)setupNavigationBar{
+    CGFloat x;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        x = 120;
+    }else{
+        x = 60;
+    }
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithTransparentBackground];
         appearance.backgroundColor = [UIColor clearColor];
@@ -56,7 +62,7 @@
         self.navigationItem.standardAppearance = appearance;
         self.navigationItem.scrollEdgeAppearance = appearance;
 
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width -  60, 20, 40, 40)];
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width -  x, 20, 40, 40)];
     [more addTarget:self
              action:@selector(closeNotes:)
    forControlEvents:UIControlEventTouchUpInside];

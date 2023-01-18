@@ -473,10 +473,23 @@
 //    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
 //    [self presentViewController:colorWheel animated:YES completion:nil];
     
-
-ColorWheelController *controller = [[ColorWheelController alloc]init];
-[self prepareOverlay:controller];
-[self presentViewController:controller animated:true completion:nil];
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+        colorWheel.delegate = self;
+        colorWheel.isIpad  = YES;
+        //colorWheel.startColor = currentColor;
+        colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
+        colorWheel.preferredContentSize = CGSizeMake(300, 400);
+        [self presentViewController:colorWheel animated:YES completion:nil];
+    }
+    else{
+   
+        ColorWheelController *controller = [[ColorWheelController alloc]init];
+        [self prepareOverlay:controller];
+        controller.isIpad  = NO;
+        [self presentViewController:controller animated:true completion:nil];
+    }
+    
 }
 
 - (void)prepareOverlay:(ColorWheelController*)viewController {
@@ -651,13 +664,15 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
     float height = textView.contentSize.height;
-    [UITextView beginAnimations:nil context:nil];
-    [UITextView setAnimationDuration:0.1];
+    [UIView animateWithDuration:0.1 animations:^{
+
     CGRect frame = textView.frame;
     frame.size.height = height + 20;
     textView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
-    [UITextView commitAnimations];
+   
+    } completion:^(BOOL finished){
+    }];
     
     if ([textView.text isEqualToString:@"TEXT"]){
     [textView setSelectedTextRange:[textView textRangeFromPosition:textView.beginningOfDocument toPosition:textView.endOfDocument]];
@@ -672,37 +687,36 @@ return YES;
     CGPoint origin = [self.drawingView.textViewNew convertPoint:CGPointMake(self.drawingView.textViewNew.frame.origin.x, self.drawingView.textViewNew.frame.origin.y)  toView:self.view.window];
     NSLog(@"pointY %f", origin.y);
     if (origin.y > 500){
-        
-        [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:.3];
-            [UIView setAnimationBeginsFromCurrentState:TRUE];
-            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -200., self.view.frame.size.width, self.view.frame.size.height);
 
-            [UIView commitAnimations];
-        
-    }}
+        [UIView animateWithDuration:0.3 animations:^{
+            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - 200., self.view.frame.size.width, self.view.frame.size.height);
+        } completion:^(BOOL finished){
+        }];
+    }
+    
+}
 
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
     if (self.view.frame.origin.y < 0){
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:.3];
-        [UIView setAnimationBeginsFromCurrentState:TRUE];
-        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y +200., self.view.frame.size.width, self.view.frame.size.height);
-        
-        [UIView commitAnimations];
+        [UIView animateWithDuration:0.3 animations:^{
+            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 200., self.view.frame.size.width, self.view.frame.size.height);
+        } completion:^(BOOL finished){
+        }];
     }
 }
 - (void)textViewDidChange:(UITextView *)txtView{
     float height = txtView.contentSize.height;
-    [UITextView beginAnimations:nil context:nil];
-    [UITextView setAnimationDuration:0.1];
+
+    [UIView animateWithDuration:0.1 animations:^{
+
     CGRect frame = txtView.frame;
     frame.size.height = height + 20;
     txtView.frame = frame;
     [self.drawingView adjustRectWhenTextChanged:frame];
-    [UITextView commitAnimations];
-    
+
+    } completion:^(BOOL finished){
+    }];
     
  
 }
