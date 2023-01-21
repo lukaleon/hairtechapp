@@ -17,11 +17,19 @@
     return self;
 }
 
-+(FrameLayer*)addCircleToPoint:(CGPoint)point scaleFactor:(CGFloat)scaleFactor
++(FrameLayer*)addCircleToPoint:(CGPoint)point  endPoint:(CGPoint)endPoint scaleFactor:(CGFloat)scaleFactor
 {
     
+    CGFloat hypot = [self distanceBetweenStartPoint:point endPoint:endPoint];
+    hypot = hypot * 2;
+    hypot = hypot * hypot;
+    hypot = hypot / 2;
+    hypot = sqrt(hypot);
+
+    NSLog(@"diagonal %f", hypot);
+
     FrameLayer * layer = [[[self class] alloc] init];
-    CGRect rect = CGRectMake(point.x-30, point.y-30, 60, 60);
+    CGRect rect = CGRectMake(point.x-(hypot /2), point.y-(hypot/2), hypot , hypot);
     
     UIBezierPath *framePath=[UIBezierPath bezierPath];
     framePath = [UIBezierPath bezierPathWithRect:rect];
@@ -36,6 +44,14 @@
     layer.shadowOffset = CGSizeMake(0,0);
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     return layer;
+}
+
++ (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
+  
+    CGFloat xDist = (endPoint.x - startPoint.x);
+    CGFloat yDist = (endPoint.y - startPoint.y);
+    return  hypot((xDist), (yDist));
 }
 
 @end

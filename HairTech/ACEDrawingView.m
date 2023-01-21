@@ -626,39 +626,26 @@ UIColor* tempColor;
             {
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
-//                        if(_magnetActivated){
-//                            [self autoPosition:&currentPoint basePoint:bufferEndPoint];
-//                        }
-//                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
-//                        [self.selectedLayer movePathWithStartPoint:currentPoint];
-//                        [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-//
-//                        if (self.magnifierView.hidden == NO){
-//                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-//                        }
+                  
                         break;
                     case JVDrawingTouchMid:
                     NSLog(@"MOVING MIDDLE POINT");
                         
                         [self hideLoupe]; // hide loupe when middle touched
-                        [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
-                      
-                        [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot];
+                        [self.selectedLayer moveDotPathWithPreviousPoint:previousPoint currentPoint:currentPoint];
+                        [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot selectedLayer:self.selectedLayer];
+                        [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
+
                         
-                      //  [self circlePosition:self.selectedLayer.startPmoving point2:self.selectedLayer.endPmoving forBothLayers:self.circleLayer1 circle2:self.circleLayer2];
                         break;
                     case JVDrawingTouchEnd:
                         NSLog(@"MOVING END POINT");
-//                        if(_magnetActivated){
-//                            [self autoPosition:&currentPoint basePoint:bufferStartPoint];
-//                        }
-//                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
-                        [self.selectedLayer movePathWithEndPoint:currentPoint];
-//                        [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
-//                            if (self.magnifierView.hidden == NO ){
-//                                self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-//
-//                        }
+                        
+                        [self hideLoupe]; // hide loupe when middle touched
+                        [self.selectedLayer zoomDotPathWithEndPoint:currentPoint];
+                        [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot selectedLayer:self.selectedLayer];
+                        [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
+                     
                         break;
                         
                     default:
@@ -928,10 +915,14 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer2];
     }
     else if (JVDrawingTypeDot == self.type){
-        self.frameForDot = [FrameLayer addCircleToPoint:layer.startPoint scaleFactor:self.zoomFactor];
-        [layer addSublayer:self.frameForDot];
-        [self.arrayOfCircles addObject:self.frameForDot];
+        self.frameForDot = [FrameLayer addCircleToPoint:layer.startPoint endPoint:layer.endPoint scaleFactor:self.zoomFactor];
+        
+        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.endPoint scaleFactor:self.zoomFactor];
 
+        [layer addSublayer:self.frameForDot];
+        [layer addSublayer:self.circleLayer1];
+        [self.arrayOfCircles addObject:self.frameForDot];
+        [self.arrayOfCircles addObject:self.circleLayer1];
 
     }
 }
@@ -950,11 +941,19 @@ UIColor* tempColor;
 }
 
 
--(void)framePosition:(CGPoint)point forLayer:(FrameLayer*)frame{
+-(void)framePosition:(CGPoint)point forLayer:(FrameLayer*)frame selectedLayer:(JVDrawingLayer*)layer{
+    
+    CGFloat hypot = [self distanceBetweenStartPoint:layer.startPoint endPoint:layer.endPoint];
+    hypot = hypot * 2;
+    hypot = hypot * hypot;
+    hypot = hypot / 2;
+    hypot = sqrt(hypot);
+    
     UIBezierPath *framePath = [UIBezierPath bezierPath];
-    framePath = [UIBezierPath bezierPathWithRect:CGRectMake(point.x - 30, point.y - 30, 60, 60)];
+    framePath = [UIBezierPath bezierPathWithRect:CGRectMake(point.x - (hypot/2), point.y - (hypot/2), hypot, hypot)];
     frame.path = framePath.CGPath;
 }
+
 
 -(void)circlePosition:(CGPoint)point point2:(CGPoint)point2 forBothLayers:(CircleLayer*)circle circle2:(CircleLayer*)circle2{
     UIBezierPath *circlePath = [UIBezierPath bezierPath];
@@ -1113,7 +1112,7 @@ UIColor* tempColor;
 
 -(void)addDotToView{
     self.type = JVDrawingTypeDot;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:self.center endPoint:self.center type:self.type lineWidth:3 lineColor:[UIColor redColor]];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:self.center endPoint:self.center height:60 type:self.type lineWidth:3 lineColor:[UIColor redColor]];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];

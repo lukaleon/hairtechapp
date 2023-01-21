@@ -153,21 +153,16 @@
         
         
         if (self.type == JVDrawingTypeDot) {
-            
-            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
-
-            if ([self isPoint:self.startPoint withinDistance:30 ofPath:self.path]){
-                
-                return JVDrawingTouchMid;
-
-            }
-            if([self distanceBetweenStartPoint:point endPoint:self.endPoint] < 10){
-                 return JVDrawingTouchEnd;
- 
-            }
-            
-        }
         
+
+            if([self distanceBetweenStartPoint:point endPoint:self.endPoint] <= 10 ){
+                return JVDrawingTouchEnd;
+            }
+                if( [self isPoint:point withinDistance:10 ofPath:self.path]){
+                     return JVDrawingTouchMid;
+
+            }
+        }
         
         CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
         JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
@@ -248,12 +243,12 @@
     return  layer.endPoint;
 }
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
     
     JVDrawingLayer *layer = [[[self class] alloc] init];
    
      UIBezierPath * rectPath = [UIBezierPath bezierPath];
-     CGRect rect = CGRectMake(startPoint.x-30, startPoint.y-30, 60, 60);
+     CGRect rect = CGRectMake(startPoint.x-(height/2), startPoint.y-(height/2), height, height);
     rectPath = [UIBezierPath bezierPathWithRect:rect];
     [rectPath stroke];
         int step = 0;
@@ -335,9 +330,10 @@
 - (void)movePathWithEndPoint:(CGPoint)endPoint {
     self.endPointToConnect = endPoint;
     [self movePathWithEndPoint:endPoint isSelected:self.isSelected];
-
-    
 }
+
+
+
 
 - (void)movePathWithStartPoint:(CGPoint)startPoint {
     [self movePathWithStartPoint:startPoint isSelected:self.isSelected];
@@ -350,6 +346,8 @@
         [self movePathWithStartPoint:startPoint endPoint:endPoint type:self.type isSelected:self.isSelected];
 }
 
+
+
 - (void)movePathWithStartPoint:(CGPoint)startPoint isSelected:(BOOL)isSelected {
     [self movePathWithStartPoint:startPoint endPoint:self.endPoint type:self.type isSelected:isSelected];
    
@@ -360,11 +358,13 @@
    
 }
 
+
 - (void)movePathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint isSelected:(BOOL)isSelected {
     CGPoint startPoint = CGPointMake(self.startPoint.x+currentPoint.x-previousPoint.x, self.startPoint.y+currentPoint.y-previousPoint.y);
     CGPoint endPoint = CGPointMake(self.endPoint.x+currentPoint.x-previousPoint.x, self.endPoint.y+currentPoint.y-previousPoint.y);
     [self movePathWithStartPoint:startPoint endPoint:endPoint type:self.type isSelected:isSelected];
 }
+
 
 - (void)moveControlPointWithPreviousPoint:(CGPoint)currentPoint{
    self.midPmoving = currentPoint;
@@ -388,6 +388,11 @@
     self.startPoint = [[self.pointArray firstObject] CGPointValue];
     self.pointArray = newArray;
 }
+
+
+
+
+
 
 - (void)movePathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type isSelected:(BOOL)isSelected {
     
@@ -509,26 +514,49 @@
 }
 
 #pragma mark MOVE DOT PATH
+
+- (void)moveDotPathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint {
+    CGPoint startPoint = CGPointMake(self.startPoint.x+currentPoint.x-previousPoint.x, self.startPoint.y+currentPoint.y-previousPoint.y);
+    CGPoint endPoint = CGPointMake(self.endPoint.x+currentPoint.x-previousPoint.x, self.endPoint.y+currentPoint.y-previousPoint.y);
+        [self moveDotPathWithStartPoint:startPoint endPoint:endPoint type:self.type isSelected:self.isSelected];
+}
+
+- (void)moveDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type isSelected:(BOOL)isSelected {
+    
+    self.startPoint = startPoint;
+    self.endPoint = endPoint;
+    self.isSelected = isSelected;
+    self.startPmoving = startPoint;
+    self.endPmoving = endPoint;
+    [self moveDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+
+}
 - (void)moveDotPathWithStartPoint:(CGPoint)startPoint
                           endPoint:(CGPoint)endPoint
                         isSelected:(BOOL)isSelected {
     
-    CGFloat widthHeight = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
     
+    CGFloat hypot = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
+    hypot = hypot * 2;
+    hypot = hypot * hypot;
+    hypot = hypot / 2;
+    hypot = sqrt(hypot);
+        
     self.dotCenter = startPoint;
 
     UIBezierPath *rectPath = [UIBezierPath bezierPath];
-    CGRect rect = CGRectMake(startPoint.x-30, startPoint.y-30, widthHeight , widthHeight);
+    CGRect rect = CGRectMake(startPoint.x-(hypot/2), startPoint.y-hypot/2, hypot , hypot);
+    
     
     rectPath = [UIBezierPath bezierPathWithRect:rect];
     int step = 0;
-    for(int i=1;i<=rect.size.width/10;i++){
+    for(int i=1; i<=rect.size.width; i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
     [rectPath moveToPoint:newP];
     [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
-    step = step + 10;
+    step = step + 1;
     }
-    self.strokeColor = [UIColor redColor].CGColor;
+//    self.strokeColor = [UIColor redColor].CGColor;
     
     DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
     self.path = rectPath.CGPath;
@@ -540,7 +568,77 @@
     dotLayer.frame = rect;
     dotLayer.position = startPoint;
     [CATransaction commit];
+    
 
+}
+
+- (void)zoomDotPathWithEndPoint:(CGPoint)endPoint {
+    self.endPointToConnect = endPoint;
+    [self zoomDotPathWithEndPoint:endPoint isSelected:self.isSelected];
+}
+- (void)zoomDotPathWithEndPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected{
+    [self zoomDotPathWithStartPoint:self.startPoint endPoint:endPoint type:self.type isSelected:isSelected];
+   
+}
+- (void)zoomDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type isSelected:(BOOL)isSelected {
+    
+    self.startPoint = startPoint;
+    self.endPoint = endPoint;
+    self.isSelected = isSelected;
+    self.startPmoving = startPoint;
+    self.endPmoving = endPoint;
+    
+    [self zoomDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:YES];
+}
+
+
+
+
+-(void)zoomDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected{
+    
+    NSLog(@" zooooooom ");
+    
+    
+    CGFloat hypot = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
+    hypot = hypot * 2;
+    hypot = hypot * hypot;
+    hypot = hypot / 2;
+    hypot = sqrt(hypot);
+        
+    self.dotCenter = startPoint;
+    
+    CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );
+    self.endPoint = tempEndPoint;
+
+    UIBezierPath *rectPath = [UIBezierPath bezierPath];
+    CGRect rect = CGRectMake(startPoint.x-(hypot/2), startPoint.y-hypot/2, hypot , hypot);
+    
+    rectPath = [UIBezierPath bezierPathWithRect:rect];
+    int step = 0;
+    for(int i=1;i<=rect.size.width;i++){
+    CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+    [rectPath moveToPoint:newP];
+    [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+    step = step + 1;
+    }
+//     self.strokeColor = [UIColor redColor].CGColor;
+    
+    
+    DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
+    self.path = rectPath.CGPath;
+
+    self.startPoint = startPoint;
+
+    [CATransaction begin];
+    [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];
+    dotLayer.frame = rect;
+    dotLayer.position = startPoint;
+    [CATransaction commit];
+    
+    
+  
+    
+    
 }
 
 #pragma mark Select and Move Arrow Methods

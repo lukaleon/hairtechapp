@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 + (JVDrawingLayer *)createAllLayersAtStart:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color controlPoint:(CGPoint)controlPoint grafittiPoints:(NSArray*)grafittiPoints;
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
 
 - (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 - (void)movePathWithStartPoint:(CGPoint)startPoint;
@@ -118,7 +118,17 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 
 
-- (void)moveDotPathWithStartPoint:(CGPoint)startPoint
+//- (void)moveDotPathWithStartPoint:(CGPoint)previousPoint
+                        //  endPoint:(CGPoint)currentPoint
+//isSelected:(BOOL)isSelected;
+
+- (void)moveDotPathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint;
+
+- (void)zoomDotPathWithStartPoint:(CGPoint)startPoint
                           endPoint:(CGPoint)endPoint
 isSelected:(BOOL)isSelected;
+
+- (void)zoomDotPathWithEndPoint:(CGPoint)endPoint;
+- (void)zoomDotPathWithEndPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected;
+- (void)zoomDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type isSelected:(BOOL)isSelected;
 @end

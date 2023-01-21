@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FrameLayer : CAShapeLayer
 
-+(FrameLayer*)addCircleToPoint:(CGPoint)point scaleFactor:(CGFloat)scaleFactor;
++(FrameLayer*)addCircleToPoint:(CGPoint)point endPoint:(CGPoint)endPoint scaleFactor:(CGFloat)scaleFactor;
++ (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
 
 @end
 
