@@ -622,6 +622,50 @@ UIColor* tempColor;
                         break;
                 }
             }
+            else if (self.selectedLayer.type == JVDrawingTypeDot)
+            {
+                switch (self.isMoveLayer) {
+                    case JVDrawingTouchHead:
+//                        if(_magnetActivated){
+//                            [self autoPosition:&currentPoint basePoint:bufferEndPoint];
+//                        }
+//                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+//                        [self.selectedLayer movePathWithStartPoint:currentPoint];
+//                        [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
+//
+//                        if (self.magnifierView.hidden == NO){
+//                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
+//                        }
+                        break;
+                    case JVDrawingTouchMid:
+                    NSLog(@"MOVING MIDDLE POINT");
+                        
+                        [self hideLoupe]; // hide loupe when middle touched
+                        [self.selectedLayer movePathWithPreviousPoint:previousPoint currentPoint:currentPoint];
+                      
+                        [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot];
+                        
+                      //  [self circlePosition:self.selectedLayer.startPmoving point2:self.selectedLayer.endPmoving forBothLayers:self.circleLayer1 circle2:self.circleLayer2];
+                        break;
+                    case JVDrawingTouchEnd:
+                        NSLog(@"MOVING END POINT");
+//                        if(_magnetActivated){
+//                            [self autoPosition:&currentPoint basePoint:bufferStartPoint];
+//                        }
+//                        [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
+                        [self.selectedLayer movePathWithEndPoint:currentPoint];
+//                        [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
+//                            if (self.magnifierView.hidden == NO ){
+//                                self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
+//
+//                        }
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+            
             else {
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
@@ -631,8 +675,6 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-                        //                        bufferStartPoint = currentPoint;
-                        //                        bufferEndPoint = self.selectedLayer.endPointToConnect;
                         
                         if (self.magnifierView.hidden == NO){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
@@ -729,7 +771,6 @@ UIColor* tempColor;
                     if ([layer isPoint:currentPoint withinDistance:10 / self.zoomFactor ofPath:layer.path]){
                         [layer caculateLocationWithPoint:currentPoint];                    // tapped on a layer
                         layerHasBeenPicked = YES;
-
                         if (layer == self.selectedLayer && !menuVisible) {
                             // the layer is already selected; show the menu
                             [self showMenu];
@@ -740,6 +781,8 @@ UIColor* tempColor;
                             [self hideMenu];
                             // draw new selection
                             [self selectLayer:layer];
+                            NSLog(@"Layer type %ld", (long)layer.type);
+
                             [layer setZoomIndex:self.zoomFactor];
 
                             
@@ -884,6 +927,13 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer1];
         [self.arrayOfCircles addObject:self.circleLayer2];
     }
+    else if (JVDrawingTypeDot == self.type){
+        self.frameForDot = [FrameLayer addCircleToPoint:layer.startPoint scaleFactor:self.zoomFactor];
+        [layer addSublayer:self.frameForDot];
+        [self.arrayOfCircles addObject:self.frameForDot];
+
+
+    }
 }
 
 -(void)controlCirclePosition:(CGPoint)point forLayer:(CircleLayer*)circle atIndex:(int)idx{
@@ -895,7 +945,15 @@ UIColor* tempColor;
 -(void)circlePosition:(CGPoint)point forLayer:(CircleLayer*)circle atIndex:(int)idx{
     UIBezierPath *circlePath = [UIBezierPath bezierPath];
     circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-5 / self.zoomFactor, point.y-5 / self.zoomFactor, 10 / self.zoomFactor, 10 / self.zoomFactor)];
+
     circle.path = circlePath.CGPath;
+}
+
+
+-(void)framePosition:(CGPoint)point forLayer:(FrameLayer*)frame{
+    UIBezierPath *framePath = [UIBezierPath bezierPath];
+    framePath = [UIBezierPath bezierPathWithRect:CGRectMake(point.x - 30, point.y - 30, 60, 60)];
+    frame.path = framePath.CGPath;
 }
 
 -(void)circlePosition:(CGPoint)point point2:(CGPoint)point2 forBothLayers:(CircleLayer*)circle circle2:(CircleLayer*)circle2{
@@ -912,10 +970,8 @@ UIColor* tempColor;
     [self.arrayOfCircles removeAllObjects];
     self.selectedLayer = nil;
     self.selectedLayer.isSelected = NO;
-    //    if (self.textViewNew.hidden == NO){
-    //    [self hideTextViewAndRect];
-    //    }
 }
+
 #pragma mark ZOOM IN / OUT METHODS
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
 
@@ -1055,91 +1111,87 @@ UIColor* tempColor;
 
 #pragma mark Add Dot
 
-                /* THIS IS BLOCK OF METHODS TO ADD DOT DOT DOT DOT DOTLAYER */
-
-- (void)showMenuFromDot:(UITapGestureRecognizer*)sender {
-    CGRect rectOfMenu = CGRectMake(self.userResizableDotView.frame.origin.x +
-                                   (self.userResizableDotView.frame.size.width / 2),
-                                   self.userResizableDotView.frame.origin.y ,
-                                   0, 0);
-            menuForTextView = [UIMenuController sharedMenuController];
-            menuForTextView.menuItems = @[
-                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeDot)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateDot)]];
-            [menuForTextView showMenuFromView:self rect:rectOfMenu];
-}
-
-- (void)hideFrameFormDot:(UITapGestureRecognizer*)sender {
- 
-}
--(void)removeDot{
-    NSLog(@"Delete Dot");
-}
--(void)duplicateDot{
-    NSLog(@"Duplicate Dot");
-}
--(void)dotPosition:(SPUserResizableView*)rect  {
-    
-    viewForDot.bounds = rect.contentView.bounds;
-    CGRect newRect = rect.contentView.bounds;
-    CGFloat widthHeight = (newRect.size.width / 10) / 4;
-
-    NSLog(@" width %f height %f", newRect.size.width, newRect.size.height);
-    
-    UIBezierPath *circlePath = [UIBezierPath bezierPath];
-    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(newRect.size.width /2 - widthHeight, newRect.size.height/ 2 - widthHeight, newRect.size.width /10, newRect.size.height /10 )];
-    self.dot.path = circlePath.CGPath;
-}
-
-
-- (CAShapeLayer*)addDotLayer {
-    CGFloat centerX =  self.userResizableDotView.contentView.bounds.size.width/2;
-    CGFloat centerY =  self.userResizableDotView.contentView.bounds.size.height/2;
-    CGPoint center = CGPointMake(centerX, centerY);
-    CGRect rect = self.userResizableDotView.contentView.bounds;
-    CGFloat widthHeight = (rect.size.width / 10) / 4;
-    NSLog(@" center %f", widthHeight);
-    
-    self.dot = [CAShapeLayer layer];
-    UIBezierPath *circlePath=[UIBezierPath bezierPath];
-    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x - widthHeight , center.y - widthHeight , rect.size.width /10, rect.size.height /10)];
-    
-    self.dot.path = circlePath.CGPath;
-    self.dot.fillColor = [UIColor blueColor].CGColor;
-    self.dot.opacity = 1.0;
-    self.dot.strokeColor = [UIColor blueColor].CGColor;
-    return self.dot;
-}
-
 -(void)addDotToView{
+    self.type = JVDrawingTypeDot;
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:self.center endPoint:self.center type:self.type lineWidth:3 lineColor:[UIColor redColor]];
     
-    NSLog(@"add dot");
-    self.userResizableDotView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(180, 250, 50, 50)];
-    UIView * viewForDot = [[UIView alloc]initWithFrame:self.userResizableDotView.bounds];
-   // viewForDot.backgroundColor = [UIColor yellowColor];
-    self.userResizableDotView.contentView = viewForDot;
-    [self.userResizableDotView setTextViewSelected:NO];
+    [self.layer addSublayer:self.drawingLayer];
+    [self.layerArray addObject:self.drawingLayer];
+    [self.drawingLayer addToTrack];
     
-    [viewForDot.layer addSublayer:[self addDotLayer]];
-
-    self.userResizableDotView.delegate = self;
-    [self.userResizableDotView showEditingHandles];
-    currentlyEditingView = self.userResizableDotView;
-    lastEditedView = self.userResizableDotView;
-    [self addSubview:self.userResizableDotView];
-    
-    gestureRecognizerDot = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuFromDot:)];
-    [self.userResizableDotView addGestureRecognizer:gestureRecognizerDot];
-    gestureRecognizerDot.numberOfTapsRequired = 1;
-    
-    gestureRecognizerHidingDot = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFrameFormDot:)];
-    [self.userResizableDotView addGestureRecognizer:gestureRecognizerHidingDot];
-    gestureRecognizerHidingDot.numberOfTapsRequired = 1;
-//    gestureRecognizer.cancelsTouchesInView = NO;
-    //[gestureRecognizer setDelegate:self];
-    
-   
-
 }
+                /* THIS IS BLOCK OF METHODS TO ADD DOT DOT DOT DOT DOTLAYER */
+//
+//- (void)showMenuFromDot:(UITapGestureRecognizer*)sender {
+//    CGRect rectOfMenu = CGRectMake(self.userResizableDotView.frame.origin.x +
+//                                   (self.userResizableDotView.frame.size.width / 2),
+//                                   self.userResizableDotView.frame.origin.y ,
+//                                   0, 0);
+//            menuForTextView = [UIMenuController sharedMenuController];
+//            menuForTextView.menuItems = @[
+//                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeDot)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateDot)]];
+//            [menuForTextView showMenuFromView:self rect:rectOfMenu];
+//}
+//
+//- (void)hideFrameFormDot:(UITapGestureRecognizer*)sender {
+// 
+//}
+//-(void)removeDot{
+//    NSLog(@"Delete Dot");
+//}
+//-(void)duplicateDot{
+//    NSLog(@"Duplicate Dot");
+//}
+//-(void)dotPosition:(SPUserResizableView*)rect  {
+//    
+//    viewForDot.bounds = rect.contentView.bounds;
+//    CGRect newRect = rect.contentView.bounds;
+//    CGFloat widthHeight = (newRect.size.width / 10) / 4;
+//
+//    NSLog(@" width %f height %f", newRect.size.width, newRect.size.height);
+//    
+//    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(newRect.size.width /2 - widthHeight, newRect.size.height/ 2 - widthHeight, newRect.size.width /10, newRect.size.height /10 )];
+//    self.dot.path = circlePath.CGPath;
+//}
+//
+//
+//- (CAShapeLayer*)addDotLayer {
+//    CGFloat centerX =  self.userResizableDotView.contentView.bounds.size.width/2;
+//    CGFloat centerY =  self.userResizableDotView.contentView.bounds.size.height/2;
+//    CGPoint center = CGPointMake(centerX, centerY);
+//    CGRect rect = self.userResizableDotView.contentView.bounds;
+//    CGFloat widthHeight = (rect.size.width / 10) / 4;
+//    NSLog(@" center %f", widthHeight);
+//    
+//    self.dot = [CAShapeLayer layer];
+//    UIBezierPath *circlePath=[UIBezierPath bezierPath];
+//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x - widthHeight , center.y - widthHeight , rect.size.width /10, rect.size.height /10)];
+//    
+//    self.dot.path = circlePath.CGPath;
+//    self.dot.fillColor = [UIColor blueColor].CGColor;
+//    self.dot.opacity = 1.0;
+//    self.dot.strokeColor = [UIColor blueColor].CGColor;
+//    return self.dot;
+//}
+//
+//-(void)addDotToView{
+//    
+//    NSLog(@"add dot");
+//    self.userResizableDotView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(180, 250, 50, 50)];
+//    UIView * viewForDot = [[UIView alloc]initWithFrame:self.userResizableDotView.bounds];
+//   // viewForDot.backgroundColor = [UIColor yellowColor];
+//    self.userResizableDotView.contentView = viewForDot;
+//    [self.userResizableDotView setTextViewSelected:NO];
+//    
+//    [viewForDot.layer addSublayer:[self addDotLayer]];
+//
+//    self.userResizableDotView.delegate = self;
+//    [self.userResizableDotView showEditingHandles];
+//    currentlyEditingView = self.userResizableDotView;
+//    lastEditedView = self.userResizableDotView;
+//    [self addSubview:self.userResizableDotView];
+//}
 
 #pragma mark Add Text View
 
@@ -1675,115 +1727,8 @@ UIColor* tempColor;
 
 -(void)updateTextView
 {
-    /*
-     if(pan == YES)
-     {
-     
-     [self.currentTool setInitialPoint:self.textView.frame.origin];
-     
-     }
-     
-     else
-     {
-     [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
-     
-     }
-     
-     // [self.currentTool setInitialPoint:CGPointMake(self.frame.size.width/2.5,self.frame.size.height/3)];
-     
-     [self.currentTool setInitialPoint:self.textView.frame.origin];
-     
-     [self.currentTool getTextFromView:self.textView.text];
-     
-     [self.currentTool boundsOfTextView:self.textView.frame.size];
-     // [self.currentTool boundsOfTextView:self.textView.textContainer.size];
-     
-     [self.pathArray addObject:self.currentTool];
-     
-     [self.textView setHidden:YES];
-     
-     
-     [self updateCacheImage:NO];
-     
-     // clear the current tool
-     
-     self.currentTool = nil;
-     
-     // clear the redo queue
-     [self.bufferArray removeAllObjects];
-     [self.bufferOfPoints removeAllObjects];
-     
-     
-     
-     // call the delegate
-     if ([self.delegate respondsToSelector:@selector(drawingView:didEndDrawUsingTool:)]) {
-     [self.delegate drawingView:self didEndDrawUsingTool:self.currentTool];
-     
-     
-     /*
-     }
-     [self setNeedsDisplay];
-     self.textView.text = nil;
-     // editModeforText = NO;
-     touchForText = 0;
-     pan=NO;
-     [self.delegate setButtonVisibleTextPressed];*/
+  
 }
-
-//- (IBAction)handlePan:(UIPanGestureRecognizer *)recognizer {
-//
-//
-//
-//    CGPoint translation = [recognizer translationInView:self];
-//    recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-//                                         recognizer.view.center.y + translation.y);
-//
-//
-//    [recognizer setTranslation:CGPointMake(0,0) inView:self];
-//
-//
-//    CGPoint p = [recognizer locationInView:self.textViewNew];
-//
-//
-//
-//
-//    if (recognizer.state == UIGestureRecognizerStateEnded) {
-//        pan = YES;
-//        touchesForUpdate = 0;
-//
-//        CGPoint finalPoint = [recognizer locationInView:self];
-//
-//        pointForRecognizer = CGPointMake(self.textViewNew.frame.origin.x,self.textViewNew.frame.origin.y);
-//
-//        //   pointForRecognizer = CGPointMake(self.textView.center.x,self.textView.center.y);
-//
-//    }
-//}
-
-
-/*
- -(void)addTextViewToMiddle
- {
- 
- pan= NO;
- self.currentTool = [self toolWithCurrentSettings];
- self.currentTool.lineColor = self.lineColor;
- self.currentTool.lineWidthNew = self.lineWidth;
- 
- [self.textView setHidden:NO];
- 
- 
- 
- // self.textView.zoomEnabled = YES;
- self.textView.frame = CGRectMake((self.frame.size.width/2)-100,self.frame.size.height/3, 200,60);
- 
- 
- 
- [self.textView becomeFirstResponder];
- self.touchForText = self.touchForText + 1;
- touchesForUpdate = 0;
- }
- */
 
 #pragma mark - Show Loupe methods
 - (void)showLoupe:(NSTimer *)timer
@@ -1859,17 +1804,7 @@ UIColor* tempColor;
     self.currentTool.a = pc;
     
 }
-/*
- - (void)addMyButton
- {    // Method for creating button, with background image and other properties
- 
- UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
- btn.frame = CGRectMake(100, 100, 100, 50);
- [btn setTitle:@"Hello, world!" forState:UIControlStateNormal];
- [btn addTarget:self action:@selector(buttonTouched:) forControlEvents:UIControlEventTouchUpInside];
- [self addSubview:btn];
- }
- */
+
 
 
 
@@ -1905,10 +1840,6 @@ UIColor* tempColor;
         
         [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.a)];
         [arrayOfPoints addObject: NSStringFromCGPoint(self.currentTool.d)];
-        
-        // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.a];
-        // [self alocatePointAtView:self.layer pointFromArray:self.currentTool.d];
-        
         [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
         
     }
@@ -1979,72 +1910,6 @@ UIColor* tempColor;
 
 
 
-/*
- - (NSUInteger)undoSteps
- {
- return self.bufferArray.count;
- return self.bufferOfPoints.count;
- 
- }
- 
- - (BOOL)canUndo
- {
- return self.pathArray.count > 0;
- return arrayOfPoints.count > 0;
- 
- }
- 
- - (void)undoLatestStep
- {
- if ([self canUndo]) {
- id<ACEDrawingTool>tool = [self.pathArray lastObject];
- [self.bufferArray addObject:tool];
- [self.pathArray removeLastObject];
- 
- [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
- [arrayOfPoints removeLastObject];
- [self.bufferOfPoints addObject:[arrayOfPoints lastObject]];
- [arrayOfPoints removeLastObject];
- [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
- 
- [self updateCacheImage:YES];
- [self setNeedsDisplay];
- 
- NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
- 
- }
- 
- 
- }
- 
- - (BOOL)canRedo
- {
- return self.bufferArray.count > 0;
- return self.bufferOfPoints.count > 0;
- }
- 
- - (void)redoLatestStep
- {
- if ([self canRedo]) {
- id<ACEDrawingTool>tool = [self.bufferArray lastObject];
- 
- [self.pathArray addObject:tool];
- [self.bufferArray removeLastObject];
- 
- 
- [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
- [self.bufferOfPoints removeLastObject];
- [arrayOfPoints addObject:[self.bufferOfPoints lastObject]];
- [self.bufferOfPoints removeLastObject];
- [self savePointsToDefaults:viewName techniqueName:currentTechniqueName];
- [self updateCacheImage:YES];
- [self setNeedsDisplay];
- NSLog(@"POINTS COUNT %lu",arrayOfPoints.count);
- 
- }
- }
- 
- */
 - (NSUInteger)undoSteps
 {
     return self.bufferOfLayers.count;

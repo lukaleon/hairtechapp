@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, JVDrawingType) {
     JVDrawingTypeDashedLine,
     JVDrawingTypeGraffiti,
     JVDrawingTypeText,
+    JVDrawingTypeDot,
 };
 
 typedef NS_ENUM(NSInteger, JVDrawingTouch) {
@@ -30,7 +31,11 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
     int JVDRAWINGBUFFERFORLINE;
     CGFloat _zoomIndex;
 
+
 }
+
+@property (nonatomic, assign) CALayer *imageLayer;
+
 -(void)setZoomIndex:(CGFloat)zoom;
 @property (nonatomic, assign) NSMutableArray * arrayOfLayerPoints;
 @property (nonatomic, assign) CGPoint startPointToConnect;
@@ -58,6 +63,10 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, assign) CGFloat height;
 
 
+@property (nonatomic, assign) CGPoint dotCenter;
+
+
+
 
 @property (nonatomic, assign) BOOL isVisible;
 @property (nonatomic, strong) NSMutableArray *arrayOfCircles;
@@ -77,6 +86,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize  isSelected:(BOOL)isSelected ;
 
 + (JVDrawingLayer *)createAllLayersAtStart:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color controlPoint:(CGPoint)controlPoint grafittiPoints:(NSArray*)grafittiPoints;
+
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
 
 - (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 - (void)movePathWithStartPoint:(CGPoint)startPoint;
@@ -105,4 +116,9 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
                                 endPoint:(CGPoint)endPoint
                           midPoint:(CGPoint)midPt;
 
+
+
+- (void)moveDotPathWithStartPoint:(CGPoint)startPoint
+                          endPoint:(CGPoint)endPoint
+isSelected:(BOOL)isSelected;
 @end

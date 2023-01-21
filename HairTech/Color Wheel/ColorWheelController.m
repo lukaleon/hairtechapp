@@ -17,6 +17,7 @@
     ColorButton * currentButton;
 
 }
+@synthesize _brightnessSlider;
 -(void)viewWillDisappear:(BOOL)animated{
     [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -93,16 +94,10 @@
         }
     }
     
-    CGSize wheelSize = CGSizeMake(size.width * .46, size.width * .46);
-    
+    [self addTitle];
     [self addRestoreButton];
     
     [self addHorizontalLine:size.height * .06];
-
-    /*_colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(size.width / 3.5 - wheelSize.width / 3.5,
-                                                                 size.height * .08,
-                                                                 wheelSize.width,
-                                                                 wheelSize.height)];*/
     _colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(screenPartitionWidth * 4,
                                                                  screenPartitionIdx * 1.7 + axeYLift,
                                                                  screenPartitionIdx * 4,
@@ -117,9 +112,9 @@
                                                                    size.height * .14,
                                                                    size.width * .40,
                                                                    size.height * .1)];*/
-    _brightnessSlider = [[UISlider alloc] initWithFrame:CGRectMake(screenPartitionWidth * 11,
-                                                                   screenPartitionIdx * 3.4 + axeYLift,
-                                                                   screenPartitionIdx * 3.5,
+    _brightnessSlider = [[sliderCustom alloc] initWithFrame:CGRectMake(screenPartitionWidth * 11,
+                                                                   screenPartitionIdx * 3.3 + axeYLift,
+                                                                   screenPartitionIdx * 3.8,
                                                                    40 )];
     
     _brightnessSlider.tintColor = [UIColor colorNamed:@"cellBg"];
@@ -127,23 +122,19 @@
     _brightnessSlider.maximumValue = 1.0;
     _brightnessSlider.value = 1.0;
     _brightnessSlider.continuous = true;
+    _brightnessSlider.thumbTintColor = [UIColor colorNamed:@"labelScreenShot"];
 //    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
 //    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateHighlighted];
 
     [_brightnessSlider addTarget:self action:@selector(changeBrightness:) forControlEvents:UIControlEventValueChanged];
+    
+    [_brightnessSlider trackRectForBounds:_brightnessSlider.bounds];
     [self.view addSubview:_brightnessSlider];
-  
-    
-    
     CGAffineTransform trans = CGAffineTransformMakeRotation(M_PI * 1.5);
-      _brightnessSlider.transform = trans;
-//    NSLog(@"slider %f, %f, %f, %f",_brightnessSlider.frame.origin.x, _brightnessSlider.frame.origin.y, _brightnessSlider.frame.size.width, _brightnessSlider.frame.size.height );
-    
-    
-//    [self addHorizontalLine:size.height * .31];
+    _brightnessSlider.transform = trans;
+   
     [self addHorizontalLine:(screenPartitionIdx * 6.2) + axeYLift];
     
-//    CGFloat newHeight = size.width * .16;
     _wellView = [[UIView alloc] initWithFrame:CGRectMake(screenPartitionWidth * 2,
                                                          screenPartitionIdx * 6.6 + axeYLift,
                                                          (screenPartitionWidth * 3.4) - correctionIdx,
@@ -156,13 +147,14 @@
     
     [self addColorButtons:screenPartitionWidth * 7.2 height:(screenPartitionIdx * 6.6 ) + axeYLift buttonWidth:colorButtonSize distance:distance];
     
-    ColorButton * btn = [self.buttonCollection objectAtIndex:0];
-   // [self currentColorIndicator:btn];
+    ColorButton * btn = [self.buttonCollection objectAtIndex:[self startingColor:self.startColor]];
     [self buttonPushed:btn];
-    NSLog(@"axe %f", (screenPartitionIdx * 8.3) + axeYLift);
+    
     [self addApplyButtonX:(screenPartitionWidth * 7) + correctionIdx  startY:(screenPartitionIdx * 8.3) + axeYLift + axeYforSE fontSize:fontSize];
     
 }
+
+
 
 -(void)addColorButtons:(CGFloat)x height:(CGFloat)height buttonWidth:(CGFloat)width distance:(CGFloat)distance{
     int colorNumber = 0;
@@ -195,6 +187,18 @@
 }
 
 
+-(int)startingColor:(UIColor*)color{
+    
+    int idx;
+    for (int i=0; i < self.colorCollection.count; i++) {
+        
+        if (CGColorEqualToColor(self.startColor.CGColor, [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
+        {
+            idx = i;
+        }
+    }
+    return idx;
+}
 -(void)addCloseButton{
     CGFloat startOfButton;
     CGFloat startY;
@@ -222,7 +226,22 @@
 //    self.navigationItem.leftBarButtonItem = moreBtn;
     [self.view addSubview:more];
 }
-
+-(void)addTitle{
+    CGFloat startOfButton;
+    CGFloat startY;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startY = 18;
+    }else {
+        startY = 10;
+    }
+    
+    UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + startY, self.view.frame.size.width, 30)];
+    title.text = @"Colours";
+    title.textColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
+    title.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:18];
+    title.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:title];
+}
 -(void)addRestoreButton{
     CGFloat startOfButton;
     CGFloat startY;
@@ -246,22 +265,20 @@
     [more setImage:[UIImage systemImageNamed:@"slider.horizontal.2.gobackward" withConfiguration:conf] forState:UIControlStateNormal];
     
     [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-//    UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
-//    self.navigationItem.leftBarButtonItem = moreBtn;
+
     btnRect = more.frame;
     [self.view addSubview:more];
 }
 -(void)showMenu{
-    UIMenuController * menu = [UIMenuController sharedMenuController];
-    menu.menuItems = @[
+    UIMenuController * menuReset = [UIMenuController sharedMenuController];
+    menuReset.menuItems = @[
         [[UIMenuItem alloc] initWithTitle:@"Restore Color Set" action:@selector(restoreDefaultColors:)]];
-    [menu setArrowDirection:UIMenuControllerArrowUp];
-    [menu showMenuFromView:self.view rect:btnRect];
+    [menuReset setArrowDirection:UIMenuControllerArrowUp];
+    [menuReset showMenuFromView:self.view rect:btnRect];
 }
--(IBAction)closeView:(id)senxer{
-    
-    [self dismissViewControllerAnimated:true completion:nil];
 
+-(IBAction)closeView:(id)senxer{
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 - (void)addHorizontalLine:(CGFloat)y {
@@ -316,7 +333,14 @@
 
 - (void)changeBrightness:(UISlider*)sender
 {
-    
+    if(_colorWheel.brightness < 0.2){
+        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor lightGrayColor] ];
+
+    }
+    if(_colorWheel.brightness > 0.2){
+        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor blackColor] ];
+
+    }
     [_colorWheel setBrightness:_brightnessSlider.value];
     [_wellView setBackgroundColor:_colorWheel.currentColor];
     self.applyBtn.enabled = YES;
@@ -348,27 +372,33 @@
 -(IBAction)buttonPushed:(id)sender{
   
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-    
-    ColorButton *btn = (ColorButton *)sender;
-    
     for(int i=0; i< self.buttonCollection.count; i++) {
         [[self.buttonCollection objectAtIndex:i] setSelected:NO];
         [line removeFromSuperlayer];
     }
-    
-    [self indicateSelctedButton:btn];
-    currentButton = btn;
+    [self indicateSelctedButton:sender];
+    currentButton = sender;
     self.applyBtn.enabled = NO;
 
 }
+
 - (void)indicateSelctedButton:(ColorButton *)btn {
     btn.layer.borderWidth = 0.0f;
     btn.layer.borderColor = [UIColor darkGrayColor].CGColor ;
     [self currentColorIndicator:btn];
-    _colorWheel.currentColor = btn.backgroundColor;
+    [_colorWheel setCurrentColor:btn.backgroundColor];
     [_colorWheel.knobView  performSelector:@selector(setFillColor:) withObject:btn.backgroundColor ];
-    _brightnessSlider.value =_colorWheel.brightness;
+    if(_colorWheel.brightness < 0.2){
+        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor lightGrayColor] ];
+
+    }
+    if(_colorWheel.brightness > 0.2){
+        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor blackColor] ];
+
+    }
+    _brightnessSlider.value = _colorWheel.brightness;
     [_wellView setBackgroundColor: btn.backgroundColor];
+    
 }
 
 -(void)currentColorIndicator:(ColorButton*)colorBtn

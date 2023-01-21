@@ -34,6 +34,25 @@
     return self;
 }
 
+
+-(void)addDotToView{
+   
+    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(330, 520, 30, 30)];
+    [more addTarget:self.drawingView
+             action:@selector(addDotToView)
+   forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    CGFloat pts = [UIFont buttonFontSize];
+    UIImageSymbolConfiguration* conf = [UIImageSymbolConfiguration configurationWithPointSize:pts weight:UIImageSymbolWeightSemibold];
+    [more setImage:[UIImage systemImageNamed:@"slider.horizontal.2.gobackward" withConfiguration:conf] forState:UIControlStateNormal];
+    
+    [more setTintColor:[UIColor colorNamed:@"orange"]];
+
+    [scrollView addSubview:more];
+}
+
+
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
@@ -54,6 +73,7 @@
     [self setupToolButtonsAppearance];
     self.lineTool.selected = YES;
     self.lineTool.backgroundColor = lineColor;
+    currentColor = lineColor;
     self.drawingView.type = JVDrawingTypeLine;
     self.drawingView.bufferType = JVDrawingTypeLine;
     self.drawingView.previousType = self.lineTool;
@@ -81,7 +101,7 @@
     
     
   
-   
+    [self addDotToView];
     
     }
 
@@ -477,7 +497,7 @@
         ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
         colorWheel.delegate = self;
         colorWheel.isIpad  = YES;
-        //colorWheel.startColor = currentColor;
+        colorWheel.startColor = currentColor;
         colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
         colorWheel.preferredContentSize = CGSizeMake(300, 400);
         [self presentViewController:colorWheel animated:YES completion:nil];
@@ -487,6 +507,8 @@
         ColorWheelController *controller = [[ColorWheelController alloc]init];
         [self prepareOverlay:controller];
         controller.isIpad  = NO;
+        controller.startColor = currentColor;
+
         [self presentViewController:controller animated:true completion:nil];
     }
     
@@ -858,7 +880,11 @@ return YES;
 }
 
 -(void)colorPopoverControllerDidSelectColor:(NSString *)hexColor {
+    
+    
+    
     if(self.penTool.selected == YES){
+        currentColor = [self colorFromHex:hexColor];
 //        [self extractRGBforPen:[GzColors colorFromHex:hexColor]];
         penColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypePen;
@@ -873,6 +899,7 @@ return YES;
     
     
     if(self.curveTool.selected == YES){
+        currentColor = [self colorFromHex:hexColor];
         curveColor =  [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeCurve;
         self.curveTool.backgroundColor = curveColor;
@@ -883,6 +910,7 @@ return YES;
     }
     
     if (self.dashTool.selected == YES){
+        currentColor = [self colorFromHex:hexColor];
         dashColor = [self colorFromHex:hexColor];
         [self deselectInactioveButtons];
         self.drawingView.drawTool = ACEDrawingToolTypeDashLine;
@@ -893,6 +921,7 @@ return YES;
     }
     
     if(self.arrowTool.selected == YES){
+        currentColor = [self colorFromHex:hexColor];
         arrowColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeArrow;
         self.drawingView.lineColor = arrowColor;
@@ -902,6 +931,7 @@ return YES;
         [self.popoverController dismissPopoverAnimated:YES];
     }
     if(self.lineTool.selected == YES){
+        currentColor = [self colorFromHex:hexColor];
         lineColor = [self colorFromHex:hexColor];
         self.drawingView.drawTool = ACEDrawingToolTypeLine;
         self.drawingView.lineColor = lineColor;

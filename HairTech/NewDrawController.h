@@ -53,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL curveToggleIsOn;
     BOOL textSelected;
     BOOL textSetterState;
+    UIColor * currentColor;
     
 }
 

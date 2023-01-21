@@ -8,6 +8,7 @@
 #import "TextRect.h"
 #import "SPUserResizableView.h"
 #import "LayersData.h"
+#import "FrameLayer.h"
 
 
 #define ACEDrawingViewVersion   1.0.0
@@ -153,6 +154,9 @@ typedef enum {
 @property (nonatomic, assign) CircleLayer * circleLayer2;
 @property (nonatomic, assign) CircleLayer * circleLayer3;
 @property (nonatomic, assign) CircleLayer * circleLayer4;
+@property (nonatomic, assign) FrameLayer * frameForDot;
+
+
 @property (nonatomic, assign) TextRect * textRect;
 
 

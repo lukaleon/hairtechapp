@@ -70,7 +70,9 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
 
 @interface ISColorKnobView : UIView
 @property(nonatomic, strong)UIColor* fillColor;
+@property(nonatomic, strong)UIColor* lineColor;
 
+-(void)setLineColor:(UIColor *)lineColor;
 @end
 
 @implementation ISColorKnobView
@@ -81,6 +83,7 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
     {
         self.backgroundColor = [UIColor clearColor];
         self.fillColor = [UIColor clearColor];
+        self.lineColor = [UIColor blackColor];
         
     }
     return self;
@@ -99,9 +102,12 @@ static ISColorWheelPixelRGB ISColorWheel_HSBToRGB (CGFloat h, CGFloat s, CGFloat
 
     
     CGContextSetLineWidth(ctx, borderWidth);
-    CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
+    CGContextSetStrokeColorWithColor(ctx, _lineColor.CGColor);
     CGContextAddEllipseInRect(ctx, borderFrame);
     CGContextStrokePath(ctx);
+}
+-(void)setLineColor:(UIColor *)lineColor{
+    _lineColor = lineColor;
 }
 
 @end

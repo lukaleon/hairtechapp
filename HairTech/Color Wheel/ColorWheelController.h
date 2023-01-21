@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ISColorWheel.h"
+#import "sliderCustom.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -17,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ColorWheelController : UIViewController <ISColorWheelDelegate,UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate>
 {
     ISColorWheel * _colorWheel;
-    UISlider* _brightnessSlider;
     UIView* _wellView;
     UIButton * colorButton;
     CAShapeLayer *line;
@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
     CGRect newSliderRect;
 
 }
+@property (strong, nonatomic) IBOutlet sliderCustom * _brightnessSlider;
+
 @property BOOL isIpad;
 @property (strong, nonatomic) IBOutlet UIButton * applyBtn;
 @property (weak, nonatomic) id<ColorWheelControllerDelegate> delegate;

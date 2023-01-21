@@ -9,7 +9,7 @@
 #import "JVDrawingLayer.h"
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
-
+#import "DotLayer.h"
 
 #define JVDRAWINGPATHWIDTH 2
 #define JVDRAWINGBUFFER 16
@@ -36,7 +36,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.frame = [UIScreen mainScreen].bounds;
-       // self.frame =
+        // self.frame =
         self.lineJoin = kCALineJoinRound;
         self.lineCap = kCALineCapRound;
         self.isSelected = NO;
@@ -45,9 +45,10 @@
         self.arrayOfCircles = [NSMutableArray array];
         self.editedLine = NO;
         _zoomIndex = 1.0;
-       // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
-        
 
+        // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
+        
+        
     }
     return self;
 }
@@ -66,7 +67,7 @@
     }
     else
     {
-
+        
         self.opacity = 1;
     }
 }
@@ -79,11 +80,11 @@
 
 - (BOOL)isPoint:(CGPoint)p withinDistance:(CGFloat)distance ofPath:(CGPathRef)path
 {
-  
+    
     CGPathRef hitPath = CGPathCreateCopyByStrokingPath(path, NULL, distance*2, kCGLineCapRound, kCGLineJoinRound, 0);
     BOOL isWithinDistance = CGPathContainsPoint(hitPath, NULL, p, false);
     CGPathRelease(hitPath);
-  //  NSLog(@"IS WITHIN DISTANCE %d", isWithinDistance);
+    //  NSLog(@"IS WITHIN DISTANCE %d", isWithinDistance);
     return isWithinDistance;
 }
 
@@ -116,11 +117,11 @@
         if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
             JVDRAWINGBUFFERFORCURVE = 16;
             if(self.editedLine){
-            self.midP = self.controlPointOfCurve;
+                self.midP = self.controlPointOfCurve;
             } else {
                 self.midP = midPoint(self.startPoint, self.endPoint);
             }
-                
+            
             CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
             
             JVDRAWINGBUFFERFORCURVE = (lineLength / 8) / _zoomIndex ;
@@ -131,27 +132,45 @@
                 JVDRAWINGBUFFERFORCURVE = 2;
             }
             NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORCURVE,  _zoomIndex );
-
-                CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
-                CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
-                CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
+            
+            CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
+            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
+            CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
+            
+            CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
+            if (diffrence <= JVDRAWINGBUFFERFORCURVE || distanceStart <= JVDRAWINGBUFFERFORCURVE || distanceEnd <= JVDRAWINGBUFFERFORCURVE) {
+                CGFloat min = MIN(distanceStart, distanceEnd);
+                if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
+                    if (min == distanceStart) return JVDrawingTouchHead;
+                    if (min == distanceEnd) return JVDrawingTouchEnd;
+                    
+                }
+            };
+            if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFERFORCURVE)
+                return JVDrawingTouchMid;
+            
+        }
         
-                CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
-                if (diffrence <= JVDRAWINGBUFFERFORCURVE || distanceStart <= JVDRAWINGBUFFERFORCURVE || distanceEnd <= JVDRAWINGBUFFERFORCURVE) {
-                    CGFloat min = MIN(distanceStart, distanceEnd);
-                    if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
-                        if (min == distanceStart) return JVDrawingTouchHead;
-                        if (min == distanceEnd) return JVDrawingTouchEnd;
-                              
-                              }
-                          };
-                  if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFERFORCURVE)
-                  return JVDrawingTouchMid;
-                  
-                  }
+        
+        if (self.type == JVDrawingTypeDot) {
+            
+            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
+
+            if ([self isPoint:self.startPoint withinDistance:30 ofPath:self.path]){
+                
+                return JVDrawingTouchMid;
+
+            }
+            if([self distanceBetweenStartPoint:point endPoint:self.endPoint] < 10){
+                 return JVDrawingTouchEnd;
+ 
+            }
+            
+        }
+        
         
         CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-            JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
+        JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
         if (JVDRAWINGBUFFERFORLINE > 16){
             JVDRAWINGBUFFERFORLINE = 16;
         }
@@ -163,7 +182,7 @@
         CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
         CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
         CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-
+        
         CGFloat diffrence = distanceStart + distanceEnd - distance;
         if (diffrence <= JVDRAWINGBUFFERFORLINE || distanceStart <= JVDRAWINGBUFFERFORLINE || distanceEnd <= JVDRAWINGBUFFERFORLINE) {
             CGFloat min = MIN(distanceStart, distanceEnd);
@@ -174,9 +193,9 @@
                 return JVDrawingTouchMid;
             }
         }
-        };
-        
-        
+    };
+    
+    
     
     
     return NO;
@@ -216,11 +235,11 @@
         layer.strokeColor = line_Color.CGColor;
         layer.fillColor = [UIColor clearColor].CGColor;
         [layer setLineDashPattern:
-        [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
-        [NSNumber numberWithInt:2+layer.lineWidth],nil]];
+         [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
+          [NSNumber numberWithInt:2+layer.lineWidth],nil]];
     }
     return layer;
-
+    
 }
 -(CGPoint)getStartPointOfLayer:(JVDrawingLayer *)layer{
     return layer.startPoint;
@@ -228,6 +247,41 @@
 -(CGPoint)getEndPointOfLayer:(JVDrawingLayer *)layer{
     return  layer.endPoint;
 }
+
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
+    
+    JVDrawingLayer *layer = [[[self class] alloc] init];
+   
+     UIBezierPath * rectPath = [UIBezierPath bezierPath];
+     CGRect rect = CGRectMake(startPoint.x-30, startPoint.y-30, 60, 60);
+    rectPath = [UIBezierPath bezierPathWithRect:rect];
+    [rectPath stroke];
+        int step = 0;
+        for(int i=1;i<=rect.size.width/10;i++){
+        CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+        [rectPath moveToPoint:newP];
+        [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+        step = step + 10;
+        }
+    [rectPath stroke];
+    
+    DotLayer * dot = [DotLayer addDotToFrame:startPoint];
+    
+    layer.path = rectPath.CGPath;
+
+   // layer.bounds = rect;
+
+    layer.startPoint = startPoint;
+    layer.endPoint = CGPointMake(startPoint.x + 30, startPoint.y + 30);
+    layer.type = type;
+    layer.dotCenter = startPoint;
+    layer.fillColor  =[UIColor clearColor].CGColor;
+    layer.strokeColor = [UIColor clearColor].CGColor;
+
+    [layer addSublayer:dot];
+    return layer;
+}
+
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize isSelected:(BOOL)isSelected{
     JVDrawingLayer *layer = [[[self class] alloc] init];
@@ -293,7 +347,7 @@
 - (void)movePathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint {
     CGPoint startPoint = CGPointMake(self.startPoint.x+currentPoint.x-previousPoint.x, self.startPoint.y+currentPoint.y-previousPoint.y);
     CGPoint endPoint = CGPointMake(self.endPoint.x+currentPoint.x-previousPoint.x, self.endPoint.y+currentPoint.y-previousPoint.y);
-    [self movePathWithStartPoint:startPoint endPoint:endPoint type:self.type isSelected:self.isSelected];
+        [self movePathWithStartPoint:startPoint endPoint:endPoint type:self.type isSelected:self.isSelected];
 }
 
 - (void)movePathWithStartPoint:(CGPoint)startPoint isSelected:(BOOL)isSelected {
@@ -367,6 +421,9 @@
             break;
         case JVDrawingTypeText:
             [self moveLinePathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
+        case JVDrawingTypeDot:
+            [self moveDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
             break;
         default:
             break;
@@ -451,6 +508,41 @@
     self.path = path.CGPath;
 }
 
+#pragma mark MOVE DOT PATH
+- (void)moveDotPathWithStartPoint:(CGPoint)startPoint
+                          endPoint:(CGPoint)endPoint
+                        isSelected:(BOOL)isSelected {
+    
+    CGFloat widthHeight = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
+    
+    self.dotCenter = startPoint;
+
+    UIBezierPath *rectPath = [UIBezierPath bezierPath];
+    CGRect rect = CGRectMake(startPoint.x-30, startPoint.y-30, widthHeight , widthHeight);
+    
+    rectPath = [UIBezierPath bezierPathWithRect:rect];
+    int step = 0;
+    for(int i=1;i<=rect.size.width/10;i++){
+    CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+    [rectPath moveToPoint:newP];
+    [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+    step = step + 10;
+    }
+    self.strokeColor = [UIColor redColor].CGColor;
+    
+    DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
+    self.path = rectPath.CGPath;
+
+    //self.startPoint = startPoint;
+
+    [CATransaction begin];
+    [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];
+    dotLayer.frame = rect;
+    dotLayer.position = startPoint;
+    [CATransaction commit];
+
+}
+
 #pragma mark Select and Move Arrow Methods
 
 - (void)moveCurvedLinePathWithStartPoint:(CGPoint)startPoint
@@ -492,6 +584,10 @@
     self.path = path.CGPath;
     [self.pointArray addObject:[NSValue valueWithCGPoint:endPoint]];
 }
+
+
+
+
 
 - (UIBezierPath *)createDashedLinePathWithEndPoint:(CGPoint)endPoint andStartPoint:(CGPoint)startPoint length:(CGFloat)length
 {
