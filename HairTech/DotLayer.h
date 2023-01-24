@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface  DotLayer : CALayer
-+(DotLayer*)addDotToFrame:(CGPoint)point;
++(DotLayer*)addDotToFrame:(CGPoint)point scale:(CGFloat)scaleFactor;
+- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize scale:(CGFloat)scale;
 
 @end
 

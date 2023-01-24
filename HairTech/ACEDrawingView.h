@@ -136,7 +136,7 @@ typedef enum {
 -(void)addFrameForTextView:(CGRect)rect centerPoint:(CGPoint)center text:(NSString*)text color:(UIColor*)color font:(CGFloat)fontSize;
 -(void)hideAndSaveTextViewWhenNewAdded;
 
--(void)addDotToView;
+-(void)addDotToView:(CGPoint)centerPoint;
 
 @property SPUserResizableView *userResizableView;
 @property SPUserResizableView *userResizableDotView;

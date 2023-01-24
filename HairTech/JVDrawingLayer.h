@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 
 + (JVDrawingLayer *)createAllLayersAtStart:(CGPoint)startPoint endPoint:(CGPoint)endPoint type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color controlPoint:(CGPoint)controlPoint grafittiPoints:(NSArray*)grafittiPoints;
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color;
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height  type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor;
 
 - (NSInteger)caculateLocationWithPoint:(CGPoint)point;
 - (void)movePathWithStartPoint:(CGPoint)startPoint;

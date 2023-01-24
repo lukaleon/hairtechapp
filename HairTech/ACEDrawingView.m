@@ -11,6 +11,7 @@
 #import "Ruler.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "DrawViewController.h"
+#import "DotLayer.h"
 
 //#define kDefaultLineColor       [UIColor redColor]
 #define kDefaultLineWidth       10.0f;
@@ -984,7 +985,23 @@ UIColor* tempColor;
     // Walk the layer and view hierarchies separately. We need to reach all tiled layers.
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toView:self.userResizableView];
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toLayer:self.textViewNew.layer];
+    
+    for (JVDrawingLayer * layer in self.layerArray){
+        UIImage * img = [UIImage imageNamed:@"dotitem"];
+
+        if (layer.type == JVDrawingTypeDot){
+            DotLayer * dotLayer = [layer.sublayers objectAtIndex:0];
+          
+           dotLayer.contents =(__bridge id _Nullable) ([dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:zoomIdx]).CGImage;
+            dotLayer.contentsGravity = kCAGravityResize;
+            
+            NSLog(@"hey ho %f", dotLayer.frame.size.width);
+        }
+    }
+
 }
+
+
 
 - (void)applyScale:(CGFloat)scale toLayer:(CALayer *)layer {
     layer.contentsScale = scale;
@@ -998,6 +1015,7 @@ UIColor* tempColor;
         [self applyScale:scale toView:subview];
     }
 }
+
 -(void)removeCirclesOnZoom{
     self.selectedLayer.isSelected = NO;
     self.selectedLayer = nil;
@@ -1051,6 +1069,13 @@ UIColor* tempColor;
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)],[[UIMenuItem alloc] initWithTitle:@"Flip" action:@selector(reflectLine)]];
     [menu showMenuFromView:self rect:rectOfMenu];
     }
+    if (self.selectedLayer.type == JVDrawingTypeDot) {
+        rectOfMenu = CGRectMake(self.selectedLayer.dotCenter.x, self.selectedLayer.dotCenter.y, 0, 0);
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
+        [menu showMenuFromView:self rect:rectOfMenu];
+    }
+    
     else {
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
@@ -1110,87 +1135,15 @@ UIColor* tempColor;
 
 #pragma mark Add Dot
 
--(void)addDotToView{
+-(void)addDotToView:(CGPoint)centerPoint{
     self.type = JVDrawingTypeDot;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:self.center endPoint:self.center height:60 type:self.type lineWidth:3 lineColor:[UIColor redColor]];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:60 type:self.type lineWidth:3 lineColor:[UIColor redColor] scale:self.zoomFactor];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
     [self.drawingLayer addToTrack];
-    
+    [self selectLayer:self.drawingLayer];
 }
-                /* THIS IS BLOCK OF METHODS TO ADD DOT DOT DOT DOT DOTLAYER */
-//
-//- (void)showMenuFromDot:(UITapGestureRecognizer*)sender {
-//    CGRect rectOfMenu = CGRectMake(self.userResizableDotView.frame.origin.x +
-//                                   (self.userResizableDotView.frame.size.width / 2),
-//                                   self.userResizableDotView.frame.origin.y ,
-//                                   0, 0);
-//            menuForTextView = [UIMenuController sharedMenuController];
-//            menuForTextView.menuItems = @[
-//                [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeDot)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateDot)]];
-//            [menuForTextView showMenuFromView:self rect:rectOfMenu];
-//}
-//
-//- (void)hideFrameFormDot:(UITapGestureRecognizer*)sender {
-// 
-//}
-//-(void)removeDot{
-//    NSLog(@"Delete Dot");
-//}
-//-(void)duplicateDot{
-//    NSLog(@"Duplicate Dot");
-//}
-//-(void)dotPosition:(SPUserResizableView*)rect  {
-//    
-//    viewForDot.bounds = rect.contentView.bounds;
-//    CGRect newRect = rect.contentView.bounds;
-//    CGFloat widthHeight = (newRect.size.width / 10) / 4;
-//
-//    NSLog(@" width %f height %f", newRect.size.width, newRect.size.height);
-//    
-//    UIBezierPath *circlePath = [UIBezierPath bezierPath];
-//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(newRect.size.width /2 - widthHeight, newRect.size.height/ 2 - widthHeight, newRect.size.width /10, newRect.size.height /10 )];
-//    self.dot.path = circlePath.CGPath;
-//}
-//
-//
-//- (CAShapeLayer*)addDotLayer {
-//    CGFloat centerX =  self.userResizableDotView.contentView.bounds.size.width/2;
-//    CGFloat centerY =  self.userResizableDotView.contentView.bounds.size.height/2;
-//    CGPoint center = CGPointMake(centerX, centerY);
-//    CGRect rect = self.userResizableDotView.contentView.bounds;
-//    CGFloat widthHeight = (rect.size.width / 10) / 4;
-//    NSLog(@" center %f", widthHeight);
-//    
-//    self.dot = [CAShapeLayer layer];
-//    UIBezierPath *circlePath=[UIBezierPath bezierPath];
-//    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x - widthHeight , center.y - widthHeight , rect.size.width /10, rect.size.height /10)];
-//    
-//    self.dot.path = circlePath.CGPath;
-//    self.dot.fillColor = [UIColor blueColor].CGColor;
-//    self.dot.opacity = 1.0;
-//    self.dot.strokeColor = [UIColor blueColor].CGColor;
-//    return self.dot;
-//}
-//
-//-(void)addDotToView{
-//    
-//    NSLog(@"add dot");
-//    self.userResizableDotView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(180, 250, 50, 50)];
-//    UIView * viewForDot = [[UIView alloc]initWithFrame:self.userResizableDotView.bounds];
-//   // viewForDot.backgroundColor = [UIColor yellowColor];
-//    self.userResizableDotView.contentView = viewForDot;
-//    [self.userResizableDotView setTextViewSelected:NO];
-//    
-//    [viewForDot.layer addSublayer:[self addDotLayer]];
-//
-//    self.userResizableDotView.delegate = self;
-//    [self.userResizableDotView showEditingHandles];
-//    currentlyEditingView = self.userResizableDotView;
-//    lastEditedView = self.userResizableDotView;
-//    [self addSubview:self.userResizableDotView];
-//}
 
 #pragma mark Add Text View
 

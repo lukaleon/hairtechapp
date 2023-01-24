@@ -38,8 +38,8 @@
 -(void)addDotToView{
    
     UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(330, 520, 30, 30)];
-    [more addTarget:self.drawingView
-             action:@selector(addDotToView)
+    [more addTarget:self
+             action:@selector(drawingViewAddDot)
    forControlEvents:UIControlEventTouchUpInside];
     [more.widthAnchor constraintEqualToConstant:30].active = YES;
     [more.heightAnchor constraintEqualToConstant:30].active = YES;
@@ -49,9 +49,12 @@
     
     [more setTintColor:[UIColor colorNamed:@"orange"]];
 
-    [scrollView addSubview:more];
+    [self.view addSubview:more];
 }
-
+-(void)drawingViewAddDot{
+    
+    [self.drawingView addDotToView:self.img.center];
+}
 
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected

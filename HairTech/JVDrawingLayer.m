@@ -243,7 +243,7 @@
     return  layer.endPoint;
 }
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color{
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor{
     
     JVDrawingLayer *layer = [[[self class] alloc] init];
    
@@ -260,7 +260,7 @@
         }
     [rectPath stroke];
     
-    DotLayer * dot = [DotLayer addDotToFrame:startPoint];
+    DotLayer * dot = [DotLayer addDotToFrame:startPoint scale:scaleFactor];
     
     layer.path = rectPath.CGPath;
 
@@ -629,16 +629,30 @@
 
     self.startPoint = startPoint;
 
+    UIImage * img = [UIImage imageNamed:@"dotitem"];
+    //UIImage * newImg = [self imageWithImage:img scaledToSize:rect.size];
+    
+    UIImage * newImg = [dotLayer imageWithImage:img scaledToSize:rect.size scale:_zoomFactor];
+    
     [CATransaction begin];
     [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];
+    dotLayer.contents = (__bridge id _Nullable)(newImg.CGImage);
     dotLayer.frame = rect;
     dotLayer.position = startPoint;
     [CATransaction commit];
     
-    
-  
-    
-    
+}
+
+
+- (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    //UIGraphicsBeginImageContext(newSize);
+    // In next line, pass 0.0 to use the current device's pixel scaling factor (and thus account for Retina resolution).
+    // Pass 1.0 to force exact pixel size.
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 #pragma mark Select and Move Arrow Methods
