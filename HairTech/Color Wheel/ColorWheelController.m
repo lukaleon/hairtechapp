@@ -236,6 +236,9 @@
     }
     
     UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + startY, self.view.frame.size.width, 30)];
+    
+//    CGPoint titleCenter = CGPointMake(self.view.center.x, self.view.frame.origin.y + startY);
+//    title.center = titleCenter;
     title.text = @"Colours";
     title.textColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     title.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:18];
@@ -254,28 +257,50 @@
         startY = 10;
 
     }
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.origin.x + startOfButton, self.view.frame.origin.y + startY, 30, 30)];
-    [more addTarget:self
+    restoreBtn = [[ColorResetButton alloc] initWithFrame:CGRectMake(startOfButton, startY, 30, 30)];
+    [restoreBtn addTarget:self
              action:@selector(showMenu)
    forControlEvents:UIControlEventTouchUpInside];
-    [more.widthAnchor constraintEqualToConstant:30].active = YES;
-    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+    [restoreBtn.widthAnchor constraintEqualToConstant:30].active = YES;
+    [restoreBtn.heightAnchor constraintEqualToConstant:30].active = YES;
     CGFloat pts = [UIFont buttonFontSize];
     UIImageSymbolConfiguration* conf = [UIImageSymbolConfiguration configurationWithPointSize:pts weight:UIImageSymbolWeightSemibold];
-    [more setImage:[UIImage systemImageNamed:@"slider.horizontal.2.gobackward" withConfiguration:conf] forState:UIControlStateNormal];
+    [restoreBtn setImage:[UIImage systemImageNamed:@"gobackward" withConfiguration:conf] forState:UIControlStateNormal];
     
-    [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    [restoreBtn setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
-    btnRect = more.frame;
-    [self.view addSubview:more];
+    btnRect = restoreBtn.frame;
+    [self.view addSubview:restoreBtn];
+    [self showMenu];
+    
 }
 -(void)showMenu{
-    UIMenuController * menuReset = [UIMenuController sharedMenuController];
-    menuReset.menuItems = @[
-        [[UIMenuItem alloc] initWithTitle:@"Restore Color Set" action:@selector(restoreDefaultColors:)]];
-    [menuReset setArrowDirection:UIMenuControllerArrowUp];
-    [menuReset showMenuFromView:self.view rect:btnRect];
+    
+    NSMutableArray* actions = [[NSMutableArray alloc] init];
+       // if (@available(iOS 14.0, *)) {
+    restoreBtn.showsMenuAsPrimaryAction = true;
+
+            [actions addObject:[UIAction actionWithTitle:@"Reset Color Set"
+                                                   image:nil
+                                              identifier:nil
+                                                 handler:^(__kindof UIAction* _Nonnull action) {
+                [self restoreDefaultColors];
+            }]];
+            
+            
+            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        restoreBtn.offset = CGPointMake(0, 0);
+
+    }else{
+        restoreBtn.offset = CGPointMake(0, 40);
+    }
+    restoreBtn.menu = menu;
+            
+       // }
 }
+
 
 -(IBAction)closeView:(id)senxer{
     [self dismissViewControllerAnimated:true completion:nil];
@@ -419,8 +444,9 @@
         [colorBtn.layer addSublayer:line];
 }
 
--(IBAction)restoreDefaultColors:(id)sender{
+-(void)restoreDefaultColors{
     
+    NSLog(@"resetcolors");
         self.applyBtn.enabled = NO;
        NSArray * defaultColors = [NSArray arrayWithObjects:
                                 
@@ -452,7 +478,7 @@
         [btn setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
         colorNumber++;
     }
-    
+   // [menuReset hideMenuFromView:self.view];
 }
 
 - (void)panGestureAction:(UIPanGestureRecognizer*)gesture {

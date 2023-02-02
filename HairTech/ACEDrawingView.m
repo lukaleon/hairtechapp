@@ -245,6 +245,24 @@ UIColor* tempColor;
                 //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
                 
             }
+            if(JVDrawingTypeDot == selectedL.type){
+                
+                if(self.selectedLayer != nil){
+                    [self removeCircles];
+                }
+               
+                self.type = JVDrawingTypeDot;
+            CGPoint newStartPoint = CGPointMake(selectedL.startPoint.x + selectedL.height, selectedL.startPoint.y);
+                
+                self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:newStartPoint endPoint:newStartPoint  height:selectedL.height type:self.type lineWidth:3 lineColor:[UIColor redColor] scale:self.zoomFactor imageName:@"dotlayer"];
+                
+                [self.layer addSublayer:self.drawingLayer];
+                [self.layerArray addObject:self.drawingLayer];
+                [self.drawingLayer addToTrack];
+                [self selectLayer:self.drawingLayer];
+                [self.selectedLayer setZoomIndex:self.zoomFactor];
+                
+            }
             else {
                 [self.drawingLayer movePathWithEndPoint:endPointOffset];
             }
@@ -623,11 +641,12 @@ UIColor* tempColor;
                         break;
                 }
             }
-            else if (self.selectedLayer.type == JVDrawingTypeDot)
-            {
+            else if (self.selectedLayer.type == JVDrawingTypeDot || self.selectedLayer.type == JVDrawingTypeClipper || self.selectedLayer.type == JVDrawingTypeRazor )
+            { // DOT LAYER MOVING
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
-                  
+                    
+                        
                         break;
                     case JVDrawingTouchMid:
                     NSLog(@"MOVING MIDDLE POINT");
@@ -635,7 +654,7 @@ UIColor* tempColor;
                         [self hideLoupe]; // hide loupe when middle touched
                         [self.selectedLayer moveDotPathWithPreviousPoint:previousPoint currentPoint:currentPoint];
                         [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot selectedLayer:self.selectedLayer];
-                        [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
+                        [self circleFramePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
 
                         
                         break;
@@ -643,9 +662,10 @@ UIColor* tempColor;
                         NSLog(@"MOVING END POINT");
                         
                         [self hideLoupe]; // hide loupe when middle touched
+                        self.selectedLayer.zoomFactor = self.zoomFactor;
                         [self.selectedLayer zoomDotPathWithEndPoint:currentPoint];
                         [self framePosition:self.selectedLayer.dotCenter forLayer:self.frameForDot selectedLayer:self.selectedLayer];
-                        [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
+                        [self circleFramePosition:self.selectedLayer.endPoint forLayer:self.circleLayer1 atIndex:0];
                      
                         break;
                         
@@ -784,6 +804,7 @@ UIColor* tempColor;
                     self.selectedLayer = nil;
                     [self removeCircles];
                     [self hideMenu];
+                    [self.delegate hideAdditionalColorPicker];
                 }
                 //       self.drawingLayerSelectedBlock(self.selectedLayer);
                 
@@ -915,16 +936,15 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer1];
         [self.arrayOfCircles addObject:self.circleLayer2];
     }
-    else if (JVDrawingTypeDot == self.type){
-        self.frameForDot = [FrameLayer addCircleToPoint:layer.startPoint endPoint:layer.endPoint scaleFactor:self.zoomFactor];
-        
-        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.endPoint scaleFactor:self.zoomFactor];
-
+    else if (JVDrawingTypeDot == self.type || JVDrawingTypeClipper == self.type || JVDrawingTypeRazor == self.type ){
+        self.frameForDot = [FrameLayer addFrameToPoint:layer.startPoint endPoint:layer.endPoint scaleFactor:self.zoomFactor];
+        self.circleLayer1 = [CircleLayer addZoomToFrame:layer.endPoint scaleFactor:self.zoomFactor];
         [layer addSublayer:self.frameForDot];
         [layer addSublayer:self.circleLayer1];
         [self.arrayOfCircles addObject:self.frameForDot];
         [self.arrayOfCircles addObject:self.circleLayer1];
-
+        
+        [self.delegate additionalToolsColorPopover:layer.lineColor_];
     }
 }
 
@@ -940,6 +960,47 @@ UIColor* tempColor;
 
     circle.path = circlePath.CGPath;
 }
+
+-(void)circleFramePosition:(CGPoint)point forLayer:(CircleLayer*)circle atIndex:(int)idx{
+    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-7 / self.zoomFactor, point.y-7 / self.zoomFactor , 14 / self.zoomFactor, 14 / self.zoomFactor)];
+
+    
+    CGPoint upperPoint = CGPointMake(point.x - 4 / self.zoomFactor, point.y - 4 / self.zoomFactor);
+    CGPoint lowerPoint = CGPointMake(point.x + 4 / self.zoomFactor, point.y + 4 / self.zoomFactor);
+
+    [circlePath moveToPoint:upperPoint];
+    [circlePath addLineToPoint:CGPointMake(upperPoint.x, upperPoint.y + 4 / self.zoomFactor)];
+    [circlePath moveToPoint:upperPoint];
+    [circlePath addLineToPoint:CGPointMake(upperPoint.x + 4 / self.zoomFactor, upperPoint.y)];
+    [circlePath moveToPoint:upperPoint];
+    [circlePath addLineToPoint:lowerPoint];
+    [circlePath addLineToPoint:CGPointMake(lowerPoint.x - 4 / self.zoomFactor, lowerPoint.y)];
+    [circlePath moveToPoint:lowerPoint];
+    [circlePath addLineToPoint:CGPointMake(lowerPoint.x, lowerPoint.y - 4 / self.zoomFactor)];
+    [circlePath stroke];
+    circlePath.lineWidth = 1 ;
+    
+    
+    
+    circle.path = circlePath.CGPath;
+}
+
+-(void)frameTextPosition:(CGPoint)point forLayer:(FrameLayer*)frame selectedLayer:(JVDrawingLayer*)layer{
+ 
+    UIBezierPath *framePath = [UIBezierPath bezierPath];
+    framePath = [UIBezierPath bezierPathWithRect:CGRectMake(layer.bounds.origin.x , layer.bounds.origin.y, layer.bounds.size.width, layer.bounds.size.height)];
+    frame.path = framePath.CGPath;
+}
+-(void)textCirclePosition:(CGPoint)point forLayer:(CircleLayer*)circle atIndex:(int)idx{
+    
+    
+
+    UIBezierPath *circlePath = [UIBezierPath bezierPath];
+    circlePath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x-5 / self.zoomFactor, point.y-5 / self.zoomFactor, 10 / self.zoomFactor, 10 / self.zoomFactor)];
+    circle.path = circlePath.CGPath;
+}
+
 
 
 -(void)framePosition:(CGPoint)point forLayer:(FrameLayer*)frame selectedLayer:(JVDrawingLayer*)layer{
@@ -974,28 +1035,33 @@ UIColor* tempColor;
 
 #pragma mark ZOOM IN / OUT METHODS
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
-
+    
     [self.touchTimer invalidate];
     [self.magnifierView setHidden:YES];
     
     self.zoomFactor = zoomFactor;
     self.drawingLayer.zoomFactor = zoomFactor;
+    if(self.selectedLayer != nil){
+        self.selectedLayer.zoomFactor = zoomFactor;
+    }
     [self removeCirclesOnZoom];
     zoomIdx = zoomFactor * [UIScreen mainScreen].scale;
     // Walk the layer and view hierarchies separately. We need to reach all tiled layers.
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toView:self.userResizableView];
     [self applyScale:(zoomFactor * [UIScreen mainScreen].scale) toLayer:self.textViewNew.layer];
     
+    
+    UIImage * img;
+    
     for (JVDrawingLayer * layer in self.layerArray){
-        UIImage * img = [UIImage imageNamed:@"dotitem"];
-
-        if (layer.type == JVDrawingTypeDot){
+        
+        if (layer.type == JVDrawingTypeDot || layer.type == JVDrawingTypeClipper || layer.type == JVDrawingTypeRazor){
             DotLayer * dotLayer = [layer.sublayers objectAtIndex:0];
-          
-           dotLayer.contents =(__bridge id _Nullable) ([dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:zoomIdx]).CGImage;
-            dotLayer.contentsGravity = kCAGravityResize;
+            img = [UIImage imageNamed:dotLayer.imageName];
+
+            dotLayer.mask.contents = (__bridge id _Nullable) ([dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:zoomIdx]).CGImage;
+            dotLayer.mask.contentsGravity = kCAGravityResize;
             
-            NSLog(@"hey ho %f", dotLayer.frame.size.width);
         }
     }
 
@@ -1056,29 +1122,52 @@ UIColor* tempColor;
         rectOfMenu = CGRectMake(middlePoint.x, middlePoint.y, 0, 0);
         
     }
-        [self becomeFirstResponder];
-        menu = [UIMenuController sharedMenuController];
-    if(self.selectedLayer.type == JVDrawingTypeText || self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine)
+    [self becomeFirstResponder];
+    menu = [UIMenuController sharedMenuController];
+    if(self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine)
     {
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+        [menu setArrowDirection:UIMenuControllerArrowDown];
+        
         [menu showMenuFromView:self rect:rectOfMenu];
     }
+//
+//    if(self.selectedLayer.type == JVDrawingTypeText){
+//             rectOfMenu = CGRectMake(self.selectedLayer.startPoint.x +( self.selectedLayer.width / 2), self.selectedLayer.startPoint.y, 0, 0);
+//                menu.menuItems = @[
+//                    [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+//                [menu setArrowDirection:UIMenuControllerArrowDown];
+//
+//                [menu showMenuFromView:self rect:rectOfMenu];
+        
+//        menuForTextView = [UIMenuController sharedMenuController];
+//        menuForTextView.menuItems = @[
+//            [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(duplicateLine)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(duplicateLine)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+//    [menuForTextView setArrowDirection:UIMenuControllerArrowDown];
+//        [menuForTextView showMenuFromView:self rect:rectOfMenu];
+//
+//
+//    }
+    
     if (self.selectedLayer.type == JVDrawingTypeDashedLine || self.selectedLayer.type == JVDrawingTypeLine || self.selectedLayer.type == JVDrawingTypeArrow){
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)],[[UIMenuItem alloc] initWithTitle:@"Flip" action:@selector(reflectLine)]];
+        [menu setArrowDirection:UIMenuControllerArrowDown];
     [menu showMenuFromView:self rect:rectOfMenu];
     }
-    if (self.selectedLayer.type == JVDrawingTypeDot) {
+    if (self.selectedLayer.type == JVDrawingTypeDot || self.selectedLayer.type == JVDrawingTypeClipper || self.selectedLayer.type == JVDrawingTypeRazor ) {
         rectOfMenu = CGRectMake(self.selectedLayer.dotCenter.x, self.selectedLayer.dotCenter.y, 0, 0);
         menu.menuItems = @[
-            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+        [menu setArrowDirection:UIMenuControllerArrowDown];
         [menu showMenuFromView:self rect:rectOfMenu];
     }
     
     else {
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
+        [menu setArrowDirection:UIMenuControllerArrowDown];
         [menu showMenuFromView:self rect:rectOfMenu];
     }
     menuVisible = YES;
@@ -1135,16 +1224,83 @@ UIColor* tempColor;
 
 #pragma mark Add Dot
 
+
 -(void)addDotToView:(CGPoint)centerPoint{
+    NSLog(@"drawing layer = %@", self.drawingLayer);
+    if(self.selectedLayer != nil){
+        [self removeCircles];
+    }
+    if ([self textViewSelected]){
+        [self hideAndCreateTextLayer];
+        textViewSelected = NO;
+        [self.delegate selectPreviousTool:self.previousType];
+    }
+    
     self.type = JVDrawingTypeDot;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:60 type:self.type lineWidth:3 lineColor:[UIColor redColor] scale:self.zoomFactor];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:40 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"dotlayer"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
     [self.drawingLayer addToTrack];
     [self selectLayer:self.drawingLayer];
+    [self.selectedLayer setZoomIndex:self.zoomFactor];
+
 }
 
+
+
+-(void)addClipperToView:(CGPoint)centerPoint{
+   
+    if(self.selectedLayer != nil){
+        [self removeCircles];
+    }
+    if ([self textViewSelected]){
+        [self hideAndCreateTextLayer];
+        textViewSelected = NO;
+        [self.delegate selectPreviousTool:self.previousType];
+    }
+   
+    self.type = JVDrawingTypeClipper;
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"clippermain"];
+    
+    [self.layer addSublayer:self.drawingLayer];
+    [self.layerArray addObject:self.drawingLayer];
+    [self.drawingLayer addToTrack];
+    [self selectLayer:self.drawingLayer];
+    [self.selectedLayer setZoomIndex:self.zoomFactor];
+
+}
+
+-(void)addRazorToView:(CGPoint)centerPoint{
+    if(self.selectedLayer != nil){
+        [self removeCircles];
+    }
+    if ([self textViewSelected]){
+        [self hideAndCreateTextLayer];
+        textViewSelected = NO;
+        [self.delegate selectPreviousTool:self.previousType];
+    }
+    self.type = JVDrawingTypeRazor;
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"clippermain"];
+    
+    [self.layer addSublayer:self.drawingLayer];
+    [self.layerArray addObject:self.drawingLayer];
+    [self.drawingLayer addToTrack];
+    [self selectLayer:self.drawingLayer];
+    [self.selectedLayer setZoomIndex:self.zoomFactor];
+
+}
+
+-(void)setNewColorForTools:(UIColor*)color{
+    [self.selectedLayer setNewColor:color];
+    
+}
+-(BOOL)textViewSelected{
+    if ([self.userResizableView.subviews containsObject:self.textViewNew]){
+        return YES;
+    }
+    return NO;
+}
 #pragma mark Add Text View
 
                 /* THIS IS BLOCK OF METHODS TO ADD TEXT TEXT TEXT TEXT  LAYER */
@@ -1216,8 +1372,9 @@ UIColor* tempColor;
     [self applyScale:zoomIdx toView:self.textViewNew];
     
     [self.arrayOfTextViews addObject:self.userResizableView];
-    
-    /**Gesture recognizers for UITextView**/
+
+
+
     gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuOnTextView:)];
     [self.userResizableView addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.numberOfTapsRequired = 1;
@@ -1255,6 +1412,7 @@ UIColor* tempColor;
             menuForTextView = [UIMenuController sharedMenuController];
             menuForTextView.menuItems = @[
                 [[UIMenuItem alloc] initWithTitle:@"Edit" action:@selector(editTextView)], [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(removeTextView)],[[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
+        [menuForTextView setArrowDirection:UIMenuControllerArrowDown];
             [menuForTextView showMenuFromView:self rect:rectOfMenu];
         
     }
@@ -1371,6 +1529,7 @@ UIColor* tempColor;
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate updateButtonStatus];
+        self.drawingLayer = nil;
         
     }
     textViewSelected = NO;

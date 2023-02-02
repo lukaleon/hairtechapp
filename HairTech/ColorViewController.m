@@ -451,6 +451,8 @@ else {
     
    button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastButtonStart width:28 yAxe:14];
 
+    [self.delegate addTextFromTextSettings];
+
     }
 
 

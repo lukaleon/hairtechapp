@@ -13,26 +13,35 @@
 - (instancetype)init:(CGPoint)point {
     if (self = [super init]) {
         
+        
     }
     return self;
 }
 
-+(DotLayer*)addDotToFrame:(CGPoint)point scale:(CGFloat)scaleFactor
++(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName scale:(CGFloat)scaleFactor
 {
+    
     DotLayer * layer = [[[self class] alloc] init];
 
+    layer.imageName = imgName;
 //    UIBezierPath *dotPath=[UIBezierPath bezierPath];
 //    dotPath = [UIBezierPath bezierPathWithRect:CGRectMake(point.x-30, point.y-30, 60 , 60 )];
    
-    layer.bounds = CGRectMake(point.x-30, point.y-30, 60 , 60 ); 
+    layer.bounds = CGRectMake(point.x-(height/2), point.y-(height/2), height , height ); 
     layer.position = point;
    //layer.fillColor = [UIColor redColor].CGColor;
-    UIImage * img = [UIImage imageNamed:@"dotitem"];
+    UIImage * img = [UIImage imageNamed:imgName];
     UIImage * newImg = [layer imageWithImage:img scaledToSize:layer.bounds.size scale:scaleFactor];
-
-    layer.contents = (__bridge id _Nullable)(newImg.CGImage);
+    CALayer * maskLayer = [CALayer layer];
+    maskLayer.frame = layer.bounds;
+    maskLayer.contents = (__bridge id _Nullable)(newImg.CGImage);
+    layer.mask = maskLayer;
+    layer.backgroundColor = [UIColor redColor].CGColor;
+   
     return layer;
 }
+
+
 
 - (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize scale:(CGFloat)scale {
     
@@ -46,6 +55,26 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+-(UIImage *) getImageWithTintedColor:(UIImage *)image withTint:(UIColor *)color withIntensity:(float)alpha {
+    CGSize size = image.size;
+
+    UIGraphicsBeginImageContextWithOptions(size, FALSE, 2);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    [image drawAtPoint:CGPointZero blendMode:kCGBlendModeNormal alpha:1.0];
+
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextSetBlendMode(context, kCGBlendModeOverlay);
+    CGContextSetAlpha(context, alpha);
+
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(CGPointZero.x, CGPointZero.y, image.size.width, image.size.height));
+
+    UIImage * tintedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return tintedImage;
 }
 
 @end

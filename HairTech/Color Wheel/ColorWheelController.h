@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ISColorWheel.h"
 #import "sliderCustom.h"
+#import "ColorResetButton.h"
 NS_ASSUME_NONNULL_BEGIN
+
 
 
 @protocol ColorWheelControllerDelegate
@@ -25,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
     CGPoint touchBegin;
     CGRect btnRect;
     CGRect newSliderRect;
-
+    UIMenuController * menuReset;
+    ColorResetButton *restoreBtn;
 }
 @property (strong, nonatomic) IBOutlet sliderCustom * _brightnessSlider;
 

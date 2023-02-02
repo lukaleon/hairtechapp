@@ -52,9 +52,48 @@
     [self.view addSubview:more];
 }
 -(void)drawingViewAddDot{
-    
+//    self.drawingView.type = JVDrawingTypeDot;
+//    self.drawingView.bufferType = JVDrawingTypeDot;
     [self.drawingView addDotToView:self.img.center];
 }
+-(void)drawingViewAddClipper{
+//    self.drawingView.type = JVDrawingTypeClipper;
+//    self.drawingView.bufferType = JVDrawingTypeClipper;
+    [self.drawingView addClipperToView:self.img.center];
+}
+-(void)drawingViewAddRazor{
+   
+//    self.drawingView.type = JVDrawingTypeRazor;
+//    self.drawingView.bufferType = JVDrawingTypeRazor;
+    [self.drawingView addRazorToView:self.img.center];
+}
+
+-(void)drawingViewAddText{
+   // [self.drawingView addTextToView:self.img.center];
+    
+    
+                [self.drawingView removeCircles];
+
+                [self.drawingView setEraserSelected:NO];
+                [self.drawingView enableGestures];
+                self.drawingView.type = JVDrawingTypeText;
+                self.drawingView.bufferType = JVDrawingTypeText;
+                self.drawingView.lineColor = textColor;
+
+    //  self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+
+                CGRect gripFrame = CGRectMake(0, 0, 70, 38);
+                if (!textSelected){
+                    [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
+                    [contentTextView setFontSizee:self.fontSizeVC];
+                    self.drawingView.textViewFontSize = self.fontSizeVC;
+                }
+                self.drawingView.textViewNew.delegate = self;
+                if (contentTextView == nil){
+                    [self showTextColorsAndSize:textColor]; //??????????? atttention
+                    [contentTextView setFontSizee:self.fontSizeVC];
+                }
+                }
 
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
@@ -101,11 +140,10 @@
         [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
         [self.drawingView setMagnetActivated:NO];
     }
-    
-    
-  
-    [self addDotToView];
-    
+
+    [self setupAdditionalTools:self.textTool];
+
+
     }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -113,13 +151,64 @@
     [self saveColorsToDefaults];
     [self removeGrid];
     [self.drawingView removeCircles]; //remove control circles when selected
-    [self.drawingView removeTextViewFrame]; //create text layer when closing window
+  //  [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     [self clearPageForClosing];
     
     [self saveDiagramToFile:self.techniqueName];
 }
 
+
+-(void)setupAdditionalTools:(UIButton*)sender{
+    
+    NSMutableArray* actions = [[NSMutableArray alloc] init];
+       // if (@available(iOS 14.0, *)) {
+            sender.showsMenuAsPrimaryAction = true;
+
+    
+    
+    [actions addObject:[UIAction actionWithTitle:@"Razor"
+                                           image:[UIImage imageNamed:@"clipper"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self drawingViewAddRazor];
+
+    }]];
+    
+    [actions addObject:[UIAction actionWithTitle:@"Text"
+                                           image:[UIImage imageNamed:@"text"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self drawingViewAddText];
+        
+    }]];
+    [actions addObject:[UIAction actionWithTitle:@"Clipper"
+                                           image:[UIImage imageNamed:@"clipper"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self drawingViewAddClipper];
+    }]];
+    
+    [actions addObject:[UIAction actionWithTitle:@"Dot"
+                                           image:[UIImage imageNamed:@"dotlayer"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self drawingViewAddDot];
+    }]];
+    
+  
+            
+            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+
+    
+           // more.offset = CGPointMake(0, 40);
+    if (@available(iOS 16.0, *)) {
+     //   menu.preferredElementSize = UIMenuElementSizeMedium;
+    } else {
+        // Fallback on earlier versions
+    }
+    sender.menu = menu;
+}
 - (void)setupScrollView {
     CGRect newFrame = CGRectMake(0, 80, self.view.frame.size.width, self.view.frame.size.height - 170);
     scrollView.frame = newFrame;
@@ -1012,10 +1101,13 @@ return YES;
     [contentTextView setFontSizee:fontSz];
     [contentViewController setCurrentTextColorForIndicator:color];
 }
+
+
 -(void)addTextFromTextSettings{
     NSLog(@"add text");
     textSelected = NO;
-    [self pencilPressed:[self.view viewWithTag:4]];
+   // [self pencilPressed:[self.view viewWithTag:4]];
+
 }
 
 - (IBAction)pencilPressed:(id)sender {
@@ -1115,27 +1207,28 @@ return YES;
            [self.drawingView removeCircles];
             curveToggleIsOn = nil;
             [self makeButtonDeselected];
-            self.textTool.selected = YES;
-            [self.drawingView setEraserSelected:NO];
-            [self.drawingView enableGestures];
-            self.drawingView.type = JVDrawingTypeText;
-            self.drawingView.bufferType = JVDrawingTypeText;
-            self.drawingView.lineColor = textColor;
-            self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+//            self.textTool.selected = YES;
+//            [self.drawingView setEraserSelected:NO];
+//            [self.drawingView enableGestures];
+//            self.drawingView.type = JVDrawingTypeText;
+//            self.drawingView.bufferType = JVDrawingTypeText;
+//            self.drawingView.lineColor = textColor;
+//            self.drawingView.textTypesSender = sender; //Should be saved to user defaults
+//
+//            CGRect gripFrame = CGRectMake(0, 0, 70, 38);
+//            if (!textSelected){
+//                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
+//                [contentTextView setFontSizee:self.fontSizeVC];
+//                self.drawingView.textViewFontSize = self.fontSizeVC;
+//            }
+//            self.drawingView.textViewNew.delegate = self;
+//            if (contentTextView == nil){
+//                [self showTextColorsAndSize:textColor]; //??????????? atttention
+//                [contentTextView setFontSizee:self.fontSizeVC];
+//            }
             
-            CGRect gripFrame = CGRectMake(0, 0, 70, 38);
-            if (!textSelected){
-                [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
-                [contentTextView setFontSizee:self.fontSizeVC];
-                self.drawingView.textViewFontSize = self.fontSizeVC;
-            }
-            self.drawingView.textViewNew.delegate = self;
-            if (contentTextView == nil){
-                [self showTextColorsAndSize:textColor]; //??????????? atttention
-                [contentTextView setFontSizee:self.fontSizeVC];
-            }
             
-          //  [self.drawingView addDotToView];
+            
             break;
        case 5:
             curveToggleIsOn = nil;
@@ -1144,7 +1237,7 @@ return YES;
             self.penTool.selected = YES;
             [self.drawingView setEraserSelected:NO];
             self.penTool.backgroundColor = penColor;
-            [self.drawingView disableGestures];
+//            [self.drawingView disableGestures];
             self.drawingView.type = JVDrawingTypeGraffiti;
             self.drawingView.bufferType = JVDrawingTypeGraffiti;
             self.drawingView.previousType = sender;
@@ -1197,12 +1290,28 @@ return YES;
     //contentTextView.currentPenColor = color;
     textSetterState = YES;
     contentTextView.delegate = self;
+    [self setupAdditionalTools:contentTextView.button3];
     [self.view addSubview:contentTextView];
+    
 }
+-(void)additionalToolsColorPopover:(UIColor*)color{
+//     Show color picker view for Dot Clipper and Razor
+    [self showTextColorsAndSize:color];
+}
+-(void)hideAdditionalColorPicker{
+//     Hide color picker view for Dot Clipper and Razor
+    [contentTextView removeFromSuperview];
+    contentTextView = nil;}
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");
     textColor = [self colorFromHex:hexColor];
+    clipperColor = [self colorFromHex:hexColor];
+    dotColor = [self colorFromHex:hexColor];
+    razorColor = [self colorFromHex:hexColor];
+    [self.drawingView setNewColorForTools:[self colorFromHex:hexColor]];
+    
+    
     self.drawingView.lineColor = textColor;
     self.textTool.backgroundColor = textColor;
     self.drawingView.textViewNew.textColor = textColor;
@@ -1295,7 +1404,7 @@ return YES;
     [self saveColorsToDefaults];
     [self removeGrid];
     [self.drawingView removeCircles]; //remove control circles when selected
-    [self.drawingView removeTextViewFrame]; //create text layer when closing window
+   // [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
@@ -1491,6 +1600,8 @@ return YES;
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
 }
+
+
 
 
 @end

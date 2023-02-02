@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 #import "DotLayer.h"
+#import "HapticHelper.h"
 
 #define JVDRAWINGPATHWIDTH 2
 #define JVDRAWINGBUFFER 16
@@ -107,7 +108,27 @@
             }
         }
         return result;
-    } else {
+    }
+    if (self.type == JVDrawingTypeDot || self.type == JVDrawingTypeClipper) {
+         if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 12 / _zoomIndex ){
+            return JVDrawingTouchEnd;
+        }
+                    if( [self isPoint:point withinDistance:4 ofPath:self.path]){
+        return JVDrawingTouchMid;
+
+         }
+    }
+    if (self.type == JVDrawingTypeText){
+        
+        if( [self isPoint:point withinDistance:2 ofPath:self.path]){
+            return JVDrawingTouchMid;
+    }
+        if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
+            return JVDrawingTouchHead;
+    }
+    }
+    
+    else {
         self.startP = self.startPoint;
         self.endP = self.endPoint;
         //self.midP = midPoint(self.startPoint, self.endPoint);
@@ -152,45 +173,33 @@
         }
         
         
-        if (self.type == JVDrawingTypeDot) {
-        
-
-            if([self distanceBetweenStartPoint:point endPoint:self.endPoint] <= 10 ){
-                return JVDrawingTouchEnd;
+   
+            CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+            JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
+            if (JVDRAWINGBUFFERFORLINE > 16){
+                JVDRAWINGBUFFERFORLINE = 16;
             }
-                if( [self isPoint:point withinDistance:10 ofPath:self.path]){
-                     return JVDrawingTouchMid;
-
+            if (JVDRAWINGBUFFERFORLINE <= 4){
+                JVDRAWINGBUFFERFORLINE = 4;
             }
-        }
-        
-        CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-        JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
-        if (JVDRAWINGBUFFERFORLINE > 16){
-            JVDRAWINGBUFFERFORLINE = 16;
-        }
-        if (JVDRAWINGBUFFERFORLINE <= 4){
-            JVDRAWINGBUFFERFORLINE = 4;
-        }
-        NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORLINE,  _zoomIndex );
-        
-        CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
-        CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
-        CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-        
-        CGFloat diffrence = distanceStart + distanceEnd - distance;
-        if (diffrence <= JVDRAWINGBUFFERFORLINE || distanceStart <= JVDRAWINGBUFFERFORLINE || distanceEnd <= JVDRAWINGBUFFERFORLINE) {
-            CGFloat min = MIN(distanceStart, distanceEnd);
-            if (MIN(min, 2*JVDRAWINGBUFFERFORLINE) == min) {
-                if (min == distanceStart) return JVDrawingTouchHead;
-                if (min == distanceEnd) return JVDrawingTouchEnd;
-            } else {
-                return JVDrawingTouchMid;
+            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORLINE,  _zoomIndex );
+            
+            CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
+            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
+            CGFloat distance = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+            
+            CGFloat diffrence = distanceStart + distanceEnd - distance;
+            if (diffrence <= JVDRAWINGBUFFERFORLINE || distanceStart <= JVDRAWINGBUFFERFORLINE || distanceEnd <= JVDRAWINGBUFFERFORLINE) {
+                CGFloat min = MIN(distanceStart, distanceEnd);
+                if (MIN(min, 2*JVDRAWINGBUFFERFORLINE) == min) {
+                    if (min == distanceStart) return JVDrawingTouchHead;
+                    if (min == distanceEnd) return JVDrawingTouchEnd;
+                } else {
+                    return JVDrawingTouchMid;
+                }
             }
-        }
-    };
-    
-    
+        };
+        
     
     
     return NO;
@@ -243,46 +252,54 @@
     return  layer.endPoint;
 }
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor{
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor imageName:(NSString*)imgName{
     
     JVDrawingLayer *layer = [[[self class] alloc] init];
    
-     UIBezierPath * rectPath = [UIBezierPath bezierPath];
-     CGRect rect = CGRectMake(startPoint.x-(height/2), startPoint.y-(height/2), height, height);
+    UIBezierPath * rectPath = [UIBezierPath bezierPath];
+    CGRect rect = CGRectMake(startPoint.x-(height/2), startPoint.y-(height/2), height, height);
     rectPath = [UIBezierPath bezierPathWithRect:rect];
     [rectPath stroke];
-        int step = 0;
-        for(int i=1;i<=rect.size.width/10;i++){
-        CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
-        [rectPath moveToPoint:newP];
-        [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
-        step = step + 10;
-        }
+    
+    int step = 0;
+    for(int i=1;i<=rect.size.width;i++){
+    CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+    [rectPath moveToPoint:newP];
+    [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+    step = step + 1;
+    }
+
     [rectPath stroke];
     
-    DotLayer * dot = [DotLayer addDotToFrame:startPoint scale:scaleFactor];
+    DotLayer * dot = [DotLayer addDotToFrame:startPoint height:height imageName:imgName scale:scaleFactor];
+
+//    UIImage * img = [UIImage imageNamed:@"dotlayer"];
+//    UIImage * newImg = [dot imageWithImage:img scaledToSize:dot.bounds.size scale:scaleFactor];
+//    dot.mask.contents = (__bridge id _Nullable)(newImg.CGImage);
+
     
     layer.path = rectPath.CGPath;
-
-   // layer.bounds = rect;
-
+    
     layer.startPoint = startPoint;
-    layer.endPoint = CGPointMake(startPoint.x + 30, startPoint.y + 30);
+    layer.endPoint = CGPointMake(startPoint.x + height/2, startPoint.y + height/2);
+    layer.height = height;
     layer.type = type;
     layer.dotCenter = startPoint;
     layer.fillColor  =[UIColor clearColor].CGColor;
-    layer.strokeColor = [UIColor clearColor].CGColor;
-
+   // layer.strokeColor = [UIColor yellowColor].CGColor;
+    
     [layer addSublayer:dot];
+    NSLog(@"type = %ld", (long)layer.type);
     return layer;
 }
 
 
 + (JVDrawingLayer *)createTextLayerWithStartPoint:(CGPoint)startPoint frame:(CGRect)frame text:(NSString*)text type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color fontSize:(CGFloat)fontSize isSelected:(BOOL)isSelected{
+    
     JVDrawingLayer *layer = [[[self class] alloc] init];
     //layer.startPoint = startPoint;
     layer.startPoint = frame.origin;
-    layer.endPoint = frame.origin;
+    layer.endPoint = CGPointMake(frame.origin.x + frame.size.width, frame.origin.y + frame.size.height);
     layer.isSelected = isSelected;
     layer.type = type;
     layer.text = text;
@@ -315,15 +332,27 @@
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     layer.fillColor = [[UIColor clearColor]CGColor];
     //adding lines to path to detect tap
+//    int step = 0;
+//    for(int i=1;i<=rect.size.width/10;i++){
+//    CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
+//    [path moveToPoint:newP];
+//    [path addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
+//    step = step + 10;
+//    }
     int step = 0;
-    for(int i=1;i<=rect.size.width/10;i++){
+    for(int i=1;i<=rect.size.width;i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
     [path moveToPoint:newP];
     [path addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
-    step = step + 10;
+    step = step + 1;
     }
+    
+    
+    
     layer.path = path.CGPath;
     [layer addSublayer:textLayer];
+    
+    NSLog(@"start point text x,y = %f, %f", layer.startPoint.x, layer.startPoint.y);
     return layer;
 }
 
@@ -336,8 +365,8 @@
 
 
 - (void)movePathWithStartPoint:(CGPoint)startPoint {
-    [self movePathWithStartPoint:startPoint isSelected:self.isSelected];
-    
+
+        [self movePathWithStartPoint:startPoint isSelected:self.isSelected];
 }
 
 - (void)movePathWithPreviousPoint:(CGPoint)previousPoint currentPoint:(CGPoint)currentPoint {
@@ -426,8 +455,12 @@
             break;
         case JVDrawingTypeText:
             [self moveLinePathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+           // [self moveTextPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
             break;
         case JVDrawingTypeDot:
+            [self moveDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
+        case JVDrawingTypeClipper:
             [self moveDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
             break;
         default:
@@ -531,6 +564,11 @@
     [self moveDotPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
 
 }
+- (void)setNewColor:(UIColor*)color{
+    DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
+    dotLayer.backgroundColor = color.CGColor;
+    self.lineColor_ = color;
+}
 - (void)moveDotPathWithStartPoint:(CGPoint)startPoint
                           endPoint:(CGPoint)endPoint
                         isSelected:(BOOL)isSelected {
@@ -542,13 +580,19 @@
     hypot = hypot / 2;
     hypot = sqrt(hypot);
         
-    self.dotCenter = startPoint;
+    CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );
 
+
+    
+    NSLog(@"start point %f  -  %f", self.startPoint.x, self.startPoint.y);
+
+    NSLog(@"end point %f  -  %f", self.endPoint.x, self.endPoint.y);
+    
+    
     UIBezierPath *rectPath = [UIBezierPath bezierPath];
     CGRect rect = CGRectMake(startPoint.x-(hypot/2), startPoint.y-hypot/2, hypot , hypot);
-    
-    
     rectPath = [UIBezierPath bezierPathWithRect:rect];
+    
     int step = 0;
     for(int i=1; i<=rect.size.width; i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
@@ -556,12 +600,17 @@
     [rectPath addLineToPoint:CGPointMake(rect.origin.x + step, rect.origin.y + rect.size.height)];
     step = step + 1;
     }
-//    self.strokeColor = [UIColor redColor].CGColor;
+    //self.strokeColor = [UIColor redColor].CGColor;
     
     DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
     self.path = rectPath.CGPath;
 
-    //self.startPoint = startPoint;
+    self.startPoint = startPoint;
+    self.dotCenter = startPoint;
+    self.dotCenter = startPoint;
+    self.endPoint = tempEndPoint;
+    self.height = hypot;
+
 
     [CATransaction begin];
     [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];
@@ -596,24 +645,35 @@
 
 -(void)zoomDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected{
     
-    NSLog(@" zooooooom ");
-    
-    
     CGFloat hypot = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
     hypot = hypot * 2;
     hypot = hypot * hypot;
     hypot = hypot / 2;
     hypot = sqrt(hypot);
-        
-    self.dotCenter = startPoint;
     
+    if (self.type == JVDrawingTypeDot){
+        if(hypot > 50){
+            hypot = 50;
+        }
+        if(hypot < 10 ){
+            hypot = 10;
+        }
+    }
+    if (self.type == JVDrawingTypeClipper || self.type == JVDrawingTypeRazor){
+        if(hypot > 100){
+            hypot = 100;
+        }
+        if(hypot < 30 ){
+            hypot = 30;
+        }
+    }
     CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );
-    self.endPoint = tempEndPoint;
-
+    
     UIBezierPath *rectPath = [UIBezierPath bezierPath];
     CGRect rect = CGRectMake(startPoint.x-(hypot/2), startPoint.y-hypot/2, hypot , hypot);
     
     rectPath = [UIBezierPath bezierPathWithRect:rect];
+
     int step = 0;
     for(int i=1;i<=rect.size.width;i++){
     CGPoint newP = CGPointMake(rect.origin.x + step, rect.origin.y);
@@ -628,17 +688,23 @@
     self.path = rectPath.CGPath;
 
     self.startPoint = startPoint;
+    self.endPoint = tempEndPoint;
+    self.dotCenter = startPoint;
+    self.height = hypot;
 
-    UIImage * img = [UIImage imageNamed:@"dotitem"];
-    //UIImage * newImg = [self imageWithImage:img scaledToSize:rect.size];
+    NSLog(@"scalezoom %f", self.zoomFactor);
+
     
-    UIImage * newImg = [dotLayer imageWithImage:img scaledToSize:rect.size scale:_zoomFactor];
-    
+    UIImage * img = [UIImage imageNamed:dotLayer.imageName];
+    UIImage * newImg = [dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:self.zoomFactor];
+
     [CATransaction begin];
     [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];
-    dotLayer.contents = (__bridge id _Nullable)(newImg.CGImage);
+  
     dotLayer.frame = rect;
     dotLayer.position = startPoint;
+    dotLayer.mask.frame = dotLayer.bounds;
+    dotLayer.mask.contents = (__bridge id _Nullable)(newImg.CGImage);
     [CATransaction commit];
     
 }
@@ -880,4 +946,6 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     return layer;
 
 }
+
+
 @end

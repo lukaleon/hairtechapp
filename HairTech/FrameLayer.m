@@ -17,7 +17,7 @@
     return self;
 }
 
-+(FrameLayer*)addCircleToPoint:(CGPoint)point  endPoint:(CGPoint)endPoint scaleFactor:(CGFloat)scaleFactor
++(FrameLayer*)addFrameToPoint:(CGPoint)point  endPoint:(CGPoint)endPoint scaleFactor:(CGFloat)scaleFactor
 {
     
     CGFloat hypot = [self distanceBetweenStartPoint:point endPoint:endPoint];
@@ -38,11 +38,31 @@
     layer.fillColor = [UIColor clearColor].CGColor;
     layer.opacity = 1.0;
     layer.lineWidth = 1.0 / scaleFactor;
-    layer.strokeColor = [UIColor colorNamed:@"deepblue"].CGColor;
-    layer.shadowRadius = 1.0;
-    layer.shadowOpacity = 0.6;
-    layer.shadowOffset = CGSizeMake(0,0);
-    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    layer.strokeColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
+
+//    layer.shadowRadius = 1.0;
+//    layer.shadowOpacity = 0.6;
+//    layer.shadowOffset = CGSizeMake(0,0);
+//    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    return layer;
+}
+
+
++(FrameLayer*)addFrameToText:(CGPoint)point size:(CGRect)frame scaleFactor:(CGFloat)scaleFactor{
+    FrameLayer * layer = [[[self class] alloc] init];
+
+    CGRect rect = CGRectMake(point.x, point.y, frame.size.width , frame.size.height);
+    NSLog(@"start point text frame x,y = %f, %f", point.x, point.y);
+
+    UIBezierPath *framePath = [UIBezierPath bezierPath];
+    framePath = [UIBezierPath bezierPathWithRect:rect];
+    [framePath stroke];
+    layer.path = framePath.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.opacity = 1.0;
+    layer.lineWidth = 1.0 / scaleFactor;
+    layer.strokeColor = [UIColor colorWithRed:45.0/255.0 green:107.0/255.0 blue:173.0/255.0 alpha:1.0].CGColor;
+
     return layer;
 }
 

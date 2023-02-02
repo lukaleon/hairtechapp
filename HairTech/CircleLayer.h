@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CircleLayer : CAShapeLayer
 
 +(CircleLayer*)addCircleToPoint:(CGPoint)point scaleFactor:(CGFloat)scaleFactor;
+
+
 //-(void)circlePosition:(CGPoint)point array:(NSMutableArray*)array atIndex:(int)idx;
++(CircleLayer*)addZoomToFrame:(CGPoint)point scaleFactor:(CGFloat)scaleFactor;
 
 @end
 

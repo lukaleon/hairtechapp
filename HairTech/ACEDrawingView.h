@@ -137,6 +137,9 @@ typedef enum {
 -(void)hideAndSaveTextViewWhenNewAdded;
 
 -(void)addDotToView:(CGPoint)centerPoint;
+-(void)addClipperToView:(CGPoint)centerPoint;
+-(void)addRazorToView:(CGPoint)centerPoint;
+-(void)addTextToView:(CGPoint)centerPoint;
 
 @property SPUserResizableView *userResizableView;
 @property SPUserResizableView *userResizableDotView;
@@ -295,6 +298,7 @@ typedef enum {
 
 
 
+
 - (NSUInteger)numberOfShapesInDrawingView:(ACEDrawingView *)drawingView;
 - (UIBezierPath *)drawingView:(ACEDrawingView *)drawingView pathForShapeAtIndex:(NSUInteger)shapeIndex;
 - (UIColor *)drawingView:(ACEDrawingView *)drawingView lineColorForShapeAtIndex:(NSUInteger)shapeIndex;
@@ -306,6 +310,9 @@ typedef enum {
 -(void)bringArrowsToFront;
 //-(void)loadJSONData:(NSMutableString*)fileName;
 -(void)loadJSONData:(NSData*)jsonData;
+-(void)setNewColorForTools:(UIColor*)color;
+
+
 @end
 
 #pragma mark -
@@ -317,10 +324,13 @@ double dist2(CGPoint a, CGPoint b);
 -(void)setButtonVisible;
 -(void)selectPreviousTool:(id)sender;
 -(void)selectTextTool:(id)sender textColor:(UIColor*)color fontSize:(CGFloat)fontSZ isSelected:(BOOL)isSelected;
+-(void)additionalToolsColorPopover:(UIColor*)color;
+-(void)hideAdditionalColorPicker;
 -(void)removeTextSettings;
 -(void)disableZoomWhenTouchesMoved;
 -(void)enableZoomWhenTouchesMoved;
 -(void)updateButtonStatus;
+
 
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;

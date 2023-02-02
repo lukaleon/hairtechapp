@@ -29,6 +29,7 @@
 		4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4043E2DC28E57D9F00BF9FF8 /* LayersData.m */; };
 		4043E2DF28E587F100BF9FF8 /* layersdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2DE28E587F100BF9FF8 /* layersdata.json */; };
 		40613F3E297B3E9100D45AE2 /* DotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40613F3D297B3E9100D45AE2 /* DotLayer.m */; };
+		40613F442987FD1100D45AE2 /* ColorResetButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 40613F432987FD1100D45AE2 /* ColorResetButton.m */; };
 		4064748B2976B46100FC80B7 /* OverlayTransitioningDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474852976B46000FC80B7 /* OverlayTransitioningDelegate.m */; };
 		4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474872976B46100FC80B7 /* OverlayPresentationController.m */; };
 		4064748D2976B46100FC80B7 /* ControllerAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 406474882976B46100FC80B7 /* ControllerAnimator.m */; };
@@ -467,6 +468,8 @@
 		4043E2E328E5887B00BF9FF8 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lastPoint.png; sourceTree = "<group>"; };
 		40613F3C297B3E9100D45AE2 /* DotLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DotLayer.h; sourceTree = "<group>"; };
 		40613F3D297B3E9100D45AE2 /* DotLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DotLayer.m; sourceTree = "<group>"; };
+		40613F422987FD1100D45AE2 /* ColorResetButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorResetButton.h; sourceTree = "<group>"; };
+		40613F432987FD1100D45AE2 /* ColorResetButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorResetButton.m; sourceTree = "<group>"; };
 		406474852976B46000FC80B7 /* OverlayTransitioningDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayTransitioningDelegate.m; sourceTree = "<group>"; };
 		406474862976B46100FC80B7 /* OverlayPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPresentationController.h; sourceTree = "<group>"; };
 		406474872976B46100FC80B7 /* OverlayPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayPresentationController.m; sourceTree = "<group>"; };
@@ -1041,6 +1044,8 @@
 				403D12CD29708AF800156A05 /* ColorWheelController.m */,
 				4000FEF929792D8E00D917A5 /* sliderCustom.h */,
 				4000FEFA29792D8F00D917A5 /* sliderCustom.m */,
+				40613F422987FD1100D45AE2 /* ColorResetButton.h */,
+				40613F432987FD1100D45AE2 /* ColorResetButton.m */,
 			);
 			path = "Color Wheel";
 			sourceTree = "<group>";
@@ -2483,6 +2488,7 @@
 				403D12CE29708AF800156A05 /* ColorWheelController.m in Sources */,
 				400B02552916D11F007A7871 /* NameViewController.m in Sources */,
 				4079875C29681FD8004C86ED /* TemporaryDictionary.m in Sources */,
+				40613F442987FD1100D45AE2 /* ColorResetButton.m in Sources */,
 				4017DE2729278D3600F6D2E9 /* WhatsNewController.m in Sources */,
 				40DC4707284A143900509D4D /* Ruler.m in Sources */,
 				407011CF28B4DFA4003CACB0 /* JVDrawingLayer.m in Sources */,
@@ -2662,7 +2668,7 @@
 				GCC_PREFIX_HEADER = "HairTech/hairtech-Prefix.pch";
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = hairtechapp;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 6.1.1;
@@ -2703,7 +2709,7 @@
 				GCC_PREFIX_HEADER = "HairTech/hairtech-Prefix.pch";
 				INFOPLIST_FILE = "HairTech/hairtech-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = hairtechapp;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 6.1.1;

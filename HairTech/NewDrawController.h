@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
     UIColor * arrowColor;
     UIColor * lineColor;
     UIColor * textColor;
+    UIColor * dotColor;
+    UIColor * clipperColor;
+    UIColor * razorColor;
     BOOL curveToggleIsOn;
     BOOL textSelected;
     BOOL textSetterState;
