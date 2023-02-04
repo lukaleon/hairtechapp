@@ -159,7 +159,6 @@ typedef enum {
 @property (nonatomic, assign) CircleLayer * circleLayer4;
 @property (nonatomic, assign) FrameLayer * frameForDot;
 
-
 @property (nonatomic, assign) TextRect * textRect;
 
 
@@ -330,7 +329,7 @@ double dist2(CGPoint a, CGPoint b);
 -(void)disableZoomWhenTouchesMoved;
 -(void)enableZoomWhenTouchesMoved;
 -(void)updateButtonStatus;
-
+-(void)selectCurentToolWhenLineSelected:(NSInteger)tool;
 
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;

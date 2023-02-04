@@ -109,8 +109,15 @@
         }
         return result;
     }
-    if (self.type == JVDrawingTypeDot || self.type == JVDrawingTypeClipper) {
-         if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 12 / _zoomIndex ){
+else {
+    self.startP = self.startPoint;
+    self.endP = self.endPoint;
+    
+}
+    if (self.type == JVDrawingTypeDot || self.type == JVDrawingTypeClipper ||  self.type == JVDrawingTypeRazor){
+         
+
+        if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 16 / _zoomIndex ){
             return JVDrawingTouchEnd;
         }
                     if( [self isPoint:point withinDistance:4 ofPath:self.path]){
@@ -118,61 +125,81 @@
 
          }
     }
-    if (self.type == JVDrawingTypeText){
-        
-        if( [self isPoint:point withinDistance:2 ofPath:self.path]){
-            return JVDrawingTouchMid;
-    }
-        if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
-            return JVDrawingTouchHead;
-    }
-    }
+//    if (self.type == JVDrawingTypeText){
+//
+//        if( [self isPoint:point withinDistance:2 ofPath:self.path]){
+//            return JVDrawingTouchMid;
+//    }
+//        if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
+//            return JVDrawingTouchHead;
+//    }
+//    }
     
-    else {
-        self.startP = self.startPoint;
-        self.endP = self.endPoint;
-        //self.midP = midPoint(self.startPoint, self.endPoint);
-        
+//    else {
+//        self.startP = self.startPoint;
+//        self.endP = self.endPoint;
+//        //self.midP = midPoint(self.startPoint, self.endPoint);
+//
         
         
         if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
+//            self.startP = self.startPoint;
+//            self.endP = self.endPoint;
+
             JVDRAWINGBUFFERFORCURVE = 16;
             if(self.editedLine){
                 self.midP = self.controlPointOfCurve;
             } else {
                 self.midP = midPoint(self.startPoint, self.endPoint);
             }
-            
-            CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
-            
-            JVDRAWINGBUFFERFORCURVE = (lineLength / 8) / _zoomIndex ;
-            if (JVDRAWINGBUFFERFORCURVE > 16){
-                JVDRAWINGBUFFERFORCURVE = 16;
-            }
-            if (JVDRAWINGBUFFERFORCURVE <= 4){
-                JVDRAWINGBUFFERFORCURVE = 2;
-            }
-            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORCURVE,  _zoomIndex );
-            
-            CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
-            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
-            CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
-            
-            CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
-            if (diffrence <= JVDRAWINGBUFFERFORCURVE || distanceStart <= JVDRAWINGBUFFERFORCURVE || distanceEnd <= JVDRAWINGBUFFERFORCURVE) {
-                CGFloat min = MIN(distanceStart, distanceEnd);
-                if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
-                    if (min == distanceStart) return JVDrawingTouchHead;
-                    if (min == distanceEnd) return JVDrawingTouchEnd;
-                    
+
+            if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
+                        return JVDrawingTouchHead;
                 }
-            };
-            if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFERFORCURVE)
-                return JVDrawingTouchMid;
+             if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 12 / _zoomIndex ){
+                        return JVDrawingTouchEnd;
+                }
+            if([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < 12 / _zoomIndex ){
             
-        }
+            return JVDrawingTouchMid;
+               
+           }
+            else {
+                return JVDrawingTouchNone;
+
+            }
         
+            
+//            CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
+//
+//            JVDRAWINGBUFFERFORCURVE = (lineLength / 8) / _zoomIndex ;
+//            if (JVDRAWINGBUFFERFORCURVE > 16){
+//                JVDRAWINGBUFFERFORCURVE = 16;
+//            }
+//            if (JVDRAWINGBUFFERFORCURVE <= 4){
+//                JVDRAWINGBUFFERFORCURVE = 2;
+//            }
+//            NSLog(@"line length = %f - %d - %f", lineLength, JVDRAWINGBUFFERFORCURVE,  _zoomIndex );
+//
+//            CGFloat distanceStart = [self distanceBetweenStartPoint:point endPoint:self.startPoint];
+//            CGFloat distanceEnd = [self distanceBetweenStartPoint:point endPoint:self.endPoint];
+//            CGFloat distanceCtr = [self distanceBetweenStartPoint:point endPoint:self.controlPointOfCurve];
+//
+//            CGFloat diffrence = distanceStart + distanceEnd - distanceCtr;
+//            if (diffrence <= JVDRAWINGBUFFERFORCURVE || distanceStart <= JVDRAWINGBUFFERFORCURVE || distanceEnd <= JVDRAWINGBUFFERFORCURVE) {
+//                CGFloat min = MIN(distanceStart, distanceEnd);
+//                if (MIN(min, 2*JVDRAWINGBUFFERFORCURVE) == min) {
+//                    if (min == distanceStart) return JVDrawingTouchHead;
+//                    if (min == distanceEnd) return JVDrawingTouchEnd;
+//                }
+//            };
+//            if ([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < JVDRAWINGBUFFERFORCURVE)
+//                return JVDrawingTouchMid;
+        };
         
+    if (self.type == JVDrawingTypeLine || self.type == JVDrawingTypeArrow || self.type == JVDrawingTypeDashedLine ) {
+//        self.startP = self.startPoint;
+//        self.endP = self.endPoint;
    
             CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
             JVDRAWINGBUFFERFORLINE = (lineLength / 8) / _zoomIndex ;
@@ -216,6 +243,7 @@
     layer.lineColor_ = line_Color;
     layer.lineWidth = line_Width;
     layer.strokeColor = layer.fillColor = line_Color.CGColor;
+  
     if (JVDrawingTypeGraffiti == type) {
         UIBezierPath *path = [UIBezierPath bezierPath];
         path.lineJoinStyle = kCGLineJoinRound;
@@ -271,7 +299,7 @@
 
     [rectPath stroke];
     
-    DotLayer * dot = [DotLayer addDotToFrame:startPoint height:height imageName:imgName scale:scaleFactor];
+    DotLayer * dot = [DotLayer addDotToFrame:startPoint height:height imageName:imgName color:line_Color scale:scaleFactor];
 
 //    UIImage * img = [UIImage imageNamed:@"dotlayer"];
 //    UIImage * newImg = [dot imageWithImage:img scaledToSize:dot.bounds.size scale:scaleFactor];
@@ -287,9 +315,8 @@
     layer.dotCenter = startPoint;
     layer.fillColor  =[UIColor clearColor].CGColor;
    // layer.strokeColor = [UIColor yellowColor].CGColor;
-    
+    layer.lineColor_ = line_Color;
     [layer addSublayer:dot];
-    NSLog(@"type = %ld", (long)layer.type);
     return layer;
 }
 
@@ -581,8 +608,6 @@
     hypot = sqrt(hypot);
         
     CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );
-
-
     
     NSLog(@"start point %f  -  %f", self.startPoint.x, self.startPoint.y);
 
@@ -816,6 +841,10 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
     self.midPmoving = self.controlPointOfCurve;
     self.midP = self.controlPointOfCurve;
     self.editedLine = YES;
+    
+//    self.startPoint = startPoint;
+//    self.endPoint = endPoint;
+    
     return path;
 }
 - (UIBezierPath *)createArrowWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
@@ -942,6 +971,10 @@ CGPoint midPoint(CGPoint p1,CGPoint p2)
         [layer setLineDashPattern:
         [NSArray arrayWithObjects:[NSNumber numberWithInt:layer.lineWidth],
         [NSNumber numberWithInt:2+layer.lineWidth],nil]];
+    }
+    
+    if(JVDrawingTypeDot == type){
+        
     }
     return layer;
 

@@ -133,7 +133,7 @@ UIColor* tempColor;
     for(LayersData * layerData in self.arrayOfLayersForJSON){
         NSLog(@"COLOR LOADED FROM ARRAY %@", layerData.color);
         
-        if (JVDrawingTypeText != [layerData.type integerValue]){
+        if (JVDrawingTypeText != [layerData.type integerValue] || JVDrawingTypeDot != [layerData.type integerValue] ){
             self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:layerData.startPoint endPoint:layerData.endPoint type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color controlPoint:layerData.controlPoint grafittiPoints:layerData.grafittiPoints];
             if(JVDrawingTypeGraffiti == [layerData.type integerValue] ){
                 for(int i = 0; i < layerData.grafittiPoints.count;i++){
@@ -155,7 +155,9 @@ UIColor* tempColor;
             else {
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
             }
-        } else {
+        }
+        
+        if (JVDrawingTypeText == [layerData.type integerValue]) {
             
             CGRect rect = CGRectMake(layerData.startPoint.x, layerData.startPoint.y, layerData.width, layerData.height);
             self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:layerData.startPoint
@@ -167,6 +169,20 @@ UIColor* tempColor;
                                                                      fontSize:layerData.fontSize
                                                                    isSelected:NO];
         }
+        
+        if(JVDrawingTypeDot == [layerData.type integerValue]){
+                    
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"dotlayer"];
+        }
+        if(JVDrawingTypeClipper == [layerData.type integerValue]){
+                    
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"clippermain"];
+        }
+        if(JVDrawingTypeRazor == [layerData.type integerValue]){
+            
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"razor"];
+        }
+        
         if(layerData.endPoint.x != 0 && layerData.endPoint.y !=0){
             [self.layer addSublayer:self.drawingLayer];
             [self.layerArray addObject:self.drawingLayer];
@@ -178,6 +194,21 @@ UIColor* tempColor;
     CGFloat f = [self pointPairToBearingDegrees:start secondPoint:end];
     return f;
 }
+- (void)duplicatingLayerType:(JVDrawingLayer *)selectedL imageName:(NSString*)imgName {
+    if(self.selectedLayer != nil){
+        [self removeCircles];
+    }
+    //self.type = selectedL.type;
+    CGPoint newStartPoint = CGPointMake(selectedL.startPoint.x + selectedL.height, selectedL.startPoint.y);
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:newStartPoint endPoint:newStartPoint  height:selectedL.height type:selectedL.type lineWidth:3 lineColor:selectedL.lineColor_ scale:self.zoomFactor imageName:imgName];
+    
+    [self.layer addSublayer:self.drawingLayer];
+    [self.layerArray addObject:self.drawingLayer];
+    [self.drawingLayer addToTrack];
+    [self selectLayer:self.drawingLayer];
+    [self.selectedLayer setZoomIndex:self.zoomFactor];
+}
+
 - (void)createCopyOfLayer:(JVDrawingLayer*)selectedL{
     
     CGPoint startPointOffset;
@@ -185,19 +216,22 @@ UIColor* tempColor;
     CGPoint controlPointOffset;
     CGFloat  dist;
 
-    
+    NSLog(@"control point x, y = %F, %f", selectedL.controlPointOfCurve.x , selectedL.controlPointOfCurve.y);
+
     CGFloat f = [self findAngleOfLine:selectedL.startPoint end:selectedL.endPoint];
+        
+        if (((f<=60)&&(f>=30) )|| ((f<=240)&&(f>=210)) ){
+            startPointOffset = CGPointMake(selectedL.startPoint.x + 20, selectedL.startPoint.y);
+            endPointOffset = CGPointMake(selectedL.endPoint.x + 20, selectedL.endPoint.y);
+            controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 20, selectedL.controlPointOfCurve.y );
+            
+        }
+        else {
+            startPointOffset = CGPointMake(selectedL.startPoint.x + 12, selectedL.startPoint.y + 12);
+            endPointOffset = CGPointMake(selectedL.endPoint.x + 12, selectedL.endPoint.y + 12);
+            controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 12, selectedL.controlPointOfCurve.y + 12);
+        }
     
-    if (((f<=60)&&(f>=30) )|| ((f<=240)&&(f>=210)) ){
-        startPointOffset = CGPointMake(selectedL.startPoint.x + 20, selectedL.startPoint.y);
-        endPointOffset = CGPointMake(selectedL.endPoint.x + 20, selectedL.endPoint.y);
-        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 20, selectedL.controlPointOfCurve.y );
-    }
-    else {
-        startPointOffset = CGPointMake(selectedL.startPoint.x + 12, selectedL.startPoint.y + 12);
-        endPointOffset = CGPointMake(selectedL.endPoint.x + 12, selectedL.endPoint.y + 12);
-        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 12, selectedL.controlPointOfCurve.y + 12);
-    }
     if (selectedL.type == JVDrawingTypeText){
         startPointOffset = CGPointMake(selectedL.startPoint.x + 25, selectedL.startPoint.y + 25);
         endPointOffset = CGPointMake(selectedL.endPoint.x + 25, selectedL.endPoint.y + 25);
@@ -233,7 +267,32 @@ UIColor* tempColor;
                     [self.drawingLayer movePathWithEndPoint:CGPointFromString([selectedL.pointArray objectAtIndex:i])];
                 }
                 
-            } if (JVDrawingTypeCurvedLine == selectedL.type || JVDrawingTypeCurvedDashLine == selectedL.type ){
+               
+                
+//            if(JVDrawingTypeDot == selectedL.type){
+//                [self duplicatingLayerType:selectedL imageName:@"dotlayer"];
+//                }
+//                if(JVDrawingTypeDot == selectedL.type){
+//                    [self duplicatingLayerType:selectedL imageName:@"dotlayer"];
+//                    }
+            }
+            
+            switch (selectedL.type) {
+                case JVDrawingTypeDot:
+                    [self duplicatingLayerType:selectedL imageName:@"dotlayer"];
+                    break;
+                case JVDrawingTypeRazor:
+                    [self duplicatingLayerType:selectedL imageName:@"razor"];
+                    break;
+                case JVDrawingTypeClipper:
+                    [self duplicatingLayerType:selectedL imageName:@"clippermain"];
+                    break;
+                default:
+                    break;
+            }
+            if (JVDrawingTypeCurvedLine == selectedL.type || JVDrawingTypeCurvedDashLine == selectedL.type ){
+                NSLog(@"duplicate curve");
+                
                 BOOL selected;
                 if (CGPointEqualToPoint(controlPointOffset,midsPoint(startPointOffset, endPointOffset))){
                     selected = NO;
@@ -243,24 +302,6 @@ UIColor* tempColor;
                 [self.drawingLayer movePathWithEndPoint:endPointOffset];
                 [self.drawingLayer moveCurvedLinePathWithStartPoint:startPointOffset endPoint:endPointOffset midPoint:controlPointOffset isSelected:selected];
                 //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
-                
-            }
-            if(JVDrawingTypeDot == selectedL.type){
-                
-                if(self.selectedLayer != nil){
-                    [self removeCircles];
-                }
-               
-                self.type = JVDrawingTypeDot;
-            CGPoint newStartPoint = CGPointMake(selectedL.startPoint.x + selectedL.height, selectedL.startPoint.y);
-                
-                self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:newStartPoint endPoint:newStartPoint  height:selectedL.height type:self.type lineWidth:3 lineColor:[UIColor redColor] scale:self.zoomFactor imageName:@"dotlayer"];
-                
-                [self.layer addSublayer:self.drawingLayer];
-                [self.layerArray addObject:self.drawingLayer];
-                [self.drawingLayer addToTrack];
-                [self selectLayer:self.drawingLayer];
-                [self.selectedLayer setZoomIndex:self.zoomFactor];
                 
             }
             else {
@@ -475,6 +516,9 @@ UIColor* tempColor;
 
 
 - (void)revoke {
+    //if(self.selectedLayer.type == JVDrawingTypeDot || self.selectedLayer.type == JVDrawingTypeClipper || self.selectedLayer.type == JVDrawingTypeRazor){
+        [self.delegate hideAdditionalColorPicker];
+    //}
     [self hideMenu];
     [self.bufferOfLayers addObject:self.selectedLayer]; //Add layer to buffer array for redo
     [self.layerArray removeObject:self.selectedLayer];
@@ -583,7 +627,7 @@ UIColor* tempColor;
             self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             
         } else {
-            
+            NSLog(@"Creating layer");
            // [self.delegate disableZoomWhenTouchesMoved];
             self.selectedLayer.isSelected = NO;
             [self removeCircles];
@@ -613,9 +657,12 @@ UIColor* tempColor;
                 self.magnifierView.hidden = YES;
                   
                 // Curved line creating and moving
-            } else if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine) {
+            }
+            else if (self.selectedLayer.type == JVDrawingTypeCurvedLine || self.selectedLayer.type == JVDrawingTypeCurvedDashLine) {
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
+                        
+                        NSLog(@"CURVED HEAD TOUCHED");
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
@@ -624,19 +671,24 @@ UIColor* tempColor;
                         }
                         break;
                     case JVDrawingTouchMid:
+                        NSLog(@"CURVED MID TOUCHED");
                         [self hideLoupe]; // hide loupe when middle touched
                         [self.selectedLayer moveControlPointWithPreviousPoint:currentPoint];
                         [self controlCirclePosition:currentPoint  forLayer:self.circleLayer3 atIndex:0];
                         break;
                     case JVDrawingTouchEnd:
+                        NSLog(@"CURVED END TOUCHED");
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
-                        [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
+                        [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer2 atIndex:0];
                         if (self.magnifierView.hidden == NO ){
                             self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
                         }
                         break;
                         
+                    case JVDrawingTouchNone:
+                        
+                        break;
                     default:
                         break;
                 }
@@ -646,7 +698,6 @@ UIColor* tempColor;
                 switch (self.isMoveLayer) {
                     case JVDrawingTouchHead:
                     
-                        
                         break;
                     case JVDrawingTouchMid:
                     NSLog(@"MOVING MIDDLE POINT");
@@ -705,10 +756,8 @@ UIColor* tempColor;
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
                             if (self.magnifierView.hidden == NO ){
                                 self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-                                            
                         }
                         break;
-                        
                     default:
                         break;
                 }
@@ -759,7 +808,8 @@ UIColor* tempColor;
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         [self.delegate updateButtonStatus];
-        if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type ){
+        
+        if (JVDrawingTypeCurvedLine == self.drawingLayer.type || JVDrawingTypeCurvedDashLine == self.drawingLayer.type ){
             [self selectLayer:[self.layerArray lastObject]];
         }
         [self.drawingLayer addToTrack];
@@ -790,10 +840,7 @@ UIColor* tempColor;
                             // draw new selection
                             [self selectLayer:layer];
                             NSLog(@"Layer type %ld", (long)layer.type);
-
                             [layer setZoomIndex:self.zoomFactor];
-
-                            
                         }
                         break;
                     }
@@ -877,9 +924,11 @@ UIColor* tempColor;
 - (void)updateAllPoints {
     [arrayOfPoints removeAllObjects];
     for (JVDrawingLayer *layer in self.layerArray) {
+        
         CGPoint start = [layer getStartPointOfLayer:layer];
         CGPoint end = [layer getEndPointOfLayer:layer];
-        if(layer.type != JVDrawingTypeText){
+        
+        if(layer.type != JVDrawingTypeText && layer.type != JVDrawingTypeDot && layer.type != JVDrawingTypeClipper && layer.type != JVDrawingTypeRazor){
             [arrayOfPoints addObject:NSStringFromCGPoint(start)];
             [arrayOfPoints addObject:NSStringFromCGPoint(end)];
         }
@@ -898,14 +947,17 @@ UIColor* tempColor;
     [self.layerArray removeObject:self.selectedLayer];
     [self.layerArray addObject:self.selectedLayer];
     self.type = self.selectedLayer.type;
+   // [self.delegate selectCurentToolWhenLineSelected:self.selectedLayer.type];
     [self placeCirclesAtLine:layer];
+    NSLog(@"control point x, y = %F, %f", self.selectedLayer.controlPointOfCurve.x , self.selectedLayer.controlPointOfCurve.y);
+
 }
 #pragma mark Placing Circles On Line
 
 -(void)placeCirclesAtLine:(JVDrawingLayer*)layer{
     if (JVDrawingTypeCurvedLine == self.type || JVDrawingTypeCurvedDashLine == self.type){
-        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
-        self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
+        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startPoint scaleFactor:self.zoomFactor];
+        self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endPoint scaleFactor:self.zoomFactor];
         self.circleLayer3 = [CircleLayer addCircleToPoint:layer.midP scaleFactor:self.zoomFactor];
         [layer addSublayer:self.circleLayer1];
         [layer addSublayer:self.circleLayer2];
@@ -929,8 +981,8 @@ UIColor* tempColor;
         [self revoke];
         
     } else if (JVDrawingTypeArrow == self.type || JVDrawingTypeLine == self.type || JVDrawingTypeDashedLine == self.type) {
-        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startP scaleFactor:self.zoomFactor];
-        self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endP scaleFactor:self.zoomFactor];
+        self.circleLayer1 = [CircleLayer addCircleToPoint:layer.startPoint scaleFactor:self.zoomFactor];
+        self.circleLayer2 = [CircleLayer addCircleToPoint:layer.endPoint scaleFactor:self.zoomFactor];
         [layer addSublayer:self.circleLayer1];
         [layer addSublayer:self.circleLayer2];
         [self.arrayOfCircles addObject:self.circleLayer1];
@@ -1027,10 +1079,13 @@ UIColor* tempColor;
 }
 
 -(void)removeCircles{
+  
     [self.arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [self.arrayOfCircles removeAllObjects];
     self.selectedLayer = nil;
     self.selectedLayer.isSelected = NO;
+    
+    
 }
 
 #pragma mark ZOOM IN / OUT METHODS
@@ -1241,10 +1296,10 @@ UIColor* tempColor;
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
+    [self storeDataInJson];
     [self.drawingLayer addToTrack];
     [self selectLayer:self.drawingLayer];
     [self.selectedLayer setZoomIndex:self.zoomFactor];
-
 }
 
 
@@ -1281,7 +1336,7 @@ UIColor* tempColor;
         [self.delegate selectPreviousTool:self.previousType];
     }
     self.type = JVDrawingTypeRazor;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"clippermain"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"razor"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1293,6 +1348,7 @@ UIColor* tempColor;
 
 -(void)setNewColorForTools:(UIColor*)color{
     [self.selectedLayer setNewColor:color];
+    [self storeDataInJson];
     
 }
 -(BOOL)textViewSelected{

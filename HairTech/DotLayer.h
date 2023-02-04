@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface  DotLayer : CALayer
-+(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName scale:(CGFloat)scaleFactor;
++(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName color:(UIColor*)color scale:(CGFloat)scaleFactor;
 - (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize scale:(CGFloat)scale;
 -(UIImage *) getImageWithTintedColor:(UIImage *)image withTint:(UIColor *)color withIntensity:(float)alpha;
 @property NSString * imageName;

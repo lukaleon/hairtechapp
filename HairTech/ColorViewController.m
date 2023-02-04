@@ -36,13 +36,14 @@
         self.colorCollection = [[NSUserDefaults standardUserDefaults] objectForKey:@"colorCollection"];
         
         _isTextSelected = isSelected;
+        
         self.currentPenColor = currentColor;
         _currentToolName = currentTool;
         arrayOfCircles = [NSMutableArray array];
         editMode = NO;
         [self configure];
         [self indicateCurrentColorAtStart];
-        [self animateScrollViewBounce];
+       // [self animateScrollViewBounce];
    
 
 
@@ -419,7 +420,11 @@ else {
     scrollText.showsHorizontalScrollIndicator = NO;
     scrollText.pagingEnabled = YES;
     
-  
+    if([_currentToolName isEqualToString:@"Clipper"]){
+        button1.alpha = 0;
+        button2.alpha = 0;
+
+    }
     
     if (self.buttonCollection != nil) {
         for (ColorButton *colorButton in self.buttonCollection) {
@@ -453,6 +458,9 @@ else {
 
     [self.delegate addTextFromTextSettings];
 
+
+    
+    
     }
 
 

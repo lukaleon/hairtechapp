@@ -52,52 +52,46 @@
     [self.view addSubview:more];
 }
 -(void)drawingViewAddDot{
-//    self.drawingView.type = JVDrawingTypeDot;
-//    self.drawingView.bufferType = JVDrawingTypeDot;
+    [self.drawingView setEraserSelected:NO];
     [self.drawingView addDotToView:self.img.center];
 }
 -(void)drawingViewAddClipper{
-//    self.drawingView.type = JVDrawingTypeClipper;
-//    self.drawingView.bufferType = JVDrawingTypeClipper;
+    [self.drawingView setEraserSelected:NO];
     [self.drawingView addClipperToView:self.img.center];
 }
 -(void)drawingViewAddRazor{
-   
-//    self.drawingView.type = JVDrawingTypeRazor;
-//    self.drawingView.bufferType = JVDrawingTypeRazor;
+    [self.drawingView setEraserSelected:NO];
     [self.drawingView addRazorToView:self.img.center];
 }
 
 -(void)drawingViewAddText{
-   // [self.drawingView addTextToView:self.img.center];
-    
-    
-                [self.drawingView removeCircles];
+    [self.drawingView setEraserSelected:NO];
+    [self.drawingView removeCircles];
 
-                [self.drawingView setEraserSelected:NO];
-                [self.drawingView enableGestures];
-                self.drawingView.type = JVDrawingTypeText;
-                self.drawingView.bufferType = JVDrawingTypeText;
-                self.drawingView.lineColor = textColor;
-
-    //  self.drawingView.textTypesSender = sender; //Should be saved to user defaults
-
-                CGRect gripFrame = CGRectMake(0, 0, 70, 38);
-                if (!textSelected){
-                    [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
-                    [contentTextView setFontSizee:self.fontSizeVC];
-                    self.drawingView.textViewFontSize = self.fontSizeVC;
-                }
-                self.drawingView.textViewNew.delegate = self;
-                if (contentTextView == nil){
-                    [self showTextColorsAndSize:textColor]; //??????????? atttention
-                    [contentTextView setFontSizee:self.fontSizeVC];
-                }
-                }
+    [self.drawingView setEraserSelected:NO];
+    [self.drawingView enableGestures];
+    self.drawingView.type = JVDrawingTypeText;
+    self.drawingView.bufferType = JVDrawingTypeText;
+    self.drawingView.lineColor = textColor;
+    CGRect gripFrame = CGRectMake(0, 0, 70, 38);
+    if (!textSelected)
+    {
+        [self.drawingView addFrameForTextView:gripFrame centerPoint:self.img.center text:@"TEXT" color:textColor font:self.fontSizeVC];
+            [contentTextView setFontSizee:self.fontSizeVC];
+        self.drawingView.textViewFontSize = self.fontSizeVC;
+    }
+    self.drawingView.textViewNew.delegate = self;
+    if (contentTextView == nil)
+    {
+        [self showTextColorsAndSize:textColor]; //??????????? atttention
+        [contentTextView setFontSizee:self.fontSizeVC];
+    }
+}
 
 -(void)viewDidLoad{
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
+    arrayOfColorPickers = [NSMutableArray array];
     [self setupScrollView];
     [self setupDrawingView];
     [self LoadColorsAtStart];
@@ -168,7 +162,7 @@
     
     
     [actions addObject:[UIAction actionWithTitle:@"Razor"
-                                           image:[UIImage imageNamed:@"clipper"]
+                                           image:[UIImage imageNamed:@"razor"]
                                       identifier:nil
                                          handler:^(__kindof UIAction* _Nonnull action) {
         [self drawingViewAddRazor];
@@ -183,7 +177,7 @@
         
     }]];
     [actions addObject:[UIAction actionWithTitle:@"Clipper"
-                                           image:[UIImage imageNamed:@"clipper"]
+                                           image:[UIImage imageNamed:@"clippermain"]
                                       identifier:nil
                                          handler:^(__kindof UIAction* _Nonnull action) {
         [self drawingViewAddClipper];
@@ -481,7 +475,7 @@
     [redo setImage:[UIImage imageNamed:@"redoNew.png"] forState:UIControlStateNormal];
     [redo setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
-    UIButton *more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [more addTarget:self
              action:@selector(presentAlertView)
    forControlEvents:UIControlEventTouchUpInside];
@@ -497,15 +491,59 @@
     UIBarButtonItem * redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, gridBtn,magnetBtn, nil];
     [self updateButtonStatus];
+    [self registerActionView];
 
 }
 
--(void)presentAlertView{
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Action" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
-//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Presenting the great... StackOverFlow!"];
-//    [hogan addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14.0] range:NSMakeRange(24, 11)];
-//    [alertVC setValue:hogan forKey:@"attributedTitle"];
+-(void)registerActionView{
+  
+    NSMutableArray* actions = [[NSMutableArray alloc] init];
+       // if (@available(iOS 14.0, *)) {
+          
+    more.showsMenuAsPrimaryAction = true;
+
     
+    
+    [actions addObject:[UIAction actionWithTitle:@"Color Palette"
+                                           image:[UIImage systemImageNamed:@"paintpalette"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self changeColorPalette];
+
+    }]];
+    
+    [actions addObject:[UIAction actionWithTitle:@"Share"
+                                           image:[UIImage systemImageNamed:@"square.and.arrow.up"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self share];
+
+    }]];
+    
+    UIAction * clear = [UIAction actionWithTitle:@"Clear Page"
+                                           image:[UIImage systemImageNamed:@"trash"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self showConfirmationAlertForClear];
+    }];
+    clear.attributes = UIMenuElementAttributesDestructive;
+
+    [actions addObject:clear];
+    
+            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+
+    
+           // more.offset = CGPointMake(0, 40);
+    if (@available(iOS 16.0, *)) {
+     //   menu.preferredElementSize = UIMenuElementSizeMedium;
+    } else {
+        // Fallback on earlier versions
+    }
+
+    more.menu = menu;
+    
+    
+    /* UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"Action" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *showPalette = [UIAlertAction actionWithTitle:@"Color palette"
                                                      style:UIAlertActionStyleDefault
@@ -527,9 +565,7 @@
                                                    handler:^(UIAlertAction *action){
                                                        //add code to make something happen once tapped
                                                    }];
-  //  [button2 setValue:[[UIImage systemImageNamed:@"trash"]
-                     //  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
-   // [button setValue:[[UIImage systemImageNamed:@"tray.and.arrow.up"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+  
     [alertVC addAction:showPalette];
     [alertVC addAction:button];
     [alertVC addAction:button2];
@@ -542,7 +578,10 @@
         [[alertVC popoverPresentationController] setSourceRect:view.frame];
         [[alertVC popoverPresentationController] setPermittedArrowDirections:UIPopoverArrowDirectionUp];
         [self presentViewController:alertVC animated:true completion:nil];
-    }
+    }*/
+    
+    
+    
 }
 -(void)showConfirmationAlertForClear
 {
@@ -1077,6 +1116,9 @@ return YES;
     textSelected = NO;
     [self pencilPressed:sender];
 }
+
+
+
 - (void)selectTextTool:(id)sender passColor:(UIColor*)color {
     curveToggleIsOn = nil;
    // dashLineCount = 0;
@@ -1292,16 +1334,33 @@ return YES;
     contentTextView.delegate = self;
     [self setupAdditionalTools:contentTextView.button3];
     [self.view addSubview:contentTextView];
-    
 }
+
+
+-(void)showToolsColorPicker:(UIColor*)color{
+    toolsColorPicker = [[ColorViewController alloc] initWithFrame:self.toolbar.bounds isSelected:YES color:color currentTool:@"Clipper"];
+    toolsColorPicker.center = self.toolbar.center;
+    //contentTextView.currentPenColor = color;
+    textSetterState = YES;
+    toolsColorPicker.delegate = self;
+    [self setupAdditionalTools:toolsColorPicker.button3];
+    [self.view addSubview:toolsColorPicker];
+    [arrayOfColorPickers addObject:toolsColorPicker];
+
+}
+
 -(void)additionalToolsColorPopover:(UIColor*)color{
 //     Show color picker view for Dot Clipper and Razor
-    [self showTextColorsAndSize:color];
+    [self showToolsColorPicker:color];
 }
 -(void)hideAdditionalColorPicker{
 //     Hide color picker view for Dot Clipper and Razor
-    [contentTextView removeFromSuperview];
-    contentTextView = nil;}
+    NSLog(@"hide color picker");
+    [arrayOfColorPickers makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [arrayOfColorPickers removeAllObjects];
+    [toolsColorPicker removeFromSuperview];
+    toolsColorPicker = nil;
+}
 
 - (void)colorPopoverDidSelectTextColor:(NSString *)hexColor{
     NSLog(@"selected color for text");

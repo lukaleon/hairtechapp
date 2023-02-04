@@ -18,7 +18,7 @@
     return self;
 }
 
-+(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName scale:(CGFloat)scaleFactor
++(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName color:(UIColor*)color scale:(CGFloat)scaleFactor
 {
     
     DotLayer * layer = [[[self class] alloc] init];
@@ -36,7 +36,7 @@
     maskLayer.frame = layer.bounds;
     maskLayer.contents = (__bridge id _Nullable)(newImg.CGImage);
     layer.mask = maskLayer;
-    layer.backgroundColor = [UIColor redColor].CGColor;
+    layer.backgroundColor = color.CGColor;
    
     return layer;
 }

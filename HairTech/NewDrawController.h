@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
     ColorViewController *contentTextView;
+    ColorViewController *toolsColorPicker;
+
     ColorViewController *contentViewController;
     IBOutlet UILongPressGestureRecognizer *longpressPenTool;
     IBOutlet UILongPressGestureRecognizer *longpressCurveTool;
@@ -57,7 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL textSelected;
     BOOL textSetterState;
     UIColor * currentColor;
-    
+    NSMutableArray * arrayOfColorPickers;
+    UIButton *more;
 }
 
 @property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;

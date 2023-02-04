@@ -22,9 +22,10 @@ typedef NS_ENUM(NSInteger, JVDrawingType) {
 };
 
 typedef NS_ENUM(NSInteger, JVDrawingTouch) {
-    JVDrawingTouchHead = 1,     //点击头部
-    JVDrawingTouchMid,          //点击中部
-    JVDrawingTouchEnd           //点击尾部
+    JVDrawingTouchHead = 1,     
+    JVDrawingTouchMid,
+    JVDrawingTouchEnd,
+    JVDrawingTouchNone
 };
 
 @interface JVDrawingLayer : CAShapeLayer{
