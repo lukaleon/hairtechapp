@@ -307,7 +307,7 @@ UIColor* tempColor;
             else {
                 [self.drawingLayer movePathWithEndPoint:endPointOffset];
             }
-        } else {
+        } if (JVDrawingTypeText == selectedL.type ) {
             
             CGRect rect = CGRectMake(startPointOffset.x, startPointOffset.y, selectedL.width, selectedL.height);
             self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:startPointOffset
@@ -498,18 +498,15 @@ UIColor* tempColor;
 }
 
 - (void)revokeWhenZooming:(JVDrawingLayer*)layer {
+    [self.delegate hideAdditionalColorPicker];
     [self hideMenu];
-   // [self.bufferOfLayers addObject:layer]; //Add layer to buffer array for redo
     [self.layerArray removeObject:layer];
     [layer removeFromSuperlayer];
-//    self.selectedLayer.isSelected = NO;
     layer = nil;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
     [self fetchData:self.fileNameInside];
-    NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
-    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
     
 }
 
@@ -530,7 +527,6 @@ UIColor* tempColor;
     [self storeDataInJson];
     [self fetchData:self.fileNameInside];
     NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
-    // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
     
 }
 - (void)revokeTextView {
@@ -598,18 +594,30 @@ UIColor* tempColor;
     }
     
     unsigned long count = [[event allTouches] count];
-    if (count > 1) {
-        return; // return amount of fingers touched right now
-    }
+//    if (count > 1) {
+//        return; // return amount of fingers touched right now
+//    }
+  
+    
+ 
+    
     
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
     CGPoint previousPoint = [touch previousLocationInView:self];
-    CGFloat distance = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
+    CGFloat distanceBetweentTouches = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
+//
+//    if(distanceBetweentTouches <= 2 ){
+//        return;
+//    }
     
-    if(distance == 0){
+    
+    if (count > 1 ) {
+       // NSLog(@"touches > 2");
+    //    [self revokeWhenZooming:[self.layerArray lastObject]];
         return;
     }
+    
     
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
@@ -792,15 +800,28 @@ UIColor* tempColor;
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     unsigned long count = [[event allTouches] count];
     
+    
+//    if(distanceBetweentTouches <= 2 ){
+//        NSLog(@"touches >");
+//
+//        return;
+//    }
+    
+   
+    
+    if (count > 1) {
+        [self removeExcessLayer];
+     //   [self revokeWhenZooming:[self.layerArray lastObject]];
+        return;
+    }
+    
     cycle = 0;
     [self hideLoupe];
     if (![self.layerArray containsObject:self.drawingLayer] && !self.isFirstTouch && self.drawingLayer != nil) {
         //add endPoint to Array when line first drawn
         [self.layerArray addObject:self.drawingLayer];
-        if (count > 1) {
-            [self revokeWhenZooming:[self.layerArray lastObject]];
-            return;
-        }
+        
+       
         
         
         [self storeDataInJson];
@@ -813,6 +834,9 @@ UIColor* tempColor;
             [self selectLayer:[self.layerArray lastObject]];
         }
         [self.drawingLayer addToTrack];
+        
+        
+        
         
     } else {
         if (self.isMoveLayer) {
@@ -873,7 +897,6 @@ UIColor* tempColor;
             }
         }
     }
-
   //  [self.delegate enableZoomWhenTouchesMoved];
 }
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -881,6 +904,27 @@ UIColor* tempColor;
     [self touchesEnded:touches withEvent:event];
 
 }
+
+-(void)removeExcessLayer{
+    NSMutableArray * tempArray = [NSMutableArray array];
+    for(JVDrawingLayer * layerTemp in self.layer.sublayers){
+     //   NSLog(@"layertemp %@", layerTemp.description);
+        if([layerTemp isKindOfClass:[JVDrawingLayer class]]){
+           if(![self.layerArray containsObject:layerTemp]){
+              //  [layerTemp removeFromSuperlayer];
+               [tempArray addObject:layerTemp];
+         }else {
+             NSLog(@"Layer exist in layer");
+       }
+
+        }
+    }
+    if (tempArray.count > 0 ){
+        [[tempArray objectAtIndex:0] removeFromSuperlayer];
+        [self layoutIfNeeded];
+    }
+}
+
 - (void)setEraserSelected:(BOOL)eraserSelected
 {
     _eraserSelected = eraserSelected;
@@ -967,6 +1011,7 @@ UIColor* tempColor;
         [self.arrayOfCircles addObject:self.circleLayer3];
     }
     else if (JVDrawingTypeText == self.type){
+       
         [self.userResizableView setTextViewSelected:YES];
         self.temporaryLayer = self.selectedLayer;
         textViewSelected = YES;
@@ -1394,7 +1439,8 @@ UIColor* tempColor;
     
 }
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView] withEvent:nil]) {
+
+    if ([currentlyEditingView hitTest:[touch locationInView:currentlyEditingView] withEvent:nil] ) {
         //[self.textViewNew becomeFirstResponder];
         [currentlyEditingView showEditingHandles];
         //        [self enableGestures];
@@ -1708,27 +1754,28 @@ UIColor* tempColor;
 #pragma mark - Drawing
 - (void)drawRect:(CGRect)rect {
     
-    if(self.editMode == NO){
-        //#if PARTIAL_REDRAW
-        // TODO: draw only the updated part of the image
-        //      [self drawPath];
-        //#else
-        CGRect fixedBounds = [UIScreen mainScreen].fixedCoordinateSpace.bounds;
-        
-        [self.image drawInRect:self.bounds];
-        [self.currentTool draw];
-        
-        //#endif
-    }
-    else    {
-        
-        [self.image drawInRect:self.bounds];
-        [self.currentTool draw2];
-        
-        
-    }
-    
-    UIGraphicsEndImageContext();
+//NSLog(@"drawRect performed");
+//    if(self.editMode == NO){
+//        //#if PARTIAL_REDRAW
+//        // TODO: draw only the updated part of the image
+//        //      [self drawPath];
+//        //#else
+//        CGRect fixedBounds = [UIScreen mainScreen].fixedCoordinateSpace.bounds;
+//
+//        [self.image drawInRect:self.bounds];
+//        [self.currentTool draw];
+//
+//        //#endif
+//    }
+//    else    {
+//
+//        [self.image drawInRect:self.bounds];
+//        [self.currentTool draw2];
+//
+//
+//    }
+//
+//    UIGraphicsEndImageContext();
 }
 
 

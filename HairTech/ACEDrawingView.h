@@ -105,7 +105,7 @@ typedef enum {
     CGPoint bufferStartPoint;
     CGPoint bufferEndPoint;
     int cycle;
-    
+    CGFloat distanceBetweentTouches;
     CGPoint pointBegin;
     CGPoint pointEnd;
     
