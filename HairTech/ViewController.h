@@ -18,6 +18,7 @@
 #import "NewEntryController.h"
 #import <CloudKit/CloudKit.h>
 #import "ReusableView.h"
+#import "AppDelegate.h"
 
 
 typedef enum {
@@ -40,7 +41,7 @@ typedef enum {
 @end
 
 @interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, ReusableViewDelegate ,CellDelegate>{
-   // buttonImage *buttonImageClass;
+
     
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;

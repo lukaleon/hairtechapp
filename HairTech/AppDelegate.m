@@ -61,6 +61,8 @@
         [self saveMagnetStateToDefaults:YES];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
+
         [self saveStartColorsToDefaults];
 
    }
@@ -298,38 +300,48 @@
         if ([url.scheme isEqualToString:@"file"] && [url.pathExtension isEqualToString:@"htapp"]) {
             
             NSString * fileName = [[url path] lastPathComponent];
+            NSString *nameWithoutExtension = [[[url path] lastPathComponent] stringByDeletingPathExtension];
+
             self.dict = options;
             NSData *data = [NSData dataWithContentsOfURL:url];
             /* CHECK FILE NAME FOR EXISTANCE IN FOLDER */
             
             [self getArrayOfFilesInDirectory];
             int i = 0;
+           
             NSMutableDictionary * dict = [self getImportedFileData:data error:nil];
-
+            
+            if(![nameWithoutExtension isEqualToString:[dict objectForKey:@"techniqueName"]]){
+                [dict setObject:nameWithoutExtension forKey:@"techniqueName"];
+                [dict setObject:@"default" forKey:@"favorite"];
+                data = [self dataOfType:dict];
+                //if file name is different than technique name - we change technique name
+            }
+//            else {
+//                [dict setObject:@"default" forKey:@"favorite"];
+//                data = [self dataOfType:dict];
+//            }
+//            
+            
             for(NSString * name in self.filesArrayAppDelegate){
                 if([fileName isEqualToString:name]){
-                    NSLog(@"Name exists");
 
-                    NSString * newIDName = [[NSUUID UUID] UUIDString];
-                    NSMutableString * newIDWithExtension = [newIDName mutableCopy];
-                    [newIDWithExtension appendString:@".htapp"];
-                    fileName = newIDWithExtension;
-                    [dict setObject:newIDName forKey:@"uuid"];
+//                NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArrayAppDelegate objectAtIndex:i] error:nil];
+                    
+                    fileName = [self getNamesOfTechniquesInFiles:[dict objectForKey:@"techniqueName"]];
+                    [dict setObject:fileName forKey:@"techniqueName"];
+                    [dict setObject:@"default" forKey:@"favorite"];
+
                     data = [self dataOfType:dict];
+                    
+                    NSMutableString * newFileName = [fileName mutableCopy];
+                    [newFileName appendString:@".htapp"];
+                    fileName = newFileName;
 
                 }else {
-                    NSLog(@"Name not exists");
-                }
-                NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArrayAppDelegate objectAtIndex:i] error:nil];
-
-                if([[dict objectForKey:@"techniqueName"] isEqualToString:[dictOfData objectForKey:@"techniqueName"]]){
-                    NSLog(@"Name is the same");
-                    NSString * newName = [self getNamesOfTechniquesInFiles:[dict objectForKey:@"techniqueName"]];
-                    [dict setObject:newName forKey:@"techniqueName"];
-                    data = [self dataOfType:dict];
-
-                }else {
-                    NSLog(@"Name is not the same");
+//                    [dict setObject:@"default" forKey:@"favorite"];
+//                    data = [self dataOfType:dict];
+                    
                 }
                 i++;
                 
@@ -339,9 +351,11 @@
             NSString *docDirectory = [sysPaths objectAtIndex:0];
             NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
             [data writeToFile:filePath atomically:YES];
-                
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
+            
+            self.importedTechniqueName = [dict objectForKey:@"techniqueName"];
 
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
+            
             return YES;
             
         }

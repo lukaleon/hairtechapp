@@ -19,8 +19,9 @@
 -(void)saveImageWhenterminate;
 -(void)closeAndSave;
 -(void)captureScreenRetina;
-
 @end
+
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
     NSMetadataQuery *_query;
@@ -30,8 +31,11 @@
  // UIBarButtonItem *tempButton;
 }
 @property NSMutableArray * filesArrayAppDelegate;
+@property (nonatomic, retain) NSString *importedTechniqueName;
 
-@property (weak, nonatomic) id<MyViewControllerDelegate>myviewdelegate;
+@property (weak, nonatomic) id<MyViewControllerDelegate> myviewdelegate;
+
+
 
 @property (weak,nonatomic)UIImage *imageToSend;
 //@property (strong, nonatomic) EntryViewController *entryViewController;

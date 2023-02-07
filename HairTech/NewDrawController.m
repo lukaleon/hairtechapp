@@ -123,6 +123,7 @@
     /* */
     textSelected = NO;
     self.fontSizeVC = 15;
+    
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
     }

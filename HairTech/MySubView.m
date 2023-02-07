@@ -343,7 +343,7 @@
     uuid = [[NSUUID UUID] UUIDString];
     [self saveDiagramToFile:uuid techniqueName:self.textField.text maleOrFemale:self.maleOrFemale];
     
-    [[NSUserDefaults standardUserDefaults] setObject:[self createNameFromUUID:uuid] forKey:@"newCreatedFileName"];
+    [[NSUserDefaults standardUserDefaults] setObject:[self createNameFromUUID:self.textField.text] forKey:@"newCreatedFileName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
  
@@ -504,7 +504,7 @@
 -(void)saveDiagramToFile:(NSString*)uuid  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
     
     
-    NSMutableString * exportingFileName = [uuid mutableCopy];
+    NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
     
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
@@ -513,7 +513,9 @@
     NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
     // Save it into file system
     [data writeToFile:filePath atomically:YES];
-    NSURL * url = [NSURL fileURLWithPath:filePath];
+   // NSURL * url = [NSURL fileURLWithPath:filePath];
+    
+    
     
 //    [[[NSFileManager alloc]init]setUbiquitous:YES itemAtURL:url destinationURL:[self ubiquitousDocumentsDirectoryURL] error:nil];
    // [self copyFileToICloud:url];

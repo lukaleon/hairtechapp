@@ -218,6 +218,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self setupNavigationBar];
     self.isSelectionActivated = NO;
     longpresscell.enabled = YES;
+
 }
 
 -(void)openInfoController{
@@ -394,7 +395,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableDictionary * dictOfData = [self openFileAtPath:_fileNameForOpenEntry error:nil];
             
     newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
-    [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
+    [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
     newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
     [self.navigationController pushViewController:newEntryVC animated:YES];
 }
@@ -716,13 +717,17 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self getArrayOfFilesInDirectory];
     [self.collectionView reloadData];
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
-
-    NSString * nameOfTechnique;
     
-    NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray lastObject ] error:nil];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableString * newTechniqueName = [appDelegate.importedTechniqueName mutableCopy];
+    [newTechniqueName appendString:@".htapp"];
+    
+    NSLog(@"techtech %@", newTechniqueName);
+    
+    NSMutableDictionary * dictOfData = [self openFileAtPath:newTechniqueName error:nil];
     
     newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
-    [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
+    [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
     newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
      
     [self.navigationController pushViewController:newEntryVC animated:YES];
@@ -769,6 +774,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     [self.collectionView reloadData];
 }
+
+
 #pragma mark Sorting methods
 
 -(void)sortCollectionView:(NSString*)key{
@@ -806,7 +813,7 @@ sortedArray = [self sortArrayByNameWithKey:key andArray:tempArray];
 [filesArray removeAllObjects];
 for(int i = 0; i < sortedArray.count; i++){
     NSMutableDictionary * dictOfDataSorted = [sortedArray objectAtIndex:i];
-    NSMutableString * stringWithWxtension = [[dictOfDataSorted objectForKey:@"uuid"] mutableCopy];
+    NSMutableString * stringWithWxtension = [[dictOfDataSorted objectForKey:@"techniqueName"] mutableCopy];
     [stringWithWxtension appendString:@".htapp"];
     [filesArray addObject:stringWithWxtension];
 }
@@ -870,6 +877,7 @@ for(int i = 0; i < sortedArray.count; i++){
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    NSLog(@"dir %@",docDirectory );
     
     NSURL * url = [NSURL fileURLWithPath:filePath];
     NSData *data = [NSData dataWithContentsOfURL:url];
@@ -950,7 +958,7 @@ for(int i = 0; i < sortedArray.count; i++){
     cell.dateLabel.text = [dictOfData objectForKey:@"techniqueName"];
     cell.cellIndex = indexPath;
     cell.viewModeLabel.text = [dictOfData objectForKey:@"creationDate"];
-    cell.UUIDcell = [dictOfData objectForKey:@"uuid"];
+    cell.UUIDcell = [dictOfData objectForKey:@"techniqueName"];
     
     if([[dictOfData objectForKey:@"favorite"] isEqualToString:@"favorite"]){
         cell.isFavorite = YES;
@@ -1028,7 +1036,7 @@ for(int i = 0; i < sortedArray.count; i++){
     [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
-    [self saveDiagramToFile:[tempDictDefaults objectForKey:@"uuid"]];
+    [self saveDiagramToFile:[tempDictDefaults objectForKey:@"techniqueName"]];
     [self reloadMyCollection];
 
     
@@ -1054,8 +1062,8 @@ for(int i = 0; i < sortedArray.count; i++){
         NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:indexPath.row] error:nil];
                 
         newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
-        [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
-        [newEntryVC setTechniqueID:[dictOfData objectForKey:@"uuid"]];
+        [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
+        [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
         newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
         
         [self.navigationController pushViewController: newEntryVC animated:YES];
@@ -1194,7 +1202,7 @@ for(int i = 0; i < sortedArray.count; i++){
 
 
         NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:[indexOfSelectedCell row]] error:nil];
-        [self removeImage:[dictOfData objectForKey:@"uuid"]];
+        [self removeImage:[dictOfData objectForKey:@"techniqueName"]];
         [self.collectionView  reloadData];
 
         self.navigationItem.leftBarButtonItems = nil;
@@ -1390,25 +1398,40 @@ for(int i = 0; i < sortedArray.count; i++){
     return filename;
  }
 -(void)storeNewNameInTempDictionary:(NSString*)name{
-    
+    NSLog(@"rename Temp Dir");
     NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    
+    NSMutableString * currentFileName = [[tempDict objectForKey:@"techniqueName"] mutableCopy];
+    [currentFileName appendString:@".htapp"];
+    
     [tempDict setObject:name forKey:@"techniqueName"];
     
     [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self saveDiagramToFile:[tempDict objectForKey:@"uuid"]];
+    
+    [self changeFileName:currentFileName to:name];
+    [self saveDiagramToFile:[tempDict objectForKey:@"techniqueName"]];
 }
 
 
 -(void)renameTechniqueDelegate:(NSString*)txtField{
-    
     NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    
+    NSMutableString * currentFileName = [[tempDict objectForKey:@"techniqueName"] mutableCopy];
+    [currentFileName appendString:@".htapp"];
+    
     [tempDict setObject:txtField forKey:@"techniqueName"];
     [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self saveDiagramToFile:[tempDict objectForKey:@"uuid"]];
+    
+    [self changeFileName:currentFileName to:txtField];
+    
+    [self saveDiagramToFile:txtField];
+    [self getArrayOfFilesInDirectory];
     [self reloadMyCollection];
 }
+
+
 
 
 -(BOOL) validate:(Technique *)c
@@ -1423,6 +1446,9 @@ for(int i = 0; i < sortedArray.count; i++){
 
 -(void)changeFileName:(NSString *)filename to:(NSString*)newFileName
 {
+    NSMutableString * newName = [newFileName mutableCopy];
+    [newName appendString:@".htapp"];
+    
     NSError *error;
     
     // Create file manager
@@ -1430,7 +1456,7 @@ for(int i = 0; i < sortedArray.count; i++){
     NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [documentPaths objectAtIndex:0];
     NSString *filePath2 = [documentsDirectory
-                           stringByAppendingPathComponent:newFileName];
+                           stringByAppendingPathComponent:newName];
     
     NSString *filePath =[documentsDirectory
                          stringByAppendingPathComponent:filename];
@@ -1496,7 +1522,7 @@ for(int i = 0; i < sortedArray.count; i++){
 
     NSMutableString * exportingFileName = [techniqueName mutableCopy];
     [exportingFileName appendString:@".htapp"];
-
+    
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
     NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
@@ -1506,6 +1532,8 @@ for(int i = 0; i < sortedArray.count; i++){
     [data writeToFile:filePath atomically:YES];
    // NSURL * url = [NSURL fileURLWithPath:filePath];
 }
+
+
 
 - (NSData *)dataOfType{
     NSError *error = nil;
