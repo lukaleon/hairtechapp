@@ -134,9 +134,7 @@
         [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
         [self.drawingView setMagnetActivated:NO];
     }
-
     [self setupAdditionalTools:self.textTool];
-
 
     }
 
@@ -150,24 +148,18 @@
     [self clearPageForClosing];
     
     [self saveDiagramToFile:self.techniqueName];
+    
 }
 
-
+-(void)deselectTools{
+    NSLog(@"deselect tools");
+}
 -(void)setupAdditionalTools:(UIButton*)sender{
     
     NSMutableArray* actions = [[NSMutableArray alloc] init];
-       // if (@available(iOS 14.0, *)) {
-            sender.showsMenuAsPrimaryAction = true;
-
+    // if (@available(iOS 14.0, *)) {
+    sender.showsMenuAsPrimaryAction = true;
     
-    
-    [actions addObject:[UIAction actionWithTitle:@"Razor"
-                                           image:[UIImage imageNamed:@"razor"]
-                                      identifier:nil
-                                         handler:^(__kindof UIAction* _Nonnull action) {
-        [self drawingViewAddRazor];
-
-    }]];
     
     [actions addObject:[UIAction actionWithTitle:@"Text"
                                            image:[UIImage imageNamed:@"text"]
@@ -176,11 +168,20 @@
         [self drawingViewAddText];
         
     }]];
-    [actions addObject:[UIAction actionWithTitle:@"Clipper"
+    
+    [actions addObject:[UIAction actionWithTitle:@"Clippers"
                                            image:[UIImage imageNamed:@"clippermain"]
                                       identifier:nil
                                          handler:^(__kindof UIAction* _Nonnull action) {
         [self drawingViewAddClipper];
+    }]];
+    
+    [actions addObject:[UIAction actionWithTitle:@"Razor"
+                                           image:[UIImage imageNamed:@"razor"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self drawingViewAddRazor];
+        
     }]];
     
     [actions addObject:[UIAction actionWithTitle:@"Dot"
@@ -190,19 +191,20 @@
         [self drawingViewAddDot];
     }]];
     
-  
-            
-            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
-
     
-           // more.offset = CGPointMake(0, 40);
+    
+    UIMenu * menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+    
+    // more.offset = CGPointMake(0, 40);
     if (@available(iOS 16.0, *)) {
-     //   menu.preferredElementSize = UIMenuElementSizeMedium;
+        //   menu.preferredElementSize = UIMenuElementSizeMedium;
     } else {
         // Fallback on earlier versions
     }
     sender.menu = menu;
+    
 }
+
 - (void)setupScrollView {
     CGRect newFrame = CGRectMake(0, 80, self.view.frame.size.width, self.view.frame.size.height - 170);
     scrollView.frame = newFrame;
@@ -1153,7 +1155,7 @@ return YES;
 }
 
 - (IBAction)pencilPressed:(id)sender {
-    
+
     [self.popTipLine hide];
     [self.popTipCurve hide];
     UIButton * PressedButton = (UIButton*)sender;
@@ -1248,7 +1250,7 @@ return YES;
         case 4:
            [self.drawingView removeCircles];
             curveToggleIsOn = nil;
-            [self makeButtonDeselected];
+            
 //            self.textTool.selected = YES;
 //            [self.drawingView setEraserSelected:NO];
 //            [self.drawingView enableGestures];
@@ -1268,8 +1270,9 @@ return YES;
 //                [self showTextColorsAndSize:textColor]; //??????????? atttention
 //                [contentTextView setFontSizee:self.fontSizeVC];
 //            }
-            
-            
+            [self makeButtonDeselected];
+            [self.drawingView setEraserSelected:NO];
+
             
             break;
        case 5:
@@ -1369,10 +1372,7 @@ return YES;
     dotColor = [self colorFromHex:hexColor];
     razorColor = [self colorFromHex:hexColor];
     [self.drawingView setNewColorForTools:[self colorFromHex:hexColor]];
-    
-    
     self.drawingView.lineColor = textColor;
-    self.textTool.backgroundColor = textColor;
     self.drawingView.textViewNew.textColor = textColor;
 }
 

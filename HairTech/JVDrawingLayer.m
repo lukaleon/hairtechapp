@@ -280,7 +280,7 @@ else {
     return  layer.endPoint;
 }
 
-+ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor imageName:(NSString*)imgName{
++ (JVDrawingLayer *)createDotWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint height:(CGFloat)height type:(JVDrawingType)type lineWidth:(CGFloat)line_Width lineColor:(UIColor*)line_Color scale:(CGFloat)scaleFactor imageName:(NSString*)imgName orientation:(NSString*)orientation{
     
     JVDrawingLayer *layer = [[[self class] alloc] init];
    
@@ -299,7 +299,10 @@ else {
 
     [rectPath stroke];
     
-    DotLayer * dot = [DotLayer addDotToFrame:startPoint height:height imageName:imgName color:line_Color scale:scaleFactor];
+    
+  
+    DotLayer * dot = [DotLayer addDotToFrame:startPoint height:height imageName:imgName color:line_Color scale:scaleFactor orientation:orientation];
+    layer.zoomFactor = scaleFactor;
 
 //    UIImage * img = [UIImage imageNamed:@"dotlayer"];
 //    UIImage * newImg = [dot imageWithImage:img scaledToSize:dot.bounds.size scale:scaleFactor];
@@ -313,10 +316,17 @@ else {
     layer.height = height;
     layer.type = type;
     layer.dotCenter = startPoint;
-    layer.fillColor  =[UIColor clearColor].CGColor;
+    layer.imageDirection = orientation;
+
+    layer.fillColor = [UIColor clearColor].CGColor;
    // layer.strokeColor = [UIColor yellowColor].CGColor;
     layer.lineColor_ = line_Color;
     [layer addSublayer:dot];
+    
+    NSLog(@"orient %@", orientation);
+    if([orientation isEqualToString:@"mirrored"]){
+    [layer flipImageOnLoad:scaleFactor];
+    }
     return layer;
 }
 
@@ -596,6 +606,49 @@ else {
     dotLayer.backgroundColor = color.CGColor;
     self.lineColor_ = color;
 }
+
+
+-(void)flipImage:(CGFloat)zoomFactor{
+    
+    NSLog(@"scale %f ", self.zoomFactor);
+    DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
+    
+    
+    UIImage* flippedImage = [UIImage imageWithCGImage:(__bridge CGImageRef _Nonnull)(dotLayer.mask.contents)
+                                                scale:zoomFactor
+                                          orientation:UIImageOrientationUpMirrored];
+    
+    UIImage * newImg = [dotLayer imageWithImage:flippedImage scaledToSize:dotLayer.bounds.size scale:zoomFactor];
+    dotLayer.mask.contents = (__bridge id _Nullable)(newImg.CGImage);
+    
+    if([self.imageDirection isEqualToString:@"default"]){
+        self.imageDirection = @"mirrored";
+        return;
+
+    }
+    if([self.imageDirection isEqualToString:@"mirrored"]){
+        self.imageDirection = @"default";
+            return;
+            
+    }
+   
+    
+}
+
+-(void)flipImageOnLoad:(CGFloat)zoomFactor{
+        DotLayer * dotLayer = [self.sublayers objectAtIndex:0];
+    
+    
+    UIImage* flippedImage = [UIImage imageWithCGImage:(__bridge CGImageRef _Nonnull)(dotLayer.mask.contents)
+                                                scale:zoomFactor
+                                          orientation:UIImageOrientationUpMirrored];
+    
+    UIImage * newImg = [dotLayer imageWithImage:flippedImage scaledToSize:dotLayer.bounds.size scale:zoomFactor];
+    dotLayer.mask.contents = (__bridge id _Nullable)(newImg.CGImage);
+    
+}
+
+
 - (void)moveDotPathWithStartPoint:(CGPoint)startPoint
                           endPoint:(CGPoint)endPoint
                         isSelected:(BOOL)isSelected {
@@ -717,11 +770,19 @@ else {
     self.dotCenter = startPoint;
     self.height = hypot;
 
-    NSLog(@"scalezoom %f", self.zoomFactor);
+    NSLog(@"scalezoom %f", _zoomIndex);
 
     
     UIImage * img = [UIImage imageNamed:dotLayer.imageName];
     UIImage * newImg = [dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:self.zoomFactor];
+
+    if ([self.imageDirection isEqualToString:@"mirrored"]){
+
+    newImg = [UIImage imageWithCGImage:newImg.CGImage
+                              scale:self.zoomFactor
+                        orientation:UIImageOrientationUpMirrored];
+    }
+   newImg = [dotLayer imageWithImage:newImg scaledToSize:dotLayer.bounds.size scale:self.zoomFactor];
 
     [CATransaction begin];
     [CATransaction setValue:(id) kCFBooleanTrue forKey:kCATransactionDisableActions];

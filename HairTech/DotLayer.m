@@ -18,7 +18,7 @@
     return self;
 }
 
-+(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName color:(UIColor*)color scale:(CGFloat)scaleFactor
++(DotLayer*)addDotToFrame:(CGPoint)point height:(CGFloat)height imageName:(NSString*)imgName color:(UIColor*)color scale:(CGFloat)scaleFactor orientation:(NSString*)orientation
 {
     
     DotLayer * layer = [[[self class] alloc] init];

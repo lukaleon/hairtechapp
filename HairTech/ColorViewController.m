@@ -38,11 +38,12 @@
         _isTextSelected = isSelected;
         
         self.currentPenColor = currentColor;
+        NSLog(@"cuurent color %@", currentColor);
         _currentToolName = currentTool;
         arrayOfCircles = [NSMutableArray array];
         editMode = NO;
         [self configure];
-        [self indicateCurrentColorAtStart];
+        [self indicateCurrentColorAtStart:currentColor];
        // [self animateScrollViewBounce];
    
 
@@ -74,41 +75,54 @@
     } completion:NULL];
 }
 
-- (void)penColorString:(int)count {
+- (void)penColorString:(int)count color:(UIColor*)currentColor {
     
     
     for (int i=0; i<=count; i++) {
         
-        if (CGColorEqualToColor(self.currentPenColor.CGColor, [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
-        {
+        CGColorRef colorRef =  [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor;
+        NSString * colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
+        
+        CGColorRef currentColorRef =  currentColor.CGColor;
+        NSString *currentColorString = [CIColor colorWithCGColor:currentColorRef].stringRepresentation;
+     
+        if ([colorString isEqualToString:currentColorString]){
             [self currentColorIndicator:[self.buttonCollection objectAtIndex:i]];
         }
     }
 }
-- (void)textColorString:(int)count {
+- (void)textColorString:(int)count color:(UIColor*)currentColor {
     for (int i=0; i<=count; i++) {
-        if (CGColorEqualToColor(self.currentPenColor.CGColor,[GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
-        {
+        //        if (CGColorEqualToColor(currentColor.CGColor, [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
+        //        {
+        //            [self currentColorIndicator:[self.buttonCollection objectAtIndex:i]];
+        //        }
+        
+        
+        CGColorRef colorRef =  [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor;
+        NSString * colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
+        
+        CGColorRef currentColorRef =  currentColor.CGColor;
+        NSString *currentColorString = [CIColor colorWithCGColor:currentColorRef].stringRepresentation;
+     
+        if ([colorString isEqualToString:currentColorString]){
             [self currentColorIndicator:[self.buttonCollection objectAtIndex:i]];
-            
         }
     }
-    
 
 }
 
-- (void)indicateCurrentColorAtStart {
+- (void)indicateCurrentColorAtStart:(UIColor*)currentColor {
     CGColorRef colorRef = self.currentPenColor.CGColor;
     NSString *colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
     NSLog(@"PEN COLOR STRING = %@", colorString);
    
     if(!_isTextSelected){
-        [self penColorString:11];
+        [self penColorString:11 color:currentColor];
     } else {
-        [self textColorString:11];
+        [self textColorString:11 color:currentColor];
     }
 }
-
 
 - (void)configure
 {
@@ -407,6 +421,22 @@ else {
     lineCoordinateX = self.rectView.center.x + screenPartitionIdx / 2;
     
     
+    if([_currentToolName isEqualToString:@"Clipper"]){
+        
+        button1.alpha = 0;
+        button2.alpha = 0;
+        lineSeparator.opacity = 0;
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+            scrollStart = screenPartitionIdx * 3;
+            scrollWidth = screenPartitionIdx * 7;
+        }else{
+            scrollStart = screenPartitionIdx;
+            scrollWidth = screenPartitionIdx * 8;
+        }
+
+    }
+    
+    
     scrollText = [[UIScrollView alloc] initWithFrame:CGRectMake(scrollStart, 0, scrollWidth, self.frame.size.height)];
     scrollText.contentSize = CGSizeMake(scrollWidth, 40);
     [self addSubview:scrollText];
@@ -420,11 +450,7 @@ else {
     scrollText.showsHorizontalScrollIndicator = NO;
     scrollText.pagingEnabled = YES;
     
-    if([_currentToolName isEqualToString:@"Clipper"]){
-        button1.alpha = 0;
-        button2.alpha = 0;
-
-    }
+   
     
     if (self.buttonCollection != nil) {
         for (ColorButton *colorButton in self.buttonCollection) {
@@ -450,11 +476,11 @@ else {
             colorNumber ++;
             [self.buttonCollection addObject:colorButton];
             [scrollText addSubview:colorButton];
-            lastColorButtonX = colorButton.frame.origin.x;
+            lastColorButtonX = scrollText.frame.origin.x + scrollText.frame.size.width;
             
         }
     
-   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastButtonStart width:28 yAxe:14];
+   button3 =  [self fontButton:@"addNewTextView:" imageName1:@"addText.png" imageName2:@"addTextSelected.png" startX:lastColorButtonX width:28 yAxe:14];
 
     [self.delegate addTextFromTextSettings];
 

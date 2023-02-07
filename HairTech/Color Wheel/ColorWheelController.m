@@ -428,13 +428,24 @@
 
 -(void)currentColorIndicator:(ColorButton*)colorBtn
 {
-        line = [CAShapeLayer layer];
-        UIBezierPath *linePath=[UIBezierPath bezierPath];
+    NSLog(@"button width %f, height %f", colorBtn.frame.size.width, colorBtn.frame.size.height);
+    line = [CAShapeLayer layer];
+    UIBezierPath * linePath=[UIBezierPath bezierPath];
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        [linePath moveToPoint: CGPointMake(14,18)];
+        [linePath addLineToPoint:CGPointMake(17,21)];
+        [linePath moveToPoint: CGPointMake(17,21)];
+        [linePath addLineToPoint:CGPointMake(22,16)];
+
+    }
+    else
+    {
         [linePath moveToPoint: CGPointMake(9,13)];
         [linePath addLineToPoint:CGPointMake(12,16)];
         [linePath moveToPoint: CGPointMake(12,16)];
         [linePath addLineToPoint:CGPointMake(17,11)];
-        line.path=linePath.CGPath;
+    }
+        line.path = linePath.CGPath;
         line.fillColor = nil;
         line.lineCap = kCALineCapRound;
         line.lineJoin = kCALineJoinRound;
@@ -487,9 +498,11 @@
     CGPoint locationInWindow = [gesture locationInView:self.view.window];
     CGFloat frameStart;
     CGPoint startPoint;
-    //    if (translation.x != 0 || translation.y != 0) {
-    //        double angle = atan2(fabs(translation.x), translation.y);
-    //        if (angle < M_PI / 8) {
+    
+    CGSize size = self.view.window.bounds.size;
+    size.height = size.height - 400;
+    
+    
     if(gesture.state == UIGestureRecognizerStateBegan){
         
         initialTouchPoint = location;
@@ -506,7 +519,8 @@
        
         
         if(self.view.frame.origin.y - (frameStart + 400)  > 200){
-            
+            NSLog(@"if > 200");
+
             [UIView animateWithDuration:0.5 animations:^{
                 self.view.frame = CGRectMake(self.view.frame.origin.x, 800, self.view.frame.size.width, self.view.frame.size.height);
                 
@@ -518,16 +532,16 @@
             
             
         }
-        if(self.view.frame.origin.y < 400){
-            self.view.frame = CGRectMake(self.view.frame.origin.x, 400, self.view.frame.size.width, self.view.frame.size.height);
-
+        if(self.view.frame.origin.y < (size.height)){
+            self.view.frame = CGRectMake(self.view.frame.origin.x, size.height, self.view.frame.size.width, 400);
+            NSLog(@"if < 00");
         }
     }
 
     if(gesture.state == UIGestureRecognizerStateEnded ){
 
         [UIView animateWithDuration:0.25 animations:^{
-            self.view.frame = CGRectMake(self.view.frame.origin.x, 400, self.view.frame.size.width, self.view.frame.size.height);
+            self.view.frame = CGRectMake(self.view.frame.origin.x, size.height, self.view.frame.size.width,400);
             
         } completion:^(BOOL finished){
         }];

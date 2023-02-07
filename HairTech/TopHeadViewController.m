@@ -327,9 +327,8 @@ return YES;
     
     [self.toolbar setClipsToBounds:YES];
     
-    UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    
-    self.view.backgroundColor = mycolor2;
+    self.view.backgroundColor = [UIColor whiteColor];
+
    // self.toolbar.backgroundColor = mycolor2;
     /*
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];

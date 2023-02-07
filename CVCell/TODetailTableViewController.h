@@ -21,6 +21,7 @@
     NSArray * sectionThemeItems;
     NSMutableArray * arrayOfCellIndexes;
 }
+@property (nonatomic,strong) NSMutableArray *techniques;
 @property (nonatomic ,retain)NSMutableArray * themeButtonArray;
 
 @end

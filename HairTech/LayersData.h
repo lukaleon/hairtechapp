@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) NSString * text;
 @property (assign, nonatomic) NSString * type;
 @property (assign, nonatomic) NSArray * grafittiPoints;
-
+@property (assign, nonatomic) NSString * imageDirection;
 
 
 @end

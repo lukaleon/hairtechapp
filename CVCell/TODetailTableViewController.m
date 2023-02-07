@@ -28,6 +28,11 @@
 #pragma mark - Rounded Table Configuration Example -
 
 -(void)viewDidLoad{
+    
+    self.techniques = [[NSMutableArray alloc] init];
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    self.techniques = [db getCustomers];
+    
     NSLog(@"view did load");
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@" " style:UIBarButtonItemStylePlain target:nil action:nil];
    [self.tableView setSeparatorColor:[UIColor colorNamed:@"grey"]];
@@ -48,6 +53,9 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     NSLog(@"view will appear");
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    self.techniques = [db getCustomers];
+
     [self.tableView reloadData];
 
 }
@@ -364,7 +372,12 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return 3;
+    if(self.techniques.count == 0){
+        return 2;
+    }
+    else {
+        return 3;
+    }
 }
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
  //   collectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
@@ -378,29 +391,52 @@
     cell.label.numberOfLines = 0;
     cell.label.frame = rect;
     cell.label.font = [self fontSizeiPad:17 iPhone:14];
+        
+    if(self.techniques.count == 0){ // if no old version techniques - show 2 cells
         if (indexPath.row == 0){
+            
             cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
             cell.label.text = @"How to use Hairtechapp";
             cell.image.image = [UIImage imageNamed:@"preview_cell1"];
             cell.image.backgroundColor = [UIColor colorNamed:@"cellBg"];
             [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
             [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
-
-
+            
+            
+            
         }
         if (indexPath.row == 1){
             cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
             cell.label.text = @"What's new";
-
         }
-        if (indexPath.row == 2){
+        
+    }
+    else{ // if old version techniques exist  - show 3 cells
+        
+        if (indexPath.row == 0){
+            
             cell.contentView.backgroundColor = [UIColor colorNamed:@"blueTest"];
             cell.image.image = [UIImage imageNamed:@"Archive"];
             cell.label.text = @"Archived diagrams";
             [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
             [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
-        
+            
         }
+        if (indexPath.row == 1){
+            
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
+            cell.label.text = @"How to use Hairtechapp";
+            cell.image.image = [UIImage imageNamed:@"preview_cell1"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"cellBg"];
+            [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
+            [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
+            
+        }
+        if (indexPath.row == 2){
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
+            cell.label.text = @"What's new";
+        }
+    }
     [cell.contentView.layer setCornerRadius:25.0];
     cell.clipsToBounds = YES;
     return cell;
@@ -418,13 +454,22 @@
 //      pageview.modalPresentationStyle = UIModalPresentationFullScreen;
 //    pageview.view.backgroundColor = cell.contentView.backgroundColor;
     
-    if(indexPath.row == 0){
-       [self.navigationController presentViewController:pageVc animated:YES completion:nil];
+    if(self.techniques.count == 0){
+        if(indexPath.row == 0){
+            [self.navigationController presentViewController:pageVc animated:YES completion:nil];
+        }
+        if(indexPath.row == 1){
+            [self.navigationController  presentViewController:pageVc animated:YES completion:nil];
+        }
     }
-    if(indexPath.row == 2){
-        [self.navigationController pushViewController:oldCollection animated:YES];
+    else {
+        if(indexPath.row == 1){
+            [self.navigationController presentViewController:pageVc animated:YES completion:nil];
+        }
+        if(indexPath.row == 0){
+            [self.navigationController pushViewController:oldCollection animated:YES];
+        }
     }
-
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

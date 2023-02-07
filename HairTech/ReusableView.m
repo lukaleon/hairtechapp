@@ -15,8 +15,6 @@
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"orangeForSegmented"]} forState:UIControlStateSelected];
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"textColor"]} forState:UIControlStateNormal];
 
-
-    
     [self.segmentedControl addTarget:self action:@selector(segmentChange:) forControlEvents:UIControlEventValueChanged];
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     [self segmentChangeOnLoad:key];
@@ -34,8 +32,8 @@
         [self.delegate sortCollectionView:@"creationDate"];
         self.segmentedControlValue = @"creationDate";
     }
-    if ([key isEqualToString:@"creationDate"]){
-        self.segmentedControl.selectedSegmentIndex = 1;
+    if ([key isEqualToString:@"favorite"]){
+        self.segmentedControl.selectedSegmentIndex = 2;
         [self.delegate sortCollectionView:@"favorite"];
         self.segmentedControlValue = @"favorite";
     }

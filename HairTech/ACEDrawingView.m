@@ -169,18 +169,18 @@ UIColor* tempColor;
                                                                      fontSize:layerData.fontSize
                                                                    isSelected:NO];
         }
-        
+        NSLog(@"image direction %@", layerData.imageDirection);
         if(JVDrawingTypeDot == [layerData.type integerValue]){
                     
-            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"dotlayer"];
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"dotlayer" orientation:layerData.imageDirection];
         }
         if(JVDrawingTypeClipper == [layerData.type integerValue]){
                     
-            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"clippermain"];
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"clippermain" orientation:layerData.imageDirection];
         }
         if(JVDrawingTypeRazor == [layerData.type integerValue]){
             
-            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"razor"];
+            self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:layerData.startPoint endPoint:layerData.endPoint height:layerData.height type:[layerData.type integerValue] lineWidth:layerData.lineWidth lineColor:layerData.color scale:self.zoomFactor imageName:@"razor" orientation:layerData.imageDirection];
         }
         
         if(layerData.endPoint.x != 0 && layerData.endPoint.y !=0){
@@ -200,7 +200,7 @@ UIColor* tempColor;
     }
     //self.type = selectedL.type;
     CGPoint newStartPoint = CGPointMake(selectedL.startPoint.x + selectedL.height, selectedL.startPoint.y);
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:newStartPoint endPoint:newStartPoint  height:selectedL.height type:selectedL.type lineWidth:3 lineColor:selectedL.lineColor_ scale:self.zoomFactor imageName:imgName];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:newStartPoint endPoint:newStartPoint  height:selectedL.height type:selectedL.type lineWidth:3 lineColor:selectedL.lineColor_ scale:self.zoomFactor imageName:imgName orientation:selectedL.imageDirection];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -260,7 +260,7 @@ UIColor* tempColor;
         }
     }
     
-        if (JVDrawingTypeText != selectedL.type ){
+        if (JVDrawingTypeText != selectedL.type && JVDrawingTypeDot != selectedL.type && JVDrawingTypeRazor != selectedL.type && JVDrawingTypeClipper != selectedL.type){
             self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:startPointOffset endPoint:endPointOffset type:selectedL.type  lineWidth:selectedL.lineWidth lineColor:selectedL.lineColor_ controlPoint:selectedL.controlPoint grafittiPoints:selectedL.pointArray];
             if(JVDrawingTypeGraffiti == selectedL.type ){
                 for(int i = 0; i < selectedL.pointArray.count;i++){
@@ -277,19 +277,7 @@ UIColor* tempColor;
 //                    }
             }
             
-            switch (selectedL.type) {
-                case JVDrawingTypeDot:
-                    [self duplicatingLayerType:selectedL imageName:@"dotlayer"];
-                    break;
-                case JVDrawingTypeRazor:
-                    [self duplicatingLayerType:selectedL imageName:@"razor"];
-                    break;
-                case JVDrawingTypeClipper:
-                    [self duplicatingLayerType:selectedL imageName:@"clippermain"];
-                    break;
-                default:
-                    break;
-            }
+           
             if (JVDrawingTypeCurvedLine == selectedL.type || JVDrawingTypeCurvedDashLine == selectedL.type ){
                 NSLog(@"duplicate curve");
                 
@@ -319,12 +307,32 @@ UIColor* tempColor;
                                                                      fontSize:selectedL.fontSize
                                                                    isSelected:NO];
         }
+    
+    switch (selectedL.type) {
+        case JVDrawingTypeDot:
+            [self duplicatingLayerType:selectedL imageName:@"dotlayer"];
+            break;
+        case JVDrawingTypeRazor:
+            [self duplicatingLayerType:selectedL imageName:@"razor"];
+            break;
+        case JVDrawingTypeClipper:
+            [self duplicatingLayerType:selectedL imageName:@"clippermain"];
+            break;
+        default:
+            break;
+    }
+    
+    
         if(endPointOffset.x != 0 && endPointOffset.y !=0){
             [self.layer addSublayer:self.drawingLayer];
             [self.layerArray addObject:self.drawingLayer];
             //            NSLog(@"layerArray   %lu", self.layerArray.count );
         }
     //}
+}
+
+-(void)flipImage{
+    [self.selectedLayer flipImage:self.zoomFactor];
 }
 
 - (void)reflectLayer:(JVDrawingLayer*)selectedL{
@@ -605,12 +613,14 @@ UIColor* tempColor;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self];
     CGPoint previousPoint = [touch previousLocationInView:self];
-    CGFloat distanceBetweentTouches = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
+    CGFloat distance = [self getDistanceBetweenStartCurrentPoints:&currentPoint];
 //
 //    if(distanceBetweentTouches <= 2 ){
 //        return;
 //    }
-    
+    if(distance == 0){
+           return;
+       }
     
     if (count > 1 ) {
        // NSLog(@"touches > 2");
@@ -984,6 +994,9 @@ UIColor* tempColor;
 }
 
 - (void)selectLayer:(JVDrawingLayer *)layer {
+    
+    [self.delegate hideAdditionalColorPicker];
+
     [layer caculateLocationWithPoint:layer.frame.origin];                    // tapped on a layer
     self.selectedLayer = layer;
     self.selectedLayer.isSelected = YES;
@@ -993,7 +1006,7 @@ UIColor* tempColor;
     self.type = self.selectedLayer.type;
    // [self.delegate selectCurentToolWhenLineSelected:self.selectedLayer.type];
     [self placeCirclesAtLine:layer];
-    NSLog(@"control point x, y = %F, %f", self.selectedLayer.controlPointOfCurve.x , self.selectedLayer.controlPointOfCurve.y);
+   
 
 }
 #pragma mark Placing Circles On Line
@@ -1130,7 +1143,8 @@ UIColor* tempColor;
     self.selectedLayer = nil;
     self.selectedLayer.isSelected = NO;
     
-    
+    [self storeDataInJson];
+    [self fetchData:self.fileNameInside];
 }
 
 #pragma mark ZOOM IN / OUT METHODS
@@ -1157,9 +1171,15 @@ UIColor* tempColor;
         
         if (layer.type == JVDrawingTypeDot || layer.type == JVDrawingTypeClipper || layer.type == JVDrawingTypeRazor){
             DotLayer * dotLayer = [layer.sublayers objectAtIndex:0];
+           
             img = [UIImage imageNamed:dotLayer.imageName];
-
-            dotLayer.mask.contents = (__bridge id _Nullable) ([dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:zoomIdx]).CGImage;
+            UIImage * newImg = [dotLayer imageWithImage:img scaledToSize:dotLayer.bounds.size scale:self.zoomFactor];
+            
+            if ([layer.imageDirection isEqualToString:@"mirrored"]){
+            newImg = [UIImage imageWithCGImage:newImg.CGImage
+                                      scale:self.zoomFactor                                orientation:UIImageOrientationUpMirrored];
+            }
+            dotLayer.mask.contents = (__bridge id _Nullable) ([dotLayer imageWithImage:newImg scaledToSize:dotLayer.bounds.size scale:zoomIdx]).CGImage;
             dotLayer.mask.contentsGravity = kCAGravityResize;
             
         }
@@ -1256,14 +1276,20 @@ UIColor* tempColor;
         [menu setArrowDirection:UIMenuControllerArrowDown];
     [menu showMenuFromView:self rect:rectOfMenu];
     }
-    if (self.selectedLayer.type == JVDrawingTypeDot || self.selectedLayer.type == JVDrawingTypeClipper || self.selectedLayer.type == JVDrawingTypeRazor ) {
+    if (self.selectedLayer.type == JVDrawingTypeDot ){
         rectOfMenu = CGRectMake(self.selectedLayer.dotCenter.x, self.selectedLayer.dotCenter.y, 0, 0);
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)]];
         [menu setArrowDirection:UIMenuControllerArrowDown];
         [menu showMenuFromView:self rect:rectOfMenu];
     }
-    
+   if(self.selectedLayer.type == JVDrawingTypeClipper || self.selectedLayer.type == JVDrawingTypeRazor ) {
+        rectOfMenu = CGRectMake(self.selectedLayer.dotCenter.x, self.selectedLayer.dotCenter.y, 0, 0);
+        menu.menuItems = @[
+            [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)],  [[UIMenuItem alloc] initWithTitle:@"Duplicate" action:@selector(duplicateLine)],  [[UIMenuItem alloc] initWithTitle:@"Flip" action:@selector(flipImage)]];
+        [menu setArrowDirection:UIMenuControllerArrowDown];
+        [menu showMenuFromView:self rect:rectOfMenu];
+    }
     else {
         menu.menuItems = @[
             [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(revoke)]];
@@ -1337,7 +1363,7 @@ UIColor* tempColor;
     }
     
     self.type = JVDrawingTypeDot;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:40 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"dotlayer"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:40 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black]  scale:self.zoomFactor imageName:@"dotlayer" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1361,7 +1387,7 @@ UIColor* tempColor;
     }
    
     self.type = JVDrawingTypeClipper;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"clippermain"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black] scale:self.zoomFactor imageName:@"clippermain" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1381,7 +1407,7 @@ UIColor* tempColor;
         [self.delegate selectPreviousTool:self.previousType];
     }
     self.type = JVDrawingTypeRazor;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[UIColor blackColor] scale:self.zoomFactor imageName:@"razor"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black] scale:self.zoomFactor imageName:@"razor" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1390,6 +1416,18 @@ UIColor* tempColor;
     [self.selectedLayer setZoomIndex:self.zoomFactor];
 
 }
+
+- (UIColor *)colorFromHex:(NSString *)hex {
+    
+    
+    unsigned rgbValue = 0;
+       NSScanner *scanner = [NSScanner scannerWithString:hex];
+       [scanner setScanLocation:1]; // bypass '#' character
+       [scanner scanHexInt:&rgbValue];
+       return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+
 
 -(void)setNewColorForTools:(UIColor*)color{
     [self.selectedLayer setNewColor:color];
@@ -2100,6 +2138,7 @@ UIColor* tempColor;
     [self updateAllPoints];
     [self storeDataInJson];
     [self fetchData:self.fileNameInside];
+    [self.delegate hideAdditionalColorPicker];
 }
 -(void)removeDrawingsForClosing{
     [self hideMenu];
@@ -2328,6 +2367,8 @@ UIColor* tempColor;
 }
 
 - (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
+    
+    
     NSMutableArray * stringArray = [self converGraffitiPointsToString:layer];
     NSString *fontSizeStr = [[NSNumber numberWithFloat:layer.fontSize] stringValue];
     NSString *widthStr = [[NSNumber numberWithFloat:layer.lineWidth_] stringValue];
@@ -2349,6 +2390,7 @@ UIColor* tempColor;
         layerProperties[@"startPoint"] = NSStringFromCGPoint([layer.pointArray[0] CGPointValue]);
         layerProperties[@"endPoint"] = NSStringFromCGPoint([[layer.pointArray lastObject] CGPointValue]);
     }
+    layerProperties[@"imagedirection"] = layer.imageDirection;
     layerProperties[@"text"] = layer.text;
     layerProperties[@"height"] =  textHeight;
     layerProperties[@"width"] = textWidth;
@@ -2424,6 +2466,8 @@ UIColor* tempColor;
             NSString *textWidth = props[@"width"];
             NSString *textHeight = props[@"height"];
             NSString *text = props[@"text"];
+            NSString *imgDirection = props[@"imagedirection"];
+
             NSArray *grPoints = array[@"points"];
             
             LayersData *layers = LayersData.new;
@@ -2440,8 +2484,9 @@ UIColor* tempColor;
             layers.width = [textWidth floatValue];
             layers.text = text;
             layers.grafittiPoints = grPoints;
-            NSLog(@"array of points %lu", grPoints.count);
-            
+            layers.imageDirection = imgDirection;
+            NSLog(@"img direct %@", layers.imageDirection);
+
             [self.arrayOfLayersForJSON addObject:layers];
             
         }

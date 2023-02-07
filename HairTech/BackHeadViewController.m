@@ -342,8 +342,8 @@ return YES;
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor clearColor]}];
     [self.toolbar setClipsToBounds:YES];
-    UIColor *mycolor2 = [UIColor colorWithRed:67.0f/255.0f green:150.0f/255.0f blue:203.0f/255.0f alpha:1.0f];
-    self.view.backgroundColor = mycolor2;
+    self.view.backgroundColor = [UIColor whiteColor];
+
     self.drawingView.delegate = self;
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
