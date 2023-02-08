@@ -141,11 +141,11 @@
     
     NSLog(@"LINE WIDTH %f " , [self loadFloatFromUserDefaultsForKey:@"lineWidth"]);
     
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:1.600000] )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:1.200000] )
     {
         [self button1Select];
     }
-    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:2.400000] )
+    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:2.200000] )
     {
         [self button2Select];
     }
@@ -527,13 +527,13 @@ else {
     
     
     // Add width button 2 first as it is in the middle of the view
- 
-
+    
+    
     
     widthButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [widthButton2 addTarget:self
-               action:@selector(buttonTapped:)
-     forControlEvents:UIControlEventTouchUpInside];
+                     action:@selector(buttonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     widthButton2.tag = 1;
     widthButton2.frame = CGRectMake((self.frame.size.width / 2) - 10, 18, 20.0, 20.0);
     UIImage *btnWidth2 = [UIImage imageNamed:@"width2"];
@@ -541,230 +541,71 @@ else {
     widthButton2.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton2.adjustsImageWhenHighlighted = NO;
     [self addSubview:widthButton2];
-
     
     
     widthButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [widthButton1 addTarget:self
-               action:@selector(buttonTapped:)
-     forControlEvents:UIControlEventTouchUpInside];
+                     action:@selector(buttonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     widthButton1.tag = 0;
     widthButton1.frame = CGRectMake((self.frame.size.width / 2) - 50, 18.0, 20.0, 20.0);
-   
+    
     UIImage *btnWidth1 = [UIImage imageNamed:@"width1"];
     [widthButton1 setBackgroundImage:btnWidth1 forState:UIControlStateNormal];
     widthButton1.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton1.adjustsImageWhenHighlighted = NO;
     [self addSubview:widthButton1];
-
+    
     widthButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
     [widthButton3 addTarget:self
-               action:@selector(buttonTapped:)
-     forControlEvents:UIControlEventTouchUpInside];
+                     action:@selector(buttonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     widthButton3.tag = 2;
     widthButton3.frame = CGRectMake((self.frame.size.width / 2) + 30, 18, 20.0, 20.0);
     UIImage *btnWidth3 = [UIImage imageNamed:@"width3"];
     [widthButton3 setBackgroundImage:btnWidth3 forState:UIControlStateNormal];
-    ///widthButton3.backgroundColor = [UIColor clearColor];
     widthButton3.tintColor =  [UIColor colorNamed:@"cellText"];
     widthButton3.adjustsImageWhenHighlighted = NO;
-
-    [self addSubview:widthButton3];
-
     
-//    widthButton4 = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [widthButton4 addTarget:self
-//               action:@selector(buttonTapped:)
-//     forControlEvents:UIControlEventTouchUpInside];
-//    widthButton4.tag = 3;
-//    widthButton4.frame = CGRectMake(140.0, 18, 20.0, 20.0);
-//    UIImage *btnWidth4 = [UIImage imageNamed:@"width4"];
-//    [widthButton4 setBackgroundImage:btnWidth4 forState:UIControlStateNormal];
-//    widthButton4.tintColor =  [UIColor colorNamed:@"cellText"];
-//    widthButton4.adjustsImageWhenHighlighted = NO;
-//
-//    [self addSubview:widthButton4];
-//
-//    widthButton5 = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [widthButton5 addTarget:self
-//               action:@selector(buttonTapped:)
-//     forControlEvents:UIControlEventTouchUpInside];
-//    widthButton5.tag = 4;
-//    widthButton5.frame = CGRectMake(170.0, 18, 20.0, 20.0);
-//    UIImage *btnWidth5 = [UIImage imageNamed:@"width5"];
-//    [widthButton5 setBackgroundImage:btnWidth5 forState:UIControlStateNormal];
-//    widthButton5.tintColor =  [UIColor colorNamed:@"cellText"];
-//    widthButton5.adjustsImageWhenHighlighted = NO;
-//    [self addSubview:widthButton5];
+    [self addSubview:widthButton3];
+    
 }
-/*
-[self extractRGBforBlack:tColor5];
-[self extractRGBforBlue:tColor2];
-[self extractRGBforRed:tColor3];
-[self extractRGBforLine:tColor4];
-[self extractRGBforPen:tColor6];
-*/
 
 -(void)button1Select{
-    NSLog(@"buttonWidth 1 slected");
     [widthButton1 setSelected:YES];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:NO];
-    [widthButton4 setSelected:NO];
-    [widthButton5 setSelected:NO];
-    
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton1 setTintColor:self.penColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton1 setTintColor:self.curveColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton1 setTintColor:self.lineColor];
-    }
-    
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton1 setTintColor:self.arrowColor];
-    }
-    
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton1 setTintColor:self.dashColor];
-    }
+
+    [widthButton1 setTintColor:self.currentPenColor];
     [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
     [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-
 }
 
 -(void)button2Select{
-    NSLog(@"buttonWidth 2 slected");
-
     [widthButton1 setSelected:NO];
     [widthButton2 setSelected:YES];
     [widthButton3 setSelected:NO];
-    [widthButton4 setSelected:NO];
-    [widthButton5 setSelected:NO];
     
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton2 setTintColor:self.penColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton2 setTintColor:self.curveColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton2 setTintColor:self.lineColor];
-    }
-    
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton2 setTintColor:self.arrowColor];
-    }
-    
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton2 setTintColor:self.dashColor];
-    }
+    [widthButton2 setTintColor:self.currentPenColor];
     [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
     [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
+   
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-
 }
 
 -(void)button3Select{
-    NSLog(@"buttonWidth 3 slected");
 
     [widthButton1 setSelected:NO];
     [widthButton2 setSelected:NO];
     [widthButton3 setSelected:YES];
-    [widthButton4 setSelected:NO];
-    [widthButton5 setSelected:NO];
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton3 setTintColor:self.penColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton3 setTintColor:self.curveColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton3 setTintColor:self.lineColor];
-    }
-    
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton3 setTintColor:self.arrowColor];
-    }
-    
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton3 setTintColor:self.dashColor];
-    }
+
+    [widthButton3 setTintColor:self.currentPenColor];
     [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
     [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-
-}
-/*
--(void)button4Select{
-    
-    [widthButton1 setSelected:NO];
-    [widthButton2 setSelected:NO];
-    [widthButton3 setSelected:NO];
-    [widthButton4 setSelected:YES];
-    [widthButton5 setSelected:NO];
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton4 setTintColor:self.penColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton4 setTintColor:self.curveColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton4 setTintColor:self.lineColor];
-    }
-    
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton4 setTintColor:self.arrowColor];
-    }
-    
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton4 setTintColor:self.dashColor];
-    }
-    
-    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton5 setTintColor:[UIColor colorNamed:@"cellText"]];
 }
 
--(void)button5Select{
-    [widthButton1 setSelected:NO];
-    [widthButton2 setSelected:NO];
-    [widthButton3 setSelected:NO];
-    [widthButton4 setSelected:NO];
-    [widthButton5 setSelected:YES];
-    if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==0.0){
-        [widthButton5 setTintColor:self.penColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==2.0){
-        [widthButton5 setTintColor:self.curveColor];
-    }
-    if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==3.0){
-        [widthButton5 setTintColor:self.lineColor];
-    }
-    
-   if ([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==5.0){
-        [widthButton5 setTintColor:self.arrowColor];
-    }
-    
-   if([self loadCurrentToolFromUserDefaultsForKey:@"currentTool"]==1.0){
-        [widthButton5 setTintColor:self.dashColor];
-    }
-    [widthButton2 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton3 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton4 setTintColor:[UIColor colorNamed:@"cellText"]];
-    [widthButton1 setTintColor:[UIColor colorNamed:@"cellText"]];
-}
-*/
 - (float)getRoundedFloat:(CGFloat)value{
     
     float new = [[NSString stringWithFormat:@"%.4f",value]floatValue];
@@ -777,7 +618,7 @@ else {
     case 0:{
         NSLog(@"Photo1");
         [self button1Select];
-        float new = [self getRoundedFloat:1.600000];
+        float new = [self getRoundedFloat:1.200000];
         [delegate sliderDidSelectWidth:new];
         [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
@@ -785,7 +626,7 @@ else {
     case 1:{
         NSLog(@"Photo2");
         [self button2Select];
-        float new = [self getRoundedFloat:2.400000];
+        float new = [self getRoundedFloat:2.200000];
         [delegate sliderDidSelectWidth:new];
         [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }

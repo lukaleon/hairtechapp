@@ -42,7 +42,6 @@ typedef enum {
 
 @interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, ReusableViewDelegate ,CellDelegate>{
 
-    
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;
     NSIndexPath * indexOfSelectedCell;

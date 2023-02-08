@@ -308,8 +308,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     [self.toolbar_view setClipsToBounds:YES];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
-    tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-    tapRecognizer.delegate=self;
+    
+    tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nono:)];
+    tapRecognizer.delegate = self;
+    
+   
+    
+    
+    
     i = 0;
     tap = NO;
     [self addNewTechniqueButton];
@@ -395,6 +401,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableDictionary * dictOfData = [self openFileAtPath:_fileNameForOpenEntry error:nil];
             
     newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
+    newEntryVC.genderType = [dictOfData objectForKey:@"maleFemale"];
     [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
     newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
     [self.navigationController pushViewController:newEntryVC animated:YES];
@@ -456,11 +463,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         }else {
             Cell * cell = (Cell *)[self.collectionView cellForItemAtIndexPath:indexPath];
             longpresscell.enabled = NO;
+            
             [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
             [self selectCell:cell];
             indexOfSelectedCell = indexPath;
             [self selectionActivatedFromLongPress];
-            
             
         }
 }
@@ -481,13 +488,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
     //[self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
     self.navigationItem.leftBarButtonItem = nil;
-    self.addHeadsheet.hidden = YES;
 
     for (NSInteger row = 0; row < [self.collectionView numberOfItemsInSection:0]; row++) {
         Cell * cell =   (Cell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
         [cell setIsCheckHidden:NO];
         [cell.favorite setHidden:YES];
-
     }
     [HapticHelper generateFeedback:FeedbackType_Impact_Light];
 }
@@ -551,7 +556,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)shareDiagram{
 
     NSString *exportingFileName = [filesArray objectAtIndex:[indexOfSelectedCell row]];
-    
+    Cell * cell = (Cell*)[self.collectionView cellForItemAtIndexPath:indexOfSelectedCell];
+
 
     NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
     NSString *docDirectory = [sysPaths objectAtIndex:0];
@@ -559,132 +565,21 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSURL * url = [NSURL fileURLWithPath:filePath];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: @[url] applicationActivities:nil];
+    
+    activityViewController.modalPresentationStyle = UIModalPresentationPopover;
     [self presentViewController:activityViewController animated: YES completion: nil];
+    UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
+    popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+    popoverPresentationController.sourceView = self.view;
+    popoverPresentationController.sourceRect = CGRectMake(cell.center.x, cell.center.y, 10, 1);
+    
+//
+//    if(activityViewController.popoverPresentationController){
+//        activityViewController.popoverPresentationController.sourceView = self.view;
+//    }
+//    [self presentViewController:activityViewController animated: YES completion: nil];
 }
 
-/*
--(UIImage*)imageToArchive:(NSString*)fileName headtype:(NSString*)headtype{
-    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-    NSMutableString *prefix= [fileName mutableCopy];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: prefix];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: headtype];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: @".png"];
-    
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
-    UIImage *tempimage = [[UIImage alloc] initWithContentsOfFile:filePath];
-    return tempimage;
-}
-
--(NSDictionary*)JSONtoArchive:(NSString*)fileName headtype:(NSString*)headtype{
-    NSMutableString *filenamethumb1 = [@"%@/" mutableCopy];
-    NSMutableString *prefix= [fileName mutableCopy];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: prefix];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: headtype];
-    filenamethumb1 = [filenamethumb1 mutableCopy];
-    [filenamethumb1 appendString: @".json"];
-    
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:filenamethumb1, docDirectory];
-   
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-    return json;
-}
-
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError imageName:(NSString*)imageName fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
-    NSError *error = nil;
-    NSLog(@"filename %@", imageName);
-
-    UIImage * fileName1 = [self imageToArchive:imageName headtype:@"thumb1"];
-    UIImage * fileName2 = [self imageToArchive:imageName headtype:@"thumb2"];
-    UIImage * fileName3 = [self imageToArchive:imageName headtype:@"thumb3"];
-    UIImage * fileName4 = [self imageToArchive:imageName headtype:@"thumb4"];
-    UIImage * fileName5 = [self imageToArchive:imageName headtype:@"thumb5"];
-    UIImage * fileNameEntry = [self imageToArchive:imageName headtype:@"Entry"];
-
-    
-    NSDictionary * fileNameJSON1 = [self JSONtoArchive:imageName headtype:@"lefthead"];
-    NSDictionary * fileNameJSON2 = [self JSONtoArchive:imageName headtype:@"righthead"];
-    NSDictionary * fileNameJSON3 = [self JSONtoArchive:imageName headtype:@"tophead"];
-    NSDictionary * fileNameJSON4 = [self JSONtoArchive:imageName headtype:@"fronthead"];
-    NSDictionary * fileNameJSON5 = [self JSONtoArchive:imageName headtype:@"backhead"];
-    
-    NSString * filename = imageName;
-    NSString * techName = techniqueName;
-    NSString * maleOrFemale = maleOrFem;
-
-
-    
-    if ([typeName isEqualToString:typeName]) {
-        //Create a Dictionary
-        NSMutableDictionary *dictToSave = [NSMutableDictionary dictionary];
-        
-        [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
-
-        [dictToSave setObject:fileName1  forKey:@"imageLeft"];
-        [dictToSave setObject:fileName2  forKey:@"imageRight"];
-        [dictToSave setObject:fileName3  forKey:@"imageTop"];
-        [dictToSave setObject:fileName4  forKey:@"imageFront"];
-        [dictToSave setObject:fileName5  forKey:@"imageBack"];
-        
-        [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
-        [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
-        [dictToSave setObject:fileNameJSON3  forKey:@"jsonTop"];
-        [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
-        [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
-
-        [dictToSave setObject:techName forKey:@"techniqueName"];
-        [dictToSave setObject:filename forKey:@"uuid"];
-        [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
-
-          //Return the archived data
-        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
-    }
-    //Don't generate an error
-    outError = NULL;
-    return nil;
-}
-
-- (NSString*)createNameFromUUID:(NSString*)filetype identifier:(NSString*)uuidTemp {
-    NSMutableString * newString = [uuidTemp mutableCopy];
-    newString = [newString mutableCopy];
-    [newString appendString:filetype];
-    newString = [newString mutableCopy];
-    [newString appendString:@".png"];
-    return newString;
-}
-
--(NSString*)techniqueNameFrom:(AppDelegate*)appDelegate{
-    
-    for(Technique * tech in self.techniques){
-        if([appDelegate.nameFromImportedFile isEqual:tech.techniquename]){
-        
-            NSString *lastChar = [tech.techniquename substringFromIndex:[tech.techniquename length] - 1];
-            
-            unichar c = [lastChar characterAtIndex:0];
-            NSCharacterSet *numericSet = [NSCharacterSet decimalDigitCharacterSet];
-            if ([numericSet characterIsMember:c]) {
-                
-                int myInt = [lastChar intValue];
-                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile substringToIndex:[appDelegate.nameFromImportedFile length] - 1];
-
-                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile stringByAppendingFormat:@"%d", myInt + 1];
-            }
-            else {
-                appDelegate.nameFromImportedFile = [appDelegate.nameFromImportedFile stringByAppendingFormat:@"%d", 1];
-            }
-        }
-    }
-    return appDelegate.nameFromImportedFile;
-}*/
 
 -(NSString*)getNamesOfTechniquesInFiles:(NSString*)techNameImported{
     
@@ -916,6 +811,7 @@ for(int i = 0; i < sortedArray.count; i++){
     tapGestureRecognizer.numberOfTapsRequired = 1;
     
     UITapGestureRecognizer *tapFavorite = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(heartPressed:)];
+    
     tapFavorite.numberOfTapsRequired = 1;
     [cell.favorite addGestureRecognizer:tapFavorite];
     [cell.dateLabel addGestureRecognizer:tapGestureRecognizer];
@@ -1012,6 +908,7 @@ for(int i = 0; i < sortedArray.count; i++){
          postNotificationName:@"showPop"
          object:self];
     }
+
 }
 -(void)heartPressed:(UITapGestureRecognizer *)gestureRecognizer{
     
@@ -1062,6 +959,7 @@ for(int i = 0; i < sortedArray.count; i++){
         NSMutableDictionary * dictOfData = [self openFileAtPath:[filesArray objectAtIndex:indexPath.row] error:nil];
                 
         newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
+        newEntryVC.genderType = [dictOfData objectForKey:@"maleFemale"];
         [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
         [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
         newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
@@ -1126,6 +1024,9 @@ for(int i = 0; i < sortedArray.count; i++){
             [cell2.favorite setHidden:NO];
     }
 }
+
+
+
 -(void)openSubView:(id)sender
     {
  

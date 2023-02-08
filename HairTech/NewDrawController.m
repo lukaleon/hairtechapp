@@ -92,12 +92,14 @@
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
     arrayOfColorPickers = [NSMutableArray array];
+   
     [self setupScrollView];
     [self setupDrawingView];
     [self LoadColorsAtStart];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
     self.drawingView.viewControllerName = @"left";
     [self setupNavigationBarItems];
+    
     [self.img setImage:[UIImage imageNamed:self.headtype]];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
  
@@ -1438,23 +1440,23 @@ return YES;
     
     NSLog(@"screenshot");
     UIImage * newImage;
-    if([headtype isEqualToString:@"imageLeft"]){
+    if([headtype isEqualToString:@"imageLeft"] || [headtype isEqualToString:@"imageLeftMan"]){
         newImage = [self getImageOfScreen:@"thumb1"];
         [self.delegate passItemBackLeft:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"imageRight"]){
+    if([headtype isEqualToString:@"imageRight"] || [headtype isEqualToString:@"imageRightMan"]){
         newImage = [self getImageOfScreen:@"thumb2"];
         [self.delegate passItemBackRight:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"imageTop"]){
+    if([headtype isEqualToString:@"imageTop"] || [headtype isEqualToString:@"imageTopMan"]){
         newImage = [self getImageOfScreen:@"thumb3"];
         [self.delegate passItemBackTop:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"imageFront"]){
+    if([headtype isEqualToString:@"imageFront"] || [headtype isEqualToString:@"imageFrontMan"]){
         newImage = [self getImageOfScreen:@"thumb4"];
         [self.delegate passItemBackFront:self imageForButton:newImage];
     }
-    if([headtype isEqualToString:@"imageBack"]){
+    if([headtype isEqualToString:@"imageBack"] || [headtype isEqualToString:@"imageBackMan"]){
         newImage = [self getImageOfScreen:@"thumb5"];
         [self.delegate passItemBackBack:self imageForButton:newImage];
     }

@@ -62,7 +62,7 @@
 -(void)viewDidLoad{
     
     NSLog(@"technique name %@", _techniqueNameID);
-    NSLog(@"View Did Load");
+    NSLog(@"Gender type %@", self.genderType);
     self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
     self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
     self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
@@ -119,26 +119,45 @@
     newDrawVC.techniqueName = _techniqueNameID;
     switch (myViewTag) {
         case 1:
-            newDrawVC.headtype = @"imageLeft";
+            if([self.genderType isEqualToString:@"female"]){
+                newDrawVC.headtype = @"imageLeft";
+            }else{
+                newDrawVC.headtype = @"imageLeftMan";
+            }
             newDrawVC.jsonType = @"jsonLeft";
             break;
         case 2:
-            newDrawVC.headtype = @"imageRight";
+            if([self.genderType isEqualToString:@"female"]){
+                newDrawVC.headtype = @"imageRight";
+            }else{
+                newDrawVC.headtype = @"imageRightMan";
+            }
             newDrawVC.jsonType = @"jsonRight";
-
             break;
         case 3:
-            newDrawVC.headtype = @"imageTop";
+            if([self.genderType isEqualToString:@"female"]){
+                newDrawVC.headtype = @"imageTop";
+            }else {
+                newDrawVC.headtype = @"imageTopMan";
+            }
             newDrawVC.jsonType = @"jsonTop";
 
             break;
         case 4:
-            newDrawVC.headtype = @"imageFront";
+            if([self.genderType isEqualToString:@"female"]){
+                newDrawVC.headtype = @"imageFront";
+            }else {
+                newDrawVC.headtype = @"imageFrontMan";
+            }
             newDrawVC.jsonType = @"jsonFront";
 
             break;
         case 5:
-            newDrawVC.headtype = @"imageBack";
+            if([self.genderType isEqualToString:@"female"]){
+                newDrawVC.headtype = @"imageBack";
+            }else {
+                newDrawVC.headtype = @"imageBackMan";
+            }
             newDrawVC.jsonType = @"jsonBack";
 
             break;

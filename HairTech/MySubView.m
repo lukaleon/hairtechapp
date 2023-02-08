@@ -589,13 +589,29 @@
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError uuid:(NSString*)uuid fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
     NSError *error = nil;
-
-    NSData * fileName1 = [self storeImagesInDictionary:@"lefthead_s"];
-    NSData * fileName2 = [self storeImagesInDictionary:@"righthead_s"];
-    NSData * fileName3 = [self storeImagesInDictionary:@"tophead_s"];
-    NSData * fileName4 = [self storeImagesInDictionary:@"fronthead_s"];
-    NSData * fileName5 = [self storeImagesInDictionary:@"backhead_s"];
-    NSData * fileNameEntry = [self storeImagesInDictionary:@"uiimage_cell_x"];
+    NSData * fileName1;
+    NSData * fileName2;
+    NSData * fileName3;
+    NSData * fileName4;
+    NSData * fileName5;
+    NSData * fileNameEntry;
+    
+    if ([maleOrFem isEqualToString:@"female"]){
+        fileName1 = [self storeImagesInDictionary:@"lefthead_s"];
+        fileName2 = [self storeImagesInDictionary:@"righthead_s"];
+        fileName3 = [self storeImagesInDictionary:@"tophead_s"];
+        fileName4 = [self storeImagesInDictionary:@"fronthead_s"];
+        fileName5 = [self storeImagesInDictionary:@"backhead_s"];
+       fileNameEntry = [self storeImagesInDictionary:@"uiimage_cell_x"];
+    }
+    if ([maleOrFem isEqualToString:@"male"]){
+        fileName1 = [self storeImagesInDictionary:@"lefthead_ms"];
+        fileName2 = [self storeImagesInDictionary:@"righthead_ms"];
+        fileName3 = [self storeImagesInDictionary:@"tophead_ms"];
+        fileName4 = [self storeImagesInDictionary:@"fronthead_ms"];
+        fileName5 = [self storeImagesInDictionary:@"backhead_ms"];
+       fileNameEntry = [self storeImagesInDictionary:@"men-full-11"];
+    }
 
     NSData * fileNameJSON1 = [self storeJsonDataInDictionary];
     NSData * fileNameJSON2 = [self storeJsonDataInDictionary];
@@ -616,7 +632,7 @@
     
     if ([typeName isEqualToString:typeName]) {
         //Create a Dictionary
-        NSMutableDictionary *dictToSave = [NSMutableDictionary dictionary];
+        NSMutableDictionary * dictToSave = [NSMutableDictionary dictionary];
         
         [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
         [dictToSave setObject:fileName1  forKey:@"imageLeft"];

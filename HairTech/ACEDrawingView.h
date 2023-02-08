@@ -112,6 +112,8 @@ typedef enum {
     BOOL _magnetActivated;
     NSData * _jsonData;
     NSString * _jsonKey;
+    
+    BOOL touchCanceled;
 }
 -(void)setJsonData:(NSData*)jsonData;
 -(void)setJsonKey:(NSString*)jsonKey;

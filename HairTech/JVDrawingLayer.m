@@ -741,8 +741,8 @@ else {
         if(hypot > 100){
             hypot = 100;
         }
-        if(hypot < 30 ){
-            hypot = 30;
+        if(hypot < 15 ){
+            hypot = 15;
         }
     }
     CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );

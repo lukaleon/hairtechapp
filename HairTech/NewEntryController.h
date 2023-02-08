@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIImageView *imageBack;
 //@property (assign, nonatomic) NSString * techniqueNameID;
 @property (assign, nonatomic) NSString * techniqueType;
+@property (assign, nonatomic) NSString * genderType;
+
+
 @property (weak, nonatomic)  UIImage *imageL;
 @property (weak, nonatomic)  UIImage *imageR;
 @property (weak, nonatomic)  UIImage *imageT;

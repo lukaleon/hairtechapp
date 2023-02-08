@@ -74,7 +74,7 @@
             self.continue_btn.alpha = 1.0;
             [self dropShadow:pressedButton];
             [self removeShadow:self.male_btn];
-            self.genderType = @"version22";
+            self.genderType = @"female";
             break;
         case 2:
             self.fem_btn.selected = NO;
@@ -83,7 +83,7 @@
             self.continue_btn.alpha = 1.0;
             [self dropShadow:pressedButton];
             [self removeShadow:self.fem_btn];
-            self.genderType = @"men22";
+            self.genderType = @"male";
             break;
     }
 }
