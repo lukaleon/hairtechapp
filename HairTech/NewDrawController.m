@@ -11,6 +11,7 @@
 #import "ColorWheelController.h"
 #import "ColorViewNew.h"
 #import "OverlayTransitioningDelegate.h"
+#import "DiagramFile.h"
 
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
@@ -139,6 +140,9 @@
     }
     [self setupAdditionalTools:self.textTool];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadColorsFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
+ 
+    
     }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -150,7 +154,11 @@
     [self screentShot:self.headtype];
     [self clearPageForClosing];
     
-    [self saveDiagramToFile:self.techniqueName];
+   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
+    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
+
+    
+    //    [self saveDiagramToFile:self.techniqueName];
     
 }
 
@@ -228,40 +236,28 @@
      
     NSLog(@"%@ json type", self.techniqueName);
     
-    //[self.drawingView loadJSONData:[self loadDictionaryFromPathWithKey:self.jsonType error:nil]];
     [self.drawingView loadJSONData:[self openDictAtPath:self.techniqueName key:self.jsonType error:nil]];
-   // [self.drawingView loadJSONData:[self openFileNameJSON:self.techniqueName headtype:self.headtype]];
+
     if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     [scrollView setZoomScale:1.7 animated:YES];
     }
 }
 
-//-(NSDictionary*)loadDictionaryFromPathWithKey:(NSString*)key error:(NSError **)outError {
+-(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
 //
 //    NSDictionary * tempDict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"temporaryDictionary"];
-//    return [tempDict objectForKey:key];
 //
-//}
--(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-    
-//    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
-//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-//    NSString *docDirectory = [sysPaths objectAtIndex:0];
-//    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
 //
-//    NSURL * url = [NSURL fileURLWithPath:filePath];
-//    NSData *data = [NSData dataWithContentsOfURL:url];
-//
-//    NSDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-    NSDictionary * tempDict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"temporaryDictionary"];
-    NSData * jsonData = [tempDict objectForKey:key];
-    
-    [self.drawingView setJsonData: [tempDict objectForKey:key]];
+//    NSData * jsonData = [tempDict objectForKey:key];
+
+    NSData *jsonData = [[[DiagramFile sharedInstance] tempDict] objectForKey:key];
+
+//    [self.drawingView setJsonData: [tempDict objectForKey:key]];
+//    [self.drawingView setJsonKey:key];
+    [self.drawingView setJsonData:jsonData];
     [self.drawingView setJsonKey:key];
-    
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[tempDict objectForKey:key]
-//                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-//                                                         error:outError];
+    NSLog(@"hey = %@", key);
+
     return jsonData;
     
 }
@@ -792,8 +788,9 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 
 
 -(void)saveColorsToDefaults{
-    
+    NSLog(@"Save colors to cloud");
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    
     [defaults setObject:[self hexFromUIColor:penColor] forKey:@"penToolColor"];
     [defaults setObject:[self hexFromUIColor:curveColor] forKey:@"curveToolColor"];
     [defaults setObject:[self hexFromUIColor:dashColor] forKey:@"dashToolColor"];
@@ -801,15 +798,36 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     [defaults setObject:[self hexFromUIColor:lineColor]forKey:@"lineToolColor"];
     [defaults setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
     [defaults synchronize];
+    
+    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+
+    [cloudStore setObject:[self hexFromUIColor:penColor] forKey:@"penToolColor"];
+    [cloudStore setObject:[self hexFromUIColor:curveColor] forKey:@"curveToolColor"];
+    [cloudStore setObject:[self hexFromUIColor:dashColor] forKey:@"dashToolColor"];
+    [cloudStore setObject:[self hexFromUIColor:arrowColor] forKey:@"arrowToolColor"];
+    [cloudStore setObject:[self hexFromUIColor:lineColor]forKey:@"lineToolColor"];
+    [cloudStore setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
+    [cloudStore synchronize];
 }
 
 
-
+-(void)loadColorsFromCloud{
+    NSLog(@"Load colors from cloud");
+    
+    NSUbiquitousKeyValueStore * cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+       
+    penColor = [self colorFromHex:[cloudStore objectForKey:@"penToolColor"]];
+    curveColor = [self colorFromHex:[cloudStore objectForKey:@"curveToolColor"]];
+    dashColor = [self colorFromHex:[cloudStore objectForKey:@"dashToolColor"]];
+    arrowColor = [self colorFromHex:[cloudStore objectForKey:@"arrowToolColor"]];
+    lineColor = [self colorFromHex:[cloudStore objectForKey:@"lineToolColor"]];
+    textColor = [self colorFromHex:[cloudStore objectForKey:@"textToolColor"]];    
+}
 -(void)LoadColorsAtStart
 {
 
-    
     self.fontSizeVC = 15;
+
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 
     penColor = [self colorFromHex:[defaults objectForKey:@"penToolColor"]];

@@ -46,7 +46,6 @@
 
 
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 
@@ -56,13 +55,14 @@
     if (![[NSUserDefaults standardUserDefaults] valueForKey:@"colorTest2"]) {
         [self addDefaultColors];
         [self setLightModeAsDefault];
-        [self saveWidthOfLinesToDefaults:1.6 forKey:@"lineWidth"];
+        [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
+        
         [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"colorTest2"];
-        [self saveMagnetStateToDefaults:YES];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
-
+       
+        [self saveMagnetStateToDefaults:YES];
         [self saveStartColorsToDefaults];
 
    }
@@ -96,8 +96,6 @@
    self.databaseName = @"Technique.db";
     NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDir = [documentPaths objectAtIndex:0];
-    NSLog(@"docs",documentPaths);
-
     
     self.databasePath = [documentDir stringByAppendingPathComponent:self.databaseName];
     
@@ -105,22 +103,26 @@
    
     dashedCurve =NO;
     
-    
+    /*
     NSURL *ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
     NSString *filePath = ubiq.absoluteString;
+    
+    NSLog(@"ubiq %@", ubiq.absoluteString);
 
        if (ubiq) {
-           NSLog(@"AppDelegate: iCloud access!");
-           
+           NSLog(@"AppDelegate: iCloud access done! ");
+           [ubiq startAccessingSecurityScopedResource];
            [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
            
        } else {
            NSLog(@"AppDelegate: No iCloud access (either you are using simulator or, if you are on your phone, you should check settings");
-       }
-    
+       }*/
    // [self getAllFilesIniCloud];
     return YES;
 }
+
+
+
 
 -(void)getArrayOfFilesInCloud:(NSURL*)url{
     NSArray * dirContents =
@@ -129,15 +131,44 @@
                                options:NSDirectoryEnumerationSkipsHiddenFiles
                                  error:nil];
     
-    NSLog(@"dir array %lu", dirContents.count);
+    NSLog(@"dir array count %lu", dirContents.count);
     for(NSString * name in dirContents){
-        NSLog(@"dir array %@", name);
+        NSLog(@"dir array name %@", name);
 
     }
     NSOperationQueue *q = [[NSOperationQueue alloc] init];
-
-   // [self deleteItemsAtURLs:dirContents queue:q]; //delete item ia iCloud Dir
+//   [self deleteItemsAtURLs:dirContents queue:q]; //delete item ia iCloud Dir
 }
+
+- (void)loadData:(NSMetadataQuery *)query {
+    
+    if ([query resultCount] == 1) {
+        // found the file in iCloud
+        NSMetadataItem *item = [query resultAtIndex:0];
+        NSURL *url = [item valueForAttribute:NSMetadataItemURLKey];
+        
+        NSLog(@"FOUND URL %@", url);
+    }
+}
+
+
+-(NSURL *)applicationCloudFolder:(NSString *)fileName
+{
+    
+    NSString * teamID = @"U53VZGYE8K";
+    NSString * bundleID = [NSBundle mainBundle].bundleIdentifier;
+    NSString * containerId = [NSString stringWithFormat:@"%@.%@", teamID, bundleID];
+    
+    // append our file name
+    NSLog(@"file name app delegate %@", fileName);
+   // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
+    NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+    NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
+    cloudDocuments = [cloudDocuments URLByAppendingPathComponent:fileName];
+
+    return cloudDocuments;
+}
+
 
 - ( void )deleteItemsAtURLs: ( NSArray * )urls queue: ( NSOperationQueue * )queue
     {
@@ -439,6 +470,9 @@
 }
 
 -(void)saveStartColorsToDefaults{
+    
+    NSLog(@"save color to defaults and cloud at first launch");
+    
     [[NSUserDefaults standardUserDefaults] setObject:DarkSlateGray forKey:@"penToolColor"];
     [[NSUserDefaults standardUserDefaults] setObject:RoyalBlue forKey:@"curveToolColor"];
     [[NSUserDefaults standardUserDefaults] setObject:Green forKey:@"dashToolColor"];
@@ -446,6 +480,20 @@
     [[NSUserDefaults standardUserDefaults] setObject:RoyalBlue forKey:@"lineToolColor"];
     [[NSUserDefaults standardUserDefaults] setObject:Black forKey:@"textToolColor"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+
+    [cloudStore setObject:DarkSlateGray forKey:@"penToolColor"];
+    [cloudStore setObject:RoyalBlue forKey:@"curveToolColor"];
+    [cloudStore setObject:Green forKey:@"dashToolColor"];
+    [cloudStore setObject:Red forKey:@"arrowToolColor"];
+    [cloudStore setObject:RoyalBlue forKey:@"lineToolColor"];
+    [cloudStore setObject:Black forKey:@"textToolColor"];
+    [cloudStore setString:@"testValue" forKey:@"testKey"];
+
+    [cloudStore synchronize];
+
+    
 }
 
 

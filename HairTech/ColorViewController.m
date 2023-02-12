@@ -34,20 +34,15 @@
 
         self.frame = frame;
         self.colorCollection = [[NSUserDefaults standardUserDefaults] objectForKey:@"colorCollection"];
-        
+    
         _isTextSelected = isSelected;
-        
         self.currentPenColor = currentColor;
-        NSLog(@"cuurent color %@", currentColor);
         _currentToolName = currentTool;
         arrayOfCircles = [NSMutableArray array];
         editMode = NO;
+       
         [self configure];
         [self indicateCurrentColorAtStart:currentColor];
-       // [self animateScrollViewBounce];
-   
-
-
     }
     return self;
 }
@@ -93,11 +88,6 @@
 }
 - (void)textColorString:(int)count color:(UIColor*)currentColor {
     for (int i=0; i<=count; i++) {
-        //        if (CGColorEqualToColor(currentColor.CGColor, [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
-        //        {
-        //            [self currentColorIndicator:[self.buttonCollection objectAtIndex:i]];
-        //        }
-        
         
         CGColorRef colorRef =  [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor;
         NSString * colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
@@ -115,7 +105,6 @@
 - (void)indicateCurrentColorAtStart:(UIColor*)currentColor {
     CGColorRef colorRef = self.currentPenColor.CGColor;
     NSString *colorString = [CIColor colorWithCGColor:colorRef].stringRepresentation;
-    NSLog(@"PEN COLOR STRING = %@", colorString);
    
     if(!_isTextSelected){
         [self penColorString:11 color:currentColor];
@@ -127,20 +116,11 @@
 - (void)configure
 {
     if(!_isTextSelected){
-//        [self createSimplyfiedOrdenatedColorsArray];
         [self loadColorButtons];
-
     } else {
-        
-      //  [self createSimplyfiedOrdenatedColorsArrayForText];
-        
         [self loadColorButtonsForText];
-
     }
-    [self LoadColorsAtStart];
-    
-    NSLog(@"LINE WIDTH %f " , [self loadFloatFromUserDefaultsForKey:@"lineWidth"]);
-    
+        
     if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:1.200000] )
     {
         [self button1Select];
@@ -153,15 +133,6 @@
     {
         [self button3Select];
     }
-//    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:4.80000] )
-//    {
-//        [self button4Select];
-//    }
-//    if([self loadFloatFromUserDefaultsForKey:@"lineWidth"] == [self getRoundedFloat:6.600000] )
-//    {
-//        [self button5Select];
-//    }
-    
 }
 
 
@@ -169,22 +140,13 @@
 {
      _isTextSelected = isTextSelected;
     textSelected = isTextSelected;
-    NSLog(@"BOOL in setter %s", textSelected ? "true" : "false");
-
 }
 -(void)setFontSizee:(CGFloat)fontSize{
     _fontSizee = fontSize;
-    NSLog(@"FONT SIZE = %f", _fontSizee);
 }
 -(void)setCurrentTextColorForIndicator:(UIColor*)currentTextColorForIndicator{
     _currentTextColorForIndicator = currentTextColorForIndicator;
 }
-//- (void)viewDidUnload
-
-//{
-//    [super viewDidUnload];
-//    // Release any retained subviews of the main view.
-//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -525,11 +487,6 @@ else {
 
 -(void)addWidthButtons{
     
-    
-    // Add width button 2 first as it is in the middle of the view
-    
-    
-    
     widthButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [widthButton2 addTarget:self
                      action:@selector(buttonTapped:)
@@ -640,22 +597,6 @@ else {
         [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
     }
         break;
-//    case 3:{
-//        NSLog(@"Photo4");
-//        [self button4Select];
-//        float new = [self getRoundedFloat:4.800000];
-//        [delegate sliderDidSelectWidth:new];
-//        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
-//    }
-//        break;
-//    case 4:{
-//        NSLog(@"Photo5");
-//        [self button5Select];
-//        float new = [self getRoundedFloat:6.600000];
-//        [delegate sliderDidSelectWidth:new];
-//        [self saveFloatToUserDefaults:new forKey:@"lineWidth"];
-//    }
-//        break;
 }
 }
 

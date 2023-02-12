@@ -12,6 +12,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "DrawViewController.h"
 #import "DotLayer.h"
+#import "DiagramFile.h"
 
 //#define kDefaultLineColor       [UIColor redColor]
 #define kDefaultLineWidth       10.0f;
@@ -1999,11 +2000,14 @@ UIColor* tempColor;
 - (void)writeStringToFile:(NSMutableArray*)arr {
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:nil];
-    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    [tempDict setObject:jsonData  forKey:_jsonKey];
+//    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
     
-    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    
+   [[[DiagramFile sharedInstance]tempDict] setObject:jsonData  forKey:_jsonKey];
+    
+//    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
@@ -2083,8 +2087,9 @@ UIColor* tempColor;
 //        return;
 //    }
     
-    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    NSData * jsonDataFromDict = [tempDict objectForKey:_jsonKey];
+    //NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+  
+    NSData * jsonDataFromDict = [[[DiagramFile sharedInstance]tempDict] objectForKey:_jsonKey];
     
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonDataFromDict options:kNilOptions error:nil];
 

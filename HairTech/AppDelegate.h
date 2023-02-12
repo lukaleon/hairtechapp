@@ -24,12 +24,16 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
-    NSMetadataQuery *_query;
+    //NSMetadataQuery *_query;
 
     
     //MyCustomLayout *mycustomLayout;
  // UIBarButtonItem *tempButton;
 }
+-(NSURL *)applicationCloudFolder:(NSString *)fileName;
+
+@property  (nonatomic, retain) NSMetadataQuery *query;
+
 @property NSMutableArray * filesArrayAppDelegate;
 @property (nonatomic, retain) NSString *importedTechniqueName;
 

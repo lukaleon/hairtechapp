@@ -9,7 +9,7 @@
 #import "NewEntryController.h"
 #import "TemporaryDictionary.h"
 #import "NotesViewController.h"
-
+#import "DiagramFile.h"
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -63,11 +63,17 @@
     
     NSLog(@"technique name %@", _techniqueNameID);
     NSLog(@"Gender type %@", self.genderType);
-    self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
-    self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
-    self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
-    self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
-    self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
+//    self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
+//    self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
+//    self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
+//    self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
+//    self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
+    
+    self.imageLeft.image = [[DiagramFile sharedInstance] imageLeft];
+    self.imageRight.image = [[DiagramFile sharedInstance] imageRight];
+    self.imageTop.image = [[DiagramFile sharedInstance] imageTop];
+    self.imageFront.image = [[DiagramFile sharedInstance] imageFront];
+    self.imageBack.image = [[DiagramFile sharedInstance] imageBack];
 
     [self addNavigationItems];
 
@@ -80,28 +86,28 @@
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
 }
-
--(UIImage*)openFileAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-
-    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-    
-    NSURL * url = [NSURL fileURLWithPath:filePath];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    
-    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-    
-    UIImage * img = [UIImage imageWithData:[tempDict objectForKey:key]];
-
-    NSMutableDictionary* tempDictDefaults = [tempDict mutableCopy];
-    [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-    return img;
-
-}
+//
+//-(UIImage*)openFileAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
+//
+//    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+//
+//    NSURL * url = [NSURL fileURLWithPath:filePath];
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//
+//    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+//
+//    UIImage * img = [UIImage imageWithData:[tempDict objectForKey:key]];
+//
+//    NSMutableDictionary* tempDictDefaults = [tempDict mutableCopy];
+//    [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+//
+//    return img;
+//
+//}
 
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
@@ -190,8 +196,8 @@
 }
 -(void)addNotes{
     
-    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    NSString * note = [dict objectForKey:@"note"];
+//    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+    NSString * note = [[DiagramFile sharedInstance] note];
     
     NotesViewController *  notesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"notes"];
     if(note.length == 0||[note isEqualToString:@"(null)"]){
@@ -200,17 +206,23 @@
     {
     notesVC.textOfTextView = note;
     }
-    notesVC.delegate =self;
+    notesVC.delegate = self;
     [self.navigationController presentViewController:notesVC animated:YES completion:nil];
 }
 -(void)saveNote:(NSString*)note{
     
-    NSLog(@"%@ noteee ", note);
-    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    [dict setObject:note forKey:@"note"];
-    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"temporaryDictionary"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [self saveDiagramToFile:_techniqueNameID];
+//    NSLog(@"%@ noteee ", note);
+//    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+//    [dict setObject:note forKey:@"note"];
+//    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"temporaryDictionary"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+//
+//    [self saveDiagramToFile:_techniqueNameID];
+
+    [[DiagramFile sharedInstance] setNote:note];
+    [[[DiagramFile sharedInstance] tempDict] setObject:note forKey:@"note"];
+   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
+    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
 
 }
 
@@ -269,18 +281,30 @@
 }
 -(void)storeImageInTempDictionary:(NSData*)imgData{
 
-    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    [tempDict setObject:imgData forKey:@"imageEntry"];
-    [tempDict setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
-    [tempDict setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
-    [tempDict setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
-    [tempDict setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
-    [tempDict setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
-    [tempDict setObject:[self currentDate] forKey:@"modificationDate"];
+//    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+//    [tempDict setObject:imgData forKey:@"imageEntry"];
+//    [tempDict setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
+//    [tempDict setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
+//    [tempDict setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
+//    [tempDict setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
+//    [tempDict setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
+//    [tempDict setObject:[self currentDate] forKey:@"modificationDate"];
+//
+//    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+//    [self saveDiagramToFile:_techniqueNameID];
     
-    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [self saveDiagramToFile:_techniqueNameID];
+    [[[DiagramFile sharedInstance]tempDict] setObject:imgData forKey:@"imageEntry"];
+
+    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
+    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
+    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
+    [[[DiagramFile sharedInstance]tempDict] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
+    [[[DiagramFile sharedInstance]tempDict] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
+    [[[DiagramFile sharedInstance]tempDict] setObject:[self currentDate] forKey:@"modificationDate"];
+   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
+    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
+
 }
 
 -(UIImage*)captureScreenRetinaOnLoad
@@ -292,13 +316,7 @@
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-//    entryviewImageSmall =  [self createFileName:[_techniqueNameID mutableCopy] prefix:@"Entry"];
-//    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-//    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-//    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
-    
-   // [thumbdata writeToFile:thumbpath atomically:YES];
     [self storeImageInTempDictionary:thumbdata];
     return newImage;
 }
@@ -316,45 +334,6 @@
     
     return newImage;
 }
-//-(void)showAlertAfterImageSaved{
-//     UIAlertController * alert = [UIAlertController
-//                                 alertControllerWithTitle:@""
-//                                 message:@"Your diagrams was saved to gallery!"
-//                                 preferredStyle:UIAlertControllerStyleActionSheet];
-//
-//    NSMutableAttributedString *hogan = [[NSMutableAttributedString alloc] initWithString:@"Your diagrams was saved to gallery!"];
-//    NSRange fullRange = NSMakeRange(0, hogan.length);
-//    [hogan addAttribute:NSFontAttributeName
-//                  value:[UIFont fontWithName:@"AvenirNext-DemiBold" size:16]
-//                  range:fullRange];
-//    [alert setValue:hogan forKey:@"attributedMessage"];
-//
-//    alert.view.tintColor = [UIColor colorNamed:@"orange"];
-//
-//    //Add Buttons
-//
-////    UIAlertAction* yesButton = [UIAlertAction
-////                                actionWithTitle:@"Yes"
-////                                style:UIAlertActionStyleDefault
-////                                handler:^(UIAlertAction * action) {
-////                                    //Handle your yes please button action here
-////                                 //   [self clearAllData];
-////                                }];
-//
-//    UIAlertAction* noButton = [UIAlertAction
-//                               actionWithTitle:@"Ok"
-//                               style:UIAlertActionStyleDefault
-//                               handler:^(UIAlertAction * action) {
-//                                   //Handle no, thanks button
-//                               }];
-//    //Add your buttons to alert controller
-//
-//   // [alert addAction:yesButton];
-//    [alert addAction:noButton];
-//
-//    [self presentViewController:alert animated:YES completion:nil];
-//}
-
 
 - (void)setupBottomToolBar {
     CGFloat startOfToolbar;
@@ -503,32 +482,29 @@
     return CGRectContainsPoint(newArea, point);
 }
 
-
--(void)saveDiagramToFile:(NSString*)techniqueName{
-
-    NSLog(@"Save Diagram To File Entry View");
-    
-    NSMutableString * exportingFileName = [techniqueName mutableCopy];
-    [exportingFileName appendString:@".htapp"];
-
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType];
-
-    // Save it into file system
-    [data writeToFile:filePath atomically:YES];
-   // NSURL * url = [NSURL fileURLWithPath:filePath];
-}
-
-- (NSData *)dataOfType{
-    NSError *error = nil;
- 
-        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-
-          //Return the archived data
-        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
-}
+//
+//-(void)saveDiagramToFile:(NSString*)techniqueName{
+//
+//    NSMutableString * exportingFileName = [techniqueName mutableCopy];
+//    [exportingFileName appendString:@".htapp"];
+//
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+//    NSData * data = [self dataOfType];
+//
+//    // Save it into file system
+//    [data writeToFile:filePath atomically:YES];
+//}
+//
+//- (NSData *)dataOfType{
+//    NSError *error = nil;
+//
+//        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
+//
+//          //Return the archived data
+//        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+//}
 -(NSString*)currentDate{
     NSDate *date = [NSDate date];
     NSDateFormatter *df = [[NSDateFormatter alloc] init];

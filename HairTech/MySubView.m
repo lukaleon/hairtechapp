@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "NameViewController.h"
 #import "Hairtech-Bridging-Header.h"
+#import "DiagramFile.h"
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -506,20 +507,47 @@
     
     NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
+
     
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
-    // Save it into file system
-    [data writeToFile:filePath atomically:YES];
-   // NSURL * url = [NSURL fileURLWithPath:filePath];
+    AppDelegate *myAppDelegate = (AppDelegate *) [UIApplication
+                                                  sharedApplication].delegate;
+    
+    NSURL *cloudFile = [myAppDelegate applicationCloudFolder:exportingFileName];
+    
+    NSData * data = [self dataOfType:techName error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
+    [data writeToURL:cloudFile atomically:YES];
+    NSLog(@"Data saved to cloud");
+    
+    [self copyToCloud:cloudFile name:techName];
     
     
     
-//    [[[NSFileManager alloc]init]setUbiquitous:YES itemAtURL:url destinationURL:[self ubiquitousDocumentsDirectoryURL] error:nil];
-   // [self copyFileToICloud:url];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
+//    NSString *docDirectory = [sysPaths objectAtIndex:0];
+//    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
+    
+//    NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
+//    // Save it into file system
+//    [data writeToFile:filePath atomically:YES];
+
+    
+    
+    
 }
+
 
 
 

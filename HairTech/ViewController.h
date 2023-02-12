@@ -19,6 +19,7 @@
 #import <CloudKit/CloudKit.h>
 #import "ReusableView.h"
 #import "AppDelegate.h"
+#import "MHPrettyDate.h"
 
 
 typedef enum {
@@ -53,8 +54,10 @@ typedef enum {
     
     NSMutableArray * filesArray;
     NSString * _fileNameForOpenEntry;
+    
 
 }
+@property (nonatomic, strong) NSMetadataQuery * query;
 @property ReusableView *headerView;
 @property (nonatomic, strong) NSArray *fetchedTechniques;
 
