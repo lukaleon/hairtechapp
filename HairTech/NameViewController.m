@@ -46,6 +46,7 @@
     
      MySubView * mySubView = [self.storyboard instantiateViewControllerWithIdentifier:@"subView"];
      mySubView.maleOrFemale = self.genderType;
+     mySubView.fileNameList = self.fileNameList;
      [self.navigationController pushViewController:mySubView animated:YES];
 }
 

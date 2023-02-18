@@ -11,15 +11,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DiagramFile : NSObject
+
 + (DiagramFile*) sharedInstance;
 +(void)setSharedInstance:(DiagramFile *)instance;
 + (void)resetSharedInstance;
--(NSMutableDictionary*)openFileAtURL:(NSString*)fileName error:(NSError **)outError;
--(void)openFileAtPath:(NSString*)fileName error:(NSError **)outError;
--(void)saveDiagramToFile:(NSString*)techniqueName;
--(void)clearAllSaveData;
--(void)saveDiagramToCloud:(NSString*)techniqueName;
 
+
+-(void)storeFileDataInObject:(NSData*)data fileName:(NSString*) fileName error:(NSError **)outError;
+-(NSData*)dataFromDictionary;
+@property NSMutableDictionary * diagramFileDictionary;
 
 @property NSString * uuid;
 @property NSString * techniqueName;
@@ -27,12 +27,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString * note;
 @property NSString * favorite;
 
+@property UIImage * imageEntry;
 @property UIImage * imageLeft;
 @property UIImage * imageRight;
 @property UIImage * imageTop;
 @property UIImage * imageFront;
 @property UIImage * imageBack;
-@property NSMutableDictionary * tempDict;
+
+@property NSDictionary * dictLeft;
+@property NSDictionary * dictRight;
+@property NSDictionary * dictTop;
+@property NSDictionary * dictFront;
+@property NSDictionary * dictBack;
+
+
 
 @end
 

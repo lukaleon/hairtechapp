@@ -533,57 +533,6 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
    }
 */
 
--(void)captureScreen
-{
-    @autoreleasepool {
-
-    
-    self.hideBar;
-    [self.label setHidden:YES];
-    [self.labelHairTech setHidden:YES];
-    entryviewImage = self.navigationItem.title;
-    entryviewImage = [entryviewImage mutableCopy];
-    [entryviewImage appendString: @"EntryBig"];
-    entryviewImage = [entryviewImage mutableCopy];
-    [entryviewImage appendString: @".png"];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString* path = [documentsDirectory stringByAppendingPathComponent:entryviewImage];
-    UIGraphicsBeginImageContext(self.view.bounds.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-        
-    data = UIImagePNGRepresentation(image);
-    [data writeToFile:path atomically:YES];
-
-    [self.label setHidden:NO];
-    [self.labelHairTech setHidden:NO];
-    self.showBar;
-    
-    
-    CGSize newSize = CGSizeMake(256, 334);
-    UIGraphicsBeginImageContext(newSize);
-
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-        entryviewImageSmall = self.navigationItem.title;
-    entryviewImageSmall = [entryviewImageSmall mutableCopy];
-    [entryviewImageSmall appendString: @"Entry"];
-    entryviewImageSmall = [entryviewImageSmall mutableCopy];
-    [entryviewImageSmall appendString: @".png"];
-    NSLog(@"Результат entryviewImageSmall from Capture screen: %@.",entryviewImageSmall);
-    
-        
-    NSArray *thumbpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,                                                NSUserDomainMask, YES);
-    NSString *thumbdocumentsDirectory = [thumbpaths objectAtIndex:0];
-    NSString *thumbpath = [thumbdocumentsDirectory stringByAppendingPathComponent:entryviewImageSmall];
-    thumbdata = UIImagePNGRepresentation(newImage);
-    [thumbdata writeToFile:thumbpath atomically:YES];
-    }
-}
 -(void)captureScreenRetina
 {
     

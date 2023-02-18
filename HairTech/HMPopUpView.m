@@ -7,6 +7,7 @@
 //
 
 #import "HMPopUpView.h"
+#import "ViewController.h"
 
 #define DEFAULT_BORDER_WIDTH 2
 #define DEFAULT_PRESENTATION_ANIMATION_DURATION 0.4
@@ -280,8 +281,7 @@
     }
     
     if(![self.hmDelegate checkEnteredName:txtField.text]){
-        
-    [self.hmDelegate renameTechniqueDelegate:txtField.text];
+        [self.hmDelegate renameTechniqueDelegate:txtField.text];
         [self hide];
 
     }
@@ -454,7 +454,7 @@
     if ([txtField isEditing]) {
         [txtField resignFirstResponder];
         
-        [self.hmDelegate changeTechniqueName];
+      //  [self.hmDelegate changeTechniqueName];
         
         
     }

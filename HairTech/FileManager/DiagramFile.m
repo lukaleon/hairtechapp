@@ -10,7 +10,8 @@
 #import "AppDelegate.h"
 
 @implementation DiagramFile
-@synthesize tempDict;
+@synthesize diagramFileDictionary;
+
 
 static DiagramFile *_sharedInstance = nil;
 //static dispatch_once_t once_token = 0;
@@ -31,97 +32,33 @@ static DiagramFile *_sharedInstance = nil;
 }
 
 
--(void)openFileAtPath:(NSString*)fileName error:(NSError **)outError {
-    
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-    NSLog(@"dir %@",docDirectory );
-    
-    NSURL * url = [NSURL fileURLWithPath:filePath];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    
-    tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-    
-    self.techniqueName = [tempDict objectForKey:@"techniqueName"];
-    self.uuid = [tempDict objectForKey:@"uuid"];
-    self.maleFemale = [tempDict objectForKey:@"maleFemale"];
-    self.note = [tempDict objectForKey:@"note"];
 
-    self.imageLeft = [UIImage imageWithData:[tempDict objectForKey:@"imageLeft"]];
-    self.imageRight = [UIImage imageWithData:[tempDict objectForKey:@"imageRight"]];
-    self.imageTop = [UIImage imageWithData:[tempDict objectForKey:@"imageTop"]];
-    self.imageFront = [UIImage imageWithData:[tempDict objectForKey:@"imageFront"]];
-    self.imageBack = [UIImage imageWithData:[tempDict objectForKey:@"imageBack"]];
+-(void)storeFileDataInObject:(NSData*)data fileName:(NSString*) fileName error:(NSError **)outError {
+    
+    diagramFileDictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    self.techniqueName = fileName;
+    self.uuid = [diagramFileDictionary objectForKey:@"uuid"];
+    self.maleFemale = [diagramFileDictionary objectForKey:@"maleFemale"];
+    self.note = [diagramFileDictionary objectForKey:@"note"];
 
-
+    self.imageEntry = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageEntry"]];
+    self.imageLeft = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageLeft"]];
+    self.imageRight = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageRight"]];
+    self.imageTop = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageTop"]];
+    self.imageFront = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageFront"]];
+    self.imageBack = [UIImage imageWithData:[diagramFileDictionary objectForKey:@"imageBack"]];
+    
+    self.dictLeft = [diagramFileDictionary objectForKey:@"jsonLeft"];
+    self.dictRight = [diagramFileDictionary objectForKey:@"jsonRight"];
+    self.dictTop = [diagramFileDictionary objectForKey:@"jsonTop"];
+    self.dictFront = [diagramFileDictionary objectForKey:@"jsonFront"];
+    self.dictBack = [diagramFileDictionary objectForKey:@"jsonBack"];
 }
 
--(NSMutableDictionary*)openFileAtURL:(NSString*)fileName error:(NSError **)outError {
-    
-    NSLog(@"open file at URL %@ ", fileName);
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-    NSURL *cloudURL = [appDelegate applicationCloudFolder:fileName];
-    NSData *data = [NSData dataWithContentsOfURL:cloudURL];
-
-    tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-    
-    self.techniqueName = [tempDict objectForKey:@"techniqueName"];
-    self.uuid = [tempDict objectForKey:@"uuid"];
-    self.maleFemale = [tempDict objectForKey:@"maleFemale"];
-    self.note = [tempDict objectForKey:@"note"];
-    self.favorite = [tempDict objectForKey:@"favorite"];
-    NSLog(@"test singleton %@, %@, %@ ", self.techniqueName, self.uuid, self.maleFemale);
-
-    
-    
-    
-    self.imageLeft = [UIImage imageWithData:[tempDict objectForKey:@"imageLeft"]];
-    self.imageRight = [UIImage imageWithData:[tempDict objectForKey:@"imageRight"]];
-    self.imageTop = [UIImage imageWithData:[tempDict objectForKey:@"imageTop"]];
-    self.imageFront = [UIImage imageWithData:[tempDict objectForKey:@"imageFront"]];
-    self.imageBack = [UIImage imageWithData:[tempDict objectForKey:@"imageBack"]];
-    return tempDict;
+-(NSData*)dataFromDictionary{
+    NSError * error;
+    return [NSKeyedArchiver archivedDataWithRootObject:diagramFileDictionary requiringSecureCoding:NO error:&error];
 }
 
-
--(void)saveDiagramToFile:(NSString*)techniqueName{
-    
-    NSLog(@"name is %@ ", techniqueName);
-    NSMutableString * exportingFileName = [techniqueName mutableCopy];
-    [exportingFileName appendString:@".htapp"];
-    
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType];
-
-    // Save it into file system
-    [data writeToFile:filePath atomically:YES];
-}
-
--(void)saveDiagramToCloud:(NSString*)techniqueName{
-    NSMutableString * fileName = [techniqueName mutableCopy];
-    [fileName appendString:@".htapp"];
-    
-    AppDelegate *myAppDelegate = (AppDelegate *) [UIApplication
-                                                  sharedApplication].delegate;
-    NSURL *cloudFile = [myAppDelegate applicationCloudFolder:fileName];
-    
-    
-    NSData * data = [self dataOfType];
-    [data writeToURL:cloudFile atomically:YES];
-    NSLog(@"Data saved to cloud %@", cloudFile);
-}
-
-- (NSData *)dataOfType{
-    NSError *error = nil;
- 
-        //NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-
-          //Return the archived data
-        return [NSKeyedArchiver archivedDataWithRootObject:tempDict requiringSecureCoding:NO error:&error];
-}
 @end

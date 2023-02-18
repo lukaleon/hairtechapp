@@ -12,6 +12,8 @@
 #import "NameViewController.h"
 #import "Hairtech-Bridging-Header.h"
 #import "DiagramFile.h"
+#import "iCloud.h"
+
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -61,7 +63,7 @@
 
 -(void)viewDidLoad
 {
-   
+
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   
     UIColor *color = [UIColor colorNamed:@"textWhiteDeepBlue"];
@@ -213,13 +215,9 @@
 
 -(BOOL)checkEnteredName{
     BOOL techniqueExist;
-    [self getArrayOfFilesInDirectory];
-    for(int i = 0; i < self.filesArraysubView.count; i++){
-        
-        NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArraysubView objectAtIndex:i] error:nil];
-        NSLog(@" technique name in array %@", [dictOfData objectForKey:@"techniqueName"]);
 
-        if([self.textField.text isEqualToString:[dictOfData objectForKey:@"techniqueName"]]){
+    for(NSString * fileName in self.fileNameList){
+        if([self.textField.text isEqualToString:[[fileName lastPathComponent] stringByDeletingPathExtension]]){
         techniqueExist = YES;
             break;
         }else {
@@ -227,18 +225,7 @@
 
         }
     }
-//    for(Technique * tech in arrayOfTechnique){
-//        if([textField.text isEqual:tech.techniquename]){
-//            techniqueExist = YES;
-//            NSLog(@"technique exists");
-//
-//            break;
-//        }
-//        else {
-//            techniqueExist = NO;
-//            NSLog(@"technique NOT exists");
-//        }
-//    }
+
     return techniqueExist;
    
 }
@@ -259,7 +246,6 @@
     
 }
 
-/////////-------- Return text from UITextField -------------------/////
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     
@@ -344,24 +330,20 @@
     uuid = [[NSUUID UUID] UUIDString];
     [self saveDiagramToFile:uuid techniqueName:self.textField.text maleOrFemale:self.maleOrFemale];
     
-    [[NSUserDefaults standardUserDefaults] setObject:[self createNameFromUUID:self.textField.text] forKey:@"newCreatedFileName"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
- 
 
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"populate"
-     object:self];
-   
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"reloadCollection"
-     object:self];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"openEntry"
-     object:self];
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"populate"
+//     object:self];
+//
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"reloadCollection"
+//     object:self];
+//
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"openEntry"
+//     object:self];
 }
 -(NSString*)currentDate{
     NSDate *date = [NSDate date];
@@ -507,105 +489,35 @@
     
     NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
-
     
-    AppDelegate *myAppDelegate = (AppDelegate *) [UIApplication
-                                                  sharedApplication].delegate;
-    
-    NSURL *cloudFile = [myAppDelegate applicationCloudFolder:exportingFileName];
+    [[NSUserDefaults standardUserDefaults] setObject:exportingFileName forKey:@"newCreatedFileName"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     NSData * data = [self dataOfType:techName error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
-    [data writeToURL:cloudFile atomically:YES];
-    NSLog(@"Data saved to cloud");
     
-    [self copyToCloud:cloudFile name:techName];
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-//    NSString *docDirectory = [sysPaths objectAtIndex:0];
-//    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    
-//    NSData * data = [self dataOfType:filePath error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
-//    // Save it into file system
-//    [data writeToFile:filePath atomically:YES];
-
-    
-    
-    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:exportingFileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+        if (!error) {
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"iCloud Document save error: %@", error);
+        }
+        
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"populate"
+            object:self];
+       
+           [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"reloadCollection"
+            object:self];
+       
+           [self dismissViewControllerAnimated:YES completion:nil];
+       
+           [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"openEntry"
+            object:self];
+        
+    }];
 }
-
-
-
-
-//- (NSURL *)localPathForResource:(NSString *)resource ofType:(NSString *)type {
-//    NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-//    NSString *resourcePath = [[documentsDirectory stringByAppendingPathComponent:resource] stringByAppendingPathExtension:type];
-//    return [NSURL fileURLWithPath:resourcePath];
-//}
-
-
-
--(NSURL*)ubiquitousContainerURL {
-    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-}
--(NSURL*)ubiquitousDocumentsDirectoryURL {
-    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
-}
-
--(void)copyToCloud:(NSURL*)url name:(NSString*)backupName{
-    NSFileManager *fm = [NSFileManager defaultManager];
-
-    NSURL *ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-
-    if (ubiq == nil) {
-        return;
-    }
-
-    NSError *theError = nil;
-
-    [fm setUbiquitous:true itemAtURL:url destinationURL:[[ubiq URLByAppendingPathComponent:@"Documents" isDirectory:true] URLByAppendingPathComponent:backupName] error:&theError];
-}
-
-
-//-(void)createiCloudFolder{
-//
-//    NSURL *iCloudDocumentsURL = [[[NSFileManager defaultManager]URLForUbiquityContainerIdentifier:nil] URLByAppendingPathComponent:@"Documents"];
-//
-//   if(![[NSFileManager defaultManager] fileExistsAtPath:iCloudDocumentsURL.path isDirectory:nil]){
-//        [[NSFileManager defaultManager] createDirectoryAtURL:iCloudDocumentsURL withIntermediateDirectories:YES attributes:nil error:nil];
-//       NSLog(@" create Directory");
-//
-//    }
-//
-//
-//   }
-//
-//-(void)copyDocumentsToiCloudDrive{
-//    NSArray * array = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-//    NSURL *localDocumentsURL = array[0];
-//
-//    NSError * error;
-//    NSURL * iCloudDocumentsURL =  [[[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil] URLByAppendingPathComponent:@"Documents"];
-////    [[NSFileManager defaultManager] removeItemAtURL:iCloudDocumentsURL error:&error];
-//[[NSFileManager defaultManager] copyItemAtURL:localDocumentsURL toURL:iCloudDocumentsURL error:&error];
-//
-//    NSLog(@"%@",error.localizedDescription);
-//
-//    }
 
 
 -(NSData*)storeJsonDataInDictionary{

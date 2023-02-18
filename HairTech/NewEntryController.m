@@ -10,30 +10,48 @@
 #import "TemporaryDictionary.h"
 #import "NotesViewController.h"
 #import "DiagramFile.h"
+#import "iCloud.h"
+
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @implementation NewEntryController
-//@synthesize techniqueNameID;
+
+#pragma mark - Load Methods
+
 -(void)viewDidAppear:(BOOL)animated{
     NSLog(@"View Did Appear");
     [self captureScreenRetinaOnLoad];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-   
+    //Store buttons images and screenshot in dictionary after view appear
     
+
 }
 -(void)setTechniqueID:(NSString*)techId{
     _techniqueNameID = techId;
 }
+
+-(void)viewDidLoad{
+    
+    [self loadImages];
+    [self addNavigationItems];
+    [self setupgestureRecognizers];
+    [self registerNotifications];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self.toolbar removeFromSuperview];
+    NSLog(@"exit entry" );
+}
+
+#pragma mark - Configure Methods
+
 - (void)addNavigationItems {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-  //  UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
-    
-    //    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(flipImage)];
-    //self.navigationItem.rightBarButtonItem = shareButton;
     
     UIButton *addNote = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     [addNote addTarget:self
@@ -59,55 +77,79 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:share, note, nil];
 }
 
--(void)viewDidLoad{
-    
-    NSLog(@"technique name %@", _techniqueNameID);
-    NSLog(@"Gender type %@", self.genderType);
-//    self.imageLeft.image = [self openFileAtPath:_techniqueNameID key:@"imageLeft" error:nil];
-//    self.imageRight.image = [self openFileAtPath:_techniqueNameID key:@"imageRight" error:nil];
-//    self.imageTop.image = [self openFileAtPath:_techniqueNameID key:@"imageTop" error:nil];
-//    self.imageFront.image = [self openFileAtPath:_techniqueNameID key:@"imageFront" error:nil];
-//    self.imageBack.image = [self openFileAtPath:_techniqueNameID key:@"imageBack" error:nil];
-    
+
+
+- (void)loadImages {
     self.imageLeft.image = [[DiagramFile sharedInstance] imageLeft];
     self.imageRight.image = [[DiagramFile sharedInstance] imageRight];
     self.imageTop.image = [[DiagramFile sharedInstance] imageTop];
     self.imageFront.image = [[DiagramFile sharedInstance] imageFront];
     self.imageBack.image = [[DiagramFile sharedInstance] imageBack];
+}
 
-    [self addNavigationItems];
+
+- (void)setupgestureRecognizers {
+    UITapGestureRecognizer * tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapRight = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapTop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapFront = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    UITapGestureRecognizer * tapBack = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
+    
+    [self.imageLeft addGestureRecognizer:tapLeft];
+    [self.imageRight addGestureRecognizer:tapRight];
+    [self.imageTop addGestureRecognizer:tapTop];
+    [self.imageFront addGestureRecognizer:tapFront];
+    [self.imageBack addGestureRecognizer:tapBack];
+}
+
+- (void)registerNotifications {
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"didEnterBackground" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"appDidTerminate" object:nil];
+}
+
+
+- (void)share{
+    NSString *textToShare;
+    textToShare = [NSString stringWithFormat:@""];
+    self.labelToSave.text = self.navigationItem.title;
+    textToShare = self.labelToSave.text;
+    self.labelToSave.alpha = 1.0;
+    self.logo.alpha = 1.0;
+    
+    UIImage * imageToShare = [self captureScreenRetina];
+    NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
+    
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
+
+    activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
 
     
-    [self setupgestureRecognizers];
-    [self registerNotifications];
+        activityViewController.modalPresentationStyle = UIModalPresentationPopover;
+        [self presentViewController:activityViewController animated: YES completion: nil];
+        UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
+        popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+        popoverPresentationController.sourceView = self.view;
+        popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
+    
+    self.labelToSave.alpha = 0.0;
+    self.logo.alpha = 0.0;
+    
+    [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
+        
+        if (!completed) {
+            return;
+            }
+        else {
+            [self setupBottomToolBar];
+        }
+
+       // [self showAlertAfterImageSaved];
+        
+    }];
 }
 
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:YES];
-    [self.toolbar removeFromSuperview];
-}
-//
-//-(UIImage*)openFileAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-//
-//    fileName = [fileName stringByAppendingFormat:@"%@",@".htapp"];
-//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-//    NSString *docDirectory = [sysPaths objectAtIndex:0];
-//    NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-//
-//    NSURL * url = [NSURL fileURLWithPath:filePath];
-//    NSData *data = [NSData dataWithContentsOfURL:url];
-//
-//    NSMutableDictionary * tempDict = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
-//
-//    UIImage * img = [UIImage imageWithData:[tempDict objectForKey:key]];
-//
-//    NSMutableDictionary* tempDictDefaults = [tempDict mutableCopy];
-//    [[NSUserDefaults standardUserDefaults] setObject:tempDictDefaults forKey:@"temporaryDictionary"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//
-//    return img;
-//
-//}
 
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
@@ -175,25 +217,8 @@
     }
 }
 
-- (void)setupgestureRecognizers {
-    UITapGestureRecognizer * tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapRight = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapTop = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapFront = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    UITapGestureRecognizer * tapBack = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openDrawingView:)];
-    
-    [self.imageLeft addGestureRecognizer:tapLeft];
-    [self.imageRight addGestureRecognizer:tapRight];
-    [self.imageTop addGestureRecognizer:tapTop];
-    [self.imageFront addGestureRecognizer:tapFront];
-    [self.imageBack addGestureRecognizer:tapBack];
-}
+#pragma mark - Notes Methods
 
-- (void)registerNotifications {
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"didEnterBackground" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"appDidTerminate" object:nil];
-}
 -(void)addNotes{
     
 //    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
@@ -211,61 +236,12 @@
 }
 -(void)saveNote:(NSString*)note{
     
-//    NSLog(@"%@ noteee ", note);
-//    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-//    [dict setObject:note forKey:@"note"];
-//    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"temporaryDictionary"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//
-//    [self saveDiagramToFile:_techniqueNameID];
-
     [[DiagramFile sharedInstance] setNote:note];
-    [[[DiagramFile sharedInstance] tempDict] setObject:note forKey:@"note"];
-   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
-    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
-
+    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:note forKey:@"note"];
+    [self saveDataToCloudWhenTerminating];
 }
 
-- (void)share{
-    NSString *textToShare;
-    textToShare = [NSString stringWithFormat:@""];
-    self.labelToSave.text = self.navigationItem.title;
-    textToShare = self.labelToSave.text;
-    self.labelToSave.alpha = 1.0;
-    self.logo.alpha = 1.0;
-    
-    UIImage * imageToShare = [self captureScreenRetina];
-    NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
-    
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
-
-    activityViewController.excludedActivityTypes = @[ UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMessage,UIActivityTypePostToWeibo];
-
-    
-        activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-        [self presentViewController:activityViewController animated: YES completion: nil];
-        UIPopoverPresentationController * popoverPresentationController = activityViewController.popoverPresentationController;
-        popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
-        popoverPresentationController.sourceView = self.view;
-        popoverPresentationController.sourceRect = CGRectMake(728,60,10,1);
-    
-    self.labelToSave.alpha = 0.0;
-    self.logo.alpha = 0.0;
-    
-    [activityViewController setCompletionWithItemsHandler:^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
-        
-        if (!completed) {
-            return;
-            }
-        else {
-            [self setupBottomToolBar];
-        }
-
-       // [self showAlertAfterImageSaved];
-        
-    }];
-}
-
+#pragma mark - Saving Methods
 
 - (NSMutableString*)createFileName:(NSMutableString*)name prefix:(NSString*)prefix {
     name = [name mutableCopy];
@@ -279,36 +255,23 @@
     NSData * data = UIImagePNGRepresentation(img);
     return data;
 }
+
+
 -(void)storeImageInTempDictionary:(NSData*)imgData{
 
-//    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-//    [tempDict setObject:imgData forKey:@"imageEntry"];
-//    [tempDict setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
-//    [tempDict setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
-//    [tempDict setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
-//    [tempDict setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
-//    [tempDict setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
-//    [tempDict setObject:[self currentDate] forKey:@"modificationDate"];
-//
-//    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//    [self saveDiagramToFile:_techniqueNameID];
-    
-    [[[DiagramFile sharedInstance]tempDict] setObject:imgData forKey:@"imageEntry"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:imgData forKey:@"imageEntry"];
 
-    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
-    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
-    [[[DiagramFile sharedInstance]tempDict]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
-    [[[DiagramFile sharedInstance]tempDict] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
-    [[[DiagramFile sharedInstance]tempDict] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
-    [[[DiagramFile sharedInstance]tempDict] setObject:[self currentDate] forKey:@"modificationDate"];
-   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
-    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
-
+    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
+    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self currentDate] forKey:@"modificationDate"];
 }
 
 -(UIImage*)captureScreenRetinaOnLoad
 {
+    NSLog(@"EntryController terminate");
     self.logo.alpha = 0;
     self.labelToSave.alpha = 0;
     UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
@@ -318,6 +281,7 @@
     UIGraphicsEndImageContext();
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
     [self storeImageInTempDictionary:thumbdata];
+    [self saveDataToCloudWhenCloseView];
     return newImage;
 }
 -(UIImage*)captureScreenRetina
@@ -334,7 +298,44 @@
     
     return newImage;
 }
+- (void)saveDataToCloudWhenCloseView{
 
+    NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
+    NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
+    [fileName appendString:@".htapp"];
+    
+    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+        if (!error) {
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"iCloud Document save error: %@", error);
+        }
+
+        [super viewWillDisappear:YES];
+    }];
+
+}
+
+
+- (void)saveDataToCloudWhenTerminating{
+
+    NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
+    NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
+    [fileName appendString:@".htapp"];
+    
+    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+        if (!error) {
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"iCloud Document save error: %@", error);
+        }
+
+    }];
+
+}
+#pragma mark - Setup Share Confirmation Alert View
 - (void)setupBottomToolBar {
     CGFloat startOfToolbar;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
@@ -387,6 +388,7 @@
     button.layer.borderWidth = 0.0f;
     return button;
 }
+
 -(UILabel*)addInfoLabel:(NSString*)string startX:(CGFloat)startX font:(CGFloat)fntSize width:(CGFloat)width{
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, width,50)];
     CGPoint newCenter = CGPointMake(startX + 5 , self.toolbar.frame.size.height / 2);
@@ -439,72 +441,25 @@
   }];
 
 }
+#pragma mark - Delegate Methods
 
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item{
-//    self.imageLeft.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageLeft.image = item;
 }
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item{
-//    self.imageRight.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageRight.image = item;
 }
 -(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item{
-//    self.imageTop.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageTop.image = item;
 }
 -(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item{
-//    self.imageFront.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageFront.image = item;
 }
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item{
-//    self.imageBack.backgroundColor = [UIColor colorNamed:@"grey"];
     self.imageBack.image = item;
     
 }
 
-
-
--(void)flipImage{
-    UIImage * flippedImage = [UIImage imageWithCGImage:self.imageLeft.image.CGImage
-                                                scale:self.imageLeft.image.scale
-                                          orientation:UIImageOrientationUpMirrored];
-    self.imageRight.image = flippedImage;
-}
-
--(BOOL)pointInside:(CGPoint)point imageView:(UIView*)imgView
-{
-    CGRect newArea = CGRectMake(imgView.bounds.origin.x + 40, imgView.bounds.origin.y + 80, imgView.bounds.size.width-  80, imgView.bounds.size.height - 100);
-    
-//    UIView * tempView = [[UIView alloc]initWithFrame:newArea];
-//    tempView.backgroundColor = [UIColor colorNamed:@"orange"];
-//    [imgView addSubview:tempView];
-    
-    return CGRectContainsPoint(newArea, point);
-}
-
-//
-//-(void)saveDiagramToFile:(NSString*)techniqueName{
-//
-//    NSMutableString * exportingFileName = [techniqueName mutableCopy];
-//    [exportingFileName appendString:@".htapp"];
-//
-//    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-//    NSString *docDirectory = [sysPaths objectAtIndex:0];
-//    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-//    NSData * data = [self dataOfType];
-//
-//    // Save it into file system
-//    [data writeToFile:filePath atomically:YES];
-//}
-//
-//- (NSData *)dataOfType{
-//    NSError *error = nil;
-//
-//        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-//
-//          //Return the archived data
-//        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
-//}
 -(NSString*)currentDate{
     NSDate *date = [NSDate date];
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
@@ -513,4 +468,13 @@
     NSString *dateString = [df stringFromDate:date];
     return dateString;
 }
+
+#pragma mark - Image Detection Area Setup
+
+-(BOOL)pointInside:(CGPoint)point imageView:(UIView*)imgView
+{
+    CGRect newArea = CGRectMake(imgView.bounds.origin.x + 40, imgView.bounds.origin.y + 80, imgView.bounds.size.width-  80, imgView.bounds.size.height - 100);
+    return CGRectContainsPoint(newArea, point);
+}
+
 @end

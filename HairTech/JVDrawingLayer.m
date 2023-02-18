@@ -46,6 +46,9 @@
         self.arrayOfCircles = [NSMutableArray array];
         self.editedLine = NO;
         _zoomIndex = 1.0;
+        performed50 = NO;
+        performed10 = NO;
+
 
         // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
         
@@ -722,7 +725,6 @@ else {
 
 
 -(void)zoomDotPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected{
-    
     CGFloat hypot = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
     hypot = hypot * 2;
     hypot = hypot * hypot;
@@ -730,21 +732,44 @@ else {
     hypot = sqrt(hypot);
     
     if (self.type == JVDrawingTypeDot){
+       
+        
+        
         if(hypot > 50){
             hypot = 50;
+            if(!performed50){
+                [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+                performed50 = true;}
         }
+        else {performed50 = false;}
+        
         if(hypot < 10 ){
             hypot = 10;
-        }
+            if(!performed10){
+                [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+                performed10 = true;
+            }
+        }else{performed10 = false;}
     }
+    
     if (self.type == JVDrawingTypeClipper || self.type == JVDrawingTypeRazor){
         if(hypot > 100){
             hypot = 100;
+            if(!performed50){
+                [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+                performed50 = true;}
         }
+        else {performed50 = false;}
+        
         if(hypot < 15 ){
             hypot = 15;
-        }
+            if(!performed10){
+                [HapticHelper generateFeedback:FeedbackType_Impact_Light ];
+                performed10 = true;
+            }
+        }else{performed10 = false;}
     }
+    
     CGPoint tempEndPoint = CGPointMake(startPoint.x + (hypot/2), startPoint.y + (hypot/2) );
     
     UIBezierPath *rectPath = [UIBezierPath bezierPath];

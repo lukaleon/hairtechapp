@@ -20,6 +20,7 @@
 #import "ReusableView.h"
 #import "AppDelegate.h"
 #import "MHPrettyDate.h"
+#import "iCloud.h"
 
 
 typedef enum {
@@ -41,7 +42,7 @@ typedef enum {
 
 @end
 
-@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, ReusableViewDelegate ,CellDelegate>{
+@interface ViewController : UIViewController<UICollectionViewDataSource, UICollectionViewDelegate,HMPopUpViewDelegate,CellDelegate, ReusableViewDelegate ,CellDelegate, iCloudDelegate>{
 
     IBOutlet UILongPressGestureRecognizer *longpresscell;
     NSUInteger *renameIndexPath;
@@ -54,11 +55,23 @@ typedef enum {
     
     NSMutableArray * filesArray;
     NSString * _fileNameForOpenEntry;
-    
+   
+    NSString *fileText;
+    NSString *fileTitle;
+    NSMutableDictionary * dictFromCloud;
+
+    NSMutableDictionary * dictForEntryImageExtraction;
+    NSMutableArray * dateArray;
+    NSMutableArray * arrayOfFileDictionaries;
 
 }
+
+typedef void(^myCompletion)(BOOL);
+@property NSMutableArray *fileNameList;
+
+@property NSString * techniqueToRename;
 @property (nonatomic, strong) NSMetadataQuery * query;
-@property ReusableView *headerView;
+@property ReusableView * headerView;
 @property (nonatomic, strong) NSArray *fetchedTechniques;
 
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *indicatorView;

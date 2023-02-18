@@ -14,7 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface  NameViewController : UIViewController{
+    NSMutableArray *fileNameList;
+
 }
+@property(nonatomic,retain) NSMutableArray *fileNameList;
+
 @property NSString * genderType;
 @property (weak, nonatomic) IBOutlet UIButton *continue_btn;
 @property (weak, nonatomic) IBOutlet UIButton *fem_btn;

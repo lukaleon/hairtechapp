@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) id<ReusableViewDelegate> delegate;
 - (void)segmentChangeOnLoad:(NSString*)key;
 @property NSString * segmentedControlValue;
+-(void)segmentChangeFromCloud:(NSString*)key;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -12,6 +12,7 @@
 #import "ColorViewNew.h"
 #import "OverlayTransitioningDelegate.h"
 #import "DiagramFile.h"
+#import "iCloud.h"
 
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
@@ -150,16 +151,10 @@
     [self saveColorsToDefaults];
     [self removeGrid];
     [self.drawingView removeCircles]; //remove control circles when selected
-  //  [self.drawingView removeTextViewFrame]; //create text layer when closing window
+    [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     [self clearPageForClosing];
-    
-   // [[DiagramFile sharedInstance] saveDiagramToFile: [[DiagramFile sharedInstance] techniqueName]];
-    [[DiagramFile sharedInstance] saveDiagramToCloud: [[DiagramFile sharedInstance] techniqueName]];
-
-    
-    //    [self saveDiagramToFile:self.techniqueName];
-    
+   
 }
 
 -(void)deselectTools{
@@ -244,22 +239,10 @@
 }
 
 -(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-//
-//    NSDictionary * tempDict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"temporaryDictionary"];
-//
-//
-//    NSData * jsonData = [tempDict objectForKey:key];
-
-    NSData *jsonData = [[[DiagramFile sharedInstance] tempDict] objectForKey:key];
-
-//    [self.drawingView setJsonData: [tempDict objectForKey:key]];
-//    [self.drawingView setJsonKey:key];
+    NSData *jsonData = [[[DiagramFile sharedInstance] diagramFileDictionary] objectForKey:key];
     [self.drawingView setJsonData:jsonData];
     [self.drawingView setJsonKey:key];
-    NSLog(@"hey = %@", key);
-
     return jsonData;
-    
 }
 
 -(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
@@ -353,19 +336,10 @@
 }
 
 -(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view{
-   // [self.drawingView updateZoomFactor:scrollView.zoomScale];
     }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-//    if ( IDIOM == IPAD){
-//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
-//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
-//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
-//    } else {
-//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.65, 0.0);
-//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.30, 0.0);
-//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
-//    }
+
     
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.drawingView.frame ;
@@ -389,16 +363,7 @@
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     [self.drawingView updateZoomFactor:scrollView.zoomScale];
     NSLog(@"zoom scale %f", scrollView.zoomScale);
-//    if ( IDIOM == IPAD){
-//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0);
-//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0);
-//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
-//    } else {
-//        CGFloat offsetX = MAX((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.65, 0.0);
-//        CGFloat offsetY = MAX((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.30, 0.0);
-//        scrollView.contentInset = UIEdgeInsetsMake(offsetY, offsetX, 0.f, 0.f);
-//    }
-//
+    
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.drawingView.frame ;
 
@@ -416,8 +381,6 @@
         imageViewFrame.origin.y = 0;
     }
     self.drawingView.frame = imageViewFrame;
-
-
 }
 
 
@@ -432,7 +395,7 @@
 }
 
 
-#pragma mark NAvigation Bar And Share Setup
+#pragma mark - Navigation Bar And Share Setup
 
 - (void)setupNavigationBarItems {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -908,9 +871,9 @@ return YES;
 //    }
 //}
 
-#pragma mark Long Press Gestures
+#pragma mark - Long Press Gestures
 - (void)longPressPenTool:(UILongPressGestureRecognizer *)gestureRecognizer {
-        [self saveColorsToDefaults];
+        //[self saveColorsToDefaults];
         [self pencilPressed:[self.view viewWithTag:5]];
         //[self makeButtonSelected];
         //self.penTool.selected = YES;
@@ -929,7 +892,7 @@ return YES;
         }
 }
 - (void)longPressCurveTool:(UILongPressGestureRecognizer *)gestureRecognizer {
-    [self saveColorsToDefaults];
+   // [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:0]];
 //self.lineTool.selected = NO;
     longpressCurveTool.minimumPressDuration = 0.2;
@@ -947,7 +910,7 @@ return YES;
     }
 }
 - (void)longPressDashTool:(UILongPressGestureRecognizer *)gestureRecognizer {
-    [self saveColorsToDefaults];
+  //  [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:1]];
     longpressDashTool .minimumPressDuration = 0.2;
     [longpressDashTool setDelaysTouchesBegan:YES];
@@ -964,7 +927,7 @@ return YES;
     }
 }
 - (void)longPressArrowTool:(UILongPressGestureRecognizer *)gestureRecognizer {
-    [self saveColorsToDefaults];
+ //   [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:2]];
     longpressArrowTool .minimumPressDuration = 0.2;
     [longpressArrowTool setDelaysTouchesBegan:YES];
@@ -982,7 +945,7 @@ return YES;
 }
 
 - (void)longPressLineTool:(UILongPressGestureRecognizer *)gestureRecognizer {
-    [self saveColorsToDefaults];
+   // [self saveColorsToDefaults];
     [self pencilPressed:[self.view viewWithTag:3]];
     if(self.popTipLine){
         [self.popTipLine hide];
@@ -1047,7 +1010,7 @@ return YES;
         [self deselectInactioveButtons];
         [self.view setNeedsDisplay];
         [self.popoverController dismissPopoverAnimated:YES];
-        [self saveColorsToDefaults];
+      //  [self saveColorsToDefaults];
 
     }
     
@@ -1112,7 +1075,7 @@ return YES;
 }
 
 
-#pragma mark Drawing Methods
+#pragma mark - Drawing Methods
 
 -(void) saveFloatToUserDefaults:(float)x forKey:(NSString *)key {
     NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -1343,7 +1306,7 @@ return YES;
         }
     }
 }
-#pragma mark TextView Operations
+#pragma mark - TextView Operations
 -(void)removeTextSettings{
     NSLog(@"remove text settings");
     [contentTextView removeFromSuperview];
@@ -1486,10 +1449,51 @@ return YES;
     [self.drawingView removeCircles]; //remove control circles when selected
    // [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
+    [self saveDataToCloudWhenTerminating]; // Saving data to file when app enter Background or Terminate
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
     }
+    
 }
+
+- (void)saveDataToCloudWhenTerminating{
+
+    NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
+    NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
+    [fileName appendString:@".htapp"];
+    
+    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+        if (!error) {
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"iCloud Document save error: %@", error);
+        }
+
+        [super viewWillDisappear:YES];
+    }];
+
+}
+
+
+
+-(void)undoPressed{
+    NSLog(@"UNDO");
+    [self.drawingView undoLatestStep];
+    [self updateButtonStatus];
+}
+-(void)redoPressed{
+    NSLog(@"REDO");
+    [self.drawingView redoLatestStep];
+    [self updateButtonStatus];
+}
+- (void)updateButtonStatus
+{
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
+}
+
+#pragma mark - Sharing image
 
 -(UIImage*)screenShotForSharing{
     NSLog(@"screenshot");
@@ -1533,23 +1537,8 @@ return YES;
     }];
 }
 
--(void)undoPressed{
-    NSLog(@"UNDO");
-    [self.drawingView undoLatestStep];
-    [self updateButtonStatus];
-}
--(void)redoPressed{
-    NSLog(@"REDO");
-    [self.drawingView redoLatestStep];
-    [self updateButtonStatus];
-}
-- (void)updateButtonStatus
-{
-    [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
-    [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
-}
 
-#pragma mark Sharing image
+
 
 - (void)setupNotificationToolbar {
     CGFloat startOfToolbar;
@@ -1653,32 +1642,6 @@ return YES;
             self.toolbarNotification.frame =  CGRectMake(self.view.frame.origin.x + startOfToolbar, self.view.frame.origin.y + self.view.frame.size.height, self.view.frame.size.width - startOfToolbar * 2, 55);
   }];
 
-}
-
-
-
--(void)saveDiagramToFile:(NSString*)techniqueName{
-
-    NSMutableString * exportingFileName = [techniqueName mutableCopy];
-    [exportingFileName appendString:@".htapp"];
-
-    NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-    NSString *docDirectory = [sysPaths objectAtIndex:0];
-    NSString *filePath = [docDirectory stringByAppendingPathComponent:exportingFileName];
-    NSData * data = [self dataOfType];
-
-    // Save it into file system
-    [data writeToFile:filePath atomically:YES];
-   // NSURL * url = [NSURL fileURLWithPath:filePath];
-}
-
-- (NSData *)dataOfType{
-    NSError *error = nil;
- 
-        NSMutableDictionary* dictToSave = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-
-          //Return the archived data
-        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
 }
 
 

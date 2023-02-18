@@ -12,6 +12,7 @@
 
 - (void)awakeFromNib{
     
+    [super awakeFromNib];
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"orangeForSegmented"]} forState:UIControlStateSelected];
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"textColor"]} forState:UIControlStateNormal];
     
@@ -19,6 +20,7 @@
 
     
     [self.segmentedControl addTarget:self action:@selector(segmentChange:) forControlEvents:UIControlEventValueChanged];
+   
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     [self segmentChangeOnLoad:key];
     
@@ -48,6 +50,7 @@
 }
 
 -(void)segmentChangeFromCloud:(NSString*)key {
+    NSLog(@"Segmented controllllll");
 
     if ([key isEqualToString:@"techniqueName"]){
         dispatch_async(dispatch_get_main_queue(), ^{

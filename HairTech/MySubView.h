@@ -40,8 +40,11 @@
     NSMutableString *exfoothumb;
     ViewController *viewcontroller;
     NSString * uuid;
+    NSMutableArray *fileNameList;
     
 }
+@property(nonatomic,retain) NSMutableArray *fileNameList;
+
 @property NSMutableArray * filesArraysubView;
 @property (assign, nonatomic) NSString * maleOrFemale;
 @property (nonatomic,strong) Technique *techniqueAdd;

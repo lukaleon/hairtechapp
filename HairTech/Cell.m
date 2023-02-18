@@ -86,13 +86,13 @@ static UIImage *deleteButtonImg;
 - (IBAction)showEditMenu:(id)sender {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDelegate.cellPath = self.cellIndex;
-    [self deleteAndRenamePressed];
+ //   [self deleteAndRenamePressed];
     
 }
 - (IBAction)renamePressed:(id)sender {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    appDelegate.cellNameForDelete = self.dateLabel.text;
-    
+    appDelegate.cellNameForDelete = self.dateLabel.text;
+    NSLog(@" cell name %@", self.dateLabel.text);
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"showPop"
      object:self];
@@ -106,15 +106,15 @@ static UIImage *deleteButtonImg;
      object:self];
     
 }
-- (void)deleteAndRenamePressed{
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDelegate.cellNameForDelete = self.dateLabel.text;
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"showDeletePop"
-     object:self];
-    
-}
+//- (void)deleteAndRenamePressed{
+//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    appDelegate.cellNameForDelete = self.dateLabel.text;
+//
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"showDeletePop"
+//     object:self];
+//
+//}
 -(void)showBar{
      [self.menuBar setBackgroundColor:[UIColor whiteColor]];
      [self.menuBarExpanded setBackgroundColor:[UIColor whiteColor]];

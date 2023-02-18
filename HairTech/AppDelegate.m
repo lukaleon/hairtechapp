@@ -103,53 +103,12 @@
    
     dashedCurve =NO;
     
-    /*
-    NSURL *ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-    NSString *filePath = ubiq.absoluteString;
-    
-    NSLog(@"ubiq %@", ubiq.absoluteString);
 
-       if (ubiq) {
-           NSLog(@"AppDelegate: iCloud access done! ");
-           [ubiq startAccessingSecurityScopedResource];
-           [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
-           
-       } else {
-           NSLog(@"AppDelegate: No iCloud access (either you are using simulator or, if you are on your phone, you should check settings");
-       }*/
-   // [self getAllFilesIniCloud];
     return YES;
 }
 
 
 
-
--(void)getArrayOfFilesInCloud:(NSURL*)url{
-    NSArray * dirContents =
-          [[NSFileManager defaultManager] contentsOfDirectoryAtURL:url
-            includingPropertiesForKeys:@[]
-                               options:NSDirectoryEnumerationSkipsHiddenFiles
-                                 error:nil];
-    
-    NSLog(@"dir array count %lu", dirContents.count);
-    for(NSString * name in dirContents){
-        NSLog(@"dir array name %@", name);
-
-    }
-    NSOperationQueue *q = [[NSOperationQueue alloc] init];
-//   [self deleteItemsAtURLs:dirContents queue:q]; //delete item ia iCloud Dir
-}
-
-- (void)loadData:(NSMetadataQuery *)query {
-    
-    if ([query resultCount] == 1) {
-        // found the file in iCloud
-        NSMetadataItem *item = [query resultAtIndex:0];
-        NSURL *url = [item valueForAttribute:NSMetadataItemURLKey];
-        
-        NSLog(@"FOUND URL %@", url);
-    }
-}
 
 
 -(NSURL *)applicationCloudFolder:(NSString *)fileName
@@ -170,45 +129,6 @@
 }
 
 
-- ( void )deleteItemsAtURLs: ( NSArray * )urls queue: ( NSOperationQueue * )queue
-    {
-        //assuming urls is an array of urls to be deleted
-        NSFileCoordinator   * coordinator;
-        NSMutableArray      * writingIntents;
-        NSURL               * url;
-
-        writingIntents = [ NSMutableArray arrayWithCapacity: urls.count ];
-
-        for( url in urls )
-        {
-            [ writingIntents addObject: [ NSFileAccessIntent writingIntentWithURL: url options: NSFileCoordinatorWritingForDeleting ] ];
-        }
-        coordinator = [ [ NSFileCoordinator alloc ] initWithFilePresenter: nil ];
-        [ coordinator coordinateAccessWithIntents: writingIntents
-                                            queue: queue
-                                       byAccessor: ^( NSError * error )
-         {
-             if( error )
-             {
-                 //handle
-                 return;
-             }
-             NSFileAccessIntent * intent;
-
-             error = nil;
-
-             for( intent in writingIntents )
-             {
-                 [ [ NSFileManager defaultManager ] removeItemAtURL: intent.URL error: &error ];
-                 if( error )
-                 {
-                     //handle
-                 }
-
-             }
-         }];
-    }
-
 
 
 -(NSURL*)ubiquitousDocumentsDirectoryURL {
@@ -225,13 +145,15 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+    NSLog(@"AppDelegate resign  Active");
+
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    NSLog(@"enter background");
+    NSLog(@"AppDelegate enter background");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didEnterBackground" object:self];
    
     /*UIApplication *app = [UIApplication sharedApplication];
@@ -246,6 +168,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    NSLog(@"AppDelegate  Enter Foreground");
+    
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 

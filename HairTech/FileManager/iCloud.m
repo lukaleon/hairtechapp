@@ -308,8 +308,7 @@
         if (wself.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery");
     }];
 }
-     
-
+\
 - (void)updateFiles {
     // Log file update
     if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
@@ -380,6 +379,8 @@
         if ([self.delegate respondsToSelector:@selector(iCloudFilesDidChange:withNewFileNames:)])
             [self.delegate iCloudFilesDidChange:discoveredFiles withNewFileNames:names];
     });
+    
+    
 }
 
 
@@ -900,6 +901,27 @@
         
     } @catch (NSException *exception) {
         NSLog(@"[iCloud] Caught exception while retrieving document: %@\n\n%s", exception, __PRETTY_FUNCTION__);
+        return nil;
+    }
+}
+
+- (NSData *)docData:(NSString *)documentName __attribute__((nonnull)){
+    // Check for iCloud
+    if ([self quickCloudCheck] == NO) return nil;
+    
+    // Get the URL to get the file from
+    NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
+    
+    // Check if the file exists, and return
+    if ([self.fileManager fileExistsAtPath:[fileURL path]]) {
+       // unsigned long long fileSize = [[self.fileManager attributesOfItemAtPath:[fileURL path] error:nil] fileSize];
+        //NSNumber *bytes = @(fileSize);
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        return data;
+    } else {
+        // The document could not be found
+        NSLog(@"[iCloud] File not found: %@", documentName);
+        
         return nil;
     }
 }

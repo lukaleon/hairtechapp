@@ -2004,7 +2004,7 @@ UIColor* tempColor;
     
     
     
-   [[[DiagramFile sharedInstance]tempDict] setObject:jsonData  forKey:_jsonKey];
+   [[[DiagramFile sharedInstance]diagramFileDictionary] setObject:jsonData  forKey:_jsonKey];
     
 //    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
@@ -2089,7 +2089,7 @@ UIColor* tempColor;
     
     //NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
   
-    NSData * jsonDataFromDict = [[[DiagramFile sharedInstance]tempDict] objectForKey:_jsonKey];
+    NSData * jsonDataFromDict = [[[DiagramFile sharedInstance]diagramFileDictionary] objectForKey:_jsonKey];
     
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonDataFromDict options:kNilOptions error:nil];
 

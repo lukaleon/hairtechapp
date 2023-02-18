@@ -33,7 +33,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
     int JVDRAWINGBUFFERFORCURVE;
     int JVDRAWINGBUFFERFORLINE;
     CGFloat _zoomIndex;
-
+    BOOL performed50;
+    BOOL performed10;
 
 }
 

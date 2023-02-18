@@ -140,8 +140,9 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
 /** @name Syncing with iCloud */
 
 /** Check for and update the list of files stored in your app's iCloud Documents Folder. This method is automatically called by iOS when there are changes to files in the iCloud Directory. The iCloudFilesDidChange:withNewFileNames: delegate method is triggered by this method. */
-- (void)updateFiles;
+//typedef void(^myCompletion)(BOOL);
 
+- (void)updateFiles;
 
 /** @name Uploading to iCloud */
 
@@ -264,8 +265,13 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
  @return The number of bytes in an unsigned long long. Returns nil if the file does not exist. May return a nil value if iCloud is unavailable. */
 - (NSNumber *)fileSize:(NSString *)documentName __attribute__((nonnull));
 
+/**
+@param documentName The name of the file in iCloud. This value must not be nil.
+@return The number of bytes in an unsigned long long. Returns nil if the file does not exist. May return a nil value if iCloud is unavailable. */
+- (NSData *)docData:(NSString *)documentName __attribute__((nonnull));
 /** Get the last modified date of a file stored in iCloud
  
+
  @param documentName The name of the file in iCloud. This value must not be nil.
  @return The date that the file was last modified. Returns nil if the file does not exist. May return a nil value if iCloud is unavailable. */
 - (NSDate *)fileModifiedDate:(NSString *)documentName __attribute__((nonnull));
