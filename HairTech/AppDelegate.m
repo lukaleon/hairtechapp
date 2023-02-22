@@ -11,7 +11,7 @@
 //#import "MyCustomLayout.h"
 #import "MAThemeKit.h"
 #import "Flurry.h"
-
+#import "iCloud.h"
 
 /*
  *  System Versioning Preprocessor Macros
@@ -103,6 +103,9 @@
    
     dashedCurve =NO;
     
+    
+     arrayOfCloudFiles = [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
+   
 
     return YES;
 }
@@ -110,33 +113,6 @@
 
 
 
-
--(NSURL *)applicationCloudFolder:(NSString *)fileName
-{
-    
-    NSString * teamID = @"U53VZGYE8K";
-    NSString * bundleID = [NSBundle mainBundle].bundleIdentifier;
-    NSString * containerId = [NSString stringWithFormat:@"%@.%@", teamID, bundleID];
-    
-    // append our file name
-    NSLog(@"file name app delegate %@", fileName);
-   // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
-    NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-    NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
-    cloudDocuments = [cloudDocuments URLByAppendingPathComponent:fileName];
-
-    return cloudDocuments;
-}
-
-
-
-
--(NSURL*)ubiquitousDocumentsDirectoryURL {
-    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
-}
--(NSURL*)ubiquitousContainerURL {
-    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-}
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -191,6 +167,10 @@
           // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+
+
+#pragma mark - Importing Methods
+
 -(void)getArrayOfFilesInDirectory{
     self.filesArrayAppDelegate = [NSMutableArray array];
     NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
@@ -226,8 +206,7 @@
 }
 
 -(NSString*)getNamesOfTechniquesInFiles:(NSString*)techNameImported{
-    
-    
+
             NSString *lastChar = [techNameImported substringFromIndex:[techNameImported length] - 1];
 
             unichar c = [lastChar characterAtIndex:0];
@@ -242,6 +221,7 @@
             else {
                 techNameImported = [techNameImported stringByAppendingFormat:@"%d", 1];
             }
+    
     return techNameImported;
 }
 
@@ -250,6 +230,33 @@
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dict requiringSecureCoding:NO error:&error];
 }
+
+-(void)addDefaultValueForFavoriteCell:(NSString*)fileName{
+    NSUserDefaults * defualts = [NSUserDefaults standardUserDefaults];
+        [defualts setObject:@"default" forKey:fileName];
+        [defualts synchronize];
+    
+    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+    [cloudStore setObject:@"default" forKey:fileName];
+    [cloudStore synchronize];
+}
+
+
+-(NSArray*)getArrayOfFilesInCloud:(NSURL*)url{
+    NSArray * dirContents =
+    [[NSFileManager defaultManager] contentsOfDirectoryAtURL:url
+                                  includingPropertiesForKeys:@[]
+                                                     options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                       error:nil];
+    
+    NSLog(@"dir array count %lu", dirContents.count);
+    for(NSString * name in dirContents){
+        NSLog(@"dir array name %@", name);
+        
+    }
+    return  dirContents;
+}
+
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
 
         if ([url.scheme isEqualToString:@"file"] && [url.pathExtension isEqualToString:@"htapp"]) {
@@ -261,56 +268,48 @@
             NSData *data = [NSData dataWithContentsOfURL:url];
             /* CHECK FILE NAME FOR EXISTANCE IN FOLDER */
             
-            [self getArrayOfFilesInDirectory];
-            int i = 0;
-           
-            NSMutableDictionary * dict = [self getImportedFileData:data error:nil];
-            
-            if(![nameWithoutExtension isEqualToString:[dict objectForKey:@"techniqueName"]]){
-                [dict setObject:nameWithoutExtension forKey:@"techniqueName"];
-                [dict setObject:@"default" forKey:@"favorite"];
-                data = [self dataOfType:dict];
-                //if file name is different than technique name - we change technique name
-            }
-//            else {
-//                [dict setObject:@"default" forKey:@"favorite"];
-//                data = [self dataOfType:dict];
-//            }
-//            
-            
-            for(NSString * name in self.filesArrayAppDelegate){
-                if([fileName isEqualToString:name]){
+          
+            ViewController * vc = [[ViewController alloc]init];
+            vc.importedFileName = fileName;
+            vc.importedFileData = data;
+            [vc insertExportedDataFromAppDelegate:fileName data:data];
 
-//                NSMutableDictionary * dictOfData = [self openFileAtPath:[self.filesArrayAppDelegate objectAtIndex:i] error:nil];
-                    
-                    fileName = [self getNamesOfTechniquesInFiles:[dict objectForKey:@"techniqueName"]];
-                    [dict setObject:fileName forKey:@"techniqueName"];
-                    [dict setObject:@"default" forKey:@"favorite"];
 
-                    data = [self dataOfType:dict];
+            /*
+            [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+                if (!error) {
                     
-                    NSMutableString * newFileName = [fileName mutableCopy];
-                    [newFileName appendString:@".htapp"];
-                    fileName = newFileName;
+                    [self addDefaultValueForFavoriteCell:fileName];
 
-                }else {
-//                    [dict setObject:@"default" forKey:@"favorite"];
-//                    data = [self dataOfType:dict];
+                    [[NSUserDefaults standardUserDefaults] setObject:fileName forKey:@"newCreatedFileName"];
                     
+                    NSTimeInterval delayInSeconds = 5.0;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                    
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        [[NSNotificationCenter defaultCenter]
+                         postNotificationName:@"openEntry"
+                         object:self];
+                    });
+                  
+                    
+
+                } else {
+                    NSLog(@"iCloud Document save error: %@", error);
                 }
-                i++;
                 
-            }
-                    
-            NSArray *sysPaths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES );
-            NSString *docDirectory = [sysPaths objectAtIndex:0];
-            NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-            [data writeToFile:filePath atomically:YES];
-            
-            self.importedTechniqueName = [dict objectForKey:@"techniqueName"];
-
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"insertExportedDataFromAppDelegate" object:self];
-            
+//                [[NSNotificationCenter defaultCenter]
+//                    postNotificationName:@"populate"
+//                    object:self];
+//
+//                   [[NSNotificationCenter defaultCenter]
+//                    postNotificationName:@"reloadCollection"
+//                    object:self];
+//
+               
+                  
+            }];*/
+        
             return YES;
             
         }
@@ -318,7 +317,32 @@
 }
 
 
+#pragma mark - Cloud Init Methods
 
+-(NSURL *)applicationCloudFolder:(NSString *)fileName
+{
+    NSString * teamID = @"U53VZGYE8K";
+    NSString * bundleID = [NSBundle mainBundle].bundleIdentifier;
+    NSString * containerId = [NSString stringWithFormat:@"%@.%@", teamID, bundleID];
+    
+    // append our file name
+    NSLog(@"file name app delegate %@", fileName);
+   // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
+    NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+    NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
+    cloudDocuments = [cloudDocuments URLByAppendingPathComponent:fileName];
+
+    return cloudDocuments;
+}
+
+-(NSURL*)ubiquitousDocumentsDirectoryURL {
+    return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];
+}
+-(NSURL*)ubiquitousContainerURL {
+    return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+}
+
+#pragma mark - Defaults Settings
 
 - (void)getCurrentMode {
     NSLog(@"current mode ");

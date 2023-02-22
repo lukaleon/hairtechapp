@@ -35,7 +35,12 @@ static DiagramFile *_sharedInstance = nil;
 
 -(void)storeFileDataInObject:(NSData*)data fileName:(NSString*) fileName error:(NSError **)outError {
     
-    diagramFileDictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+//    diagramFileDictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:outError];
+    
+    NSError* err;
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&err];
+    diagramFileDictionary = [unarchiver decodeObjectOfClasses:[[NSSet alloc] initWithArray:@[[NSMutableDictionary class],[NSString class], [NSData class]]] forKey:NSKeyedArchiveRootObjectKey];
+
     
     self.techniqueName = fileName;
     self.uuid = [diagramFileDictionary objectForKey:@"uuid"];

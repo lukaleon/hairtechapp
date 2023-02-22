@@ -14,6 +14,7 @@
 		4014B17E29993C96007B3B2E /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B17C29993C96007B3B2E /* iCloud.m */; };
 		4014B18229993E4C007B3B2E /* MHPrettyDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B18129993E4B007B3B2E /* MHPrettyDate.m */; };
 		4014B187299E0F47007B3B2E /* ConflictViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B185299E0F46007B3B2E /* ConflictViewController.m */; };
+		4014B18C29A375CD007B3B2E /* CustomActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B18A29A375CC007B3B2E /* CustomActivityIndicator.m */; };
 		40161C502891CA3900E4CC18 /* data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40161C4F2891CA3900E4CC18 /* data.plist */; };
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
@@ -448,6 +449,8 @@
 		4014B18129993E4B007B3B2E /* MHPrettyDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHPrettyDate.m; sourceTree = "<group>"; };
 		4014B185299E0F46007B3B2E /* ConflictViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConflictViewController.m; sourceTree = "<group>"; };
 		4014B186299E0F47007B3B2E /* ConflictViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConflictViewController.h; sourceTree = "<group>"; };
+		4014B18A29A375CC007B3B2E /* CustomActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomActivityIndicator.m; sourceTree = "<group>"; };
+		4014B18B29A375CC007B3B2E /* CustomActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomActivityIndicator.h; sourceTree = "<group>"; };
 		40161C4F2891CA3900E4CC18 /* data.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = data.plist; sourceTree = "<group>"; };
 		40163804291104A000C9D9C4 /* DrawViewControllerRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewControllerRight.h; sourceTree = "<group>"; };
 		40163805291104A000C9D9C4 /* DrawViewControllerRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewControllerRight.m; sourceTree = "<group>"; };
@@ -1046,6 +1049,15 @@
 				4014B185299E0F46007B3B2E /* ConflictViewController.m */,
 			);
 			path = "Conflict Controller";
+			sourceTree = "<group>";
+		};
+		4014B18929A375BC007B3B2E /* Activity Indicator */ = {
+			isa = PBXGroup;
+			children = (
+				4014B18B29A375CC007B3B2E /* CustomActivityIndicator.h */,
+				4014B18A29A375CC007B3B2E /* CustomActivityIndicator.m */,
+			);
+			name = "Activity Indicator";
 			sourceTree = "<group>";
 		};
 		40179E0028C6733C0090CB0C /* Frame */ = {
@@ -1965,6 +1977,7 @@
 		B4FA974916680C1900F36E34 /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				4014B18929A375BC007B3B2E /* Activity Indicator */,
 				B4BBEEE71779C6E900FEBFC3 /* toolbar_view.h */,
 				B4BBEEE81779C6E900FEBFC3 /* toolbar_view.m */,
 				B445F66F166DF15F00E38343 /* Technique.h */,
@@ -2558,6 +2571,7 @@
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,
+				4014B18C29A375CD007B3B2E /* CustomActivityIndicator.m in Sources */,
 				B4188FBA171C7DBE0035785B /* ACEDrawingTools.m in Sources */,
 				40D86A1D296DE6FC009991A8 /* ReusableView.m in Sources */,
 				B4188FBB171C7DBE0035785B /* ACEDrawingView.m in Sources */,

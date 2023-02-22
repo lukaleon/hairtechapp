@@ -274,8 +274,8 @@
 #pragma  mark Text View
 
 -(void)decreaseFontSize:(UIButton*)button{
-    if (self.fontSizee >= 8 ){
-        self.fontSizee = self.fontSizee - 4;
+    if (self.fontSizee >= 6 ){
+        self.fontSizee = self.fontSizee - 3;
         [delegate textSettingsDidSelectFontSize:self.fontSizee];
     }
     if(button.highlighted){
@@ -288,7 +288,7 @@
     
     if(button.highlighted) {
         if (self.fontSizee <= 60){
-            self.fontSizee = self.fontSizee + 4;
+            self.fontSizee = self.fontSizee + 3;
             [delegate textSettingsDidSelectFontSize:self.fontSizee];
         }
     [button setHighlighted:NO];

@@ -308,6 +308,9 @@
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//            [[NSNotificationCenter defaultCenter]
+//             postNotificationName:@"stopAnimatingRefresh"
+//             object:self];
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }

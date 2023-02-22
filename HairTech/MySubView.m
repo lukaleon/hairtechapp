@@ -214,18 +214,16 @@
 }
 
 -(BOOL)checkEnteredName{
-    BOOL techniqueExist;
-
+    BOOL techniqueExist = NO;
+    
     for(NSString * fileName in self.fileNameList){
         if([self.textField.text isEqualToString:[[fileName lastPathComponent] stringByDeletingPathExtension]]){
         techniqueExist = YES;
             break;
         }else {
         techniqueExist = NO;
-
         }
     }
-
     return techniqueExist;
    
 }
@@ -330,20 +328,6 @@
     uuid = [[NSUUID UUID] UUIDString];
     [self saveDiagramToFile:uuid techniqueName:self.textField.text maleOrFemale:self.maleOrFemale];
     
-
-//    [[NSNotificationCenter defaultCenter]
-//     postNotificationName:@"populate"
-//     object:self];
-//
-//    [[NSNotificationCenter defaultCenter]
-//     postNotificationName:@"reloadCollection"
-//     object:self];
-//
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//
-//    [[NSNotificationCenter defaultCenter]
-//     postNotificationName:@"openEntry"
-//     object:self];
 }
 -(NSString*)currentDate{
     NSDate *date = [NSDate date];
@@ -416,10 +400,6 @@
         [self checkNameLength];
     }
     
-    if(![self checkEnteredName]&&(![self checkNameLength])&&![self checkNameForSpecialSymbols]){
-       [self closeSubViewManually];
-    }
-    
     if ([self checkNameForSpecialSymbols]) {
         
         UIAlertView *alert4 = [[UIAlertView alloc] initWithTitle:@"Warning!"
@@ -430,6 +410,13 @@
         [alert4 show];
         [self checkNameForSpecialSymbols];
     }
+    
+    
+    if(![self checkEnteredName]&&(![self checkNameLength])&&![self checkNameForSpecialSymbols]){
+       [self closeSubViewManually];
+    }
+    
+   
     
     
 
@@ -497,26 +484,42 @@
     
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:exportingFileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
+            
+            [self addDefaultValueForFavoriteCell:exportingFileName];
+            
+            [[NSNotificationCenter defaultCenter]
+                postNotificationName:@"populate"
+                object:self];
+           
+               [[NSNotificationCenter defaultCenter]
+                postNotificationName:@"reloadCollection"
+                object:self];
+           
+               [self dismissViewControllerAnimated:YES completion:nil];
+           
+               [[NSNotificationCenter defaultCenter]
+                postNotificationName:@"openEntry"
+                object:self];
+            
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }
         
-        [[NSNotificationCenter defaultCenter]
-            postNotificationName:@"populate"
-            object:self];
-       
-           [[NSNotificationCenter defaultCenter]
-            postNotificationName:@"reloadCollection"
-            object:self];
-       
-           [self dismissViewControllerAnimated:YES completion:nil];
-       
-           [[NSNotificationCenter defaultCenter]
-            postNotificationName:@"openEntry"
-            object:self];
+        
         
     }];
+}
+
+
+-(void)addDefaultValueForFavoriteCell:(NSString*)fileName{
+    NSUserDefaults * defualts = [NSUserDefaults standardUserDefaults];
+        [defualts setObject:@"default" forKey:fileName];
+        [defualts synchronize];
+    
+    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+    [cloudStore setObject:@"default" forKey:fileName];
+    [cloudStore synchronize];
 }
 
 

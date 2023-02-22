@@ -142,8 +142,8 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
 /** Check for and update the list of files stored in your app's iCloud Documents Folder. This method is automatically called by iOS when there are changes to files in the iCloud Directory. The iCloudFilesDidChange:withNewFileNames: delegate method is triggered by this method. */
 //typedef void(^myCompletion)(BOOL);
 
-- (void)updateFiles;
 
+- (void)updateFiles;
 /** @name Uploading to iCloud */
 
 /** Create, save, and close a document in iCloud.

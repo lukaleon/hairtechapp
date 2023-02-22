@@ -26,7 +26,7 @@
 {
     //NSMetadataQuery *_query;
 
-    
+    NSArray * arrayOfCloudFiles;
     //MyCustomLayout *mycustomLayout;
  // UIBarButtonItem *tempButton;
 }

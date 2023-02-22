@@ -1371,7 +1371,9 @@ return YES;
      NSParagraphStyleAttributeName: paragraphStyle, NSForegroundColorAttributeName : self.drawingView.textViewNew.textColor};
     self.drawingView.textViewNew.attributedText = [[NSAttributedString alloc] initWithString:self.drawingView.textViewNew.text attributes:attrsDictionary];
     [self textViewDidChange:self.drawingView.textViewNew];
+    [self.drawingView applyScale:(scrollView.zoomScale *  [UIScreen mainScreen].scale) toView:self.drawingView.textViewNew];
     }
+
 -(void)disableZoomWhenTouchesMoved{
     scrollView.pinchGestureRecognizer.enabled = NO;    
 }

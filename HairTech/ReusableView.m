@@ -16,14 +16,13 @@
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"orangeForSegmented"]} forState:UIControlStateSelected];
     [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor colorNamed:@"textColor"]} forState:UIControlStateNormal];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFromCloud:) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
 
     
     [self.segmentedControl addTarget:self action:@selector(segmentChange:) forControlEvents:UIControlEventValueChanged];
    
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-    [self segmentChangeOnLoad:key];
-    
+    [self performSelector:@selector(segmentChangeOnLoad:) withObject:key afterDelay:1.0];
 }
 
 - (void)segmentChangeOnLoad:(NSString*)key {
@@ -45,7 +44,7 @@
     }
     }
 
--(void)loadFromCloud{
+-(void)loadFromCloud:(NSNotification *)notification{
     [self segmentChangeFromCloud:[[NSUbiquitousKeyValueStore defaultStore] objectForKey:@"order"]];
 }
 

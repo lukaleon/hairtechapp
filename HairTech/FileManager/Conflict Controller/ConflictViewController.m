@@ -59,7 +59,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [[iCloud sharedCloud] resolveConflictForFile:documentName withSelectedFileVersion:[documentVersions objectAtIndex:indexPath.row]];
-    [[iCloud sharedCloud] updateFiles];
+   // [[iCloud sharedCloud] updateFiles];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

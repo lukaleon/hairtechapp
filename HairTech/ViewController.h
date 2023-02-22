@@ -65,9 +65,14 @@ typedef enum {
     NSMutableArray * arrayOfFileDictionaries;
 
 }
+@property NSString * importedFileName;
+@property NSData * importedFileData;
 
-typedef void(^myCompletion)(BOOL);
+
 @property NSMutableArray *fileNameList;
+@property NSMutableArray *dateList;
+
+
 
 @property NSString * techniqueToRename;
 @property (nonatomic, strong) NSMetadataQuery * query;
@@ -123,5 +128,6 @@ typedef void(^myCompletion)(BOOL);
 @property BOOL *tapcopy;
 
 @property (nonatomic, assign) Mode collectionMode;
-
+-(void)animateRefresh;
+-(void)insertExportedDataFromAppDelegate:(NSString*)importedFileName data:(NSData*)importedFileData;
 @end

@@ -115,6 +115,8 @@ typedef enum {
     
     BOOL touchCanceled;
 }
+- (void)applyScale:(CGFloat)scale toView:(UIView *)view;
+
 -(void)setJsonData:(NSData*)jsonData;
 -(void)setJsonKey:(NSString*)jsonKey;
 

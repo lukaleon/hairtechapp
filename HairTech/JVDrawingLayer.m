@@ -368,7 +368,7 @@ else {
   //  [textLayer setForegroundColor:[line_Color CGColor]];
     
     [textLayer setMasksToBounds:YES];
-    textLayer.contentsScale = [[UIScreen mainScreen] scale] * 3;
+    textLayer.contentsScale = [[UIScreen mainScreen] scale] * 6;
     layer.backgroundColor = [[UIColor clearColor] CGColor];
     layer.fillColor = [[UIColor clearColor]CGColor];
     //adding lines to path to detect tap

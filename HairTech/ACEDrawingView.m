@@ -1409,7 +1409,7 @@ UIColor* tempColor;
     }
     
     self.type = JVDrawingTypeDot;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:40 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black]  scale:self.zoomFactor imageName:@"dotlayer" orientation:@"default"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:40 type:self.type lineWidth:3 lineColor:[self colorFromHex:DeepPink]  scale:self.zoomFactor imageName:@"dotlayer" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1433,7 +1433,7 @@ UIColor* tempColor;
     }
    
     self.type = JVDrawingTypeClipper;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black] scale:self.zoomFactor imageName:@"clippermain" orientation:@"default"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:DeepPink] scale:self.zoomFactor imageName:@"clippermain" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
@@ -1453,7 +1453,7 @@ UIColor* tempColor;
         [self.delegate selectPreviousTool:self.previousType];
     }
     self.type = JVDrawingTypeRazor;
-    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:Black] scale:self.zoomFactor imageName:@"razor" orientation:@"default"];
+    self.drawingLayer = [JVDrawingLayer createDotWithStartPoint:centerPoint endPoint:centerPoint  height:70 type:self.type lineWidth:3 lineColor:[self colorFromHex:DeepPink] scale:self.zoomFactor imageName:@"razor" orientation:@"default"];
     
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];

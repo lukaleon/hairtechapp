@@ -7,6 +7,7 @@
 //
 
 #import "iCloud.h"
+#import "ViewController.h"
 
 // Check for ARC
 #if !__has_feature(objc_arc)
@@ -59,6 +60,9 @@
 }
 
 - (void)setupiCloudDocumentSyncWithUbiquityContainer:(NSString *)containerID {
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:@"startAnimating"
+        object:self];
     // Setup the File Manager
     if (_fileManager == nil) _fileManager = [NSFileManager defaultManager];
     
@@ -79,6 +83,11 @@
             // We can write to the ubiquity container
             
             dispatch_async(dispatch_get_main_queue (), ^(void) {
+//                
+//                            [[NSNotificationCenter defaultCenter]
+//                                postNotificationName:@"startAnimating"
+//                                object:self];
+                
                 // On the main thread, update UI and state as appropriate
                 NSLog(@"[iCloud] Initializing Document Enumeration");
                 
@@ -93,6 +102,13 @@
                 
                 if ([_delegate respondsToSelector:@selector(iCloudDidFinishInitializingWitUbiquityToken: withUbiquityContainer:)])
                     [_delegate iCloudDidFinishInitializingWitUbiquityToken:cloudToken withUbiquityContainer:_ubiquityContainer];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                        // Stop the spinner animation
+                    
+                  
+                    
+                });
             });
             
             // Log the setup
@@ -160,8 +176,8 @@
 }
 
 - (BOOL)checkCloudUbiquityContainer {
-	if (self.ubiquityContainer) return YES;
-	else return NO;
+    if (self.ubiquityContainer) return YES;
+    else return NO;
 }
 
 - (BOOL)quickCloudCheck {
@@ -244,22 +260,28 @@
     [self.query setSortDescriptors:sortDescriptors];
     
     // Notify the responder that an update has begun
-	[self.notificationCenter addObserver:self selector:@selector(startUpdate:) name:NSMetadataQueryDidStartGatheringNotification object:self.query];
+    [self.notificationCenter addObserver:self selector:@selector(startUpdate:) name:NSMetadataQueryDidStartGatheringNotification object:self.query];
     
     // Notify the responder that an update has been pushed
-	[self.notificationCenter addObserver:self selector:@selector(recievedUpdate:) name:NSMetadataQueryDidUpdateNotification object:self.query];
+    [self.notificationCenter addObserver:self selector:@selector(recievedUpdate:) name:NSMetadataQueryDidUpdateNotification object:self.query];
     
     // Notify the responder that the update has completed
-	[self.notificationCenter addObserver:self selector:@selector(endUpdate:) name:NSMetadataQueryDidFinishGatheringNotification object:self.query];
+    [self.notificationCenter addObserver:self selector:@selector(endUpdate:) name:NSMetadataQueryDidFinishGatheringNotification object:self.query];
     
     // Start the query on the main thread
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"startAnimating"
+            object:self];
+        
         BOOL startedQuery = [self.query startQuery];
         if (!startedQuery) {
             NSLog(@"[iCloud] Failed to start query.");
             return;
         } else {
             if (self.verboseLogging == YES) NSLog(@"[iCloud] Query initialized successfully"); // Log file query success
+
         }
     });
 }
@@ -272,8 +294,13 @@
         
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidBegin)])
                 [wself.delegate iCloudFileUpdateDidBegin];
+            
+            
+            
         });
     }];
 }
@@ -284,11 +311,12 @@
     [self.updatesQueue addOperationWithBlock:^{
         // Log file update
         if (wself.verboseLogging == YES) NSLog(@"[iCloud] An update has been pushed from iCloud with NSMetadataQuery");
+    
         
         // Get the updated files
         [wself updateFiles];
     }];
-   
+    
 }
 
 - (void)endUpdate:(NSNotification *)notification {
@@ -297,90 +325,119 @@
     [self.updatesQueue addOperationWithBlock:^{
         // Get the updated files
         [wself updateFiles];
-        
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidEnd)])
                 [wself.delegate iCloudFileUpdateDidEnd];
+            
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"stopAnimatingRefresh"
+             object:self];
+            
         });
         
         // Log query completion
         if (wself.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery");
-    }];
-}
-\
-- (void)updateFiles {
-    // Log file update
-    if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
-    
-    // Check for iCloud
-    if ([self quickCloudCheck] == NO) return;
-    
-    // Initialize the discovered files and file names array
-    NSMutableArray *discoveredFiles = [NSMutableArray array];
-    NSMutableArray *names = [NSMutableArray array];
-
-    if ([self.query respondsToSelector:@selector(enumerateResultsUsingBlock:)]) {
-        // Code for iOS 7.0 and later
         
-        // Enumerate through the results
-        [self.query enumerateResultsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
-            // Grab the file URL
-            NSURL *fileURL = [result valueForAttribute:NSMetadataItemURLKey];
-            NSString *fileStatus;
-	    NSError *error;
-	    [fileURL getResourceValue:&fileStatus forKey:NSURLUbiquitousItemDownloadingStatusKey error:&error];
-	    if(error){
-		//If failed to get the resource value of the file, the file should not appear in the 'names' list.
-	        if (self.verboseLogging == YES) NSLog(@"[iCloud] Failed to get resource value with error: %@.", error);
-	        return;
-	    }     
-            if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusDownloaded]) {
-                // File will be updated soon
-            }
+    }];
+    
+    
+}
+
+//NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+//[mainQueue addOperationWithBlock:^{
+//    [[NSNotificationCenter defaultCenter]
+//     postNotificationName:@"startAnimating"
+//     object:self];
+//
+//}];
+
+- (void)updateFiles{
+    
+
+        // Log file update
+        if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
+        
+        // Check for iCloud
+        if ([self quickCloudCheck] == NO) return;
+        
+        // Initialize the discovered files and file names array
+        NSMutableArray *discoveredFiles = [NSMutableArray array];
+        NSMutableArray *names = [NSMutableArray array];
+        
+        if ([self.query respondsToSelector:@selector(enumerateResultsUsingBlock:)]) {
             
-            if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusCurrent]) {
-                // Add the file metadata and file names to arrays
+               
+            // Code for iOS 7.0 and later
+            
+            // Enumerate through the results
+            [self.query enumerateResultsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
+                                
+                // Grab the file URL
+                NSURL *fileURL = [result valueForAttribute:NSMetadataItemURLKey];
+                NSString *fileStatus;
+                NSError *error;
+                [fileURL getResourceValue:&fileStatus forKey:NSURLUbiquitousItemDownloadingStatusKey error:&error];
+                if(error){
+                    //If failed to get the resource value of the file, the file should not appear in the 'names' list.
+                    if (self.verboseLogging == YES) NSLog(@"[iCloud] Failed to get resource value with error: %@.", error);
+                    return;
+                }
+                if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusDownloaded]) {
+                    // File will be updated soon
+                }
+                
+                if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusCurrent]) {
+                    // Add the file metadata and file names to arrays
+                    NSLog(@"result %@", [result valueForAttribute:NSMetadataItemFSNameKey]);
+                    [discoveredFiles addObject:result];
+                    [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
+                } else if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusNotDownloaded]) {
+                    NSError *error;
+                    BOOL downloading = [[NSFileManager defaultManager] startDownloadingUbiquitousItemAtURL:fileURL error:&error];
+                    if (self.verboseLogging == YES) NSLog(@"[iCloud] %@ started downloading locally, successful? %@", [fileURL lastPathComponent], downloading ? @"YES" : @"NO");
+                    if (error) {
+                        if (self.verboseLogging == YES) NSLog(@"[iCloud] Ubiquitous item failed to start downloading with error: %@", error);
+                    }
+                }
+                
+            }];
+        } else {
+            // Code for iOS 6.1 and earlier
+            
+            // Disable updates to iCloud while we update to avoid errors
+            [self.query disableUpdates];
+            
+            // Log the query results
+            if (self.verboseLogging == YES) NSLog(@"Query Results: %@", self.query.results);
+            
+            // Gather the query results
+            for (NSMetadataItem *result in self.query.results) {
                 [discoveredFiles addObject:result];
                 [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
-            } else if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusNotDownloaded]) {
-                NSError *error;
-                BOOL downloading = [[NSFileManager defaultManager] startDownloadingUbiquitousItemAtURL:fileURL error:&error];
-                if (self.verboseLogging == YES) NSLog(@"[iCloud] %@ started downloading locally, successful? %@", [fileURL lastPathComponent], downloading ? @"YES" : @"NO");
-                if (error) {
-                    if (self.verboseLogging == YES) NSLog(@"[iCloud] Ubiquitous item failed to start downloading with error: %@", error);
-                }
             }
-        }];
-    } else {
-        // Code for iOS 6.1 and earlier
-        
-        // Disable updates to iCloud while we update to avoid errors
-        [self.query disableUpdates];
-        
-        // Log the query results
-        if (self.verboseLogging == YES) NSLog(@"Query Results: %@", self.query.results);
-        
-        // Gather the query results
-        for (NSMetadataItem *result in self.query.results) {
-            [discoveredFiles addObject:result];
-            [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
+            
+            // Log query completion
+            if (self.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery");
+            
+            // Reenable Updates
+            [self.query enableUpdates];
         }
         
-        // Log query completion
-        if (self.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery");
-		
-        // Reenable Updates
-        [self.query enableUpdates];
-    }
-    
-    // Notify the delegate of the results on the main thread
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(iCloudFilesDidChange:withNewFileNames:)])
-            [self.delegate iCloudFilesDidChange:discoveredFiles withNewFileNames:names];
-    });
-    
-    
+        // Notify the delegate of the results on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ([self.delegate respondsToSelector:@selector(iCloudFilesDidChange:withNewFileNames:)])
+                [self.delegate iCloudFilesDidChange:discoveredFiles withNewFileNames:names];
+            
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"stopAnimatingRefresh"
+             object:self];
+            
+        });
+        
+   
 }
 
 
@@ -456,7 +513,6 @@
                     if (closeSuccess) {
                         // Log the save and close
                         if (self.verboseLogging == YES) NSLog(@"[iCloud] New document created, saved and closed successfully");
-                        
                         handler(document, document.contents, nil);
                     } else {
                         NSLog(@"[iCloud] Error while saving and closing document: %s", __PRETTY_FUNCTION__);
@@ -464,6 +520,8 @@
                         
                         handler(document, document.contents, error);
                     }
+                    
+                   
                 }];
                 
                 
@@ -791,10 +849,17 @@
                     if (success) {
                         // Log open
                         if (self.verboseLogging == YES) NSLog(@"[iCloud] Opened document");
+                       
                         
+                        
+                        
+                        [document closeWithCompletionHandler:nil];
+
                         // Pass data on to the completion handler on the main thread
                         dispatch_async(dispatch_get_main_queue(), ^{
                             handler(document, document.contents, nil);
+                            
+                           
                         });
                         
                         return;
@@ -805,6 +870,7 @@
                         // Pass data on to the completion handler on the main thread
                         dispatch_async(dispatch_get_main_queue(), ^{
                             handler(document, document.contents, error);
+                           
                         });
                         
                         return;
@@ -841,6 +907,7 @@
                 // Pass data on to the completion handler on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
                     handler(document, document.contents, nil);
+                    
                 });
                 
                 return;
@@ -861,6 +928,9 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     handler(document, document.contents, nil);
+                    
+                 
+                    
                 });
             }];
         }
@@ -1381,6 +1451,7 @@
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self updateFiles];
                             if (handler) handler(nil);
+                        
                         });
                         
                         return;
@@ -1570,6 +1641,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (handler)
                 handler(error);
+           
+            
         });
         
         return;
@@ -1583,6 +1656,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (handler)
                 handler(error);
+           
         });
         
         return;
@@ -1613,6 +1687,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (handler)
                         handler(nil);
+                 
                 });
                 return;
             }
@@ -1624,6 +1699,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (handler)
                         handler(moveError);
+                
                 });
                 
                 return;
@@ -1634,6 +1710,9 @@
                 NSLog(@"[iCloud] Failed to rename file, %@, to new name: %@. Error: %@", documentName, newName , coordinatorError);
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
+                 
+                  
+                    
                     if (handler)
                         handler(coordinatorError);
                 });
@@ -1641,7 +1720,10 @@
                 return;
             }
         }];
+        
+       
     });
+
 }
 
 - (void)duplicateOriginalDocument:(NSString *)documentName withNewName:(NSString *)newName completion:(void (^)(NSError *error))handler {
