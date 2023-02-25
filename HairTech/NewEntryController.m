@@ -11,6 +11,7 @@
 #import "NotesViewController.h"
 #import "DiagramFile.h"
 #import "iCloud.h"
+#import "CustomActivityIndicator.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -21,8 +22,11 @@
 #pragma mark - Load Methods
 
 -(void)viewDidAppear:(BOOL)animated{
-    NSLog(@"View Did Appear");
-    [self captureScreenRetinaOnLoad];
+    NSLog(@"view did apear %s",self.openedFromDrawingView ? "true" : "false");
+
+    if(self.openedFromDrawingView){
+        [self captureScreenRetinaOnLoad];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -40,6 +44,7 @@
     [self addNavigationItems];
     [self setupgestureRecognizers];
     [self registerNotifications];
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -299,7 +304,9 @@
     return newImage;
 }
 - (void)saveDataToCloudWhenCloseView{
-
+    
+    [self startAnimating];
+    
     NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
     NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
     [fileName appendString:@".htapp"];
@@ -308,9 +315,8 @@
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-//            [[NSNotificationCenter defaultCenter]
-//             postNotificationName:@"stopAnimatingRefresh"
-//             object:self];
+            [self stopAnimatingRefresh];
+            
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }
@@ -446,19 +452,25 @@
 }
 #pragma mark - Delegate Methods
 
--(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item{
+-(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
+    self.openedFromDrawingView = openedFromDrawing;
     self.imageLeft.image = item;
 }
--(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item{
+-(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
+    self.openedFromDrawingView = openedFromDrawing;
     self.imageRight.image = item;
 }
--(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item{
+-(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
+    self.openedFromDrawingView = openedFromDrawing;
     self.imageTop.image = item;
 }
--(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item{
+-(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
+    self.openedFromDrawingView = openedFromDrawing;
     self.imageFront.image = item;
 }
--(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item{
+-(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing
+{
+    self.openedFromDrawingView = openedFromDrawing;
     self.imageBack.image = item;
     
 }
@@ -480,4 +492,16 @@
     return CGRectContainsPoint(newArea, point);
 }
 
+
+#pragma mark - Activity Indicator Animation
+-(void)startAnimating{
+    NSLog(@"animate refresh ....");
+    [CustomActivityIndicator.shared show:self.view backgroundColor:[UIColor darkGrayColor] size:40 duration:2.0];
+}
+
+-(void)stopAnimatingRefresh{
+    NSLog(@"animate stop ....");
+    [CustomActivityIndicator.shared hide:self.view duration:1.0];
+
+}
 @end

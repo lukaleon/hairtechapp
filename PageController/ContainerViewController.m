@@ -9,6 +9,7 @@
 #import "ContainerViewController.h"
 #import "PageView.h"
 
+
 @interface ContainerViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 
 @property (nonatomic, strong) NSArray *array;
@@ -31,10 +32,10 @@
     self = [super initWithCoder:coder];
     if (self) {
         self.array = @[
-                       @"Create male or female diagrams",
+                       @"Create new diagrams",
                        @"Select head side",
-                       @"Share diagrams with colegues",
-                       @"Turn on / off grid"
+                       @"Setup tools",
+                       @"Share, Delete or Rename"
                        ];
         self.arrayOfImages = @[
                        @"screen1",
@@ -43,10 +44,13 @@
                        @"screen1"
                        ];
         self.arrayOfTexts = @[
-                       @"When creating new diagram, select female or male heads template, press Continue and give a name for new diagram in the next window.",
-                       @"Tap on any head side and you will be redirected to drawing space.",
-                       @"When creating new diagram, select female or male heads template, press Continue and give a name for new diagram in the next window.",
-                       @"When creating new diagram, select female or male heads template, press Continue and give a name for new diagram in the next window."
+                       @"When creating a new diagram, choose either the female or male head template, then click 'Continue' and provide a name for the new diagram in the next window.",
+                       
+                       @"Tap on any head side at the main diagram screen and you will be redirected to drawing space. \r Save the diagram image to the photo gallery by tapping the share button in the top right corner and selecting 'Save to Photos'.",
+                       
+                       @"From the main diagram editing screen select color and line width by long pressing on any tool button. \r Turn on/off the grid by pressing the 'Grid Icon' located on the top navigation bar.",
+                       
+                       @"You can share, delete, or rename the diagrams in the 'Collection screen'."
                        ];
     }
     return self;

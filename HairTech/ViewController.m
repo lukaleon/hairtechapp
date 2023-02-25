@@ -23,7 +23,7 @@
 #import "iCloud.h"
 #import "iCloudDocument.h"
 #import "CustomActivityIndicator.h"
-//#import "Flurry.h"
+#import "Hairtech-Swift.h"
 
 //NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
@@ -136,8 +136,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self iCloudSetup];
     
     
-    
-    
     [self setupLongPressGestures];
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
     if (@available(iOS 15.0, *)) {
@@ -149,6 +147,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
         [self.navigationController prefersStatusBarHidden];
+        
         
     }
     [self registerNotificationObservers];
@@ -173,8 +172,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     i = 0;
     tap = NO;
     [self addNewTechniqueButton];
-    
- 
+
     
     NSUbiquitousKeyValueStore *ubiquitousKeyValueStore = [NSUbiquitousKeyValueStore defaultStore];
 }
@@ -186,6 +184,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     [self.collectionView removeGestureRecognizer:tapRecognizer];
     [self reloadMyCollection];
+    [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"stopAnimatingRefresh"
+         object:self];
     
 }
 
@@ -203,6 +204,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     [self.collectionView  reloadData];
     longpresscell.enabled = YES;
     
+
     
     // Present Welcome Screen
     if ([self appIsRunningForFirstTime] == YES || [[iCloud sharedCloud] checkCloudAvailability] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:@"userCloudPref"] == NO) {
@@ -332,10 +334,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         [userDefaults setFloat:[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] forKey:@"version"];
     }
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-//        [self sortCollectionView:key];
-//    });
+   UIViewController* whatsNewController = [WhatsNewObjcWrapper getWhatsNewViewController];
+    
+    whatsNewController.modalInPresentation = YES;
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    if(appDelegate.firstTimeAfeterUpdate){
+        [self.navigationController presentViewController:whatsNewController animated:true completion:nil];
+    }
   
 }
 
@@ -426,14 +432,22 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     
     // Get the query results
-    for(NSString * name in fileNameList){
-        NSLog(@"Files: %@",name);
-    }
+ 
     fileNameList = fileNames; // A list of the file names
     fileObjectList = files; // A list of NSMetadata objects with detailed metadata
+    
+    // store file modification dates in array for further sorting
+    for(NSString * name in fileNameList){
+        NSDate *updated = [[iCloud sharedCloud] fileModifiedDate:name];
+        [dateList addObject:updated];
+    }
+
     [refreshControl endRefreshing];
     
-    [self.collectionView reloadData];
+
+    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
+    [self sortCollectionView:key];
+   // [self.collectionView reloadData];
     NSLog(@"iCloudFilesDidChange");
 
 }
@@ -536,6 +550,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                     {
                         newEntryVC.navigationItem.title = techniqueName;
                         newEntryVC.genderType = [diagram  maleFemale];
+                        newEntryVC.openedFromDrawingView = NO;
                         [newEntryVC setTechniqueID:techniqueName];
                         [newEntryVC setTechniqueID: techniqueName];
                     
@@ -673,12 +688,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     NSDate *updated = [[iCloud sharedCloud] fileModifiedDate:fileName];
     NSString *fileDetail = [NSString stringWithFormat:@"%@", [MHPrettyDate prettyDateFromDate:updated withFormat:MHPrettyDateFormatNoTime]];
-    [dateList addObject:fileDetail];
+    
+   // [dateList addObject:updated];
     
     // Configure the cell...
     cell.dateLabel.text = [[fileName lastPathComponent] stringByDeletingPathExtension];
     cell.image.image = [self iconForFile:fileName];// [UIImage imageWithData:[dict objectForKey:@"imageEntry"]];
-    cell.viewModeLabel.text = [dateList objectAtIndex:indexPath.row];
+    cell.viewModeLabel.text = fileDetail; // [dateList objectAtIndex:indexPath.row];
     
     
    // Configure favorite cells
@@ -755,7 +771,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     
     if(!self.isSelectionActivated){
-        
+ 
+
         [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
             if (!error) {
                 
@@ -772,20 +789,17 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                 [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
                     if (!error) {
                         if (*documentState == UIDocumentStateInConflict) {
-                            [self performSegueWithIdentifier:@"conflictVC" sender:self];
-                          //  [self performSegueWithIdentifier:@"showConflict" sender:self];
-                          //  [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                          //  [self performSegueWithIdentifier:@"conflictVC" sender:self];
                         } else
                         {
-                            
                             newEntryVC.navigationItem.title = techniqueName;
                             newEntryVC.genderType = [diagram  maleFemale];
+                            newEntryVC.openedFromDrawingView = NO;
                             [newEntryVC setTechniqueID:techniqueName];
                             [newEntryVC setTechniqueID: techniqueName];
                             [HapticHelper generateFeedback:FeedbackType_Impact_Light];
                             [self.navigationController pushViewController: newEntryVC animated:YES];
                         }
-                        
                     } else {
                         NSLog(@"Error retrieveing document state: %@", error);
                     }
@@ -795,7 +809,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                 NSLog(@"Error retrieveing document: %@", error);
             }
         }];
-        
     }
     else{
         [self selectCell:cell];
@@ -816,8 +829,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         NSLog(@"Gesture Swipe Handled");
     }
 }
-
-
 
 - (UIImage *)iconForFile:(NSString *)documentName {
     UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
@@ -1313,24 +1324,42 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableArray * sortedArray;
     
     if( [sortingKey isEqualToString:@"techniqueName"]){
-        sortedArray = [[unsortedArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] mutableCopy];
+         sortedArray = [[unsortedArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] mutableCopy];
+        
+        NSArray *sortedDates = [dateList sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                   NSUInteger index1 = [dateList indexOfObject:obj1];
+                   NSUInteger index2 = [dateList indexOfObject:obj2];
+                   return [sortedArray[index1] compare:sortedArray[index2]];
+               }];
+        dateList = [sortedDates mutableCopy];
+        
+        
     }
     if ([sortingKey isEqualToString:@"creationDate"]){
-        NSLog(@"sort by date");
-        // Sort the names array based on the corresponding ages in the ages array
+        
+        NSArray *sortedDates = [dateList sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *date1 = (NSDate *)a;
+            NSDate *date2 = (NSDate *)b;
+            return [date2 compare:date1]; // sort dates in descending order
+        }];
+        dateList = [sortedDates mutableCopy];
+        
+        // and sosrt by date
         [unsortedArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             NSUInteger index1 = [unsortedArray indexOfObject:obj1];
             NSUInteger index2 = [unsortedArray indexOfObject:obj2];
-            return [dateList[index1] compare:dateList[index2]];
+            NSDate *date1 = [dateList objectAtIndex:index1];
+            NSDate *date2 = [dateList objectAtIndex:index2];
+            return [date1 compare:date2];
         }];
+
         sortedArray = unsortedArray;
     }
+    
     if ([sortingKey isEqualToString:@"favorite"]){
         [unsortedArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-          //  NSMutableDictionary * dict = [defaults objectForKey:@"favoritesdict"];
-            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];            
             NSString *firstObject = (NSString *)obj1;
             NSString *secondObject = (NSString *)obj2;
             

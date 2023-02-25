@@ -56,7 +56,7 @@
         [self addDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        
+        self.firstTimeAfeterUpdate = YES;
         [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"colorTest2"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
@@ -65,15 +65,18 @@
         [self saveMagnetStateToDefaults:YES];
         [self saveStartColorsToDefaults];
 
-   }
+    } else {
+        self.firstTimeAfeterUpdate = NO;
+    }
 
     [self getCurrentMode];
     
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-    //ViewController *controller = (ViewController *)navigationController.topViewController;
+//    ViewController *controller = (ViewController *)navigationController.topViewController;
     navigationController.navigationBar.tintColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     [[UINavigationBar appearance] setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
-  
+    
+
 
     sleep(1);
 

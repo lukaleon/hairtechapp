@@ -32,14 +32,11 @@
 }
 -(NSURL *)applicationCloudFolder:(NSString *)fileName;
 
+@property BOOL firstTimeAfeterUpdate;
 @property  (nonatomic, retain) NSMetadataQuery *query;
-
 @property NSMutableArray * filesArrayAppDelegate;
 @property (nonatomic, retain) NSString *importedTechniqueName;
-
 @property (weak, nonatomic) id<MyViewControllerDelegate> myviewdelegate;
-
-
 
 @property (weak,nonatomic)UIImage *imageToSend;
 //@property (strong, nonatomic) EntryViewController *entryViewController;

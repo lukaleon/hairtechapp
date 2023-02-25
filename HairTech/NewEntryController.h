@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString * _techniqueNameID;
 }
 -(void)setTechniqueID:(NSString*)techId;
+@property BOOL openedFromDrawingView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
 @property (weak, nonatomic) IBOutlet UILabel *labelToSave;
@@ -31,7 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (assign, nonatomic) NSString * techniqueNameID;
 @property (assign, nonatomic) NSString * techniqueType;
 @property (assign, nonatomic) NSString * genderType;
-
 
 @property (weak, nonatomic)  UIImage *imageL;
 @property (weak, nonatomic)  UIImage *imageR;

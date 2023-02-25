@@ -31,7 +31,7 @@
     // Show activity indicator with no animation and no label
     //
     uiView.userInteractionEnabled = NO;
-    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     loadingView.center = uiView.center;
     loadingView.backgroundColor = UIColor.darkGrayColor;
     loadingView.clipsToBounds = YES;

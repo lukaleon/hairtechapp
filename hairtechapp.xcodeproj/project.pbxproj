@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36BC36431F9C85E797471C8D /* Pods_hairtech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 880EB6E9EE1E9126357F81CF /* Pods_hairtech.framework */; };
 		4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 4000FEFA29792D8F00D917A5 /* sliderCustom.m */; };
 		400B02552916D11F007A7871 /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B02542916D11F007A7871 /* NameViewController.m */; };
 		400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400B6E8A295DBFAB0048F477 /* CloudKit.framework */; };
@@ -51,6 +52,7 @@
 		4071B5F428DA1AC300CCC9C3 /* textNew_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F228DA1AC300CCC9C3 /* textNew_white.png */; };
 		4071B5F528DA1AC300CCC9C3 /* textNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 4071B5F328DA1AC300CCC9C3 /* textNew.png */; };
 		40729CCB294A038800F64E38 /* 120.png in Resources */ = {isa = PBXBuildFile; fileRef = 40729CCA294A038700F64E38 /* 120.png */; };
+		4077D50C29A67EEF00A88399 /* WhatsNewObjcWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4077D50B29A67EEF00A88399 /* WhatsNewObjcWrapper.swift */; };
 		4079875C29681FD8004C86ED /* TemporaryDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4079875B29681FD8004C86ED /* TemporaryDictionary.m */; };
 		40798766296D7B24004C86ED /* OldCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40798765296D7B24004C86ED /* OldCollectionView.m */; };
 		407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D4B6E2750033600BA0474 /* ASValueTrackingSlider.m */; };
@@ -434,6 +436,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		131BAE5B85361A2A9188B90D /* Pods-hairtech.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hairtech.debug.xcconfig"; path = "Target Support Files/Pods-hairtech/Pods-hairtech.debug.xcconfig"; sourceTree = "<group>"; };
 		4000FEF929792D8E00D917A5 /* sliderCustom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sliderCustom.h; sourceTree = "<group>"; };
 		4000FEFA29792D8F00D917A5 /* sliderCustom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sliderCustom.m; sourceTree = "<group>"; };
 		400B02532916D11F007A7871 /* NameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NameViewController.h; sourceTree = "<group>"; };
@@ -507,6 +510,7 @@
 		4071B5F228DA1AC300CCC9C3 /* textNew_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew_white.png; sourceTree = "<group>"; };
 		4071B5F328DA1AC300CCC9C3 /* textNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textNew.png; sourceTree = "<group>"; };
 		40729CCA294A038700F64E38 /* 120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 120.png; path = Images.xcassets/AppIcon.appiconset/120.png; sourceTree = "<group>"; };
+		4077D50B29A67EEF00A88399 /* WhatsNewObjcWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewObjcWrapper.swift; sourceTree = "<group>"; };
 		4079874329643C32004C86ED /* Hairtech-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hairtech-Bridging-Header.h"; sourceTree = "<group>"; };
 		4079875A29681FD8004C86ED /* TemporaryDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TemporaryDictionary.h; sourceTree = "<group>"; };
 		4079875B29681FD8004C86ED /* TemporaryDictionary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TemporaryDictionary.m; sourceTree = "<group>"; };
@@ -581,6 +585,8 @@
 		40FCA47229268A050082D645 /* tableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tableCell.m; sourceTree = "<group>"; };
 		40FCA47429268A390082D645 /* collectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = collectionCell.h; sourceTree = "<group>"; };
 		40FCA47529268A390082D645 /* collectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = collectionCell.m; sourceTree = "<group>"; };
+		5B0791CB3D80E80FA5B37384 /* Pods-hairtech.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hairtech.release.xcconfig"; path = "Target Support Files/Pods-hairtech/Pods-hairtech.release.xcconfig"; sourceTree = "<group>"; };
+		880EB6E9EE1E9126357F81CF /* Pods_hairtech.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hairtech.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B401A6202179CC8000BBE2ED /* cell_menu_exp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_menu_exp.png; sourceTree = "<group>"; };
 		B401C9F61B04796E00596292 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		B401C9F71B04796E00596292 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
@@ -1010,6 +1016,7 @@
 				400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */,
 				CEB7E7501649A62A0099C14C /* Foundation.framework in Frameworks */,
 				CEB7E7521649A62A0099C14C /* CoreGraphics.framework in Frameworks */,
+				36BC36431F9C85E797471C8D /* Pods_hairtech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1231,6 +1238,7 @@
 			isa = PBXGroup;
 			children = (
 				4079874329643C32004C86ED /* Hairtech-Bridging-Header.h */,
+				4077D50B29A67EEF00A88399 /* WhatsNewObjcWrapper.swift */,
 				4079875229643D69004C86ED /* Extension */,
 				4079874D29643D53004C86ED /* Data */,
 			);
@@ -2011,6 +2019,7 @@
 				CEB7E7531649A62A0099C14C /* HairTech */,
 				CEB7E74C1649A62A0099C14C /* Frameworks */,
 				CEB7E74A1649A62A0099C14C /* Products */,
+				D61350E1509B3A9937C7C24D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2038,6 +2047,7 @@
 				CEB7E74D1649A62A0099C14C /* UIKit.framework */,
 				CEB7E74F1649A62A0099C14C /* Foundation.framework */,
 				CEB7E7511649A62A0099C14C /* CoreGraphics.framework */,
+				880EB6E9EE1E9126357F81CF /* Pods_hairtech.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2103,6 +2113,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D61350E1509B3A9937C7C24D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				131BAE5B85361A2A9188B90D /* Pods-hairtech.debug.xcconfig */,
+				5B0791CB3D80E80FA5B37384 /* Pods-hairtech.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2110,9 +2129,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEB7E76D1649A62A0099C14C /* Build configuration list for PBXNativeTarget "hairtech" */;
 			buildPhases = (
+				FA052B897B2AB8A928E43C1A /* [CP] Check Pods Manifest.lock */,
 				CEB7E7451649A62A0099C14C /* Sources */,
 				CEB7E7461649A62A0099C14C /* Frameworks */,
 				CEB7E7471649A62A0099C14C /* Resources */,
+				4D12AE643A0FD423A4CA2F32 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2484,6 +2505,49 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4D12AE643A0FD423A4CA2F32 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hairtech/Pods-hairtech-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/WhatsNewKit/WhatsNewKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WhatsNewKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hairtech/Pods-hairtech-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FA052B897B2AB8A928E43C1A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-hairtech-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CEB7E7451649A62A0099C14C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -2519,6 +2583,7 @@
 				4014B17E29993C96007B3B2E /* iCloud.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */,
+				4077D50C29A67EEF00A88399 /* WhatsNewObjcWrapper.swift in Sources */,
 				403D12C6297031C400156A05 /* CommentTextView.m in Sources */,
 				4083669F293222CE00472CC8 /* AppDelegate.m in Sources */,
 				40D86A1A296D82F0009991A8 /* OldCell.m in Sources */,
@@ -2717,6 +2782,7 @@
 		};
 		CEB7E76E1649A62A0099C14C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 131BAE5B85361A2A9188B90D /* Pods-hairtech.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2758,6 +2824,7 @@
 		};
 		CEB7E76F1649A62A0099C14C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5B0791CB3D80E80FA5B37384 /* Pods-hairtech.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

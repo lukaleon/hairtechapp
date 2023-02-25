@@ -60,9 +60,7 @@
 }
 
 - (void)setupiCloudDocumentSyncWithUbiquityContainer:(NSString *)containerID {
-    [[NSNotificationCenter defaultCenter]
-        postNotificationName:@"startAnimating"
-        object:self];
+ 
     // Setup the File Manager
     if (_fileManager == nil) _fileManager = [NSFileManager defaultManager];
     
@@ -78,15 +76,19 @@
     dispatch_async(dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSLog(@"[iCloud] Initializing Ubiquity Container");
         
+//        [[NSNotificationCenter defaultCenter]
+//                                       postNotificationName:@"startAnimating"
+//                                       object:self];
+        
         _ubiquityContainer = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:containerID];
         if (_ubiquityContainer) {
             // We can write to the ubiquity container
             
             dispatch_async(dispatch_get_main_queue (), ^(void) {
 //                
-//                            [[NSNotificationCenter defaultCenter]
-//                                postNotificationName:@"startAnimating"
-//                                object:self];
+                            [[NSNotificationCenter defaultCenter]
+                                postNotificationName:@"startAnimating"
+                                object:self];
                 
                 // On the main thread, update UI and state as appropriate
                 NSLog(@"[iCloud] Initializing Document Enumeration");
@@ -271,9 +273,9 @@
     // Start the query on the main thread
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [[NSNotificationCenter defaultCenter]
-            postNotificationName:@"startAnimating"
-            object:self];
+//        [[NSNotificationCenter defaultCenter]
+//             postNotificationName:@"startAnimating"
+//             object:self];
         
         BOOL startedQuery = [self.query startQuery];
         if (!startedQuery) {
@@ -294,7 +296,8 @@
         
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+                            
+       
             
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidBegin)])
                 [wself.delegate iCloudFileUpdateDidBegin];
@@ -327,18 +330,20 @@
         [wself updateFiles];
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"endUpdate ");
+            [[NSNotificationCenter defaultCenter]
+                 postNotificationName:@"stopAnimatingRefresh"
+                 object:self];
             
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidEnd)])
                 [wself.delegate iCloudFileUpdateDidEnd];
             
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"stopAnimatingRefresh"
-             object:self];
+           
             
         });
         
         // Log query completion
-        if (wself.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery");
+        if (wself.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery endUpdate");
         
     }];
     
@@ -354,7 +359,7 @@
 //}];
 
 - (void)updateFiles{
-    
+
 
         // Log file update
         if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
@@ -427,13 +432,10 @@
         
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+           
             if ([self.delegate respondsToSelector:@selector(iCloudFilesDidChange:withNewFileNames:)])
                 [self.delegate iCloudFilesDidChange:discoveredFiles withNewFileNames:names];
-            
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"stopAnimatingRefresh"
-             object:self];
+         
             
         });
         
@@ -447,6 +449,9 @@
 #pragma mark - Write
 
 - (void)saveAndCloseDocumentWithName:(NSString *)documentName withContent:(NSData *)content completion:(void (^)(UIDocument *cloudDocument, NSData *documentData, NSError *error))handler {
+   
+  
+    
     // Log save
     if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning document save");
     

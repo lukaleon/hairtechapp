@@ -327,6 +327,7 @@ else {
     [self addSubview:button];
     return button;
 }
+
 - (CAShapeLayer*)addLineSeparator:(CGFloat)x1 y1:(CGFloat)y1 x2:(CGFloat)x2 y2:(CGFloat)y2 {
     CAShapeLayer *line = [CAShapeLayer layer];
     UIBezierPath *linePath=[UIBezierPath bezierPath];
@@ -398,7 +399,6 @@ else {
 
     }
     
-    
     scrollText = [[UIScrollView alloc] initWithFrame:CGRectMake(scrollStart, 0, scrollWidth, self.frame.size.height)];
     scrollText.contentSize = CGSizeMake(scrollWidth, 40);
     [self addSubview:scrollText];
@@ -421,6 +421,7 @@ else {
         self.buttonCollection = nil;
     }
         self.buttonCollection = [[NSMutableArray alloc]init];
+    
     int colorNumber = 0;
     
         for (int j=0; j<=11; j++) {

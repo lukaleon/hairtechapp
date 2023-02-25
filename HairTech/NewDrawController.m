@@ -1425,23 +1425,23 @@ return YES;
     UIImage * newImage;
     if([headtype isEqualToString:@"imageLeft"] || [headtype isEqualToString:@"imageLeftMan"]){
         newImage = [self getImageOfScreen:@"thumb1"];
-        [self.delegate passItemBackLeft:self imageForButton:newImage];
+        [self.delegate passItemBackLeft:self imageForButton:newImage openedFromDrawingView:YES];
     }
     if([headtype isEqualToString:@"imageRight"] || [headtype isEqualToString:@"imageRightMan"]){
         newImage = [self getImageOfScreen:@"thumb2"];
-        [self.delegate passItemBackRight:self imageForButton:newImage];
+        [self.delegate passItemBackRight:self imageForButton:newImage openedFromDrawingView:YES];
     }
     if([headtype isEqualToString:@"imageTop"] || [headtype isEqualToString:@"imageTopMan"]){
         newImage = [self getImageOfScreen:@"thumb3"];
-        [self.delegate passItemBackTop:self imageForButton:newImage];
+        [self.delegate passItemBackTop:self imageForButton:newImage openedFromDrawingView:YES];
     }
     if([headtype isEqualToString:@"imageFront"] || [headtype isEqualToString:@"imageFrontMan"]){
         newImage = [self getImageOfScreen:@"thumb4"];
-        [self.delegate passItemBackFront:self imageForButton:newImage];
+        [self.delegate passItemBackFront:self imageForButton:newImage openedFromDrawingView:YES];
     }
     if([headtype isEqualToString:@"imageBack"] || [headtype isEqualToString:@"imageBackMan"]){
         newImage = [self getImageOfScreen:@"thumb5"];
-        [self.delegate passItemBackBack:self imageForButton:newImage];
+        [self.delegate passItemBackBack:self imageForButton:newImage openedFromDrawingView:YES];
     }
     return newImage;
 }

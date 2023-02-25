@@ -21,11 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
 @protocol NewDrawControllerDelegate<NSObject>
 -(void)imageForButton:(UIImage*)imageForButton;
--(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item;
--(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item;
--(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item;
--(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item;
--(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item;
+-(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
+-(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
+-(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
+-(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
+-(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;;
 
 @end
 
