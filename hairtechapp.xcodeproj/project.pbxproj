@@ -11,8 +11,10 @@
 		4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 4000FEFA29792D8F00D917A5 /* sliderCustom.m */; };
 		400B02552916D11F007A7871 /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B02542916D11F007A7871 /* NameViewController.m */; };
 		400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400B6E8A295DBFAB0048F477 /* CloudKit.framework */; };
+		400C4D3629A9CDDB0019DDA0 /* WSCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 400C4D3529A9CDDB0019DDA0 /* WSCoachMarksView.m */; };
+		400C4D3929A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m in Sources */ = {isa = PBXBuildFile; fileRef = 400C4D3829A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m */; };
+		400C4D3E29AA53CA0019DDA0 /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 400C4D3D29AA53CA0019DDA0 /* iCloud.m */; };
 		4014B17D29993C96007B3B2E /* iCloudDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B17B29993C96007B3B2E /* iCloudDocument.m */; };
-		4014B17E29993C96007B3B2E /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B17C29993C96007B3B2E /* iCloud.m */; };
 		4014B18229993E4C007B3B2E /* MHPrettyDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B18129993E4B007B3B2E /* MHPrettyDate.m */; };
 		4014B187299E0F47007B3B2E /* ConflictViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B185299E0F46007B3B2E /* ConflictViewController.m */; };
 		4014B18C29A375CD007B3B2E /* CustomActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4014B18A29A375CC007B3B2E /* CustomActivityIndicator.m */; };
@@ -444,10 +446,14 @@
 		400B6E89295DBE240048F477 /* hairtechRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechRelease.entitlements; path = hairtech/hairtechRelease.entitlements; sourceTree = "<group>"; };
 		400B6E8A295DBFAB0048F477 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		400B6E8C295DC1920048F477 /* hairtechDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechDebug.entitlements; path = hairtech/hairtechDebug.entitlements; sourceTree = "<group>"; };
+		400C4D3429A9CDDB0019DDA0 /* WSCoachMarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSCoachMarksView.h; sourceTree = "<group>"; };
+		400C4D3529A9CDDB0019DDA0 /* WSCoachMarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WSCoachMarksView.m; sourceTree = "<group>"; };
+		400C4D3729A9D7C80019DDA0 /* UIBezierPath+Arrowhead.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Arrowhead.h"; sourceTree = "<group>"; };
+		400C4D3829A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Arrowhead.m"; sourceTree = "<group>"; };
+		400C4D3D29AA53CA0019DDA0 /* iCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCloud.m; sourceTree = "<group>"; };
 		4014B17929993C95007B3B2E /* iCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCloud.h; sourceTree = "<group>"; };
 		4014B17A29993C96007B3B2E /* iCloudDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCloudDocument.h; sourceTree = "<group>"; };
 		4014B17B29993C96007B3B2E /* iCloudDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCloudDocument.m; sourceTree = "<group>"; };
-		4014B17C29993C96007B3B2E /* iCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCloud.m; sourceTree = "<group>"; };
 		4014B18029993E4B007B3B2E /* MHPrettyDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MHPrettyDate.h; sourceTree = "<group>"; };
 		4014B18129993E4B007B3B2E /* MHPrettyDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHPrettyDate.m; sourceTree = "<group>"; };
 		4014B185299E0F46007B3B2E /* ConflictViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConflictViewController.m; sourceTree = "<group>"; };
@@ -1040,6 +1046,17 @@
 			name = DrawingViews;
 			sourceTree = "<group>";
 		};
+		400C4D3329A9CDC30019DDA0 /* Coach Marks */ = {
+			isa = PBXGroup;
+			children = (
+				400C4D3429A9CDDB0019DDA0 /* WSCoachMarksView.h */,
+				400C4D3529A9CDDB0019DDA0 /* WSCoachMarksView.m */,
+				400C4D3729A9D7C80019DDA0 /* UIBezierPath+Arrowhead.h */,
+				400C4D3829A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m */,
+			);
+			name = "Coach Marks";
+			sourceTree = "<group>";
+		};
 		4014B17F29993E35007B3B2E /* MHPrettyDate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1157,7 +1174,7 @@
 				40546DF1299673F5009DB636 /* DiagramFile.h */,
 				40546DF2299673F5009DB636 /* DiagramFile.m */,
 				4014B17929993C95007B3B2E /* iCloud.h */,
-				4014B17C29993C96007B3B2E /* iCloud.m */,
+				400C4D3D29AA53CA0019DDA0 /* iCloud.m */,
 				4014B17A29993C96007B3B2E /* iCloudDocument.h */,
 				4014B17B29993C96007B3B2E /* iCloudDocument.m */,
 			);
@@ -1985,6 +2002,7 @@
 		B4FA974916680C1900F36E34 /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				400C4D3329A9CDC30019DDA0 /* Coach Marks */,
 				4014B18929A375BC007B3B2E /* Activity Indicator */,
 				B4BBEEE71779C6E900FEBFC3 /* toolbar_view.h */,
 				B4BBEEE81779C6E900FEBFC3 /* toolbar_view.m */,
@@ -2580,7 +2598,7 @@
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
 				403D12D329734AF300156A05 /* ColorViewNew.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
-				4014B17E29993C96007B3B2E /* iCloud.m in Sources */,
+				400C4D3E29AA53CA0019DDA0 /* iCloud.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */,
 				4077D50C29A67EEF00A88399 /* WhatsNewObjcWrapper.swift in Sources */,
@@ -2595,6 +2613,7 @@
 				B4BBBBAE1AF36E0D00A9FA45 /* WEPopoverContainerView.m in Sources */,
 				B445F671166DF15F00E38343 /* Technique.m in Sources */,
 				B419661D17F9D4DB003E9159 /* DEMOMenuViewController.m in Sources */,
+				400C4D3929A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m in Sources */,
 				40FCA47329268A050082D645 /* tableCell.m in Sources */,
 				403D12CB29708A0400156A05 /* ISColorWheel.m in Sources */,
 				407D4B722750033600BA0474 /* ASValueTrackingSlider.m in Sources */,
@@ -2633,6 +2652,7 @@
 				40FCA47629268A390082D645 /* collectionCell.m in Sources */,
 				B401CA081B04798000596292 /* Utility.m in Sources */,
 				B434126E16E61E25003FAFA7 /* ColorButton.m in Sources */,
+				400C4D3629A9CDDB0019DDA0 /* WSCoachMarksView.m in Sources */,
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,

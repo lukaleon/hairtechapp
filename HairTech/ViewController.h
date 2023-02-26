@@ -71,6 +71,7 @@ typedef enum {
 
 @property NSMutableArray *fileNameList;
 @property NSMutableArray *dateList;
+@property NSMutableDictionary * datesDict;
 
 
 
