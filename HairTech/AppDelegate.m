@@ -52,18 +52,17 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"colorTest2"]) {
-        [self addDefaultColors];
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"version08"]) {
+        [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
         self.firstTimeAfeterUpdate = YES;
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"colorTest2"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"version08"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
        
         [self saveMagnetStateToDefaults:YES];
-        [self saveStartColorsToDefaults];
 
     } else {
         self.firstTimeAfeterUpdate = NO;
@@ -107,7 +106,7 @@
     dashedCurve =NO;
     
     
-     arrayOfCloudFiles = [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
+    // arrayOfCloudFiles = [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
    
 
     return YES;
@@ -323,11 +322,7 @@
 #pragma mark - Cloud Init Methods
 
 -(NSURL *)applicationCloudFolder:(NSString *)fileName
-{
-    NSString * teamID = @"U53VZGYE8K";
-    NSString * bundleID = [NSBundle mainBundle].bundleIdentifier;
-    NSString * containerId = [NSString stringWithFormat:@"%@.%@", teamID, bundleID];
-    
+{    
     // append our file name
     NSLog(@"file name app delegate %@", fileName);
    // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
@@ -400,7 +395,7 @@
     [prefs synchronize];
 }
 
--(NSArray*)addDefaultColors{
+-(void)setupDefaultColors{
     self.colorCollection = [NSArray arrayWithObjects:
                             
                             Black,
@@ -417,10 +412,6 @@
                             DarkBlue,
                             Yellow,
                             nil];
-    return self.colorCollection;
-}
-
--(void)saveStartColorsToDefaults{
     
     NSLog(@"save color to defaults and cloud at first launch");
     
@@ -444,8 +435,6 @@
 
     [cloudStore synchronize];
 
-    
 }
-
 
 @end
