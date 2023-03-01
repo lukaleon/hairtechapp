@@ -79,14 +79,16 @@
 //        [[NSNotificationCenter defaultCenter]
 //                                       postNotificationName:@"startAnimating"
 //                                       object:self];
-        
+//
         _ubiquityContainer = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:containerID];
         if (_ubiquityContainer) {
             // We can write to the ubiquity container
             
             dispatch_async(dispatch_get_main_queue (), ^(void) {
-              
-                         
+
+                            [[NSNotificationCenter defaultCenter]
+                                postNotificationName:@"startAnimating"
+                                object:self];
                 
                 // On the main thread, update UI and state as appropriate
                 NSLog(@"[iCloud] Initializing Document Enumeration");
@@ -328,7 +330,11 @@
         [wself updateFiles];
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-      
+            NSLog(@"endUpdate ");
+            [[NSNotificationCenter defaultCenter]
+                 postNotificationName:@"stopAnimatingRefresh"
+                 object:self];
+            
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidEnd)])
                 [wself.delegate iCloudFileUpdateDidEnd];
             

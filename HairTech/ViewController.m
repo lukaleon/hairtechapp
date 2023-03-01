@@ -136,7 +136,17 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     dateList = [NSMutableArray array];
     datesDict = [NSMutableDictionary dictionary];
 
-    [self iCloudSetup];
+    
+    [[CKContainer defaultContainer] fetchUserRecordIDWithCompletionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+        if (error) {
+            [self showAlertWithMessage:@"To continue using the app, you need to sign in to iCloud"];
+           // NSLog(@"Error fetching user record ID: %@", error);
+        } else {
+            [self iCloudSetup];
+           //[self showAlertWithMessage:@"User is signed in to iCloud"];
+            NSLog(@"User is signed in to iCloud");
+        }
+    }];
     
     
     [self setupLongPressGestures];
@@ -342,32 +352,84 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     whatsNewController.modalInPresentation = YES;
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if(appDelegate.firstTimeAfeterUpdate){
-        [self.navigationController presentViewController:whatsNewController animated:true completion:^{
-            [self showCoachMark];
-
-        }];
+    // cheking if there is old version techniques
+    FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
+    self.techniques = [db getCustomers];
+   // Technique * tech = [[Technique alloc]init];
+    //[self.techniques addObject:tech];
     
-        
-
+    if(!appDelegate.firstTimeAfeterUpdate){
+        [self.navigationController presentViewController:whatsNewController animated:true completion:^{
+          //  if(self.techniques.count >0){
+                [self showCoachMark];
+            //}
+        }];
     }
 
 }
 
 -(void)showCoachMark{
+    
+    
+    UIView *leftBarButtonView = self.navigationItem.leftBarButtonItem.customView;
+    CGRect frame = [leftBarButtonView convertRect:leftBarButtonView.bounds toView:self.view];
+    CGPoint origin = frame.origin;
+    
+    CGFloat startY;
+    CGFloat startX;
+    CGFloat width;
+    CGFloat height;
+    CGPoint arrowHeadPoint;
+    CGFloat lblStart;
+
+    arrowHeadPoint = CGPointMake(origin.x + 65, origin.y + 22);
+
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        startY = 1;
+        startX = 15;
+        width = 60;
+        height = 60;
+        lblStart = 70;
+        
+        
+    }else {
+        width = height = 60;
+        startY = 48;
+        startX = 6;
+        lblStart = 0;
+       // origin = CGPointMake(origin.x - 20, origin.y - 35);
+    }
+
+    
     // Setup coach marks
     NSArray *coachMarks = @[
         @{
-            @"rect": [NSValue valueWithCGRect:(CGRect){{6,48},{60,60}}],
-            @"caption": @"Here, you will find diagrams from older Hairtechapp version",
+            @"rect": [NSValue valueWithCGRect:(CGRect){{origin.x - 10,origin.y-10},{width,height}}],
+            @"caption": @"Here, you can access diagrams from previous versions of Hairtechapp.",
             @"shape": @"circle"
         }
         ];
     
-    WSCoachMarksView *coachMarksView = [[WSCoachMarksView alloc] initWithFrame:self.navigationController.view.bounds coachMarks:coachMarks];
+    WSCoachMarksView *coachMarksView = [[WSCoachMarksView alloc] initWithFrame:self.navigationController.view.bounds coachMarks:coachMarks startPoint:arrowHeadPoint labelStrt:lblStart];
     [self.navigationController.view addSubview:coachMarksView];
     [coachMarksView start];
 }
+
+- (void)showAlertWithMessage:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    
+    [alert addAction:okAction];
+    
+    // Present the alert on the main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:alert animated:YES completion:nil];
+    });
+}
+
+
 
 
 #pragma mark - Configure Methods
@@ -429,9 +491,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     // Create refresh control
-    if (refreshControl == nil) refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(refreshCloudList) forControlEvents:UIControlEventValueChanged];
-    [self.collectionView addSubview:refreshControl];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (refreshControl == nil) refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self action:@selector(refreshCloudList) forControlEvents:UIControlEventValueChanged];
+        [self.collectionView addSubview:refreshControl];
+    });
     
     // Subscribe to iCloud Ready Notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshCloudListAfterSetup) name:@"iCloud Ready" object:nil];
@@ -460,7 +525,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
  
     fileNameList = fileNames; // A list of the file names
     fileObjectList = files; // A list of NSMetadata objects with detailed metadata
-    [datesDict removeAllObjects];
+    [datesDict removeAllObjects]; // remove all objects before storing new objects in dict
     
     // store dates in coresponding key (fileNames)
     int i = 0;
@@ -744,29 +809,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     if ([documentStateString isEqualToString:@"Document is in conflict"]) {
         cell.backgroundColor = [UIColor redColor];
     }
-    
-
-    
- /*   NSMutableDictionary * dictOfData = [self openFileAtURL:[filesArray objectAtIndex:indexPath.row] error:nil];
-    
-    NSLog(@"File name in dir %@", [filesArray objectAtIndex:indexPath.row]);
-
-    
-    cell.image.image = [UIImage imageWithData:[dictOfData objectForKey:@"imageEntry"]];
-    cell.dateLabel.text = [dictOfData objectForKey:@"techniqueName"];
-    cell.cellIndex = indexPath;
-    cell.viewModeLabel.text = [dictOfData objectForKey:@"creationDate"];
-    cell.UUIDcell = [dictOfData objectForKey:@"techniqueName"];
-    
-    if([[dictOfData objectForKey:@"favorite"] isEqualToString:@"favorite"]){
-        cell.isFavorite = YES;
-        [cell.favorite setImage:[UIImage imageNamed:@"star.fill"]];
-    }else {
-        cell.isFavorite = NO;
-
-        [cell.favorite setImage:[UIImage imageNamed:@"star.tr"]];
-    }*/
-    
 
         CGSize  newsize;
         newsize = CGSizeMake(CGRectGetWidth(cell.frame), (CGRectGetHeight(cell.frame)));
@@ -783,6 +825,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         indexOfSelectedCell = indexPath;
         [self setupRightNavigationItem:@"Cancel" selector:@"removeOrangeLayer"];
         [self setupInfoButton:@"trash_edited" selector:@"showConfirmationPopOver"];
+        
     }
     else {
         // Set cell to non-highlight
@@ -1574,12 +1617,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                 
               //  [self updateFavoriteCellsData:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
             
-                //[datesDict removeObjectForKey:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
+                [datesDict removeObjectForKey:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
                 [fileObjectList removeObjectAtIndex:indexOfSelectedCell.row];
                 [fileNameList removeObjectAtIndex:indexOfSelectedCell.row];
               //  [dateList removeObjectAtIndex:indexOfSelectedCell.row];
                 
-
+                [self showDeletedView];
+                
                 NSLog(@"filenamelist %lu", fileNameList.count);
                 
                 if(fileNameList.count == 0){
@@ -1588,19 +1632,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                     self.navigationItem.rightBarButtonItem.enabled = NO;
                 }
                 
-//                if(fileNameList.count > 0){
-//
-//                    // [ self.editButtonOutlet setEnabled:YES];
-//
-//                    for (Cell *cell in [self.collectionView visibleCells]) {
-//                        [cell setEditing:NO animated:NO];
-//                    }
-//                    //  isDeletionModeActive = NO;
-//                    MyCustomLayout *layout = (MyCustomLayout *)self.collectionView.collectionViewLayout;
-//                    [layout invalidateLayout];
-//                    [self.addTechnique setEnabled:YES];
-//                    [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:YES];
-//                }
             }
     
         }];
@@ -1608,6 +1639,25 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
   
     }
    
+}
+
+
+- (void)showDeletedView {
+    UILabel *deletedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    deletedLabel.text = @"Deleted";
+    deletedLabel.textColor = [UIColor whiteColor];
+    deletedLabel.textAlignment = NSTextAlignmentCenter;
+    deletedLabel.backgroundColor = [UIColor blackColor];
+    deletedLabel.center = self.view.center;
+    deletedLabel.layer.cornerRadius = 10;
+    deletedLabel.clipsToBounds = YES;
+    [self.view addSubview:deletedLabel];
+    
+    [UIView animateWithDuration:0.3 delay:0.7 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        deletedLabel.alpha = 0;
+    } completion:^(BOOL finished) {
+        [deletedLabel removeFromSuperview];
+    }];
 }
 
 
@@ -1694,16 +1744,9 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSMutableString * newName = [txtField mutableCopy];
     [newName appendString:@".htapp"];
     
-//    // Save new file name to techniqueName inDictionary
-//    NSError * outError;
-//    NSData * data = [[iCloud sharedCloud] docData:currentFileName];
-//    NSMutableDictionary * dictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:&outError];
-//    [dictionary setObject:txtField forKey:@"techniqueName"];
-//    NSData * newData = [NSKeyedArchiver archivedDataWithRootObject:dictionary requiringSecureCoding:NO error:&outError];
- //   [self saveDataToCloudWhenFavoritePressed:newData fileName:currentFileName];
     NSLog(@"indexcell %ld", (long)indexOfSelectedCell.row);
     [[iCloud sharedCloud] renameOriginalDocument:currentFileName withNewName:newName completion:^(NSError *error) {
-        [fileNameList replaceObjectAtIndex:indexOfSelectedCell.row withObject:newName];
+       // [fileNameList replaceObjectAtIndex:indexOfSelectedCell.row withObject:newName];
         [self updateFavoritesData:currentFileName newName:newName];
         
         

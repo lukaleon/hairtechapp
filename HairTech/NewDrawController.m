@@ -462,6 +462,8 @@
 -(void)registerActionView{
   
     NSMutableArray* actions = [[NSMutableArray alloc] init];
+    NSMutableArray* actions2 = [[NSMutableArray alloc] init];
+
        // if (@available(iOS 14.0, *)) {
           
     more.showsMenuAsPrimaryAction = true;
@@ -484,6 +486,12 @@
 
     }]];
     
+   
+    UIMenu *divider = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+
+
+            
+    
     UIAction * clear = [UIAction actionWithTitle:@"Clear Page"
                                            image:[UIImage systemImageNamed:@"trash"]
                                       identifier:nil
@@ -491,11 +499,14 @@
         [self showConfirmationAlertForClear];
     }];
     clear.attributes = UIMenuElementAttributesDestructive;
-
-    [actions addObject:clear];
+    [actions2 addObject:divider];
+    [actions2 addObject:clear];
     
-            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+    
+    
+    UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions2];
 
+    
     
            // more.offset = CGPointMake(0, 40);
     if (@available(iOS 16.0, *)) {

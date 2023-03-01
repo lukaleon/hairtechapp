@@ -40,7 +40,11 @@
 
 @protocol WSCoachMarksViewDelegate;
 
-@interface WSCoachMarksView : UIView
+@interface WSCoachMarksView : UIView {
+    CGPoint arrowHeadPoint;
+    CGFloat labelStart;
+
+}
 
 @property (nonatomic, WS_WEAK) id<WSCoachMarksViewDelegate> delegate;
 @property (nonatomic, retain) NSArray *coachMarks;
@@ -53,12 +57,13 @@
 @property (nonatomic) BOOL enableContinueLabel;
 @property (nonatomic) BOOL enableSkipButton;
 
-- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks;
+- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks startPoint:(CGPoint)startPoint labelStrt:(CGFloat)lblStart;
 - (void)start;
 
 @end
 
 @protocol WSCoachMarksViewDelegate <NSObject>
+
 
 @optional
 - (void)coachMarksView:(WSCoachMarksView*)coachMarksView willNavigateToIndex:(NSUInteger)index;

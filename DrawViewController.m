@@ -428,15 +428,15 @@ return YES;
 -(void)viewDidLoad{
     
     self.drawingView.userInteractionEnabled = NO;
-    
     //NSLog(@"App version is %@", self.appVersion);
     textSelected = NO; // UITextView from drawing view is not selected
     [self LoadColorsAtStart];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-    self.drawingView.viewControllerName = @"left";
+  //  self.drawingView.viewControllerName = @"left";
     [self setupBottomToolBar];
     [self setupButtons];
-    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+    
+  //  [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     [self addImagesForScreensPreviousVersions];
     [self loadMainImage];
@@ -448,9 +448,11 @@ return YES;
     [self.toolbar setClipsToBounds:YES];
     self.view.backgroundColor = [UIColor whiteColor];
  
-    self.drawingView.delegate = self;
+   // self.drawingView.delegate = self;
+  
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
+    
     lineButton.selected = YES;
     self.drawingView.editMode = NO;
     self.drawingView.editModeforText = NO;
@@ -640,7 +642,7 @@ return YES;
     }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    [self.drawingView updateZoomFactor:scrollView.zoomScale];
+ //   [self.drawingView updateZoomFactor:scrollView.zoomScale];
     NSLog(@"Zoom factor = %f", scrollView.zoomScale);
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.viewForImg.frame ;

@@ -38,12 +38,13 @@ static const BOOL kEnableSkipButton = YES;
 
 #pragma mark - Methods
 
-- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks {
+- (id)initWithFrame:(CGRect)frame coachMarks:(NSArray *)marks  startPoint:(CGPoint)startPoint labelStrt:(CGFloat)lblStart{
     self = [super initWithFrame:frame];
     if (self) {
         // Save the coach marks
         self.coachMarks = marks;
-        
+        arrowHeadPoint = startPoint;
+        labelStart = lblStart;
         // Setup
         [self setup];
     }
@@ -217,12 +218,21 @@ static const BOOL kEnableSkipButton = YES;
     self.lblCaption.text = markCaption;
     [self.lblCaption sizeToFit];
     
-    CGFloat y = markRect.origin.y + markRect.size.height + self.lblSpacing + 50;
+    CGFloat lableIndex;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        lableIndex = 70;
+    }else{
+        lableIndex = 50;
+        
+    }
+    
+    
+    CGFloat y = markRect.origin.y + markRect.size.height + self.lblSpacing + lableIndex;
     CGFloat bottomY = y + self.lblCaption.frame.size.height + self.lblSpacing;
     if (bottomY > self.bounds.size.height) {
-        y = markRect.origin.y - self.lblSpacing - self.lblCaption.frame.size.height ;
+        y = markRect.origin.y - self.lblSpacing - self.lblCaption.frame.size.height;
     }
-    CGFloat x = floorf((self.bounds.size.width - self.lblCaption.frame.size.width) / 2.0f);
+    CGFloat x = floorf((self.bounds.size.width - self.lblCaption.frame.size.width) / 2.0f - (labelStart * 2));
     
     // Animate the caption label
     self.lblCaption.frame = (CGRect){{x, y}, self.lblCaption.frame.size};
@@ -280,7 +290,7 @@ static const BOOL kEnableSkipButton = YES;
         [btnSkipCoach.layer setCornerRadius:btnSkipCoach.frame.size.height / 2];
         [btnSkipCoach.layer setMasksToBounds:YES];
         
-        [self addSubview:btnSkipCoach];
+      //  [self addSubview:btnSkipCoach];
         [UIView animateWithDuration:0.1f delay:0.0f options:0 animations:^{
             btnSkipCoach.alpha = 1.0f;
         } completion:nil];
@@ -324,15 +334,14 @@ static const BOOL kEnableSkipButton = YES;
 #pragma mark - Add arrow line
 -(CAShapeLayer*)addArrow
 {
-    CGPoint startX = CGPointMake(80, 80);
     CAShapeLayer *shapeLayer = [CAShapeLayer layer];
     Arrowhead *path = [Arrowhead bezierPath];
-    [path moveToPoint:startX];
+    [path moveToPoint:arrowHeadPoint];
    
-    [path addQuadCurveToPoint:CGPointMake(self.frame.size.width/2, 170) controlPoint:CGPointMake(self.frame.size.width/2-10, 80)];
-    [path moveToPoint:startX];
+    [path addQuadCurveToPoint:CGPointMake(self.frame.size.width/2 - (labelStart * 2), 170 - (labelStart / 2)) controlPoint:CGPointMake(self.frame.size.width/2-10 - (labelStart * 2), 80 - (labelStart /2))];
+    [path moveToPoint:arrowHeadPoint];
 
-    [path addArrowheadToPoint:startX tipLength:10.0f tipAngle:M_PI_4 ];
+    [path addArrowheadToPoint:arrowHeadPoint tipLength:10.0f tipAngle:M_PI_4 ];
     shapeLayer.path = path.CGPath;
     shapeLayer.strokeColor = [UIColor whiteColor].CGColor;
     shapeLayer.lineWidth = 2.0f;

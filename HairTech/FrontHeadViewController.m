@@ -255,11 +255,11 @@ return YES;
     [self setupButtons];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
 
-    self.drawingView.viewControllerName = @"front";
+    //self.drawingView.viewControllerName = @"front";
     [self setupBottomToolBar];
 
     [super viewDidLoad];
-    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+  //  [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     
 
@@ -352,7 +352,7 @@ return YES;
     
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.drawingView.delegate = self;
+   // self.drawingView.delegate = self;
     
         
     //UIPanGestureRecognizer * recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.drawingView action:@selector(handlePan:)];
@@ -379,8 +379,8 @@ return YES;
 
     
           
-    self.drawingView.editMode = NO;
-    self.drawingView.editModeforText = NO;
+//    self.drawingView.editMode = NO;
+//    self.drawingView.editModeforText = NO;
     self.drawingView.touchForText=0;
 
     [self.btn setEnabled:NO];
@@ -527,7 +527,7 @@ return YES;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    [self.drawingView updateZoomFactor:scrollView.zoomScale];
+   // [self.drawingView updateZoomFactor:scrollView.zoomScale];
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.viewForImg.frame ;
     

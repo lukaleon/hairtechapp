@@ -305,7 +305,6 @@
 }
 - (void)saveDataToCloudWhenCloseView{
     
-    [self startAnimating];
     
     NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
     NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
@@ -314,9 +313,7 @@
     
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-            [self stopAnimatingRefresh];
-            
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);            
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }

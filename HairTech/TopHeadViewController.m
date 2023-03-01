@@ -233,11 +233,11 @@ return YES;
     [self LoadColorsAtStart];
     [self setupButtons];
     [self loadFloatFromUserDefaultsForKey:@"lineWidth"];
-    self.drawingView.viewControllerName = @"top";
+ //   self.drawingView.viewControllerName = @"top";
     [self setupBottomToolBar];
 
     [super viewDidLoad];
-    [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
+  //  [self.drawingView getViewControllerId:[self restorationIdentifier] nameOfTechnique: self.stringForLabel];
     self.navigationController.interactivePopGestureRecognizer.enabled=NO;
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"GLOBALDATE %@", appDelegate.globalDate);
@@ -370,7 +370,7 @@ return YES;
 
  
     
-    self.drawingView.delegate = self;
+ //   self.drawingView.delegate = self;
 
     [self.toolbarImg.layer setBorderWidth:2.0];
     [self.toolbarImg.layer setBorderColor:[UIColor yellowColor].CGColor];
@@ -379,9 +379,9 @@ return YES;
 
     [self.lineButton setSelected:YES];
     
-    self.drawingView.editMode = NO;
-    self.drawingView.editModeforText = NO;
-    self.drawingView.touchForText=0;
+//    self.drawingView.editMode = NO;
+//    self.drawingView.editModeforText = NO;
+//    self.drawingView.touchForText=0;
 
     [self.btn setEnabled:NO];
     [self.btn setHidden:YES];
@@ -530,7 +530,7 @@ return YES;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    [self.drawingView updateZoomFactor:scrollView.zoomScale];
+   // [self.drawingView updateZoomFactor:scrollView.zoomScale];
     CGSize boundsSize = scrollView.bounds.size;
     CGRect imageViewFrame = self.viewForImg.frame ;
     

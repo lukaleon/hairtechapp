@@ -14,18 +14,23 @@ import WhatsNewKit
         let whatsNew = WhatsNew(title: "What's New",
                                 items: [
                                     WhatsNew.Item(
+                                        title: "New Tools",
+                                        subtitle: "Clippers, Razor Blade and Dot tools added",
+                                        image: UIImage(systemName: "pencil.and.outline")
+                                    ),
+                                    WhatsNew.Item(
                                         title: "Edit Drawings",
                                         subtitle: "You can now edit lines, texts and other objects.",
-                                        image: UIImage(systemName: "pencil.line")
+                                        image: UIImage(systemName: "point.topleft.down.curvedto.point.bottomright.up")
                                     ),
                                     WhatsNew.Item(
                                         title: "Share Diagrams",
-                                        subtitle: "Share your diagrams as a file or open other user's diagrams.",
+                                        subtitle: "Share your diagrams as a file or open diagrams from other users.",
                                         image: UIImage(systemName: "paperplane")
                                     ),
                                     WhatsNew.Item(
                                         title: "iCloud Sync",
-                                        subtitle: "Access your collection of diagrams from all you devices.",
+                                        subtitle: "Access your collection of diagrams on all your devices.",
                                         image: UIImage(systemName: "icloud")
                                     ),
                                   
