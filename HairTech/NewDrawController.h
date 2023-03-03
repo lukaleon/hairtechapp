@@ -15,7 +15,7 @@
 #import "ColorWheelController.h"
 #import "ColorViewNew.h"
 #import "OverlayTransitioningDelegate.h"
-
+#import "iCloudDocument.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray * arrayOfColorPickers;
     UIButton *more;
 }
+@property (nonatomic, strong) iCloudDocument *document;
 
 @property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;
 

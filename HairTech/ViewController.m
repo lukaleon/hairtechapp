@@ -25,6 +25,7 @@
 #import "CustomActivityIndicator.h"
 #import "Hairtech-Swift.h"
 #import "WSCoachMarksView.h"
+#import "iCloudDocument.h"
 
 //NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
@@ -142,8 +143,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             [self showAlertWithMessage:@"To continue using the app, you need to sign in to iCloud"];
            // NSLog(@"Error fetching user record ID: %@", error);
         } else {
-            [self iCloudSetup];
-           //[self showAlertWithMessage:@"User is signed in to iCloud"];
+            [self startAnimating];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self iCloudSetup];
+                
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [self stopAnimatingRefresh];
+                });
+            });
+//           [self showAlertWithMessage:@"User is signed in to iCloud"];
             NSLog(@"User is signed in to iCloud");
         }
     }];
@@ -358,13 +366,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
    // Technique * tech = [[Technique alloc]init];
     //[self.techniques addObject:tech];
     
-    if(!appDelegate.firstTimeAfeterUpdate){
+    if(appDelegate.firstTimeAfeterUpdate){
         [self.navigationController presentViewController:whatsNewController animated:true completion:^{
           //  if(self.techniques.count >0){
                 [self showCoachMark];
             //}
         }];
     }
+    
+    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
+     [self sortCollectionView:key];
 
 }
 
@@ -537,10 +548,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
     [refreshControl endRefreshing];
     
-
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     [self sortCollectionView:key];
-   // [self.collectionView reloadData];
+    
+    
     NSLog(@"iCloudFilesDidChange");
 
 }
@@ -555,6 +566,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     // Reclaim delegate and then update files
     [[iCloud sharedCloud] setDelegate:self];
     [[iCloud sharedCloud] updateFiles];
+}
+
+-(void)sortCollection{
+    NSLog(@"sort collection from icloud");
+       NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
+        [self sortCollectionView:key];
 }
 
 - (void)loadFavoriteCellsFromCloud:(NSNotification *)notification {
@@ -581,12 +598,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     NSLog(@"animate refresh ....");
 
     [CustomActivityIndicator.shared show:self.view];
+    
+    self.view.userInteractionEnabled = false;
 //    [CustomActivityIndicator.shared show:self.view backgroundColor:UIColor.darkGrayColor size:35.0 duration:1.0];
     
 //    [CustomActivityIndicator.shared show:self.view backgroundColor:UIColor.darkGrayColor textColor:UIColor.whiteColor labelText:@"Updating data" duration:2.0];
 }
 
 -(void)stopAnimatingRefresh{
+    self.view.userInteractionEnabled = true;
     NSLog(@"animate stop ....");
     [CustomActivityIndicator.shared hide:self.view duration:1.0];
 
@@ -713,14 +733,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     UICollectionReusableView *reusableview = nil;
     
     if (kind == UICollectionElementKindSectionHeader) {
-        self.headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
+        self.reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
 //        NSString *title = [[NSString alloc]initWithFormat:@"Recipe Group #%i", indexPath.section + 1];
 //        headerView.title.text = title;
 //        UIImage *headerImage = [UIImage imageNamed:@"header_banner.png"];
         //headerView.backgroundImage.image = headerImage;
-        self.headerView.delegate = self;
+        self.reusableView.delegate = self;
 
-        reusableview = self.headerView;
+        reusableview = self.reusableView;
     }
  
     if (kind == UICollectionElementKindSectionFooter) {
@@ -790,7 +810,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     // Configure the cell...
     cell.dateLabel.text = [[fileName lastPathComponent] stringByDeletingPathExtension];
-    cell.image.image = [self iconForFile:fileName];// [UIImage imageWithData:[dict objectForKey:@"imageEntry"]];
+    
+   [self loadImageWithURL:fileName completion:^(UIImage *image) {
+        cell.image.image = image;
+
+    }];
+  
+    
     cell.viewModeLabel.text = fileDetail; // [dateList objectAtIndex:indexPath.row];
     
     
@@ -841,48 +867,57 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
+
     Cell *cell = (Cell *)[collectionView  cellForItemAtIndexPath:indexPath];
 
     
     if(!self.isSelectionActivated){
  
 
-        [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-            if (!error) {
-                
-               fileText = [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding];
+        [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+//            if (!error) {
+//
+     //   [iCloudDocument documentNamed:[fileNameList objectAtIndex:indexPath.row]  withCompletion:^(iCloudDocument * _Nonnull doc) {
+            
+        NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
+            
+                    
+            
+            NSLog(@"doc note %@",cloudDocument.note);
+              // fileText = [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding];
                fileTitle = cloudDocument.fileURL.lastPathComponent;
                 
                //Extracting extension from filename to get technique name
                NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
 
                 // Put data file into object
-                DiagramFile * diagram =  [DiagramFile sharedInstance];
-                [diagram storeFileDataInObject:documentData fileName:techniqueName error:nil];
+               // DiagramFile * diagram =  [DiagramFile sharedInstance];
+                //[diagram storeFileDataInObject:documentData fileName:techniqueName error:nil];
                
-                [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
-                    if (!error) {
-                        if (*documentState == UIDocumentStateInConflict) {
-                          //  [self performSegueWithIdentifier:@"conflictVC" sender:self];
-                        } else
-                        {
-                            newEntryVC.navigationItem.title = techniqueName;
-                            newEntryVC.genderType = [diagram  maleFemale];
+//                [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
+//                    if (!error) {
+//                        if (*documentState == UIDocumentStateInConflict) {
+//                          //  [self performSegueWithIdentifier:@"conflictVC" sender:self];
+//                        } else
+//                        {
+                          //  newEntryVC.navigationItem.title = techniqueName;
+                           // newEntryVC.genderType = [dictFromData objectForKey:@"maleFemale"];
+                            newEntryVC.document = cloudDocument;
                             newEntryVC.openedFromDrawingView = NO;
                             [newEntryVC setTechniqueID:techniqueName];
                             [newEntryVC setTechniqueID: techniqueName];
                             [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+                            
                             [self.navigationController pushViewController: newEntryVC animated:YES];
-                        }
-                    } else {
-                        NSLog(@"Error retrieveing document state: %@", error);
-                    }
-                }];
-                
-            } else {
-                NSLog(@"Error retrieveing document: %@", error);
-            }
+//                        }
+//                    } else {
+//                        NSLog(@"Error retrieveing document state: %@", error);
+//                    }
+//                }];
+//
+//            } else {
+//                NSLog(@"Error retrieveing document: %@", error);
+//            }
         }];
     }
     else{
@@ -905,27 +940,39 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
 }
 
+
+typedef void(^ImageCompletion)(UIImage *image);
+
+- (void)loadImageWithURL:(NSString *)name completion:(ImageCompletion)completion {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSURL *cloudURL = [appDelegate applicationCloudFolder:name];
+        NSData *data = [NSData dataWithContentsOfURL:cloudURL];
+        
+        NSError* err;
+        NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&err];
+        unarchiver.requiresSecureCoding = NO;
+        UIImage * image = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageEntry"]];
+        [unarchiver finishDecoding];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            completion(image);
+        });
+        
+    });
+}
+
+
 - (UIImage *)iconForFile:(NSString *)documentName {
     UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
-    NSMutableDictionary * dictOfData = [self openFileAtURL:documentName error:nil];
-
-
     if (controller) {
-        return [UIImage imageWithData:[dictOfData objectForKey:@"imageEntry"]]; // arbitrary selection--gives you the largest icon in this case
+        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
     }
-
+    
     return nil;
-   
-   
-        
-    
-    
-//    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
-//    if (controller) {
-//        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
-//    }
-//
-//    return nil;
 }
 
 #pragma mark - Cell Selection Methods
@@ -1603,7 +1650,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-
+    
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         
         [[iCloud sharedCloud] deleteDocumentWithName:[fileNameList objectAtIndex:indexOfSelectedCell.row] completion:^(NSError *error) {
@@ -1640,7 +1687,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     }
    
 }
-
 
 - (void)showDeletedView {
     UILabel *deletedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];

@@ -58,7 +58,6 @@ typedef enum {
    
     NSString *fileText;
     NSString *fileTitle;
-    NSMutableDictionary * dictFromCloud;
 
     NSMutableDictionary * dictForEntryImageExtraction;
     NSMutableArray * dateArray;
@@ -77,7 +76,7 @@ typedef enum {
 
 @property NSString * techniqueToRename;
 @property (nonatomic, strong) NSMetadataQuery * query;
-@property ReusableView * headerView;
+@property ReusableView * reusableView;
 @property (nonatomic, strong) NSArray *fetchedTechniques;
 
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *indicatorView;

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		36BC36431F9C85E797471C8D /* Pods_hairtech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 880EB6E9EE1E9126357F81CF /* Pods_hairtech.framework */; };
 		4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 4000FEFA29792D8F00D917A5 /* sliderCustom.m */; };
+		4002E63029B087C6002531CC /* DocumentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4002E62F29B087C6002531CC /* DocumentManager.m */; };
 		400B02552916D11F007A7871 /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400B02542916D11F007A7871 /* NameViewController.m */; };
 		400B6E8B295DBFAB0048F477 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400B6E8A295DBFAB0048F477 /* CloudKit.framework */; };
 		400C4D3629A9CDDB0019DDA0 /* WSCoachMarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 400C4D3529A9CDDB0019DDA0 /* WSCoachMarksView.m */; };
@@ -441,6 +442,10 @@
 		131BAE5B85361A2A9188B90D /* Pods-hairtech.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hairtech.debug.xcconfig"; path = "Target Support Files/Pods-hairtech/Pods-hairtech.debug.xcconfig"; sourceTree = "<group>"; };
 		4000FEF929792D8E00D917A5 /* sliderCustom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sliderCustom.h; sourceTree = "<group>"; };
 		4000FEFA29792D8F00D917A5 /* sliderCustom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sliderCustom.m; sourceTree = "<group>"; };
+		4002E62E29B087C5002531CC /* DocumentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentManager.h; sourceTree = "<group>"; };
+		4002E62F29B087C6002531CC /* DocumentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentManager.m; sourceTree = "<group>"; };
+		4002E63529B15DA6002531CC /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
+		4002E63729B15DC0002531CC /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		400B02532916D11F007A7871 /* NameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NameViewController.h; sourceTree = "<group>"; };
 		400B02542916D11F007A7871 /* NameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NameViewController.m; sourceTree = "<group>"; };
 		400B6E89295DBE240048F477 /* hairtechRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = hairtechRelease.entitlements; path = hairtech/hairtechRelease.entitlements; sourceTree = "<group>"; };
@@ -1177,6 +1182,8 @@
 				400C4D3D29AA53CA0019DDA0 /* iCloud.m */,
 				4014B17A29993C96007B3B2E /* iCloudDocument.h */,
 				4014B17B29993C96007B3B2E /* iCloudDocument.m */,
+				4002E62E29B087C5002531CC /* DocumentManager.h */,
+				4002E62F29B087C6002531CC /* DocumentManager.m */,
 			);
 			path = FileManager;
 			sourceTree = "<group>";
@@ -2052,6 +2059,8 @@
 		CEB7E74C1649A62A0099C14C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4002E63729B15DC0002531CC /* QuickLook.framework */,
+				4002E63529B15DA6002531CC /* QuickLookThumbnailing.framework */,
 				400B6E8A295DBFAB0048F477 /* CloudKit.framework */,
 				B41A9F0E213E48BF00B53A11 /* MapKit.framework */,
 				B43DF9F617454ECA00C36E02 /* OpenGLES.framework */,
@@ -2664,6 +2673,7 @@
 				B41A9F0D213E3E8300B53A11 /* HapticHelper.m in Sources */,
 				B4364A9E176F714100466B0D /* TextViewCustom.m in Sources */,
 				40B79AE62922BB6D003A8680 /* TORoundedTableView.m in Sources */,
+				4002E63029B087C6002531CC /* DocumentManager.m in Sources */,
 				B4BBEEE91779C6E900FEBFC3 /* toolbar_view.m in Sources */,
 				40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */,
 				B47059F51779DA300093C781 /* toolbar.m in Sources */,

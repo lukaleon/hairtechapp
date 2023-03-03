@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "NewDrawController.h"
 #import "NotesViewController.h"
+#import "iCloudDocument.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,9 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 {
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;
-    NSMutableDictionary * temporaryDictionary;
+    NSMutableDictionary * dictionary;
     NSString * _techniqueNameID;
 }
+
+@property (nonatomic, strong) iCloudDocument *document;
+
+
 -(void)setTechniqueID:(NSString*)techId;
 @property BOOL openedFromDrawingView;
 

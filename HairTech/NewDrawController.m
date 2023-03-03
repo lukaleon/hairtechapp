@@ -231,18 +231,33 @@
      
     NSLog(@"%@ json type", self.techniqueName);
     
-    [self.drawingView loadJSONData:[self openDictAtPath:self.techniqueName key:self.jsonType error:nil]];
-
+    NSData * newdata = _document.dictLeft;
+    [self.drawingView loadJSONData:_document.dictLeft];
+    [self.drawingView setJsonData:_document.dictLeft];
+    [self.drawingView setJsonKey:self.jsonType];
+    
     if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
     [scrollView setZoomScale:1.7 animated:YES];
     }
 }
 
 -(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-    NSData *jsonData = [[[DiagramFile sharedInstance] diagramFileDictionary] objectForKey:key];
-    [self.drawingView setJsonData:jsonData];
-    [self.drawingView setJsonKey:key];
-    return jsonData;
+    //NSData *jsonData = [[[DiagramFile sharedInstance] diagramFileDictionary] objectForKey:key];
+//    NSData * dataFromDocument;
+//    if([self.jsonType isEqualToString:@"jsonLeft"]){
+//        dataFromDocument = _document.dictLeft;
+//    }
+
+  
+    return _document.dictLeft;
+}
+
+-(void)saveDataToUIDocument:(NSData*)data{
+    NSLog(@"Data passed to UIDocument");
+    self.document.dictLeft = data;
+}
+-(NSData*)getDataFromVC{
+    return self.document.dictLeft;
 }
 
 -(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{

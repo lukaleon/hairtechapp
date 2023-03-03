@@ -30,8 +30,36 @@
 @class iCloudDocument;
 @protocol iCloudDocumentDelegate;
 @interface iCloudDocument : UIDocument
+@property NSString * fileNameFromFile;
+
+@property NSMutableDictionary * diagramFileDictionary;
+
+@property NSString * uuid;
+@property NSString * techniqueName;
+@property NSString * maleFemale;
+@property (nonatomic)  NSString * note;
+@property NSString * favorite;
+
+@property NSString * creationDate;
+@property NSString * modificationDate;
+
+@property UIImage * imageEntry;
+@property UIImage * imageLeft;
+@property UIImage * imageRight;
+@property UIImage * imageTop;
+@property UIImage * imageFront;
+@property UIImage * imageBack;
+
+@property NSData * dictLeft;
+@property NSData * dictRight;
+@property NSData * dictTop;
+@property NSData * dictFront;
+@property NSData * dictBack;
+
+@property (nonatomic) NSData * documentData;
 
 
++ (void)documentNamed: (NSString *)name withCompletion: (void (^)(iCloudDocument *doc))completionHandler;
 
 /** @name Methods */
 
@@ -59,7 +87,7 @@ NSFileVersion *laterVersion(NSFileVersion *first, NSFileVersion *second);
 
 /** The data to read or write to a UIDocument */
 @property (copy) NSData *contents;
-
++ (void)documentNamed: (NSString *)name withCompletion: (void (^)(iCloudDocument *doc))completionHandler;
 /** Retrieve the localized name of the current document
  
  @return Name of document including file extension, as an NSString */

@@ -165,7 +165,7 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
  @param documentName The name of the document being written to iCloud. This value must not be nil.
  @param content The data to write to the document
  @param handler Code block called when the document is successfully saved. The completion block passes UIDocument and NSData objects containing the saved document and it's contents in the form of NSData. The NSError object contains any error information if an error occurred, otherwise it will be nil. */
-- (void)saveAndCloseDocumentWithName:(NSString *)documentName withContent:(NSData *)content completion:(void (^)(UIDocument *cloudDocument, NSData *documentData, NSError *error))handler __attribute__((nonnull));
+- (void)saveAndCloseDocumentWithName:(NSString *)documentName withContent:(iCloudDocument *)doc completion:(void (^)(iCloudDocument *cloudDocument, NSData *documentData, NSError *error))handler __attribute__((nonnull));
 
 /** Upload any local files that weren't created with iCloud
  
@@ -243,7 +243,7 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
  
  @param documentName The name of the document in iCloud. This value must not be nil.
  @param handler Code block called when the document is successfully retrieved (opened or downloaded). The completion block passes UIDocument and NSData objects containing the opened document and it's contents in the form of NSData. If there is an error, the NSError object will have an error message (may be nil if there is no error). This value must not be nil. */
-- (void)retrieveCloudDocumentWithName:(NSString *)documentName completion:(void (^)(UIDocument *cloudDocument, NSData *documentData, NSError *error))handler __attribute__((nonnull));
+- (void)retrieveCloudDocumentWithName:(NSString *)documentName completion:(void (^)(iCloudDocument *cloudDocument, NSData *documentData, NSError *error))handler __attribute__((nonnull));
 
 /** Get the relevant iCloudDocument object for the specified file
  
@@ -395,6 +395,7 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
 
 @optional
 
+-(void)sortCollection;
 /** Called when the availability of iCloud changes
  
  @param cloudIsAvailable Boolean value that is YES if iCloud is available and NO if iCloud is not available 

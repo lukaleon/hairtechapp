@@ -86,9 +86,7 @@
             
             dispatch_async(dispatch_get_main_queue (), ^(void) {
 
-                            [[NSNotificationCenter defaultCenter]
-                                postNotificationName:@"startAnimating"
-                                object:self];
+                           
                 
                 // On the main thread, update UI and state as appropriate
                 NSLog(@"[iCloud] Initializing Document Enumeration");
@@ -257,9 +255,11 @@
     }
     
     // Setup iCloud Metadata Query : order by (could be not working on some iOS release)
+    
     NSSortDescriptor *FileNameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:NSMetadataItemFSNameKey ascending:FALSE];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:FileNameSortDescriptor, nil];
     [self.query setSortDescriptors:sortDescriptors];
+    
     
     // Notify the responder that an update has begun
     [self.notificationCenter addObserver:self selector:@selector(startUpdate:) name:NSMetadataQueryDidStartGatheringNotification object:self.query];
@@ -276,6 +276,8 @@
 //        [[NSNotificationCenter defaultCenter]
 //             postNotificationName:@"startAnimating"
 //             object:self];
+        
+        [self.delegate sortCollection];
         
         BOOL startedQuery = [self.query startQuery];
         if (!startedQuery) {
@@ -331,9 +333,7 @@
         // Notify the delegate of the results on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"endUpdate ");
-            [[NSNotificationCenter defaultCenter]
-                 postNotificationName:@"stopAnimatingRefresh"
-                 object:self];
+           
             
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidEnd)])
                 [wself.delegate iCloudFileUpdateDidEnd];
@@ -448,7 +448,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------//
 #pragma mark - Write
 
-- (void)saveAndCloseDocumentWithName:(NSString *)documentName withContent:(NSData *)content completion:(void (^)(UIDocument *cloudDocument, NSData *documentData, NSError *error))handler {
+- (void)saveAndCloseDocumentWithName:(NSString *)documentName withContent:(iCloudDocument *)doc completion:(void (^)(iCloudDocument *cloudDocument, NSData *documentData, NSError *error))handler {
    
   
     
@@ -474,56 +474,57 @@
     NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
     
     // Initialize a document with that path
-    iCloudDocument *document = [[iCloudDocument alloc] initWithFileURL:fileURL];
-    document.contents = content;
-    [document updateChangeCount:UIDocumentChangeDone];
+   // iCloudDocument *document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+    //document.contents = content;
+    [doc updateChangeCount:UIDocumentChangeDone];
     
     if ([self.fileManager fileExistsAtPath:[fileURL path]]) {
 		// The document did not exist and is being saved for the first time.
 		
         if (self.verboseLogging == YES) NSLog(@"[iCloud] Document exists; overwriting, saving and closing");
         // Save and create the new document, then close it
-        [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             if (success) {
 				// Save and close the document
-				[document closeWithCompletionHandler:^(BOOL closeSuccess) {
+				[doc closeWithCompletionHandler:^(BOOL closeSuccess) {
 					if (closeSuccess) {
 						// Log
 						if (self.verboseLogging == YES) NSLog(@"[iCloud] Written, saved and closed document");
-						
-						handler(document, document.contents, nil);
+                        [doc closeWithCompletionHandler:nil];
+
+						//handler(doc, doc.contents, nil);
 					} else {
 						NSLog(@"[iCloud] Error while saving document: %s", __PRETTY_FUNCTION__);
-						NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while saving the document, %@, to iCloud", __PRETTY_FUNCTION__, document.fileURL] code:110 userInfo:@{@"FileURL": fileURL}];
+						NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while saving the document, %@, to iCloud", __PRETTY_FUNCTION__, doc.fileURL] code:110 userInfo:@{@"FileURL": fileURL}];
 						
-						handler(document, document.contents, error);
+						handler(doc, doc.contents, error);
 					}
 				}];
 				
 			} else {
                 NSLog(@"[iCloud] Error while writing to the document: %s", __PRETTY_FUNCTION__);
-                NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while writing to the document, %@, in iCloud", __PRETTY_FUNCTION__, document.fileURL] code:100 userInfo:@{@"FileURL": fileURL}];
+                NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while writing to the document, %@, in iCloud", __PRETTY_FUNCTION__, doc.fileURL] code:100 userInfo:@{@"FileURL": fileURL}];
                 
-                handler(document, document.contents, error);
+                handler(doc, doc.contents, error);
             }
 		}];
     } else {
         if (self.verboseLogging == YES) NSLog(@"[iCloud] Document is new; creating, saving and then closing");
         
         // The document is being saved by overwriting the current version, then closed.
-        [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+        [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
             if (success) {
                 // Saving implicitly opens the file
-                [document closeWithCompletionHandler:^(BOOL closeSuccess) {
+                [doc closeWithCompletionHandler:^(BOOL closeSuccess) {
                     if (closeSuccess) {
                         // Log the save and close
                         if (self.verboseLogging == YES) NSLog(@"[iCloud] New document created, saved and closed successfully");
-                        handler(document, document.contents, nil);
+                        handler(doc, doc.contents, nil);
                     } else {
                         NSLog(@"[iCloud] Error while saving and closing document: %s", __PRETTY_FUNCTION__);
-                        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while saving the document, %@, to iCloud", __PRETTY_FUNCTION__, document.fileURL] code:110 userInfo:@{@"FileURL": fileURL}];
+                        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while saving the document, %@, to iCloud", __PRETTY_FUNCTION__, doc.fileURL] code:110 userInfo:@{@"FileURL": fileURL}];
                         
-                        handler(document, document.contents, error);
+                        handler(doc, doc.contents, error);
                     }
                     
                    
@@ -532,9 +533,9 @@
                 
             } else {
                 NSLog(@"[iCloud] Error while creating the document: %s", __PRETTY_FUNCTION__);
-                NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while creating the document, %@, in iCloud", __PRETTY_FUNCTION__, document.fileURL] code:100 userInfo:@{@"FileURL": fileURL}];
+                NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while creating the document, %@, in iCloud", __PRETTY_FUNCTION__, doc.fileURL] code:100 userInfo:@{@"FileURL": fileURL}];
                 
-                handler(document, document.contents, error);
+                handler(doc, doc.contents, error);
             }
         }];
     }
@@ -817,7 +818,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------//
 #pragma mark - Read
 
-- (void)retrieveCloudDocumentWithName:(NSString *)documentName completion:(void (^)(UIDocument *cloudDocument, NSData *documentData, NSError *error))handler {
+- (void)retrieveCloudDocumentWithName:(NSString *)documentName completion:(void (^)(iCloudDocument *cloudDocument, NSData *documentData, NSError *error))handler {
     // Log Retrieval
     if (self.verboseLogging == YES) NSLog(@"[iCloud] Retrieving iCloud document, %@", documentName);
     
@@ -858,7 +859,7 @@
                         
                         
                         
-                        [document closeWithCompletionHandler:nil];
+                      //[document closeWithCompletionHandler:nil];
 
                         // Pass data on to the completion handler on the main thread
                         dispatch_async(dispatch_get_main_queue(), ^{

@@ -12,6 +12,7 @@
 #import "DiagramFile.h"
 #import "iCloud.h"
 #import "CustomActivityIndicator.h"
+#import "iCloudDocument.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -21,11 +22,12 @@
 
 #pragma mark - Load Methods
 
+
 -(void)viewDidAppear:(BOOL)animated{
     NSLog(@"view did apear %s",self.openedFromDrawingView ? "true" : "false");
 
     if(self.openedFromDrawingView){
-        [self captureScreenRetinaOnLoad];
+    [self captureScreenRetinaOnLoad];
     }
 }
 
@@ -39,6 +41,7 @@
 }
 
 -(void)viewDidLoad{
+    NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ", self.document.note, self.document.techniqueName , self.document.maleFemale);
     
     [self loadImages];
     [self addNavigationItems];
@@ -51,6 +54,29 @@
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
     NSLog(@"exit entry" );
+    //[self saveDataToCloudWhenCloseView];
+//
+//    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        // ...
+//        if (success) {
+//            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+//        } else {
+//            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+//        }
+//    }];
+    
+    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+        if (!error) {
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+        } else {
+            NSLog(@"iCloud Document save error: %@", error);
+        }
+
+    }];
+    
+ 
+
 }
 
 #pragma mark - Configure Methods
@@ -85,11 +111,12 @@
 
 
 - (void)loadImages {
-    self.imageLeft.image = [[DiagramFile sharedInstance] imageLeft];
-    self.imageRight.image = [[DiagramFile sharedInstance] imageRight];
-    self.imageTop.image = [[DiagramFile sharedInstance] imageTop];
-    self.imageFront.image = [[DiagramFile sharedInstance] imageFront];
-    self.imageBack.image = [[DiagramFile sharedInstance] imageBack];
+    
+    self.imageLeft.image = self.document.imageLeft;
+    self.imageRight.image = self.document.imageRight;
+    self.imageTop.image = self.document.imageTop;
+    self.imageFront.image = self.document.imageFront;
+    self.imageBack.image = self.document.imageBack;
 }
 
 
@@ -172,7 +199,7 @@
     newDrawVC.techniqueName = _techniqueNameID;
     switch (myViewTag) {
         case 1:
-            if([self.genderType isEqualToString:@"female"]){
+            if([_document.maleFemale isEqualToString:@"female"]){
                 newDrawVC.headtype = @"imageLeft";
             }else{
                 newDrawVC.headtype = @"imageLeftMan";
@@ -180,7 +207,7 @@
             newDrawVC.jsonType = @"jsonLeft";
             break;
         case 2:
-            if([self.genderType isEqualToString:@"female"]){
+            if([_document.maleFemale isEqualToString:@"female"]){
                 newDrawVC.headtype = @"imageRight";
             }else{
                 newDrawVC.headtype = @"imageRightMan";
@@ -188,7 +215,7 @@
             newDrawVC.jsonType = @"jsonRight";
             break;
         case 3:
-            if([self.genderType isEqualToString:@"female"]){
+            if([_document.maleFemale isEqualToString:@"female"]){
                 newDrawVC.headtype = @"imageTop";
             }else {
                 newDrawVC.headtype = @"imageTopMan";
@@ -197,7 +224,7 @@
 
             break;
         case 4:
-            if([self.genderType isEqualToString:@"female"]){
+            if([_document.maleFemale isEqualToString:@"female"]){
                 newDrawVC.headtype = @"imageFront";
             }else {
                 newDrawVC.headtype = @"imageFrontMan";
@@ -206,7 +233,7 @@
 
             break;
         case 5:
-            if([self.genderType isEqualToString:@"female"]){
+            if([_document.maleFemale isEqualToString:@"female"]){
                 newDrawVC.headtype = @"imageBack";
             }else {
                 newDrawVC.headtype = @"imageBackMan";
@@ -218,6 +245,7 @@
             break;
     }
     if(pointInside){
+        newDrawVC.document = self.document;
         [self.navigationController pushViewController: newDrawVC animated:YES];
     }
 }
@@ -227,7 +255,7 @@
 -(void)addNotes{
     
 //    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    NSString * note = [[DiagramFile sharedInstance] note];
+    NSString * note = self.document.note;
     
     NotesViewController *  notesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"notes"];
     if(note.length == 0||[note isEqualToString:@"(null)"]){
@@ -241,9 +269,19 @@
 }
 -(void)saveNote:(NSString*)note{
     
-    [[DiagramFile sharedInstance] setNote:note];
-    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:note forKey:@"note"];
-    [self saveDataToCloudWhenTerminating];
+    self.document.note = note;
+
+
+  //  self.document.contents = [NSKeyedArchiver archivedDataWithRootObject:self.document.diagramFileDictionary requiringSecureCoding:NO error:nil];
+
+    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        // ...
+        if (success) {
+            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+        } else {
+            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+        }
+    }];
 }
 
 #pragma mark - Saving Methods
@@ -262,17 +300,17 @@
 }
 
 
--(void)storeImageInTempDictionary:(NSData*)imgData{
-
-    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:imgData forKey:@"imageEntry"];
-
-    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
-    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
-    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
-    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
-    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
-    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self currentDate] forKey:@"modificationDate"];
-}
+//-(void)storeImageInTempDictionary:(NSData*)imgData{
+//
+//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:imgData forKey:@"imageEntry"];
+//
+//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
+//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
+//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
+//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
+//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
+//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self currentDate] forKey:@"modificationDate"];
+//}
 
 -(UIImage*)captureScreenRetinaOnLoad
 {
@@ -285,8 +323,11 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData * thumbdata = UIImagePNGRepresentation(newImage);
-    [self storeImageInTempDictionary:thumbdata];
-    [self saveDataToCloudWhenCloseView];
+    
+   // [self storeImageInTempDictionary:thumbdata];
+    //[self saveDataToCloudWhenCloseView];
+   
+    self.document.imageEntry = newImage;
     return newImage;
 }
 -(UIImage*)captureScreenRetina
@@ -296,13 +337,13 @@
 
     UIGraphicsBeginImageContextWithOptions(resize, self.screenShotView.opaque, 0);
     CGContextScaleCTM(UIGraphicsGetCurrentContext(), rescale, rescale);
-
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     return newImage;
 }
+/*
 - (void)saveDataToCloudWhenCloseView{
     
     
@@ -310,28 +351,28 @@
     NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
     [fileName appendString:@".htapp"];
     
-    
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileNameFromFile withContent:self.document.contents completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);            
+            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }
 
         [super viewWillDisappear:YES];
     }];
+    
+    
+ 
 
 }
-
-
+*/
+/*
 - (void)saveDataToCloudWhenTerminating{
 
-    NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
-    NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
-    [fileName appendString:@".htapp"];
     
     
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+    
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileNameFromFile withContent:self.document.contents completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
         } else {
@@ -340,7 +381,10 @@
 
     }];
 
+
 }
+ 
+ */
 #pragma mark - Setup Share Confirmation Alert View
 - (void)setupBottomToolBar {
     CGFloat startOfToolbar;
@@ -452,24 +496,32 @@
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageLeft.image = item;
+    self.document.imageLeft = item;
 }
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageRight.image = item;
+    self.document.imageRight = item;
+
 }
 -(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageTop.image = item;
+    self.document.imageTop = item;
+
 }
 -(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageFront.image = item;
+    self.document.imageFront = item;
+
 }
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing
 {
     self.openedFromDrawingView = openedFromDrawing;
     self.imageBack.image = item;
-    
+    self.document.imageBack = item;
+
 }
 
 -(NSString*)currentDate{

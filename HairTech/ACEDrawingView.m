@@ -537,7 +537,7 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData:self.fileNameInside];
+    [self fetchData:[self.delegate getDataFromVC]];
     
 }
 
@@ -556,7 +556,7 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData:self.fileNameInside];
+    [self fetchData:[self.delegate getDataFromVC]];
     NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
     
 }
@@ -569,7 +569,7 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData:self.fileNameInside];
+    [self fetchData:[self.delegate getDataFromVC]];
     NSLog(@"layers count redo %lu", self.bufferOfLayers.count );
     // NSLog(@"layerArray  after revoke %lu", self.layerArray.count );
     
@@ -869,7 +869,7 @@ UIColor* tempColor;
         
         
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         [self.delegate updateButtonStatus];
@@ -1181,7 +1181,7 @@ UIColor* tempColor;
     self.selectedLayer.isSelected = NO;
     
     [self storeDataInJson];
-    [self fetchData:self.fileNameInside];
+    [self fetchData:[self.delegate getDataFromVC] ];
 }
 
 #pragma mark ZOOM IN / OUT METHODS
@@ -1363,7 +1363,7 @@ UIColor* tempColor;
     }else{
         [self createCopyOfLayer:self.selectedLayer];
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         [self.delegate updateButtonStatus];
@@ -1384,7 +1384,7 @@ UIColor* tempColor;
         [self revoke];
         [self reflectLayer:self.temporaryLayerForFliping    ];
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getStartPointOfLayer:self.drawingLayer])];
         [arrayOfPoints addObject:NSStringFromCGPoint([self.drawingLayer getEndPointOfLayer:self.drawingLayer])];
         [self.delegate updateButtonStatus];
@@ -1657,7 +1657,7 @@ UIColor* tempColor;
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
         [self.drawingLayer addToTrack];
         [self.textViewNew removeFromSuperview];
         [self.delegate removeTextSettings];
@@ -1820,7 +1820,7 @@ UIColor* tempColor;
     self.drawingLayer = nil;
     [self updateAllPoints];
     [self storeDataInJson];
-    [self fetchData:self.fileNameInside];
+    [self fetchData:[self.delegate getDataFromVC]];
     [self.delegate hideAdditionalColorPicker];
 }
 -(void)removeDrawingsForClosing{
@@ -1856,7 +1856,7 @@ UIColor* tempColor;
         [self.layerArray removeLastObject];
         [self updateAllPoints];
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
     }
     NSLog(@"buffer array cont %lu", self.bufferOfLayers.count);
     
@@ -1868,7 +1868,7 @@ UIColor* tempColor;
         [self.bufferOfLayers removeLastObject];
         [self updateAllPoints];
         [self storeDataInJson];
-        [self fetchData:self.fileNameInside];
+        [self fetchData:[self.delegate getDataFromVC]];
     }
 }
 
@@ -2000,15 +2000,19 @@ UIColor* tempColor;
 - (void)writeStringToFile:(NSMutableArray*)arr {
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:nil];
-//    NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
     
     
+//    if([_jsonKey isEqualToString:@"jsonLeft"]){
+//
+//        document.dictLeft = jsonData;
+//    }
+    [self.delegate saveDataToUIDocument:jsonData];
     
-   [[[DiagramFile sharedInstance]diagramFileDictionary] setObject:jsonData  forKey:_jsonKey];
+  // [[[DiagramFile sharedInstance]diagramFileDictionary] setObject:jsonData  forKey:_jsonKey];
     
-//    [[NSUserDefaults standardUserDefaults] setObject:tempDict forKey:@"temporaryDictionary"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
+
 
 - (NSMutableArray*)addLayerInfoToDict:(JVDrawingLayer*)layer{
     
@@ -2089,9 +2093,10 @@ UIColor* tempColor;
     
     //NSMutableDictionary* tempDict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
   
-    NSData * jsonDataFromDict = [[[DiagramFile sharedInstance]diagramFileDictionary] objectForKey:_jsonKey];
+    //NSData * jsonDataFromDict = [[[DiagramFile sharedInstance]diagramFileDictionary] objectForKey:_jsonKey];
     
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonDataFromDict options:kNilOptions error:nil];
+    
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
 
     NSMutableDictionary * props = [NSMutableDictionary dictionary];
     NSMutableDictionary * array = [NSMutableDictionary dictionary];

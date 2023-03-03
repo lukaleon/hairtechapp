@@ -18,11 +18,11 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFromCloud:) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
 
+    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     
     [self.segmentedControl addTarget:self action:@selector(segmentChange:) forControlEvents:UIControlEventValueChanged];
    
-    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-    [self performSelector:@selector(segmentChangeOnLoad:) withObject:key afterDelay:1.0];
+   [self performSelector:@selector(segmentChangeOnLoad:) withObject:key afterDelay:1.0];
 }
 
 - (void)segmentChangeOnLoad:(NSString*)key {

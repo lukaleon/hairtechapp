@@ -335,6 +335,8 @@ double dist2(CGPoint a, CGPoint b);
 -(void)updateButtonStatus;
 -(void)selectCurentToolWhenLineSelected:(NSInteger)tool;
 
+-(void)saveDataToUIDocument:(NSData*)data;
+-(NSData*)getDataFromVC;
 @optional
 - (void)drawingView:(ACEDrawingView *)view willBeginDrawUsingTool:(id<ACEDrawingTool>)tool;
 - (void)drawingView:(ACEDrawingView *)view didEndDrawUsingTool:(id<ACEDrawingTool>)tool;

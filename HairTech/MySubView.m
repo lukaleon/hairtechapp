@@ -13,7 +13,7 @@
 #import "Hairtech-Bridging-Header.h"
 #import "DiagramFile.h"
 #import "iCloud.h"
-
+#import "iCloudDocument.h"
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -477,38 +477,82 @@
     NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
     
+    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:exportingFileName];
+
+    
     [[NSUserDefaults standardUserDefaults] setObject:exportingFileName forKey:@"newCreatedFileName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    NSData * data = [self dataOfType:techName error:nil uuid:uuid fileName:exportingFileName techniqueName:techName maleOrFemale:maleOrFemale];
+    iCloudDocument * document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+    document.note = @"";
+    document.techniqueName = techName;
+    document.maleFemale = maleOrFemale;
+    document.uuid = uuid;
     
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:exportingFileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+    document.creationDate = [self currentDate];
+    document.modificationDate = [self currentDate];
+    document.favorite = @"default";
+    
+    if ([maleOrFemale isEqualToString:@"female"]){
+        document.imageLeft = [self storeImagesInDictionary:@"lefthead_s"];
+        document.imageRight = [self storeImagesInDictionary:@"righthead_s"];
+        document.imageTop = [self storeImagesInDictionary:@"tophead_s"];
+        document.imageFront = [self storeImagesInDictionary:@"fronthead_s"];
+        document.imageBack = [self storeImagesInDictionary:@"backhead_s"];
+        document.imageEntry = [self storeImagesInDictionary:@"uiimage_cell_x"];
+    }
+    if ([maleOrFemale isEqualToString:@"male"]){
+        document.imageLeft = [self storeImagesInDictionary:@"lefthead_ms"];
+        document.imageRight = [self storeImagesInDictionary:@"righthead_ms"];
+        document.imageTop = [self storeImagesInDictionary:@"tophead_ms"];
+        document.imageFront = [self storeImagesInDictionary:@"fronthead_ms"];
+        document.imageBack = [self storeImagesInDictionary:@"backhead_ms"];
+       document.imageEntry = [self storeImagesInDictionary:@"men-full-11"];
+    }
+    
+    document.dictLeft = [self storeJsonDataInDictionary];
+    document.dictRight = [self storeJsonDataInDictionary];
+    document.dictTop = [self storeJsonDataInDictionary];
+    document.dictFront = [self storeJsonDataInDictionary];
+    document.dictBack = [self storeJsonDataInDictionary];
+
+
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:document.fileURL.lastPathComponent withContent:document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
-            
-            [self addDefaultValueForFavoriteCell:exportingFileName];
-            
-            [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"populate"
-                object:self];
-           
-               [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"reloadCollection"
-                object:self];
-           
-               [self dismissViewControllerAnimated:YES completion:nil];
-           
-               [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"openEntry"
-                object:self];
-            
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }
-        
-        
-        
+
     }];
+    
+//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:exportingFileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+//        if (!error) {
+//
+//            [self addDefaultValueForFavoriteCell:exportingFileName];
+//
+//            [[NSNotificationCenter defaultCenter]
+//                postNotificationName:@"populate"
+//                object:self];
+//
+//               [[NSNotificationCenter defaultCenter]
+//                postNotificationName:@"reloadCollection"
+//                object:self];
+//
+//               [self dismissViewControllerAnimated:YES completion:nil];
+//
+//           //    [[NSNotificationCenter defaultCenter]
+//             //   postNotificationName:@"openEntry"
+//               /// object:self];
+//
+//            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//        } else {
+//            NSLog(@"iCloud Document save error: %@", error);
+//        }
+//
+//
+//
+//    }];
 }
 
 
@@ -532,12 +576,12 @@
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError uuid:(NSString*)uuid fileName:(NSString*)name techniqueName:(NSString*)techniqueName maleOrFemale:(NSString*)maleOrFem{
     NSError *error = nil;
-    NSData * fileName1;
-    NSData * fileName2;
-    NSData * fileName3;
-    NSData * fileName4;
-    NSData * fileName5;
-    NSData * fileNameEntry;
+    UIImage * fileName1;
+    UIImage * fileName2;
+    UIImage * fileName3;
+    UIImage * fileName4;
+    UIImage * fileName5;
+    UIImage * fileNameEntry;
     
     if ([maleOrFem isEqualToString:@"female"]){
         fileName1 = [self storeImagesInDictionary:@"lefthead_s"];
@@ -575,33 +619,64 @@
     
     if ([typeName isEqualToString:typeName]) {
         //Create a Dictionary
-        NSMutableDictionary * dictToSave = [NSMutableDictionary dictionary];
+        /*    NSMutableDictionary * dictToSave = [NSMutableDictionary dictionary];
+         
+         [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
+         [dictToSave setObject:fileName1  forKey:@"imageLeft"];
+         [dictToSave setObject:fileName2  forKey:@"imageRight"];
+         [dictToSave setObject:fileName3  forKey:@"imageTop"];
+         [dictToSave setObject:fileName4  forKey:@"imageFront"];
+         [dictToSave setObject:fileName5  forKey:@"imageBack"];
+         
+         [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
+         [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
+         [dictToSave setObject:fileNameJSON3  forKey:@"jsonTop"];
+         [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
+         [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
+         
+         [dictToSave setObject:techName forKey:@"techniqueName"];
+         [dictToSave setObject:filename forKey:@"uuid"];
+         [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
+         [dictToSave setObject:creationDate forKey:@"creationDate"];
+         [dictToSave setObject:modificationDate forKey:@"modificationDate"];
+         [dictToSave setObject:favorite forKey:@"favorite"];
+         [dictToSave setObject:note forKey:@"note"];
+         */
         
-        [dictToSave setObject:fileNameEntry forKey:@"imageEntry"];
-        [dictToSave setObject:fileName1  forKey:@"imageLeft"];
-        [dictToSave setObject:fileName2  forKey:@"imageRight"];
-        [dictToSave setObject:fileName3  forKey:@"imageTop"];
-        [dictToSave setObject:fileName4  forKey:@"imageFront"];
-        [dictToSave setObject:fileName5  forKey:@"imageBack"];
+        note  = @"HELLO NEW FILE";
+        NSMutableData *data = [[NSMutableData alloc] init];
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:NO];
+        [archiver encodeObject:@"HELLO SASAS" forKey:@"techniqueName"];
+        [archiver encodeObject:note forKey:@"note"];
+        [archiver encodeObject:filename forKey:@"uuid"];
+        [archiver encodeObject:maleOrFemale forKey:@"maleFemale"];
+        [archiver encodeObject:modificationDate forKey:@"modificationDate"];
+        [archiver encodeObject:favorite forKey:@"favorite"];
         
-        [dictToSave setObject:fileNameJSON1  forKey:@"jsonLeft"];
-        [dictToSave setObject:fileNameJSON2  forKey:@"jsonRight"];
-        [dictToSave setObject:fileNameJSON3  forKey:@"jsonTop"];
-        [dictToSave setObject:fileNameJSON4  forKey:@"jsonFront"];
-        [dictToSave setObject:fileNameJSON5  forKey:@"jsonBack"];
+        [archiver encodeObject:fileNameJSON1 forKey:@"jsonLeft"];
+        [archiver encodeObject:fileNameJSON2 forKey:@"jsonRight"];
+        [archiver encodeObject:fileNameJSON3 forKey:@"jsonTop"];
+        [archiver encodeObject:fileNameJSON4 forKey:@"jsonFront"];
+        [archiver encodeObject:fileNameJSON5 forKey:@"jsonBack"];
 
-        [dictToSave setObject:techName forKey:@"techniqueName"];
-        [dictToSave setObject:filename forKey:@"uuid"];
-        [dictToSave setObject:maleOrFemale forKey:@"maleFemale"];
-        [dictToSave setObject:creationDate forKey:@"creationDate"];
-        [dictToSave setObject:modificationDate forKey:@"modificationDate"];
-        [dictToSave setObject:favorite forKey:@"favorite"];
-        [dictToSave setObject:note forKey:@"note"];
+        [archiver encodeObject:fileNameEntry forKey:@"imageEntry"];
+        [archiver encodeObject:fileName1 forKey:@"imageLeft"];
+        [archiver encodeObject:fileName2 forKey:@"imageRight"];
+        [archiver encodeObject:fileName3 forKey:@"imageTop"];
+        [archiver encodeObject:fileName4 forKey:@"imageFront"];
+        [archiver encodeObject:fileName5 forKey:@"imageBack"];
 
 
+
+
+        [archiver finishEncoding];
         
-          //Return the archived data
-        return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+        data = [[archiver encodedData] mutableCopy];
+
+        //Return the archived data
+        return  data;    //   return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
+        
+        
     }
     //Don't generate an error
     outError = NULL;
@@ -609,13 +684,13 @@
 }
 
 
--(NSData*)storeImagesInDictionary:(NSString*)imageToStore{
+-(UIImage*)storeImagesInDictionary:(NSString*)imageToStore{
 
     NSString* documentsDir = [[NSBundle mainBundle] pathForResource:imageToStore ofType:@"png"];
     NSLog(@"documentsDir:%@",documentsDir);
     UIImage * imgData = [UIImage imageWithContentsOfFile:documentsDir];
     NSData * data = UIImagePNGRepresentation(imgData);
-    return data;
+    return imgData;
 }
 
 @end
