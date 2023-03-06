@@ -114,9 +114,6 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
     NSLog(@"load from contents");
     
-  
-
- 
 
     NSData *data = (NSData *)contents;
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
@@ -157,12 +154,40 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 }
 
 
-
 - (void)setDocumentData:(NSData *)newData {
     
     NSLog(@"setDocumentData");
     NSData *oldData = self.contents;
     self.contents = [newData copy];
+//
+//    NSData *data = (NSData *)newData;
+//    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:nil];
+//    unarchiver.requiresSecureCoding = NO;
+//
+//    _techniqueName = (NSString *)[unarchiver decodeObjectForKey:@"techniqueName"];
+//    _note = (NSString *)[unarchiver decodeObjectForKey:@"note"];
+//    _maleFemale = (NSString *)[unarchiver decodeObjectForKey:@"maleFemale"];
+//
+//    _imageEntry = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageEntry"]];
+//    _imageLeft = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageLeft"]];
+//    _imageRight = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageRight"]];
+//    _imageTop = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageTop"]];
+//    _imageFront = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageFront"]];
+//    _imageBack = [UIImage imageWithData:[unarchiver decodeObjectForKey:@"imageBack"]];
+//
+//    _dictLeft = (NSData*)[unarchiver decodeObjectForKey:@"jsonLeft"];
+//    _dictRight = (NSData*)[unarchiver decodeObjectForKey:@"jsonRight"];
+//    _dictTop = (NSData*)[unarchiver decodeObjectForKey:@"jsonTop"];
+//    _dictFront = (NSData*)[unarchiver decodeObjectForKey:@"jsonFront"];
+//    _dictBack = (NSData*)[unarchiver decodeObjectForKey:@"jsonBack"];
+//
+//    [unarchiver finishDecoding];
+//
+//
+//
+//
+//
+    
     
     
     // Register the undo operation

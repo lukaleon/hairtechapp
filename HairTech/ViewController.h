@@ -64,6 +64,8 @@ typedef enum {
     NSMutableArray * arrayOfFileDictionaries;
 
 }
+@property iCloudDocument * importedDoc;
+
 @property NSString * importedFileName;
 @property NSData * importedFileData;
 
@@ -129,5 +131,5 @@ typedef enum {
 
 @property (nonatomic, assign) Mode collectionMode;
 -(void)animateRefresh;
--(void)insertExportedDataFromAppDelegate:(NSString*)importedFileName data:(NSData*)importedFileData;
+-(void)insertExportedDataFromAppDelegate:(NSString*)importedFileName data:(iCloudDocument*)document;
 @end

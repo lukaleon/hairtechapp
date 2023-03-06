@@ -635,50 +635,23 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     NSLog(@"naame %@", _fileNameForOpenEntry);
     
+    [[iCloud sharedCloud] retrieveCloudDocumentWithName:_fileNameForOpenEntry completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+
     NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
-
-    
-    [[iCloud sharedCloud] retrieveCloudDocumentWithName:_fileNameForOpenEntry completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-            
-           fileText = [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding];
-           fileTitle = cloudDocument.fileURL.lastPathComponent;
-            
-           //Extracting extension from filename to get technique name
-           NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
-
-            // Put data file into object
-            DiagramFile * diagram =  [DiagramFile sharedInstance];
-            [diagram storeFileDataInObject:documentData fileName:techniqueName error:nil];
-           
-            
         
-            [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
-                if (!error) {
-                    if (*documentState == UIDocumentStateInConflict) {
-                        [self performSegueWithIdentifier:@"conflictVC" sender:self];
-                      //  [self performSegueWithIdentifier:@"showConflict" sender:self];
-                      //  [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-                    } else
-                    {
-                        newEntryVC.navigationItem.title = techniqueName;
-                        newEntryVC.genderType = [diagram  maleFemale];
-                        newEntryVC.openedFromDrawingView = NO;
-                        [newEntryVC setTechniqueID:techniqueName];
-                        [newEntryVC setTechniqueID: techniqueName];
-                    
-                        [self.navigationController pushViewController: newEntryVC animated:YES];
-                    }
-                    
-                } else {
-                    NSLog(@"Error retrieveing document state: %@", error);
-                }
-            }];
+    fileTitle = cloudDocument.fileURL.lastPathComponent;
             
-            
-        } else {
-            NSLog(@"Error retrieveing document: %@", error);
-        }
+    //Extracting extension from filename to get technique name
+    NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
+        newEntryVC.navigationItem.title = techniqueName;
+    newEntryVC.document = cloudDocument;
+    newEntryVC.openedFromDrawingView = NO;
+    [newEntryVC setTechniqueID:techniqueName];
+    [newEntryVC setTechniqueID: techniqueName];
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+
+    [self.navigationController pushViewController: newEntryVC animated:YES];
+
     }];
 
 }
@@ -875,49 +848,22 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
  
 
         [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-//            if (!error) {
-//
-     //   [iCloudDocument documentNamed:[fileNameList objectAtIndex:indexPath.row]  withCompletion:^(iCloudDocument * _Nonnull doc) {
-            
+
         NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
             
-                    
-            
-            NSLog(@"doc note %@",cloudDocument.note);
-              // fileText = [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding];
-               fileTitle = cloudDocument.fileURL.lastPathComponent;
+        fileTitle = cloudDocument.fileURL.lastPathComponent;
                 
-               //Extracting extension from filename to get technique name
-               NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
+        //Extracting extension from filename to get technique name
+        NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
+        newEntryVC.navigationItem.title = techniqueName;
+        newEntryVC.document = cloudDocument;
+        newEntryVC.openedFromDrawingView = NO;
+        [newEntryVC setTechniqueID:techniqueName];
+        [newEntryVC setTechniqueID: techniqueName];
+        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+    
+        [self.navigationController pushViewController: newEntryVC animated:YES];
 
-                // Put data file into object
-               // DiagramFile * diagram =  [DiagramFile sharedInstance];
-                //[diagram storeFileDataInObject:documentData fileName:techniqueName error:nil];
-               
-//                [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
-//                    if (!error) {
-//                        if (*documentState == UIDocumentStateInConflict) {
-//                          //  [self performSegueWithIdentifier:@"conflictVC" sender:self];
-//                        } else
-//                        {
-                          //  newEntryVC.navigationItem.title = techniqueName;
-                           // newEntryVC.genderType = [dictFromData objectForKey:@"maleFemale"];
-                            newEntryVC.document = cloudDocument;
-                            newEntryVC.openedFromDrawingView = NO;
-                            [newEntryVC setTechniqueID:techniqueName];
-                            [newEntryVC setTechniqueID: techniqueName];
-                            [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-                            
-                            [self.navigationController pushViewController: newEntryVC animated:YES];
-//                        }
-//                    } else {
-//                        NSLog(@"Error retrieveing document state: %@", error);
-//                    }
-//                }];
-//
-//            } else {
-//                NSLog(@"Error retrieveing document: %@", error);
-//            }
         }];
     }
     else{
@@ -1257,81 +1203,6 @@ typedef void(^ImageCompletion)(UIImage *image);
     return dirContents;
 }
 
--(void)insertExportedDataFromAppDelegate:(NSString*)importedFileName data:(NSData*)importedFileData{
-    NSArray * arrayOfFilesInDir;
-    arrayOfFilesInDir = [self getArrayOfFilesInCloudForImport:[self ubiquitousDocumentsDirectoryURL]];
-
-    NSLog(@"files count %lu", [arrayOfFilesInDir count]);
-    //    for(NSURL * urlInCloud in arrayOfFilesInDir){
-    //
-    //        NSString * nameInCloud = [[urlInCloud path] lastPathComponent];
-    //        NSLog(@"name in cloud %@",nameInCloud);
-    //        NSLog(@"imported name in cloud %@",importedFileName);
-    //
-    //
-    //        if([importedFileName isEqualToString:nameInCloud]){
-    //                importedFileName = [self createNewNameForImportedFile:[[importedFileName lastPathComponent] stringByDeletingPathExtension]];
-    //            NSMutableString * newString = [importedFileName mutableCopy];
-    //            [newString appendString:@".htapp"];
-    //            importedFileName = newString;
-    //            NSLog(@"new imported name in cloud %@",importedFileName);
-    //
-    
-    //        }
-//}
-    
-    NSString *uniqueFileName = [self createUniqueFileName:importedFileName];
-    
-    [[NSUserDefaults standardUserDefaults] setObject:uniqueFileName forKey:@"newCreatedFileName"];
-
-    [self addDefaultValueForFavoriteCell:uniqueFileName];
-
-    
-    
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:uniqueFileName withContent:importedFileData completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-
-            [self addDefaultValueForFavoriteCell:uniqueFileName];
-            
-            
-            [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"populate"
-                object:self];
-           
-            [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"reloadCollection"
-                object:self];
-           
-            [[NSNotificationCenter defaultCenter]
-                postNotificationName:@"openEntry"
-                object:self];
-            
-            
-          
-        } else {
-            NSLog(@"iCloud Document save error: %@", error);
-        }
-        
-    }];
-    
-/*    [self.collectionView reloadData];
-    NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSMutableString * newTechniqueName = [appDelegate.importedTechniqueName mutableCopy];
-    [newTechniqueName appendString:@".htapp"];
-    
-    NSLog(@"techtech %@", newTechniqueName);
-    
-    NSMutableDictionary * dictOfData = [self openFileAtPath:newTechniqueName error:nil];
-    
-    newEntryVC.navigationItem.title = [dictOfData objectForKey:@"techniqueName"];
-    [newEntryVC setTechniqueID:[dictOfData objectForKey:@"techniqueName"]];
-    newEntryVC.techniqueType = [dictOfData objectForKey:@"maleFemale"];
-     
-    [self.navigationController pushViewController:newEntryVC animated:YES];*/
-    
-}
 
 - (NSString *)createUniqueFileName:(NSString *)fileName {
 

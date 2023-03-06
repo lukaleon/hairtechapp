@@ -143,7 +143,9 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadColorsFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
  
+   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"didEnterBackground" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
     }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -229,11 +231,24 @@
     self.drawingView.editModeforText = NO;
     self.drawingView.touchForText = 0;
      
-    NSLog(@"%@ json type", self.techniqueName);
+    if([_jsonType isEqualToString:@"jsonLeft"]){
+        newdata = _document.dictLeft;
+    }
+    if([_jsonType isEqualToString:@"jsonRight"]){
+        newdata = _document.dictRight;
+    }
+    if([_jsonType isEqualToString:@"jsonTop"]){
+        newdata = _document.dictTop;
+    }
+    if([_jsonType isEqualToString:@"jsonFront"]){
+        newdata = _document.dictFront;
+    }
+    if([_jsonType isEqualToString:@"jsonBack"]){
+        newdata = _document.dictBack;
+    }
     
-    NSData * newdata = _document.dictLeft;
-    [self.drawingView loadJSONData:_document.dictLeft];
-    [self.drawingView setJsonData:_document.dictLeft];
+    [self.drawingView loadJSONData:newdata];
+    [self.drawingView setJsonData:newdata];
     [self.drawingView setJsonKey:self.jsonType];
     
     if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
@@ -242,22 +257,47 @@
 }
 
 -(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-    //NSData *jsonData = [[[DiagramFile sharedInstance] diagramFileDictionary] objectForKey:key];
-//    NSData * dataFromDocument;
-//    if([self.jsonType isEqualToString:@"jsonLeft"]){
-//        dataFromDocument = _document.dictLeft;
-//    }
-
-  
+    
     return _document.dictLeft;
 }
 
 -(void)saveDataToUIDocument:(NSData*)data{
-    NSLog(@"Data passed to UIDocument");
-    self.document.dictLeft = data;
+
+    if([_jsonType isEqualToString:@"jsonLef"]){
+        self.document.dictLeft = data;
+    }
+    if([_jsonType isEqualToString:@"jsonRight"]){
+        self.document.dictRight = data;
+    }
+    if([_jsonType isEqualToString:@"jsonTop"]){
+        self.document.dictTop = data;
+    }
+    if([_jsonType isEqualToString:@"jsonFront"]){
+        self.document.dictFront = data;
+    }
+    if([_jsonType isEqualToString:@"jsonBack"]){
+        self.document.dictBack = data;
+    }
 }
 -(NSData*)getDataFromVC{
-    return self.document.dictLeft;
+    
+    if([_jsonType isEqualToString:@"jsonLeft"]){
+        newdata = _document.dictLeft;
+    }
+    if([_jsonType isEqualToString:@"jsonRight"]){
+        newdata = _document.dictRight;
+    }
+    if([_jsonType isEqualToString:@"jsonTop"]){
+        newdata = _document.dictTop;
+    }
+    if([_jsonType isEqualToString:@"jsonFront"]){
+        newdata = _document.dictFront;
+    }
+    if([_jsonType isEqualToString:@"jsonBack"]){
+        newdata = _document.dictBack;
+    }
+    
+    return newdata;
 }
 
 -(NSMutableString *)openFileNameJSON:(NSString*)fileName headtype:(NSString*)type{
@@ -1477,7 +1517,7 @@ return YES;
     [self.drawingView removeCircles]; //remove control circles when selected
    // [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
-    [self saveDataToCloudWhenTerminating]; // Saving data to file when app enter Background or Terminate
+   [self saveDataToCloudWhenTerminating]; // Saving data to file when app enter Background or Terminate
     if([self loadGridAppearanceToDefaults]){
         [self performSelector:@selector(showOrHideGrid)];
     }
@@ -1486,20 +1526,15 @@ return YES;
 
 - (void)saveDataToCloudWhenTerminating{
 
-    NSData * data = [[DiagramFile sharedInstance] dataFromDictionary];
-    NSMutableString * fileName = [[[DiagramFile sharedInstance] techniqueName] mutableCopy];
-    [fileName appendString:@".htapp"];
+    NSLog(@"draw controller when terminate");
     
-    
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"iCloud Document save error: %@", error);
-        }
-
-        [super viewWillDisappear:YES];
-    }];
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+     if (!error) {
+         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+     } else {
+         NSLog(@"iCloud Document save error: %@", error);
+     }
+ }];
 
 }
 

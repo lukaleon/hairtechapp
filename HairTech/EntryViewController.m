@@ -536,9 +536,6 @@ dcController = [self.storyboard instantiateViewControllerWithIdentifier:@"leftVi
 -(void)captureScreenRetina
 {
     
-    NSLog(@"APP TERMINATED JUST JUST.");
-    
-    
     self.hideBar;
     [self.label setHidden:YES];
     [self.labelHairTech setHidden:YES];

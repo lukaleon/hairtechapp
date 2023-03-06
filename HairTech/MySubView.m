@@ -519,7 +519,24 @@
 
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:document.fileURL.lastPathComponent withContent:document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+            NSLog(@"iCloud Document saved with text:");
+            [self addDefaultValueForFavoriteCell:exportingFileName];
+        
+                    [[NSNotificationCenter defaultCenter]
+                        postNotificationName:@"populate"
+                        object:self];
+        
+                       [[NSNotificationCenter defaultCenter]
+                        postNotificationName:@"reloadCollection"
+                        object:self];
+        
+                       [self dismissViewControllerAnimated:YES completion:nil];
+        
+                       [[NSNotificationCenter defaultCenter]
+                        postNotificationName:@"openEntry"
+                        object:self];
+            
+            
         } else {
             NSLog(@"iCloud Document save error: %@", error);
         }

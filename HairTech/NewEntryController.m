@@ -54,18 +54,7 @@
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
     NSLog(@"exit entry" );
-    //[self saveDataToCloudWhenCloseView];
-//
-//    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//        // ...
-//        if (success) {
-//            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
-//        } else {
-//            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
-//        }
-//    }];
-    
-    
+
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
@@ -270,18 +259,6 @@
 -(void)saveNote:(NSString*)note{
     
     self.document.note = note;
-
-
-  //  self.document.contents = [NSKeyedArchiver archivedDataWithRootObject:self.document.diagramFileDictionary requiringSecureCoding:NO error:nil];
-
-    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        // ...
-        if (success) {
-            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
-        } else {
-            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
-        }
-    }];
 }
 
 #pragma mark - Saving Methods
@@ -300,21 +277,8 @@
 }
 
 
-//-(void)storeImageInTempDictionary:(NSData*)imgData{
-//
-//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:imgData forKey:@"imageEntry"];
-//
-//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageLeft.image] forKey:@"imageLeft"];
-//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageRight.image] forKey:@"imageRight"];
-//    [[[DiagramFile sharedInstance] diagramFileDictionary]  setObject:[self imageFromButton:self.imageTop.image] forKey:@"imageTop"];
-//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageFront.image] forKey:@"imageFront"];
-//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self imageFromButton:self.imageBack.image] forKey:@"imageBack"];
-//    [[[DiagramFile sharedInstance] diagramFileDictionary] setObject:[self currentDate] forKey:@"modificationDate"];
-//}
-
 -(UIImage*)captureScreenRetinaOnLoad
 {
-    NSLog(@"EntryController terminate");
     self.logo.alpha = 0;
     self.labelToSave.alpha = 0;
     UIGraphicsBeginImageContextWithOptions(self.screenShotView.frame.size, self.screenShotView.opaque, 3.0);
@@ -340,7 +304,7 @@
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+    self.document.imageEntry = newImage;
     return newImage;
 }
 /*
@@ -366,25 +330,21 @@
 
 }
 */
-/*
+
 - (void)saveDataToCloudWhenTerminating{
-
+   // NSLog(@"Save when terminate");
     
-    
-    
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileNameFromFile withContent:self.document.contents completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"iCloud Document save error: %@", error);
-        }
-
-    }];
-
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+     if (!error) {
+         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+     } else {
+         NSLog(@"iCloud Document save error: %@", error);
+     }
+ }];
 
 }
  
- */
+ 
 #pragma mark - Setup Share Confirmation Alert View
 - (void)setupBottomToolBar {
     CGFloat startOfToolbar;

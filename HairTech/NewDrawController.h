@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
     UIColor * currentColor;
     NSMutableArray * arrayOfColorPickers;
     UIButton *more;
+    NSData * newdata;
+
 }
 @property (nonatomic, strong) iCloudDocument *document;
 

@@ -57,7 +57,7 @@
 @property NSData * dictBack;
 
 @property (nonatomic) NSData * documentData;
-
+-(void)copyDocumentDataFromImportedFile:(id)contents;
 
 + (void)documentNamed: (NSString *)name withCompletion: (void (^)(iCloudDocument *doc))completionHandler;
 

@@ -266,59 +266,76 @@
             NSString * fileName = [[url path] lastPathComponent];
             NSString *nameWithoutExtension = [[[url path] lastPathComponent] stringByDeletingPathExtension];
 
-            self.dict = options;
-            NSData *data = [NSData dataWithContentsOfURL:url];
-            /* CHECK FILE NAME FOR EXISTANCE IN FOLDER */
-            
-          
-            ViewController * vc = [[ViewController alloc]init];
-            vc.importedFileName = fileName;
-            vc.importedFileData = data;
-            [vc insertExportedDataFromAppDelegate:fileName data:data];
+            NSString *uniqueFileName = [self createUniqueFileName:fileName];
 
+            NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
 
-            /*
-            [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-                if (!error) {
-                    
-                    [self addDefaultValueForFavoriteCell:fileName];
-
-                    [[NSUserDefaults standardUserDefaults] setObject:fileName forKey:@"newCreatedFileName"];
-                    
-                    NSTimeInterval delayInSeconds = 5.0;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-                    
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [[NSNotificationCenter defaultCenter]
-                         postNotificationName:@"openEntry"
-                         object:self];
-                    });
-                  
-                    
-
-                } else {
-                    NSLog(@"iCloud Document save error: %@", error);
-                }
+            NSData *fileData = [NSData dataWithContentsOfURL:url];
+            NSError *error = nil;
+            BOOL success = [fileData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
+            if (success) {
                 
-//                [[NSNotificationCenter defaultCenter]
-//                    postNotificationName:@"populate"
-//                    object:self];
-//
-//                   [[NSNotificationCenter defaultCenter]
-//                    postNotificationName:@"reloadCollection"
-//                    object:self];
-//
+                [[NSUserDefaults standardUserDefaults] setObject:uniqueFileName forKey:@"newCreatedFileName"];
+                [self addDefaultValueForFavoriteCell:uniqueFileName];
+
+                [[NSNotificationCenter defaultCenter]
+                    postNotificationName:@"populate"
+                    object:self];
                
-                  
-            }];*/
-        
+                [[NSNotificationCenter defaultCenter]
+                    postNotificationName:@"reloadCollection"
+                    object:self];
+               
+                [[NSNotificationCenter defaultCenter]
+                    postNotificationName:@"openEntry"
+                    object:self];
+                
+            } else {
+                // There was an error saving the file
+                NSLog(@"Error saving file: %@", error);
+            }
+            
+            
+            
+            
+            
+            //            NSData *data = [NSData dataWithContentsOfURL:url];
+//
+//            iCloudDocument * document = [[iCloudDocument alloc] initWithFileURL:url];
+//
+//
+//            ViewController * vc = [[ViewController alloc]init];
+//            vc.importedFileName = fileName;
+//            vc.importedFileData = data;
+//            vc.importedDoc = document;
+//            [vc insertExportedDataFromAppDelegate:fileName data:document];
+            
             return YES;
             
         }
     return NO;
 }
 
+- (NSString *)createUniqueFileName:(NSString *)fileName {
 
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *basePath = [fileName stringByDeletingLastPathComponent];
+    NSString *fileExtension = [fileName pathExtension];
+    NSString *fileNameWithoutExtension = [fileName stringByDeletingPathExtension];
+    NSString *uniqueFileName = fileName;
+    
+    NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+    
+    int i = 1;
+    while ([fileManager fileExistsAtPath:fileURL.path]) {
+        
+        uniqueFileName = [NSString stringWithFormat:@"%@%@_%d.%@", basePath, fileNameWithoutExtension, i, fileExtension];
+        fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+        i++;
+    }
+    
+    return uniqueFileName;
+}
 #pragma mark - Cloud Init Methods
 
 -(NSURL *)applicationCloudFolder:(NSString *)fileName
