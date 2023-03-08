@@ -15,8 +15,10 @@
     [self setupNavigationBar];
     NSLog(@"text from nrc = %@",self.textOfTextView);
     self.textView1.delegate = self;
-    [self.textView1 setText:self.textOfTextView];
     [super viewDidLoad];
+///    [self.textView1 becomeFirstResponder];
+    [self.textView1 setText:self.textOfTextView];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

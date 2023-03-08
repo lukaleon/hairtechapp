@@ -26,9 +26,9 @@
 -(void)viewDidAppear:(BOOL)animated{
     NSLog(@"view did apear %s",self.openedFromDrawingView ? "true" : "false");
 
-    if(self.openedFromDrawingView){
+  //  if(self.openedFromDrawingView){
     [self captureScreenRetinaOnLoad];
-    }
+    //}
 }
 
 -(void)viewWillAppear:(BOOL)animated{

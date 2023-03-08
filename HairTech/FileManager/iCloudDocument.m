@@ -28,8 +28,14 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 	if (self) {
         self.fileNameFromFile = [[url path] lastPathComponent];
 		_contents = [[NSData alloc] init];
+    
 	}
 	return self;
+}
+- (void)autosaveWithCompletionHandler:(void (^)(BOOL success))completionHandler {
+    // perform the autosave here
+    NSLog(@"AUTOSAVE PERFORMED");
+    [super autosaveWithCompletionHandler:completionHandler];
 }
 
 - (NSString *)localizedName {

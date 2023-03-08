@@ -143,7 +143,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadColorsFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
  
-   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"didEnterBackground" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"didEnterBackground" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
     }
@@ -256,14 +256,14 @@
     }
 }
 
--(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
-    
-    return _document.dictLeft;
-}
+//-(NSData*)openDictAtPath:(NSString*)fileName key:(NSString*)key error:(NSError **)outError {
+//
+//    return _document.dictLeft;
+//}
 
 -(void)saveDataToUIDocument:(NSData*)data{
 
-    if([_jsonType isEqualToString:@"jsonLef"]){
+    if([_jsonType isEqualToString:@"jsonLeft"]){
         self.document.dictLeft = data;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
