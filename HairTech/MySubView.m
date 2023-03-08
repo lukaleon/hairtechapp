@@ -14,6 +14,9 @@
 #import "DiagramFile.h"
 #import "iCloud.h"
 #import "iCloudDocument.h"
+#import <sys/xattr.h>
+
+
 @interface MySubView()
 {
     NSMutableArray *arrayOfTechnique;
@@ -515,8 +518,8 @@
     document.dictTop = [self storeJsonDataInDictionary];
     document.dictFront = [self storeJsonDataInDictionary];
     document.dictBack = [self storeJsonDataInDictionary];
-
-
+       // [self addCustomMetadata:document.fileURL];
+    
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:document.fileURL.lastPathComponent withContent:document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document saved with text:");
@@ -571,8 +574,17 @@
 //
 //    }];
 }
-
-
+//-(void)addCustomMetadata:(NSURL*)url{
+//   // NSString *filePath = @"/path/to/file";
+//    NSString *attributeKey = @"com.hairtechapp.favorite";
+//    NSString *attributeValue = @"default";
+//
+//    NSError *error = nil;
+//        [url setResourceValue:attributeValue
+//                       forKey:attributeKey
+//                        error:&error];
+//
+//}
 -(void)addDefaultValueForFavoriteCell:(NSString*)fileName{
     NSUserDefaults * defualts = [NSUserDefaults standardUserDefaults];
         [defualts setObject:@"default" forKey:fileName];

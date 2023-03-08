@@ -26,6 +26,9 @@
 #import "Hairtech-Swift.h"
 #import "WSCoachMarksView.h"
 #import "iCloudDocument.h"
+#import <QuickLook/QuickLook.h>
+#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
+
 
 //NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
@@ -374,8 +377,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         }];
     }
     
-    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-     [self sortCollectionView:key];
+//    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
+//     [self sortCollectionView:key];
+    [self.collectionView reloadData];
+
 
 }
 
@@ -528,6 +533,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 -(void)iCloudFileUpdateDidBegin{
     NSLog(@"iCloudFileUpdateDidBegin");
+    [self startAnimating];
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
@@ -538,24 +544,32 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     fileNameList = fileNames; // A list of the file names
     fileObjectList = files; // A list of NSMetadata objects with detailed metadata
     [datesDict removeAllObjects]; // remove all objects before storing new objects in dict
-    
+
     // store dates in coresponding key (fileNames)
     int i = 0;
     for(NSString * name in fileNameList){
+        
+        NSLog(@" file object %@", [[fileObjectList objectAtIndex:i]valueForAttribute: @"favoriteKey"]);
+
         NSDate *updated = [[iCloud sharedCloud] fileModifiedDate:name];
         [datesDict setValue:updated forKey:name];
         i++;
     }
 
     [refreshControl endRefreshing];
-    
+//
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     [self sortCollectionView:key];
-    
-    
+
     NSLog(@"iCloudFilesDidChange");
 
+
 }
+- (void)iCloudFileUpdateDidEnd{
+    NSLog(@"iCloudFilesDidEnd");
+    [self.collectionView reloadData];
+}
+
 
 - (void)refreshCloudList {
     
@@ -726,6 +740,31 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     return reusableview;
 }
 
+/*- (UIImage *)iconForFile:(NSString *)documentName {
+    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
+    
+//    CGSize size;
+//    size.width = 200;
+//    size.height = 300;
+//    
+//    NSURL * url = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
+//    
+//    
+//    QLThumbnailGenerationRequest *request = [[QLThumbnailGenerationRequest alloc] initWithFileAtURL:url size:size scale:3 representationTypes:QLThumbnailGenerationRequestRepresentationTypeIcon];
+//    
+//    
+    
+    
+    if (controller) {
+        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
+        
+        
+    }
+    
+    return nil;
+}
+*/
+
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -789,7 +828,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         cell.image.image = image;
 
     }];
-  
+    //cell.image.image = [self iconForFile:fileName];
     
     cell.viewModeLabel.text = fileDetail; // [dateList objectAtIndex:indexPath.row];
     
@@ -849,7 +888,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
  
 
         [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-
         NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
             
         fileTitle = cloudDocument.fileURL.lastPathComponent;
@@ -913,14 +951,14 @@ typedef void(^ImageCompletion)(UIImage *image);
 }
 
 
-- (UIImage *)iconForFile:(NSString *)documentName {
-    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
-    if (controller) {
-        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
-    }
-    
-    return nil;
-}
+//- (UIImage *)iconForFile:(NSString *)documentName {
+//    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
+//    if (controller) {
+//        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
+//    }
+//
+//    return nil;
+//}
 
 #pragma mark - Cell Selection Methods
 
@@ -1091,7 +1129,11 @@ typedef void(^ImageCompletion)(UIImage *image);
    // NSData * newData = [NSKeyedArchiver archivedDataWithRootObject:dictionary requiringSecureCoding:NO error:&outError];
         
     //[self saveDataToCloudWhenFavoritePressed:newData fileName:filePath];
-    [self reloadMyCollection];
+  //  [self reloadMyCollection];
+    
+    NSArray * itemsArray = [NSArray arrayWithObjects:indexOfFavoriteCell, nil];
+    [self.collectionView reloadItemsAtIndexPaths:itemsArray];
+    
     NSLog(@" object for key %@", [cloudStore objectForKey:@"Alex.htapp"]);
 
 }
@@ -1664,12 +1706,12 @@ typedef void(^ImageCompletion)(UIImage *image);
     
     NSLog(@"indexcell %ld", (long)indexOfSelectedCell.row);
     [[iCloud sharedCloud] renameOriginalDocument:currentFileName withNewName:newName completion:^(NSError *error) {
-       // [fileNameList replaceObjectAtIndex:indexOfSelectedCell.row withObject:newName];
+       //[fileNameList replaceObjectAtIndex:indexOfSelectedCell.row withObject:newName];
         [self updateFavoritesData:currentFileName newName:newName];
-        
-        
+
         NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-        [self sortCollectionViewFromSegments:key];
+        [self sortCollectionView:key];
+
     }];
      
 }
@@ -1735,7 +1777,7 @@ if([[defaults objectForKey:currentName] isEqualToString:@"favorite"]){
 }
 
 
-
+/*
 -(void)saveDiagramToFile:(NSString*)techniqueName{
 
     NSMutableString * exportingFileName = [techniqueName mutableCopy];
@@ -1751,8 +1793,8 @@ if([[defaults objectForKey:currentName] isEqualToString:@"favorite"]){
    // NSURL * url = [NSURL fileURLWithPath:filePath];
 }
 
-
-
+*/
+/*
 - (NSData *)dataOfType{
     NSError *error = nil;
  
@@ -1761,21 +1803,23 @@ if([[defaults objectForKey:currentName] isEqualToString:@"favorite"]){
           //Return the archived data
         return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
 }
-
+*/
 
 
 #pragma mark  - STORE NEW DATA IN CLOUD
 
-- (void)saveDataToCloudWhenFavoritePressed:(NSData*)data fileName:(NSString*)fileName{
-   
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"iCloud Document save error: %@", error);
-        }
-    }];
 
-}
+
+//- (void)saveDataToCloudWhenFavoritePressed:(NSData*)data fileName:(NSString*)fileName{
+//
+//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:fileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+//        if (!error) {
+//            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//        } else {
+//            NSLog(@"iCloud Document save error: %@", error);
+//        }
+//    }];
+//
+//}
 
 @end

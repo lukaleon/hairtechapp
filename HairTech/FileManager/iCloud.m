@@ -8,7 +8,7 @@
 
 #import "iCloud.h"
 #import "ViewController.h"
-
+#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
 // Check for ARC
 #if !__has_feature(objc_arc)
     // Add the -fobjc-arc flag to enable ARC for only these files, as described in the ARC documentation: http://clang.llvm.org/docs/AutomaticReferenceCounting.html
@@ -251,12 +251,15 @@
     // Setup iCloud Metadata Query : predicate
     if(self.fileExtension != nil)
     {
+        self.fileExtension = @"htapp";
         [self.query setPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%%K.pathExtension IN { %@ }", self.fileExtension], NSMetadataItemFSNameKey]];
+        
     }
     
     // Setup iCloud Metadata Query : order by (could be not working on some iOS release)
     
     NSSortDescriptor *FileNameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:NSMetadataItemFSNameKey ascending:FALSE];
+  
     NSArray *sortDescriptors = [NSArray arrayWithObjects:FileNameSortDescriptor, nil];
     [self.query setSortDescriptors:sortDescriptors];
     
@@ -277,7 +280,7 @@
 //             postNotificationName:@"startAnimating"
 //             object:self];
         
-        [self.delegate sortCollection];
+       // [self.delegate sortCollection];
         
         BOOL startedQuery = [self.query startQuery];
         if (!startedQuery) {
@@ -345,21 +348,16 @@
         // Log query completion
         if (wself.verboseLogging == YES) NSLog(@"[iCloud] Finished file update with NSMetadataQuery endUpdate");
         
+        
     }];
     
     
 }
 
-//NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
-//[mainQueue addOperationWithBlock:^{
-//    [[NSNotificationCenter defaultCenter]
-//     postNotificationName:@"startAnimating"
-//     object:self];
-//
-//}];
+
 
 - (void)updateFiles{
-
+    NSLog(@"UPDATE FILES");
 
         // Log file update
         if (self.verboseLogging == YES) NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
@@ -394,10 +392,19 @@
                 }
                 
                 if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusCurrent]) {
-                    // Add the file metadata and file names to arrays
-                    NSLog(@"result %@", [result valueForAttribute:NSMetadataItemFSNameKey]);
-                    [discoveredFiles addObject:result];
-                    [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
+
+                    NSString *ext = [[[result valueForAttribute:NSMetadataItemFSNameKey]  lastPathComponent] pathExtension];
+                    
+                    if([ext isEqualToString:@"htapp"]){
+                        
+                        // Add the file metadata and file names to arrays
+                        NSLog(@"result %@", [result valueForAttribute:NSMetadataItemFSNameKey]);
+                       
+                        [discoveredFiles addObject:result];
+                        [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
+                
+                    }
+                    
                 } else if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusNotDownloaded]) {
                     NSError *error;
                     BOOL downloading = [[NSFileManager defaultManager] startDownloadingUbiquitousItemAtURL:fileURL error:&error];
@@ -491,6 +498,8 @@
 						// Log
 						if (self.verboseLogging == YES) NSLog(@"[iCloud] Written, saved and closed document");
                         [doc closeWithCompletionHandler:nil];
+                        
+                        
 
 						//handler(doc, doc.contents, nil);
 					} else {
@@ -540,6 +549,8 @@
         }];
     }
 }
+
+
 
 - (void)uploadLocalOfflineDocumentsWithRepeatingHandler:(void (^)(NSString *documentName, NSError *error))repeatingHandler completion:(void (^)(void))completion {
     // Log upload

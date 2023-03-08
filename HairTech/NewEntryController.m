@@ -13,6 +13,8 @@
 #import "iCloud.h"
 #import "CustomActivityIndicator.h"
 #import "iCloudDocument.h"
+#import <QuickLook/QuickLook.h>
+#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -50,20 +52,28 @@
     
 }
 
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
     NSLog(@"exit entry" );
+   
+    if (self.isMovingFromParentViewController){
+        
+           
+           [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+               if (!error) {
 
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-        if (!error) {
-            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"iCloud Document save error: %@", error);
+                 
+                   NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+               } else {
+                   NSLog(@"iCloud Document save error: %@", error);
+               }
+
+           }];
+           
         }
-
-    }];
-    
+ 
  
 
 }
@@ -337,6 +347,8 @@
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
      if (!error) {
          NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+         
+         
      } else {
          NSLog(@"iCloud Document save error: %@", error);
      }
@@ -344,6 +356,8 @@
 
 }
  
+
+
  
 #pragma mark - Setup Share Confirmation Alert View
 - (void)setupBottomToolBar {

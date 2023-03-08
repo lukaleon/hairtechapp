@@ -8,6 +8,7 @@
 
 #import "iCloudDocument.h"
 #import "DocumentManager.h"
+#import <sys/xattr.h>
 
 
 NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
@@ -320,6 +321,9 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
         completionHandler(doc);
     }
 }
+
+
+
 
 @end
 
