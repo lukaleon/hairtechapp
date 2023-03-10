@@ -134,12 +134,10 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 {
     [super viewDidLoad];
    
-    
     filesArray = [NSMutableArray array];
     arrayOfFileDictionaries = [NSMutableArray array];
     dateList = [NSMutableArray array];
     datesDict = [NSMutableDictionary dictionary];
-
     
     [[CKContainer defaultContainer] fetchUserRecordIDWithCompletionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
         if (error) {
@@ -187,18 +185,16 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     [self.toolbar_view setClipsToBounds:YES];
     [self.collectionView setBackgroundColor:[UIColor clearColor]];
-    
-    //    tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nono:)];
-    //    tapRecognizer.delegate = self;
+ 
     [self setupNavigationBar];
+    [self addNewTechniqueButton];
+
     self.isSelectionActivated = NO;
     
     i = 0;
-    tap = NO;
-    [self addNewTechniqueButton];
+    //tap = NO;
 
     
-    NSUbiquitousKeyValueStore *ubiquitousKeyValueStore = [NSUbiquitousKeyValueStore defaultStore];
 }
 
 
@@ -207,7 +203,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self.collectionView removeGestureRecognizer:tapRecognizer];
-    [self reloadMyCollection];
+    //[self reloadMyCollection];
     [[NSNotificationCenter defaultCenter]
          postNotificationName:@"stopAnimatingRefresh"
          object:self];
@@ -217,18 +213,13 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [DiagramFile setSharedInstance:nil];
-
     [super viewWillAppear:YES];
-   
-    
+
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     
-    [self.collectionView  reloadData];
+    //[self.collectionView  reloadData];
     longpresscell.enabled = YES;
-    
-
     
     // Present Welcome Screen
     if ([self appIsRunningForFirstTime] == YES || [[iCloud sharedCloud] checkCloudAvailability] == NO || [[NSUserDefaults standardUserDefaults] boolForKey:@"userCloudPref"] == NO) {
@@ -238,12 +229,8 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     /* --- Force iCloud Update ---
      This is done automatically when changes are made, but we want to make sure the view is always updated when presented */
-    
-  //  [[iCloud sharedCloud] updateFiles];
-    
-    
     [[iCloud sharedCloud] updateFiles];
-
+     
 }
 
 
@@ -366,8 +353,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     // cheking if there is old version techniques
     FMDBDataAccess *db = [[FMDBDataAccess alloc] init];
     self.techniques = [db getCustomers];
-   // Technique * tech = [[Technique alloc]init];
-    //[self.techniques addObject:tech];
+   
     
     if(appDelegate.firstTimeAfeterUpdate){
         [self.navigationController presentViewController:whatsNewController animated:true completion:^{
@@ -376,12 +362,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             //}
         }];
     }
-    
-//    NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-//     [self sortCollectionView:key];
-    [self.collectionView reloadData];
-
-
 }
 
 -(void)showCoachMark{
@@ -548,26 +528,20 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     // store dates in coresponding key (fileNames)
     int i = 0;
     for(NSString * name in fileNameList){
-        
-        NSLog(@" file object %@", [[fileObjectList objectAtIndex:i]valueForAttribute: @"favoriteKey"]);
-
         NSDate *updated = [[iCloud sharedCloud] fileModifiedDate:name];
         [datesDict setValue:updated forKey:name];
         i++;
     }
 
     [refreshControl endRefreshing];
-//
+    
     NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
     [self sortCollectionView:key];
-
-    NSLog(@"iCloudFilesDidChange");
-
-
+    
+      NSLog(@"iCloudFilesDidChange");
 }
 - (void)iCloudFileUpdateDidEnd{
     NSLog(@"iCloudFilesDidEnd");
-    [self.collectionView reloadData];
 }
 
 
@@ -631,15 +605,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 
 #pragma mark - Add New Technique
 
--(void)MySubViewController:(MySubView *) controller didAddCustomer:(Technique *) technique
-{
-    [self.collectionView reloadData];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)populateAndReload{
-    [self.collectionView reloadData];
-}
+//-(void)MySubViewController:(MySubView *) controller didAddCustomer:(Technique *) technique
+//{
+//    [self.collectionView reloadData];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
+//
+//-(void)populateAndReload{
+//    [self.collectionView reloadData];
+//}
 
 
 -(void)openEntry
@@ -766,10 +740,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 */
 
 
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     NSLog(@"cellForItemAtIndexPath");
+    
+    
+    
     
     if(fileNameList.count == 0){
         self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -824,11 +800,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     // Configure the cell...
     cell.dateLabel.text = [[fileName lastPathComponent] stringByDeletingPathExtension];
     
-   [self loadImageWithURL:fileName completion:^(UIImage *image) {
-        cell.image.image = image;
-
-    }];
-    //cell.image.image = [self iconForFile:fileName];
+//   [self loadImageWithURL:fileName completion:^(UIImage *image) {
+//        cell.image.image = image;
+//
+//    }];
+    
+    cell.image.image = [self iconForFile:fileName];
     
     cell.viewModeLabel.text = fileDetail; // [dateList objectAtIndex:indexPath.row];
     
@@ -888,21 +865,40 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
  
 
         [[iCloud sharedCloud] retrieveCloudDocumentWithName:[fileNameList objectAtIndex:indexPath.row] completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-        NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
             
-        fileTitle = cloudDocument.fileURL.lastPathComponent;
+            if (!error) {
+                fileText = [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding];
+                fileTitle = cloudDocument.fileURL.lastPathComponent;
                 
-        //Extracting extension from filename to get technique name
-        NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
-        newEntryVC.navigationItem.title = techniqueName;
-        newEntryVC.document = cloudDocument;
-        newEntryVC.openedFromDrawingView = NO;
-        [newEntryVC setTechniqueID:techniqueName];
-        [newEntryVC setTechniqueID: techniqueName];
-        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-    
-        [self.navigationController pushViewController: newEntryVC animated:YES];
+                [[iCloud sharedCloud] documentStateForFile:fileTitle completion:^(UIDocumentState *documentState, NSString *userReadableDocumentState, NSError *error) {
+                    if (!error) {
+                        if (*documentState == UIDocumentStateInConflict) {
+                           
+                        } else {
+                        NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
+                            
+                        fileTitle = cloudDocument.fileURL.lastPathComponent;
+                                
+                        //Extracting extension from filename to get technique name
+                        NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
+                        newEntryVC.navigationItem.title = techniqueName;
+                        newEntryVC.document = cloudDocument;
+                        newEntryVC.openedFromDrawingView = NO;
+                        [newEntryVC setTechniqueID:techniqueName];
+                        [newEntryVC setTechniqueID: techniqueName];
+                        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+                        [self.navigationController pushViewController: newEntryVC animated:YES];
 
+                        }
+                    } else {
+                        NSLog(@"Error retrieveing document state: %@", error);
+                    }
+                }];
+            } else {
+                NSLog(@"Error retrieveing document: %@", error);
+            }
+            
+            
         }];
     }
     else{
@@ -951,14 +947,28 @@ typedef void(^ImageCompletion)(UIImage *image);
 }
 
 
-//- (UIImage *)iconForFile:(NSString *)documentName {
+- (UIImage *)iconForFile:(NSString *)documentName {
 //    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:[[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName]];
 //    if (controller) {
 //        return [controller.icons lastObject]; // arbitrary selection--gives you the largest icon in this case
 //    }
 //
 //    return nil;
-//}
+    documentName = [documentName stringByDeletingPathExtension];
+    documentName = [documentName stringByAppendingString:@".png"];
+    NSURL * fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
+    // Load the image from the file URL
+    UIImage *image = [UIImage imageWithContentsOfFile:fileURL.path];
+    
+    if (image) {
+        // Do something with the image
+        return image;
+
+    }
+    
+    return nil;
+    
+}
 
 #pragma mark - Cell Selection Methods
 
@@ -1341,13 +1351,10 @@ typedef void(^ImageCompletion)(UIImage *image);
 #pragma mark - Sorting methods
 
 -(void)sortCollectionView:(NSString*)key{
-    
-    NSLog(@"sortCollectionView files array count - %lu ", fileNameList.count);
-    NSLog(@"sortCollectionView dates array count - %lu ", dateList.count);
+
     [self sortCollectionViewFromSegments:key];
-    //[arrayOfFileDictionaries removeAllObjects];
-    //[dateList removeAllObjects];
     [self.collectionView reloadData];
+    
 }
 
 -(void)sortCollectionViewFromSegments:(NSString*)key{
@@ -1563,9 +1570,27 @@ typedef void(^ImageCompletion)(UIImage *image);
     [cloudStore synchronize];
 }
 
+
+
+-(void)removeEntryImageFromiCloud:(NSString*)imageName{
+    
+    imageName = [imageName stringByDeletingPathExtension];
+    imageName = [imageName stringByAppendingString:@".png"];
+    NSURL * fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:imageName];
+    // Remove the file at the URL
+    NSError *error;
+    BOOL success = [[NSFileManager defaultManager] removeItemAtURL:fileURL error:&error];
+
+    if (!success) {
+        NSLog(@"Error removing image: %@", error.localizedDescription);
+    }
+}
+
+
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        
         
         [[iCloud sharedCloud] deleteDocumentWithName:[fileNameList objectAtIndex:indexOfSelectedCell.row] completion:^(NSError *error) {
             if (error) {
@@ -1576,8 +1601,8 @@ typedef void(^ImageCompletion)(UIImage *image);
                 
                 [[iCloud sharedCloud] updateFiles];
                 
-              //  [self updateFavoriteCellsData:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
-            
+                [self updateFavoriteCellsData:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
+                [self removeEntryImageFromiCloud:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
                 [datesDict removeObjectForKey:[fileNameList objectAtIndex:indexOfSelectedCell.row]];
                 [fileObjectList removeObjectAtIndex:indexOfSelectedCell.row];
                 [fileNameList removeObjectAtIndex:indexOfSelectedCell.row];
@@ -1686,7 +1711,27 @@ typedef void(^ImageCompletion)(UIImage *image);
  }
 
 
+-(void)renameEntryImageIniCloud:(NSString*)imageName newName:(NSString*)newName{
+    
+    imageName = [imageName stringByDeletingPathExtension];
+    imageName = [imageName stringByAppendingString:@".png"];
+    
+    newName = [newName stringByDeletingPathExtension];
+    newName = [newName stringByAppendingString:@".png"];
+    
+    
+    NSURL * fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:imageName];
+    // Append the new file name to the URL
+    NSURL *newFileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:newName];
 
+    // Rename the file at the old URL to the new URL
+    NSError *error;
+    BOOL success = [[NSFileManager defaultManager] moveItemAtURL:fileURL toURL:newFileURL error:&error];
+
+    if (!success) {
+        NSLog(@"Error renaming image: %@", error.localizedDescription);
+    }
+}
 -(void)renameTechniqueDelegate:(NSString*)txtField{
     NSMutableString * currentFileName;
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1705,12 +1750,14 @@ typedef void(^ImageCompletion)(UIImage *image);
     [newName appendString:@".htapp"];
     
     NSLog(@"indexcell %ld", (long)indexOfSelectedCell.row);
+    [self renameEntryImageIniCloud:currentFileName newName:newName];
+
     [[iCloud sharedCloud] renameOriginalDocument:currentFileName withNewName:newName completion:^(NSError *error) {
        //[fileNameList replaceObjectAtIndex:indexOfSelectedCell.row withObject:newName];
         [self updateFavoritesData:currentFileName newName:newName];
-
-        NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
-        [self sortCollectionView:key];
+        
+      //  NSString * key =  [[NSUserDefaults standardUserDefaults] objectForKey:@"order"];
+        //[self sortCollectionView:key];
 
     }];
      

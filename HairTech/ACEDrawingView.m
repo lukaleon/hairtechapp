@@ -644,22 +644,30 @@ UIColor* tempColor;
         return;
     }
     
+    CGFloat touchDistance;
+    touchDistance = 12;
+    self.drawingLayer.touchDistance = 12;
+    
     if (touch.type == UITouchTypeStylus) {
+        touchDistance = 24;
+        self.drawingLayer.touchDistance = 24;
         if(distance < 3){
             touchCanceled = YES;
             return;
            }
         
     }
-    
- 
+    NSLog(@"zoom factor %f", self.zoomFactor);
+
+    [self.drawingLayer setZoomIndex:self.zoomFactor];
+
     
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
     self.type = self.bufferType;
 
     if (self.isFirstTouch) {
    
-        if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:12 / self.zoomFactor ofPath:self.selectedLayer.path]){
+        if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:touchDistance / self.zoomFactor ofPath:self.selectedLayer.path]){
             
             self.isMoveLayer = [self.selectedLayer caculateLocationWithPoint:currentPoint];
             

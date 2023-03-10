@@ -341,8 +341,6 @@
             if ([wself.delegate respondsToSelector:@selector(iCloudFileUpdateDidEnd)])
                 [wself.delegate iCloudFileUpdateDidEnd];
             
-           
-            
         });
         
         // Log query completion
@@ -353,7 +351,6 @@
     
     
 }
-
 
 
 - (void)updateFiles{
@@ -445,8 +442,95 @@
          
             
         });
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+     
+    });
         
    
+    
+    /*
+    self.shouldUpdateFiles = YES;
+    if (self.isUpdatingFiles) { return; }
+
+    self.isUpdatingFiles = YES;
+
+    // Log file update
+    if (self.verboseLogging) {
+        NSLog(@"[iCloud] Beginning file update with NSMetadataQuery");
+    }
+
+    void (^doUpdateFiles)(void) = ^{
+        
+        self.shouldUpdateFiles = NO;
+        if (!self.quickCloudCheck) { return; }
+
+        NSMutableArray *discoveredFiles = [NSMutableArray array];
+        NSMutableArray *names = [NSMutableArray array];
+
+        [self.query enumerateResultsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
+                       
+            NSArray *results = [self.query.results objectsAtIndexes:[self.query.results indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                    return [obj isKindOfClass:[NSMetadataItem class]];
+                }]];
+            
+            // Grab the file URL
+            NSURL *fileURL = [result valueForAttribute:NSMetadataItemURLKey];
+            NSString *fileStatus;
+            NSError *error;
+            [fileURL getResourceValue:&fileStatus forKey:NSURLUbiquitousItemDownloadingStatusKey error:&error];
+            if(error){
+                //If failed to get the resource value of the file, the file should not appear in the 'names' list.
+                if (self.verboseLogging == YES) NSLog(@"[iCloud] Failed to get resource value with error: %@.", error);
+                return;
+            }
+            if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusDownloaded]) {
+                // File will be updated soon
+            }
+            
+            if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusCurrent]) {
+
+                NSString *ext = [[[result valueForAttribute:NSMetadataItemFSNameKey]  lastPathComponent] pathExtension];
+                
+                if([ext isEqualToString:@"htapp"]){
+                    
+                    // Add the file metadata and file names to arrays
+                    NSLog(@"result %@", [result valueForAttribute:NSMetadataItemFSNameKey]);
+                   
+                    [discoveredFiles addObject:result];
+                    [names addObject:[result valueForAttribute:NSMetadataItemFSNameKey]];
+            
+                }
+                
+            } else if ([fileStatus isEqualToString:NSURLUbiquitousItemDownloadingStatusNotDownloaded]) {
+                NSError *error;
+                BOOL downloading = [[NSFileManager defaultManager] startDownloadingUbiquitousItemAtURL:fileURL error:&error];
+                if (self.verboseLogging == YES) NSLog(@"[iCloud] %@ started downloading locally, successful? %@", [fileURL lastPathComponent], downloading ? @"YES" : @"NO");
+                if (error) {
+                    if (self.verboseLogging == YES) NSLog(@"[iCloud] Ubiquitous item failed to start downloading with error: %@", error);
+                }
+            }
+            
+        }];
+        
+
+        // Notify delegate about results
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(iCloudFilesDidChange:withNewFileNames:)])
+                [self.delegate iCloudFilesDidChange:discoveredFiles withNewFileNames:names];
+         
+            
+        });
+
+    };
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+        while (self.shouldUpdateFiles) {
+            doUpdateFiles();
+        }
+        self.isUpdatingFiles = NO;
+    });
+    
+    */
 }
 
 

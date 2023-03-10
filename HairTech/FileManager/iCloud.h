@@ -81,6 +81,9 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
 /** iCloud Delegate helps call methods when document processes begin or end */
 @property (weak, nonatomic) id <iCloudDelegate> delegate;
 
+@property ( nonatomic) BOOL shouldUpdateFiles;
+@property (nonatomic) BOOL isUpdatingFiles;
+@property ( nonatomic)  NSMutableArray * discoveredFiles;
 
 
 /** @name Properties */

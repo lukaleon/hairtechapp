@@ -120,7 +120,7 @@ else {
     if (self.type == JVDrawingTypeDot || self.type == JVDrawingTypeClipper ||  self.type == JVDrawingTypeRazor){
          
 
-        if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 16 / _zoomIndex ){
+        if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < _touchDistance / _zoomIndex ){
             return JVDrawingTouchEnd;
         }
                     if( [self isPoint:point withinDistance:4 ofPath:self.path]){
@@ -156,13 +156,13 @@ else {
                 self.midP = midPoint(self.startPoint, self.endPoint);
             }
 
-            if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
+            if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < _touchDistance / _zoomIndex ){
                         return JVDrawingTouchHead;
                 }
-             if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 12 / _zoomIndex ){
+             if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < _touchDistance / _zoomIndex ){
                         return JVDrawingTouchEnd;
                 }
-            if([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < 12 / _zoomIndex ){
+            if([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < _touchDistance / _zoomIndex ){
             
             return JVDrawingTouchMid;
                

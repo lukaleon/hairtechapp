@@ -473,6 +473,24 @@
     [self changeFileName:@"fronthead_ms.png" to:filenamethumb4];
     [self changeFileName:@"backhead_ms.png" to:filenamethumb5];
 }
+-(void)saveEntryImageToCloud:(NSString*)name document:(UIImage*)image{
+    name = [name stringByDeletingPathExtension];
+    name = [name stringByAppendingString:@".png"];
+    
+    // Append the desired file name to the URL
+    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+
+    // Get the PNG data from the UIImage
+    NSData *imageData = UIImagePNGRepresentation(image);
+    
+    // Save the image data to the file URL
+    NSError *error;
+    BOOL success = [imageData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
+    
+    if (!success) {
+        NSLog(@"Error saving image: %@", error.localizedDescription);
+    }
+}
 
 -(void)saveDiagramToFile:(NSString*)uuid  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
     
@@ -518,26 +536,19 @@
     document.dictTop = [self storeJsonDataInDictionary];
     document.dictFront = [self storeJsonDataInDictionary];
     document.dictBack = [self storeJsonDataInDictionary];
-       // [self addCustomMetadata:document.fileURL];
+    
     
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:document.fileURL.lastPathComponent withContent:document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document saved with text:");
             [self addDefaultValueForFavoriteCell:exportingFileName];
+            [self saveEntryImageToCloud:document.fileURL.lastPathComponent document:document.imageEntry];
+
+            [self dismissViewControllerAnimated:YES completion:nil];
         
-                    [[NSNotificationCenter defaultCenter]
-                        postNotificationName:@"populate"
-                        object:self];
-        
-                       [[NSNotificationCenter defaultCenter]
-                        postNotificationName:@"reloadCollection"
-                        object:self];
-        
-                       [self dismissViewControllerAnimated:YES completion:nil];
-        
-                       [[NSNotificationCenter defaultCenter]
-                        postNotificationName:@"openEntry"
-                        object:self];
+            [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"openEntry"
+            object:self];
             
             
         } else {

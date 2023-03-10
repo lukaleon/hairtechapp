@@ -52,7 +52,7 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     if ((self.documentState & UIDocumentStateInConflict) != 0) [string appendString:@"Document is in conflict"];
     if ((self.documentState & UIDocumentStateSavingError) != 0) [string appendString:@"Document is experiencing saving error"];
     if ((self.documentState & UIDocumentStateEditingDisabled) != 0) [string appendString:@"Document editing is disbled"];
-    NSLog(@"Document State = %@", string);
+   // NSLog(@"Document State = %@", string);
     return string;
 }
 

@@ -62,6 +62,9 @@ typedef enum {
     NSMutableDictionary * dictForEntryImageExtraction;
     NSMutableArray * dateArray;
     NSMutableArray * arrayOfFileDictionaries;
+    
+    NSInteger refreshCount;
+    NSArray * images;
 
 }
 @property iCloudDocument * importedDoc;

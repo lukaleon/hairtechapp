@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
 @property (nonatomic, strong) NSMutableArray *pointArray;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
-
+@property CGFloat touchDistance;
 
 @property (nonatomic, assign) CGPoint dotCenter;
 

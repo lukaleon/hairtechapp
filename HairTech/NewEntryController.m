@@ -51,6 +51,24 @@
     [self registerNotifications];
     
 }
+-(void)saveEntryImageToCloud:(NSString*)name image:(UIImage*)img{
+    name = [name stringByDeletingPathExtension];
+    name = [name stringByAppendingString:@".png"];
+    
+    // Append the desired file name to the URL
+    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+
+    // Get the PNG data from the UIImage
+    NSData *imageData = UIImagePNGRepresentation(img);
+    
+    // Save the image data to the file URL
+    NSError *error;
+    BOOL success = [imageData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
+    
+    if (!success) {
+        NSLog(@"Error saving image: %@", error.localizedDescription);
+    }
+}
 
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -58,13 +76,14 @@
     [self.toolbar removeFromSuperview];
     NSLog(@"exit entry" );
    
-    if (self.isMovingFromParentViewController){
-        
-           
+   // if (self.isMovingToParentViewController){
+
+    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+
            [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
                if (!error) {
 
-                 
+
                    NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
                } else {
                    NSLog(@"iCloud Document save error: %@", error);
@@ -72,7 +91,7 @@
 
            }];
            
-        }
+       // }
  
  
 
@@ -135,9 +154,9 @@
 
 - (void)registerNotifications {
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"didEnterBackground" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"didEnterBackground" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureScreenRetinaOnLoad) name:@"appDidTerminate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
 }
 
 
@@ -343,7 +362,8 @@
 
 - (void)saveDataToCloudWhenTerminating{
    // NSLog(@"Save when terminate");
-    
+    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
      if (!error) {
          NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);

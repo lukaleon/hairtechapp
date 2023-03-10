@@ -47,7 +47,7 @@ static UIImage *deleteButtonImg;
 }
 - (void)setIsHidden:(BOOL)isHidden
 {
-    NSLog(@"set hiddden NO");
+  //  NSLog(@"set hiddden NO");
     self.editView.hidden = isHidden;
 }
 

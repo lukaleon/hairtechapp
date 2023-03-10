@@ -259,6 +259,25 @@
     return  dirContents;
 }
 
+-(void)saveEntryImageToCloud:(NSString*)name document:(UIImage*)image{
+    name = [name stringByDeletingPathExtension];
+    name = [name stringByAppendingString:@".png"];
+    
+    // Append the desired file name to the URL
+    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+
+    // Get the PNG data from the UIImage
+    NSData *imageData = UIImagePNGRepresentation(image);
+    
+    // Save the image data to the file URL
+    NSError *error;
+    BOOL success = [imageData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
+    
+    if (!success) {
+        NSLog(@"Error saving image: %@", error.localizedDescription);
+    }
+}
+
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
 
         if ([url.scheme isEqualToString:@"file"] && [url.pathExtension isEqualToString:@"htapp"]) {
@@ -278,13 +297,10 @@
                 [[NSUserDefaults standardUserDefaults] setObject:uniqueFileName forKey:@"newCreatedFileName"];
                 [self addDefaultValueForFavoriteCell:uniqueFileName];
 
-                [[NSNotificationCenter defaultCenter]
-                    postNotificationName:@"populate"
-                    object:self];
                
-                [[NSNotificationCenter defaultCenter]
-                    postNotificationName:@"reloadCollection"
-                    object:self];
+//                [[NSNotificationCenter defaultCenter]
+//                    postNotificationName:@"reloadCollection"
+//                    object:self];
                
                 [[NSNotificationCenter defaultCenter]
                     postNotificationName:@"openEntry"
@@ -341,7 +357,7 @@
 -(NSURL *)applicationCloudFolder:(NSString *)fileName
 {    
     // append our file name
-    NSLog(@"file name app delegate %@", fileName);
+    //NSLog(@"file name app delegate %@", fileName);
    // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
     NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
     NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
