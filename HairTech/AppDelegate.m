@@ -142,6 +142,14 @@
 */
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    __block UIBackgroundTaskIdentifier backgroundTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+
+        NSLog(@"Background Time:%f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
+
+        [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskIdentifier];
+
+        backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+    }];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -158,10 +166,9 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    
+    NSLog(@"Saving on terminating");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"appDidTerminate" object:self];
 
-    //NSLog(@"Saving on terminating");
     //[self.myviewdelegate saveImageWhenterminate];
     
    

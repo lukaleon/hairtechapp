@@ -91,6 +91,8 @@
 }
 
 -(void)viewDidLoad{
+    
+    self.document = [[iCloud sharedCloud] getDocument];
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
     arrayOfColorPickers = [NSMutableArray array];
@@ -141,11 +143,10 @@
     }
     [self setupAdditionalTools:self.textTool];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadColorsFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
+  
  
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"didEnterBackground" object:nil];
+
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
     }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -156,7 +157,10 @@
     [self.drawingView removeTextViewFrame]; //create text layer when closing window
     [self screentShot:self.headtype];
     [self clearPageForClosing];
-   
+    
+    
+    
+ 
 }
 
 -(void)deselectTools{
@@ -232,19 +236,24 @@
     self.drawingView.touchForText = 0;
      
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        newdata = _document.dictLeft;
+        //newdata = _document.dictLeft;
+        newdata = [[iCloud sharedCloud] getDocument].dictLeft;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        newdata = _document.dictRight;
+        //newdata = _document.dictRight;
+        newdata = [[iCloud sharedCloud] getDocument].dictRight;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-        newdata = _document.dictTop;
+//        newdata = _document.dictTop;
+        newdata = [[iCloud sharedCloud] getDocument].dictTop;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-        newdata = _document.dictFront;
+//        newdata = _document.dictFront;
+        newdata = [[iCloud sharedCloud] getDocument].dictFront;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        newdata = _document.dictBack;
+        //newdata = _document.dictBack;
+        newdata = [[iCloud sharedCloud] getDocument].dictBack;
     }
     
     [self.drawingView loadJSONData:newdata];
@@ -264,39 +273,67 @@
 -(void)saveDataToUIDocument:(NSData*)data{
 
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        self.document.dictLeft = data;
+        [[iCloud sharedCloud] getDocument].dictLeft = data;
+        //self.document.dictLeft = data;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        self.document.dictRight = data;
+        [[iCloud sharedCloud] getDocument].dictRight = data;
+
+        //self.document.dictRight = data;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-        self.document.dictTop = data;
+        [[iCloud sharedCloud] getDocument].dictTop = data;
+
+       // self.document.dictTop = data;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-        self.document.dictFront = data;
+        [[iCloud sharedCloud] getDocument].dictFront = data;
+
+        //self.document.dictFront = data;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        self.document.dictBack = data;
+        [[iCloud sharedCloud] getDocument].dictBack = data;
+
+       // self.document.dictBack = data;
     }
 }
 -(NSData*)getDataFromVC{
-    
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        newdata = _document.dictLeft;
+        //newdata = _document.dictLeft;
+        newdata = [[iCloud sharedCloud] getDocument].dictLeft;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        newdata = _document.dictRight;
+        //newdata = _document.dictRight;
+        newdata = [[iCloud sharedCloud] getDocument].dictRight;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-        newdata = _document.dictTop;
+//        newdata = _document.dictTop;
+        newdata = [[iCloud sharedCloud] getDocument].dictTop;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-        newdata = _document.dictFront;
+//        newdata = _document.dictFront;
+        newdata = [[iCloud sharedCloud] getDocument].dictFront;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        newdata = _document.dictBack;
+        //newdata = _document.dictBack;
+        newdata = [[iCloud sharedCloud] getDocument].dictBack;
     }
-    
+//    if([_jsonType isEqualToString:@"jsonLeft"]){
+//        newdata = _document.dictLeft;
+//    }
+//    if([_jsonType isEqualToString:@"jsonRight"]){
+//        newdata = _document.dictRight;
+//    }
+//    if([_jsonType isEqualToString:@"jsonTop"]){
+//        newdata = _document.dictTop;
+//    }
+//    if([_jsonType isEqualToString:@"jsonFront"]){
+//        newdata = _document.dictFront;
+//    }
+//    if([_jsonType isEqualToString:@"jsonBack"]){
+//        newdata = _document.dictBack;
+//    }
+//
     return newdata;
 }
 
@@ -444,9 +481,13 @@
 }
 
 - (void)registerNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadColorsFromCloud) name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:[NSUbiquitousKeyValueStore defaultStore]];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveColorsToDefaults) name:UIApplicationWillTerminateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"didEnterBackground" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
+    
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"didEnterBackground" object:nil];
+    
+   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenShotNotification) name:@"appDidTerminate" object:nil];
 }
 
 
@@ -1527,8 +1568,7 @@ return YES;
 - (void)saveDataToCloudWhenTerminating{
 
     NSLog(@"draw controller when terminate");
-    
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:[[iCloud sharedCloud] getDocument]  completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
      if (!error) {
          NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
      } else {

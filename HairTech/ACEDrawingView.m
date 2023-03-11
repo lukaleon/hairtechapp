@@ -647,10 +647,14 @@ UIColor* tempColor;
     CGFloat touchDistance;
     touchDistance = 12;
     self.drawingLayer.touchDistance = 12;
+    self.selectedLayer.touchDistance = 12;
+
     
     if (touch.type == UITouchTypeStylus) {
         touchDistance = 24;
         self.drawingLayer.touchDistance = 24;
+        self.selectedLayer.touchDistance = 24;
+
         if(distance < 3){
             touchCanceled = YES;
             return;
@@ -660,6 +664,8 @@ UIColor* tempColor;
     NSLog(@"zoom factor %f", self.zoomFactor);
 
     [self.drawingLayer setZoomIndex:self.zoomFactor];
+    [self.selectedLayer setZoomIndex:self.zoomFactor];
+
 
     
     pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown

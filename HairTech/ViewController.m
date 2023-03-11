@@ -144,12 +144,12 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
             [self showAlertWithMessage:@"To continue using the app, you need to sign in to iCloud"];
            // NSLog(@"Error fetching user record ID: %@", error);
         } else {
-            [self startAnimating];
+            //[self startAnimating];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [self iCloudSetup];
                 
                 dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    [self stopAnimatingRefresh];
+               //     [self stopAnimatingRefresh];
                 });
             });
 //           [self showAlertWithMessage:@"User is signed in to iCloud"];
@@ -513,7 +513,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 }
 -(void)iCloudFileUpdateDidBegin{
     NSLog(@"iCloudFileUpdateDidBegin");
-    [self startAnimating];
+   // [self startAnimating];
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
@@ -586,18 +586,18 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
 -(void)startAnimating{
     NSLog(@"animate refresh ....");
 
-    [CustomActivityIndicator.shared show:self.view];
+  //  [CustomActivityIndicator.shared show:self.view];
     
-    self.view.userInteractionEnabled = false;
+  //  self.view.userInteractionEnabled = false;
 //    [CustomActivityIndicator.shared show:self.view backgroundColor:UIColor.darkGrayColor size:35.0 duration:1.0];
     
 //    [CustomActivityIndicator.shared show:self.view backgroundColor:UIColor.darkGrayColor textColor:UIColor.whiteColor labelText:@"Updating data" duration:2.0];
 }
 
 -(void)stopAnimatingRefresh{
-    self.view.userInteractionEnabled = true;
+   // self.view.userInteractionEnabled = true;
     NSLog(@"animate stop ....");
-    [CustomActivityIndicator.shared hide:self.view duration:1.0];
+   // [CustomActivityIndicator.shared hide:self.view duration:1.0];
 
 }
 
@@ -877,12 +877,14 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                         } else {
                         NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
                             
+                            
+                            
                         fileTitle = cloudDocument.fileURL.lastPathComponent;
                                 
                         //Extracting extension from filename to get technique name
                         NSString * techniqueName = [[fileTitle lastPathComponent] stringByDeletingPathExtension];
                         newEntryVC.navigationItem.title = techniqueName;
-                        newEntryVC.document = cloudDocument;
+                        newEntryVC.document = [[iCloud sharedCloud] getDocument];
                         newEntryVC.openedFromDrawingView = NO;
                         [newEntryVC setTechniqueID:techniqueName];
                         [newEntryVC setTechniqueID: techniqueName];

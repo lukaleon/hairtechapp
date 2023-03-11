@@ -31,6 +31,7 @@
   //  if(self.openedFromDrawingView){
     [self captureScreenRetinaOnLoad];
     //}
+    openingDrawingView = NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -43,7 +44,7 @@
 }
 
 -(void)viewDidLoad{
-    NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ", self.document.note, self.document.techniqueName , self.document.maleFemale);
+    NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ", [[iCloud sharedCloud] getDocument].note,  [[iCloud sharedCloud] getDocument].techniqueName ,  [[iCloud sharedCloud] getDocument].maleFemale);
     
     [self loadImages];
     [self addNavigationItems];
@@ -76,14 +77,12 @@
     [self.toolbar removeFromSuperview];
     NSLog(@"exit entry" );
    
-   // if (self.isMovingToParentViewController){
+    if (self.isMovingFromParentViewController){
 
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
 
            [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
                if (!error) {
-
-
                    NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
                } else {
                    NSLog(@"iCloud Document save error: %@", error);
@@ -91,7 +90,7 @@
 
            }];
            
-       // }
+        }
  
  
 
@@ -155,8 +154,9 @@
 - (void)registerNotifications {
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"didEnterBackground" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
+//    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
+ 
 }
 
 
@@ -263,7 +263,8 @@
             break;
     }
     if(pointInside){
-        newDrawVC.document = self.document;
+        openingDrawingView = YES;
+      //  newDrawVC.document = [[iCloud sharedCloud] getDocument];
         [self.navigationController pushViewController: newDrawVC animated:YES];
     }
 }
@@ -273,8 +274,8 @@
 -(void)addNotes{
     
 //    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-    NSString * note = self.document.note;
-    
+   // NSString * note = self.document.note;
+    NSString * note = [[iCloud sharedCloud] getDocument].note;
     NotesViewController *  notesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"notes"];
     if(note.length == 0||[note isEqualToString:@"(null)"]){
     notesVC.textOfTextView = @"";
@@ -287,7 +288,8 @@
 }
 -(void)saveNote:(NSString*)note{
     
-    self.document.note = note;
+    [[iCloud sharedCloud] getDocument].note = note;
+    //self.document.note = note;
 }
 
 #pragma mark - Saving Methods
@@ -320,7 +322,9 @@
    // [self storeImageInTempDictionary:thumbdata];
     //[self saveDataToCloudWhenCloseView];
    
-    self.document.imageEntry = newImage;
+    [[iCloud sharedCloud] getDocument].imageEntry = newImage;
+
+    //self.document.imageEntry = newImage;
     return newImage;
 }
 -(UIImage*)captureScreenRetina
@@ -333,7 +337,8 @@
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    self.document.imageEntry = newImage;
+    [[iCloud sharedCloud] getDocument].imageEntry = newImage;
+    //self.document.imageEntry = newImage;
     return newImage;
 }
 /*
@@ -361,7 +366,9 @@
 */
 
 - (void)saveDataToCloudWhenTerminating{
-   // NSLog(@"Save when terminate");
+    NSLog(@"Save when terminate");
+    self.document = [[iCloud sharedCloud] getDocument];
+    
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
 
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
@@ -490,32 +497,34 @@
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageLeft.image = item;
-    self.document.imageLeft = item;
+//    self.document.imageLeft = item;
+    [[iCloud sharedCloud] getDocument].imageLeft = item;
 }
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageRight.image = item;
-    self.document.imageRight = item;
-
+    //self.document.imageRight = item;
+    [[iCloud sharedCloud] getDocument].imageRight = item;
 }
 -(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageTop.image = item;
-    self.document.imageTop = item;
-
+//    self.document.imageTop = item;
+    [[iCloud sharedCloud] getDocument].imageTop = item;
 }
 -(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageFront.image = item;
-    self.document.imageFront = item;
+//    self.document.imageFront = item;
+    [[iCloud sharedCloud] getDocument].imageFront = item;
 
 }
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing
 {
     self.openedFromDrawingView = openedFromDrawing;
     self.imageBack.image = item;
-    self.document.imageBack = item;
-
+//    self.document.imageBack = item;
+    [[iCloud sharedCloud] getDocument].imageBack = item;
 }
 
 -(NSString*)currentDate{
@@ -537,14 +546,5 @@
 
 
 #pragma mark - Activity Indicator Animation
--(void)startAnimating{
-    NSLog(@"animate refresh ....");
-    [CustomActivityIndicator.shared show:self.view backgroundColor:[UIColor darkGrayColor] size:40 duration:2.0];
-}
 
--(void)stopAnimatingRefresh{
-    NSLog(@"animate stop ....");
-    [CustomActivityIndicator.shared hide:self.view duration:1.0];
-
-}
 @end

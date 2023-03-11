@@ -57,6 +57,10 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface iCloud : NSObject
  @return The shared instance of iCloud */
 + (instancetype)sharedCloud;
 
+@property (nonatomic, strong) iCloudDocument *document;
+- (iCloudDocument *)getDocument;
+
+
 /** Setup iCloud Document Sync and begin the initial document syncing process.
  
  @discussion You \b must call this method before using iCloud Document Sync to avoid potential issues with syncing. This setup process ensures that all variables are initialized. A preliminary file sync will be performed when this method is called.

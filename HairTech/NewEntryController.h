@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableString *entryviewImageSmall;
     NSMutableDictionary * dictionary;
     NSString * _techniqueNameID;
+    BOOL openingDrawingView;
 }
 
 @property (nonatomic, strong) iCloudDocument *document;

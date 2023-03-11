@@ -14,8 +14,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "883"
-            endingLineNumber = "883"
+            startingLineNumber = "907"
+            endingLineNumber = "907"
             landmarkName = "-createDashedLinePathWithEndPoint:andStartPoint:length:"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "906"
-            endingLineNumber = "906"
+            startingLineNumber = "930"
+            endingLineNumber = "930"
             landmarkName = "-editCurvedLineWithStartPoint:endPoint:midPoint:length:"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "901"
-            endingLineNumber = "901"
+            startingLineNumber = "925"
+            endingLineNumber = "925"
             landmarkName = "-createCurvedLineWithStartPoint:endPoint:midPoint:length:"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "-caculateLocationWithPoint:"
             landmarkType = "7">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
             landmarkName = "-viewWillDisappear:"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "456"
-            endingLineNumber = "456"
+            startingLineNumber = "497"
+            endingLineNumber = "497"
             landmarkName = "-setupNavigationBarItems"
             landmarkType = "7">
          </BreakpointContent>
@@ -172,9 +172,9 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "510"
-            endingLineNumber = "510"
-            landmarkName = "-setupNavigationBarItems"
+            startingLineNumber = "551"
+            endingLineNumber = "551"
+            landmarkName = "-registerActionView"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -249,8 +249,8 @@
             filePath = "HairTech/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "284"
-            endingLineNumber = "284"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "-application:openURL:options:"
             landmarkType = "7">
          </BreakpointContent>
@@ -265,8 +265,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "-caculateLocationWithPoint:"
             landmarkType = "7">
          </BreakpointContent>
@@ -297,8 +297,8 @@
             filePath = "HairTech/JVDrawingLayer.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
             landmarkName = "-caculateLocationWithPoint:"
             landmarkType = "7">
          </BreakpointContent>
@@ -361,8 +361,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1345"
-            endingLineNumber = "1345"
+            startingLineNumber = "1347"
+            endingLineNumber = "1347"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>

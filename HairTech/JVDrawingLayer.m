@@ -144,10 +144,8 @@ else {
 //        //self.midP = midPoint(self.startPoint, self.endPoint);
 //
         
-        
         if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
-//            self.startP = self.startPoint;
-//            self.endP = self.endPoint;
+
 
             JVDRAWINGBUFFERFORCURVE = 16;
             if(self.editedLine){
@@ -172,6 +170,32 @@ else {
 
             }
         
+  /*  if (self.type == JVDrawingTypeCurvedLine || self.type == JVDrawingTypeCurvedDashLine) {
+//            self.startP = self.startPoint;
+//            self.endP = self.endPoint;
+
+        JVDRAWINGBUFFERFORCURVE = 16;
+        if(self.editedLine){
+            self.midP = self.controlPointOfCurve;
+        } else {
+            self.midP = midPoint(self.startPoint, self.endPoint);
+        }
+
+        if([self distanceBetweenStartPoint:self.startPoint endPoint:point] < 12 / _zoomIndex ){
+                    return JVDrawingTouchHead;
+            }
+         if([self distanceBetweenStartPoint:self.endPoint endPoint:point] < 12 / _zoomIndex ){
+                    return JVDrawingTouchEnd;
+            }
+        if([self distanceBetweenStartPoint:self.controlPointOfCurve endPoint:point] < 12 / _zoomIndex ){
+        
+        return JVDrawingTouchMid;
+           
+       }
+        else {
+            return JVDrawingTouchNone;
+
+        }*/
             
 //            CGFloat lineLength = [self distanceBetweenStartPoint:self.startPoint endPoint:self.endPoint];
 //

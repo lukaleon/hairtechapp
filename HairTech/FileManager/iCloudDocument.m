@@ -33,11 +33,11 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 	}
 	return self;
 }
-- (void)autosaveWithCompletionHandler:(void (^)(BOOL success))completionHandler {
-    // perform the autosave here
-    NSLog(@"AUTOSAVE PERFORMED");
-    [super autosaveWithCompletionHandler:completionHandler];
-}
+//- (void)autosaveWithCompletionHandler:(void (^)(BOOL success))completionHandler {
+//    // perform the autosave here
+//    NSLog(@"AUTOSAVE PERFORMED");
+//    [super autosaveWithCompletionHandler:completionHandler];
+//}
 
 - (NSString *)localizedName {
 	return [self.fileURL lastPathComponent];
