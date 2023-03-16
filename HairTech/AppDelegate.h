@@ -32,7 +32,7 @@
 }
 -(NSURL *)applicationCloudFolder:(NSString *)fileName;
 
-@property BOOL firstTimeAfeterUpdate;
+@property BOOL fileImported;
 @property  (nonatomic, retain) NSMetadataQuery *query;
 @property NSMutableArray * filesArrayAppDelegate;
 @property (nonatomic, retain) NSString *importedTechniqueName;

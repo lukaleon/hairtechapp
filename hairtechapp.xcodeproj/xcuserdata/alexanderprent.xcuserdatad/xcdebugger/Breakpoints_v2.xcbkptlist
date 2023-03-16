@@ -174,7 +174,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "551"
             endingLineNumber = "551"
-            landmarkName = "-registerActionView"
+            landmarkName = "-setupNavigationBarItems"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -243,14 +243,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "C5D940BE-201E-4CFF-9D5D-076FD5828920"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HairTech/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
             landmarkName = "-application:openURL:options:"
             landmarkType = "7">
          </BreakpointContent>
@@ -345,8 +345,8 @@
             filePath = "HairTech/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "AppDelegate"
             landmarkType = "3">
          </BreakpointContent>
@@ -361,10 +361,10 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1347"
-            endingLineNumber = "1347"
-            landmarkName = "ViewController"
-            landmarkType = "3">
+            startingLineNumber = "1488"
+            endingLineNumber = "1488"
+            landmarkName = "-openEntry"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -377,9 +377,9 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "785"
-            endingLineNumber = "785"
-            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            startingLineNumber = "898"
+            endingLineNumber = "898"
+            landmarkName = "-openEntry"
             landmarkType = "7">
             <Actions>
                <BreakpointActionProxy
@@ -402,8 +402,8 @@
             filePath = "HairTech/MySubView.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "-textFieldShouldReturn:"
             landmarkType = "7">
          </BreakpointContent>
@@ -418,9 +418,9 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "744"
-            endingLineNumber = "744"
-            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            startingLineNumber = "858"
+            endingLineNumber = "858"
+            landmarkName = "-openEntry"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -434,9 +434,9 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "759"
-            endingLineNumber = "759"
-            landmarkName = "-collectionView:cellForItemAtIndexPath:"
+            startingLineNumber = "872"
+            endingLineNumber = "872"
+            landmarkName = "-openEntry"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -450,10 +450,10 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "524"
-            endingLineNumber = "524"
-            landmarkName = "-iCloudFilesDidChange:withNewFileNames:"
-            landmarkType = "7">
+            startingLineNumber = "612"
+            endingLineNumber = "612"
+            landmarkName = "ViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -466,10 +466,10 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "520"
-            endingLineNumber = "520"
-            landmarkName = "-iCloudFilesDidChange:withNewFileNames:"
-            landmarkType = "7">
+            startingLineNumber = "608"
+            endingLineNumber = "608"
+            landmarkName = "ViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -482,8 +482,8 @@
             filePath = "HairTech/FileManager/iCloud.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "-setupiCloudDocumentSyncWithUbiquityContainer:"
             landmarkType = "7">
          </BreakpointContent>

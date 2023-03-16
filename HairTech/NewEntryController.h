@@ -10,8 +10,9 @@
 #import "NewDrawController.h"
 #import "NotesViewController.h"
 #import "iCloudDocument.h"
-
+#import "MyDoc.h"
 NS_ASSUME_NONNULL_BEGIN
+
 
 @interface NewEntryController : UIViewController <NotesViewDelegate>
 {
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL openingDrawingView;
 }
 
-@property (nonatomic, strong) iCloudDocument *document;
+@property (nonatomic, strong) MyDoc *document;
 
 
 -(void)setTechniqueID:(NSString*)techId;

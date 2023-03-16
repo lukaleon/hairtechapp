@@ -29,9 +29,9 @@ import WhatsNewKit
                                         image: UIImage(systemName: "paperplane")
                                     ),
                                     WhatsNew.Item(
-                                        title: "iCloud Sync",
-                                        subtitle: "Access your collection of diagrams on all your devices.",
-                                        image: UIImage(systemName: "icloud")
+                                        title: "New User Interface",
+                                        subtitle: "New redesigned user interface for better experience.",
+                                        image: UIImage(systemName: "sparkles")
                                     ),
                                   
                                 ])

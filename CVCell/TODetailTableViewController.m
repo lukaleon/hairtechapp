@@ -15,6 +15,7 @@
 #import "PageViewController.h"
 #import "ContainerViewController.h"
 #import "OldCollectionView.h"
+#import "WebBrowserViewController.h"
 
 #define SECTIONID_CollectionView 0
 #define SECTIONID_General 1
@@ -42,8 +43,8 @@
    // self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
-    sectionOneItems = @[@"Help", @"Rate our app", @"Report an issue", @"Give us your feedback"];
-    sectionTwoItems = @[@"Follow us on Instagram", @"Visit our web site"];
+    sectionOneItems = @[@"Rate our app", @"Report an issue", @"Visit our website"];
+    sectionTwoItems = @[@"Follow us on Instagram", @"Follow us on Facebook"];
     sectionThemeItems = @[@"Auto", @"Light", @"Dark"];
     self.themeButtonArray = [NSMutableArray new];
     arrayOfCellIndexes = [NSMutableArray new];
@@ -92,7 +93,7 @@
 }
 -(UIView*)addFooterTitle{
     UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 60)];
-    title.text = @"Version 6.0.1";
+    title.text = @"Version 8.0.1";
     title.font = [UIFont fontWithName:@"AvenirNext-Bold" size:10];
     title.textColor = [UIColor colorNamed:@"smallText"];
     title.textAlignment = NSTextAlignmentCenter;
@@ -236,12 +237,9 @@
     }
     
     if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 0 ) {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-    }
-
-    if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 1 ) {
         
+//    [self presentViewController:webView animated:YES completion:nil];
+//        [self performSegueWithIdentifier:@"showWeb" sender:self];
         UIApplication *application = [UIApplication sharedApplication];
         NSURL *URL = [NSURL URLWithString:@"https://apps.apple.com/us/app/hairtech-head-sheets/id625740630?action=write-review"];
         [application openURL:URL options:@{} completionHandler:^(BOOL success) {
@@ -250,10 +248,31 @@
             }
         }];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    }
+
+    if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 1 ) {
+        
+//        UIApplication *application = [UIApplication sharedApplication];
+//        NSURL *URL = [NSURL URLWithString:@"https://apps.apple.com/us/app/hairtech-head-sheets/id625740630?action=write-review"];
+//        [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+//            if (success) {
+//                NSLog(@"Opened url");
+//            }
+//        }];
+        [self sendEmail];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     }
     
     if ( indexPath.section == SECTIONID_GetStarted && indexPath.row == 2) {
-        [self sendEmail];
+        UIApplication *application = [UIApplication sharedApplication];
+                NSURL *URL = [NSURL URLWithString:@"https://hairtechapp.com"];
+                [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+                    if (success) {
+                        NSLog(@"Opened url");
+                    }
+                }];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     }
@@ -276,7 +295,7 @@
     }
     if ( indexPath.section == 3 && indexPath.row == 1 ) {
         UIApplication *application = [UIApplication sharedApplication];
-        NSURL *URL = [NSURL URLWithString:@"https://hairtechapp.com"];
+        NSURL *URL = [NSURL URLWithString:@"https://www.facebook.com/HairtechApp"];
         [application openURL:URL options:@{} completionHandler:^(BOOL success) {
             if (success) {
                 NSLog(@"Opened url");
@@ -325,7 +344,7 @@
             return 1;
             break;
         case SECTIONID_GetStarted:
-            return 4;
+            return 3;
             break;
         case SECTIONID_Follow:
             return 2;
@@ -398,7 +417,7 @@
             cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
             cell.label.text = @"How to use Hairtechapp";
             cell.image.image = [UIImage imageNamed:@"preview_cell1"];
-            cell.image.backgroundColor = [UIColor colorNamed:@"cellBg"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"blueTest"];
             [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
             [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
             
@@ -406,8 +425,11 @@
             
         }
         if (indexPath.row == 1){
-            cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
-            cell.label.text = @"What's new";
+            cell.image.image = [UIImage imageNamed:@"guideicon"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"blueTest"];
+            cell.label.text = @"User guide";
+            [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
+            [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
         }
         
     }
@@ -424,17 +446,21 @@
         }
         if (indexPath.row == 1){
             
-            cell.contentView.backgroundColor = [UIColor colorNamed:@"yellowTest"];
+            cell.contentView.backgroundColor = [UIColor colorNamed:@"blueTest"];
             cell.label.text = @"How to use Hairtechapp";
             cell.image.image = [UIImage imageNamed:@"preview_cell1"];
-            cell.image.backgroundColor = [UIColor colorNamed:@"cellBg"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"blueTest"];
             [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
             [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
             
         }
         if (indexPath.row == 2){
-            cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
-            cell.label.text = @"What's new";
+            cell.image.image = [UIImage imageNamed:@"guideicon"];
+            cell.image.backgroundColor = [UIColor colorNamed:@"blueTest"];
+            [[cell.image.widthAnchor constraintEqualToConstant:cell.frame.size.width] setActive:YES];
+            [[cell.image.heightAnchor constraintEqualToConstant:cell.frame.size.height] setActive:YES];
+          //  cell.contentView.backgroundColor = [UIColor colorNamed:@"redTest"];
+            cell.label.text = @"User guide";
         }
     }
     [cell.contentView.layer setCornerRadius:25.0];
@@ -459,7 +485,7 @@
             [self.navigationController presentViewController:pageVc animated:YES completion:nil];
         }
         if(indexPath.row == 1){
-            [self.navigationController  presentViewController:pageVc animated:YES completion:nil];
+            [self performSegueWithIdentifier:@"showWeb" sender:self];
         }
     }
     else {

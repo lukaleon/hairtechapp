@@ -644,23 +644,7 @@ UIColor* tempColor;
         return;
     }
     
-    CGFloat touchDistance;
-    touchDistance = 12;
-    self.drawingLayer.touchDistance = 12;
-    self.selectedLayer.touchDistance = 12;
-
-    
-    if (touch.type == UITouchTypeStylus) {
-        touchDistance = 24;
-        self.drawingLayer.touchDistance = 24;
-        self.selectedLayer.touchDistance = 24;
-
-        if(distance < 3){
-            touchCanceled = YES;
-            return;
-           }
-        
-    }
+   
     NSLog(@"zoom factor %f", self.zoomFactor);
 
     [self.drawingLayer setZoomIndex:self.zoomFactor];
@@ -672,6 +656,24 @@ UIColor* tempColor;
     self.type = self.bufferType;
 
     if (self.isFirstTouch) {
+        
+        CGFloat touchDistance;
+        touchDistance = 12;
+        self.drawingLayer.touchDistance = 12;
+        self.selectedLayer.touchDistance = 12;
+
+        
+        if (touch.type == UITouchTypeStylus) {
+            touchDistance = 24;
+            self.drawingLayer.touchDistance = 24;
+            self.selectedLayer.touchDistance = 24;
+
+            if(distance < 3){
+                touchCanceled = YES;
+                return;
+               }
+            
+        }
    
         if (self.selectedLayer && [self.selectedLayer isPoint:currentPoint withinDistance:touchDistance / self.zoomFactor ofPath:self.selectedLayer.path]){
             

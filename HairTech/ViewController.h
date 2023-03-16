@@ -129,7 +129,7 @@ typedef enum {
 - (void)saveData;
 - (void)openItemInEntryViewController:(UIStoryboardSegue *)segue;
 - (void)openSubView;
-@property (weak, nonatomic) id<ViewControllerDelegate>delegate1;
+@property (weak, nonatomic) id<ViewControllerDelegate> delegate1;
 @property BOOL *tapcopy;
 
 @property (nonatomic, assign) Mode collectionMode;

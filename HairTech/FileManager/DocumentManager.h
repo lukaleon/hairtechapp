@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)documentExists: (NSString *)name;
 
 +(NSURL*)ubiquitousDocumentsDirectoryURL;
-
++(NSMutableArray*)getArrayOfFilesInDirectory;
 
 @end
 

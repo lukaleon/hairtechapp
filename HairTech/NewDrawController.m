@@ -92,7 +92,7 @@
 
 -(void)viewDidLoad{
     
-    self.document = [[iCloud sharedCloud] getDocument];
+    //self.document = [[iCloud sharedCloud] getDocument];
     textSelected = NO; // UITextView from drawing view is not selected
     arrayOfGrids = [NSMutableArray array];
     arrayOfColorPickers = [NSMutableArray array];
@@ -236,24 +236,24 @@
     self.drawingView.touchForText = 0;
      
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        //newdata = _document.dictLeft;
-        newdata = [[iCloud sharedCloud] getDocument].dictLeft;
+        newdata = _document.dictLeft;
+     //   newdata = [[iCloud sharedCloud] getDocument].dictLeft;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        //newdata = _document.dictRight;
-        newdata = [[iCloud sharedCloud] getDocument].dictRight;
+        newdata = _document.dictRight;
+//        newdata = [[iCloud sharedCloud] getDocument].dictRight;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-//        newdata = _document.dictTop;
-        newdata = [[iCloud sharedCloud] getDocument].dictTop;
+        newdata = _document.dictTop;
+//        newdata = [[iCloud sharedCloud] getDocument].dictTop;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-//        newdata = _document.dictFront;
-        newdata = [[iCloud sharedCloud] getDocument].dictFront;
+        newdata = _document.dictFront;
+//        newdata = [[iCloud sharedCloud] getDocument].dictFront;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        //newdata = _document.dictBack;
-        newdata = [[iCloud sharedCloud] getDocument].dictBack;
+        newdata = _document.dictBack;
+//        newdata = [[iCloud sharedCloud] getDocument].dictBack;
     }
     
     [self.drawingView loadJSONData:newdata];
@@ -273,50 +273,50 @@
 -(void)saveDataToUIDocument:(NSData*)data{
 
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        [[iCloud sharedCloud] getDocument].dictLeft = data;
-        //self.document.dictLeft = data;
+//        [[iCloud sharedCloud] getDocument].dictLeft = data;
+        self.document.dictLeft = data;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        [[iCloud sharedCloud] getDocument].dictRight = data;
+//        [[iCloud sharedCloud] getDocument].dictRight = data;
 
-        //self.document.dictRight = data;
+        self.document.dictRight = data;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-        [[iCloud sharedCloud] getDocument].dictTop = data;
+//        [[iCloud sharedCloud] getDocument].dictTop = data;
 
-       // self.document.dictTop = data;
+        self.document.dictTop = data;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-        [[iCloud sharedCloud] getDocument].dictFront = data;
+//        [[iCloud sharedCloud] getDocument].dictFront = data;
 
-        //self.document.dictFront = data;
+        self.document.dictFront = data;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        [[iCloud sharedCloud] getDocument].dictBack = data;
+//        [[iCloud sharedCloud] getDocument].dictBack = data;
 
-       // self.document.dictBack = data;
+        self.document.dictBack = data;
     }
 }
 -(NSData*)getDataFromVC{
     if([_jsonType isEqualToString:@"jsonLeft"]){
-        //newdata = _document.dictLeft;
-        newdata = [[iCloud sharedCloud] getDocument].dictLeft;
+        newdata = _document.dictLeft;
+//        newdata = [[iCloud sharedCloud] getDocument].dictLeft;
     }
     if([_jsonType isEqualToString:@"jsonRight"]){
-        //newdata = _document.dictRight;
-        newdata = [[iCloud sharedCloud] getDocument].dictRight;
+        newdata = _document.dictRight;
+//        newdata = [[iCloud sharedCloud] getDocument].dictRight;
     }
     if([_jsonType isEqualToString:@"jsonTop"]){
-//        newdata = _document.dictTop;
-        newdata = [[iCloud sharedCloud] getDocument].dictTop;
+        newdata = _document.dictTop;
+//        newdata = [[iCloud sharedCloud] getDocument].dictTop;
     }
     if([_jsonType isEqualToString:@"jsonFront"]){
-//        newdata = _document.dictFront;
-        newdata = [[iCloud sharedCloud] getDocument].dictFront;
+        newdata = _document.dictFront;
+//        newdata = [[iCloud sharedCloud] getDocument].dictFront;
     }
     if([_jsonType isEqualToString:@"jsonBack"]){
-        //newdata = _document.dictBack;
-        newdata = [[iCloud sharedCloud] getDocument].dictBack;
+        newdata = _document.dictBack;
+//        newdata = [[iCloud sharedCloud] getDocument].dictBack;
     }
 //    if([_jsonType isEqualToString:@"jsonLeft"]){
 //        newdata = _document.dictLeft;
@@ -549,7 +549,7 @@
     UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
     UIBarButtonItem * undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
     UIBarButtonItem * redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, redoBtn, undoBtn, gridBtn,magnetBtn, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, gridBtn, magnetBtn, nil];
     [self updateButtonStatus];
     [self registerActionView];
 
@@ -808,15 +808,40 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
         [magnet setTintColor:[UIColor colorNamed:@"orange"]];
         [self saveMagnetStateToDefaults:YES];
         [self.drawingView setMagnetActivated:YES];
+        [self showMagnetStateView:@"Auto - alignement enabled"];
+
 
     }
     else {
         [magnet setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
         [self saveMagnetStateToDefaults:NO];
         [self.drawingView setMagnetActivated:NO];
+        [self showMagnetStateView:@"Auto - alignement disabled"];
 
     }
     
+}
+
+- (void)showMagnetStateView:(NSString*)text {
+    UILabel *deletedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 100)];
+    deletedLabel.text = text;
+    deletedLabel.numberOfLines = 2;
+    deletedLabel.textColor = [UIColor whiteColor];
+    deletedLabel.textAlignment = NSTextAlignmentCenter;
+    deletedLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:15];
+
+    deletedLabel.backgroundColor = [UIColor colorNamed:@"orange"];
+    deletedLabel.layer.opacity = 0.9;
+    deletedLabel.center = self.view.center;
+    deletedLabel.layer.cornerRadius = 10;
+    deletedLabel.clipsToBounds = YES;
+    [self.view addSubview:deletedLabel];
+    
+    [UIView animateWithDuration:0.3 delay:0.7 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        deletedLabel.alpha = 0;
+    } completion:^(BOOL finished) {
+        [deletedLabel removeFromSuperview];
+    }];
 }
 
 -(void)showOrHideGrid{
@@ -1568,14 +1593,22 @@ return YES;
 - (void)saveDataToCloudWhenTerminating{
 
     NSLog(@"draw controller when terminate");
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:[[iCloud sharedCloud] getDocument]  completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-     if (!error) {
-         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-     } else {
-         NSLog(@"iCloud Document save error: %@", error);
-     }
- }];
-
+    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        // ...
+        if (success) {
+            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+        } else {
+            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+        }
+    }];
+//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:[[iCloud sharedCloud] getDocument]  completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+//     if (!error) {
+//         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//     } else {
+//         NSLog(@"iCloud Document save error: %@", error);
+//     }
+// }];
+//    [[iCloud sharedCloud] setDocument:nil];
 }
 
 
@@ -1592,8 +1625,8 @@ return YES;
 }
 - (void)updateButtonStatus
 {
-    [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
-    [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
+   // [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
+   // [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
 }
 
 #pragma mark - Sharing image

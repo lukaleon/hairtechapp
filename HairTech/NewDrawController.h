@@ -16,10 +16,14 @@
 #import "ColorViewNew.h"
 #import "OverlayTransitioningDelegate.h"
 #import "iCloudDocument.h"
+#import "MyDoc.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class NewDrawController;
+
+
 @protocol NewDrawControllerDelegate<NSObject>
+
 -(void)imageForButton:(UIImage*)imageForButton;
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing;
@@ -64,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSData * newdata;
 
 }
-@property (nonatomic, strong) iCloudDocument *document;
+@property (nonatomic, strong) MyDoc *document;
 
 @property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;
 
@@ -99,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AMPopTip *magnetTip;
 
 @property (nonatomic, strong) WEPopoverController *popoverController;
-@property (weak, nonatomic) id<NewDrawControllerDelegate>delegate;
+@property (weak, nonatomic) id<NewDrawControllerDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

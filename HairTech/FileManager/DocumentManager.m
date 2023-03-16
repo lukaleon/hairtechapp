@@ -18,8 +18,8 @@
 }
 
 + (NSURL *)documentDirectory {
-    return [self ubiquitousDocumentsDirectoryURL];
-    //return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+  //  return [self ubiquitousDocumentsDirectoryURL];
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
 }
 
 +(NSURL*)ubiquitousDocumentsDirectoryURL {
@@ -27,5 +27,18 @@
 }
 +(NSURL*)ubiquitousContainerURL {
     return [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+}
++(NSMutableArray*)getArrayOfFilesInDirectory{
+    NSMutableArray * array = [NSMutableArray array];
+    NSArray * dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] error:NULL];
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        if ([extension isEqualToString:@"htapp"]) {
+            [array addObject:filename];
+            NSLog(@"filename in appdelegate %@ ", filename );
+        }
+    }];
+    return array;
 }
 @end

@@ -85,7 +85,7 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 //    return YES;
 //}
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
-        NSLog(@"save to contents");
+    NSLog(@"save to contents");
 
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:NO];

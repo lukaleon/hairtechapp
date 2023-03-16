@@ -13,8 +13,7 @@
 #import "iCloud.h"
 #import "CustomActivityIndicator.h"
 #import "iCloudDocument.h"
-#import <QuickLook/QuickLook.h>
-#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
+#import "DocumentManager.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -36,7 +35,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     //Store buttons images and screenshot in dictionary after view appear
-    
+   // [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
 
 }
 -(void)setTechniqueID:(NSString*)techId{
@@ -44,12 +43,13 @@
 }
 
 -(void)viewDidLoad{
-    NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ", [[iCloud sharedCloud] getDocument].note,  [[iCloud sharedCloud] getDocument].techniqueName ,  [[iCloud sharedCloud] getDocument].maleFemale);
+   // NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ",    [MyDoc sharedDocument].note, [MyDoc sharedDocument].techniqueName , [MyDoc sharedDocument].maleFemale);
     
     [self loadImages];
     [self addNavigationItems];
     [self setupgestureRecognizers];
     [self registerNotifications];
+    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
     
 }
 -(void)saveEntryImageToCloud:(NSString*)name image:(UIImage*)img{
@@ -57,7 +57,9 @@
     name = [name stringByAppendingString:@".png"];
     
     // Append the desired file name to the URL
-    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+//    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name]; //iCloud
+    NSURL *fileURL = [[DocumentManager documentDirectory]URLByAppendingPathComponent:name];
+
 
     // Get the PNG data from the UIImage
     NSData *imageData = UIImagePNGRepresentation(img);
@@ -78,19 +80,39 @@
     NSLog(@"exit entry" );
    
     if (self.isMovingFromParentViewController){
+        
+        [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            // ...
+            if (success) {
+                [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+                
+                NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+            } else {
+                [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+            }
+        }];
+    }
+        
+        
+        
+        
+        
+        
+        
+//    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+//
+//           [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+//               if (!error) {
+//
+//                   NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//               } else {
+//                   NSLog(@"iCloud Document save error: %@", error);
+//               }
+//
+//           }];
+//        [[iCloud sharedCloud] setDocument:nil];
 
-    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-
-           [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-               if (!error) {
-                   NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-               } else {
-                   NSLog(@"iCloud Document save error: %@", error);
-               }
-
-           }];
-           
-        }
+        
  
  
 
@@ -134,6 +156,12 @@
     self.imageTop.image = self.document.imageTop;
     self.imageFront.image = self.document.imageFront;
     self.imageBack.image = self.document.imageBack;
+
+//    self.imageLeft.image = [MyDoc sharedInstance].imageLeft;
+//    self.imageRight.image = [MyDoc sharedInstance].imageRight;
+//    self.imageTop.image = [MyDoc sharedInstance].imageTop;
+//    self.imageFront.image = [MyDoc sharedInstance].imageFront;
+//    self.imageBack.image = [MyDoc sharedInstance].imageBack;
 }
 
 
@@ -155,7 +183,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"didEnterBackground" object:nil];
 //    
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
  
 }
 
@@ -264,7 +292,7 @@
     }
     if(pointInside){
         openingDrawingView = YES;
-      //  newDrawVC.document = [[iCloud sharedCloud] getDocument];
+        newDrawVC.document = self.document;
         [self.navigationController pushViewController: newDrawVC animated:YES];
     }
 }
@@ -274,8 +302,8 @@
 -(void)addNotes{
     
 //    NSMutableDictionary* dict = [[[NSUserDefaults standardUserDefaults] objectForKey:@"temporaryDictionary"] mutableCopy];
-   // NSString * note = self.document.note;
-    NSString * note = [[iCloud sharedCloud] getDocument].note;
+    NSString * note = self.document.note;
+//    NSString * note = [[iCloud sharedCloud] getDocument].note;
     NotesViewController *  notesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"notes"];
     if(note.length == 0||[note isEqualToString:@"(null)"]){
     notesVC.textOfTextView = @"";
@@ -288,8 +316,8 @@
 }
 -(void)saveNote:(NSString*)note{
     
-    [[iCloud sharedCloud] getDocument].note = note;
-    //self.document.note = note;
+//    [[iCloud sharedCloud] getDocument].note = note;
+    self.document.note = note;
 }
 
 #pragma mark - Saving Methods
@@ -322,9 +350,9 @@
    // [self storeImageInTempDictionary:thumbdata];
     //[self saveDataToCloudWhenCloseView];
    
-    [[iCloud sharedCloud] getDocument].imageEntry = newImage;
-
-    //self.document.imageEntry = newImage;
+  //  [[iCloud sharedCloud] getDocument].imageEntry = newImage;
+ ////   [MyDoc sharedDocument].imageEntry = newImage;
+    self.document.imageEntry = newImage;
     return newImage;
 }
 -(UIImage*)captureScreenRetina
@@ -337,8 +365,8 @@
     [self.screenShotView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    [[iCloud sharedCloud] getDocument].imageEntry = newImage;
-    //self.document.imageEntry = newImage;
+    //[[iCloud sharedCloud] getDocument].imageEntry = newImage;
+    self.document.imageEntry = newImage;
     return newImage;
 }
 /*
@@ -367,20 +395,35 @@
 
 - (void)saveDataToCloudWhenTerminating{
     NSLog(@"Save when terminate");
-    self.document = [[iCloud sharedCloud] getDocument];
     
-    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-
-    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-     if (!error) {
-         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-         
-         
-     } else {
-         NSLog(@"iCloud Document save error: %@", error);
-     }
- }];
-
+    
+    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        // ...
+        if (success) {
+            [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+        } else {
+            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+        }
+    }];
+    
+    
+    
+    
+//    self.document = [[iCloud sharedCloud] getDocument];
+//
+//    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+//
+//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:self.document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
+//     if (!error) {
+//         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
+//
+//
+//     } else {
+//         NSLog(@"iCloud Document save error: %@", error);
+//     }
+// }];
+//    [[iCloud sharedCloud] setDocument:nil];
 }
  
 
@@ -497,34 +540,34 @@
 -(void)passItemBackLeft:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageLeft.image = item;
-//    self.document.imageLeft = item;
-    [[iCloud sharedCloud] getDocument].imageLeft = item;
+    self.document.imageLeft = item;
+//    [[iCloud sharedCloud] getDocument].imageLeft = item;
 }
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageRight.image = item;
-    //self.document.imageRight = item;
-    [[iCloud sharedCloud] getDocument].imageRight = item;
+    self.document.imageRight = item;
+//    [[iCloud sharedCloud] getDocument].imageRight = item;
 }
 -(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageTop.image = item;
-//    self.document.imageTop = item;
-    [[iCloud sharedCloud] getDocument].imageTop = item;
+    self.document.imageTop = item;
+//    [[iCloud sharedCloud] getDocument].imageTop = item;
 }
 -(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageFront.image = item;
-//    self.document.imageFront = item;
-    [[iCloud sharedCloud] getDocument].imageFront = item;
+    self.document.imageFront = item;
+//    [[iCloud sharedCloud] getDocument].imageFront = item;
 
 }
 -(void)passItemBackBack:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing
 {
     self.openedFromDrawingView = openedFromDrawing;
     self.imageBack.image = item;
-//    self.document.imageBack = item;
-    [[iCloud sharedCloud] getDocument].imageBack = item;
+    self.document.imageBack = item;
+//    [[iCloud sharedCloud] getDocument].imageBack = item;
 }
 
 -(NSString*)currentDate{

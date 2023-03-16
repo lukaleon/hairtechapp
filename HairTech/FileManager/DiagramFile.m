@@ -20,7 +20,6 @@ static DiagramFile *_sharedInstance = nil;
   //  dispatch_once(&once_token, ^{
         if (_sharedInstance == nil) {
             _sharedInstance = [[DiagramFile alloc] init];
-
         }
     //});
     return _sharedInstance;

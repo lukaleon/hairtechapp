@@ -15,6 +15,7 @@
 #import "iCloud.h"
 #import "iCloudDocument.h"
 #import <sys/xattr.h>
+#import "DocumentManager.h"
 
 
 @interface MySubView()
@@ -478,8 +479,8 @@
     name = [name stringByAppendingString:@".png"];
     
     // Append the desired file name to the URL
-    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
-
+ //   NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+    NSURL * fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:name];
     // Get the PNG data from the UIImage
     NSData *imageData = UIImagePNGRepresentation(image);
     
@@ -498,7 +499,8 @@
     NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
     
-    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:exportingFileName];
+  //  NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:exportingFileName];
+    NSURL * fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:exportingFileName];
 
     
     [[NSUserDefaults standardUserDefaults] setObject:exportingFileName forKey:@"newCreatedFileName"];
@@ -536,8 +538,28 @@
     document.dictTop = [self storeJsonDataInDictionary];
     document.dictFront = [self storeJsonDataInDictionary];
     document.dictBack = [self storeJsonDataInDictionary];
+   
+    [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        // ...
+        if (success) {
+            [self addDefaultValueForFavoriteCell:exportingFileName];
+            [self saveEntryImageToCloud:document.fileURL.lastPathComponent document:document.imageEntry];
+
+            [self dismissViewControllerAnimated:YES completion:nil];
+
+            [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"openEntry"
+            object:self];
+            NSLog(@"Fuck yeah, %@ saved!",document.fileURL);
+        } else {
+            [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+        }
+    }];
     
     
+    
+  /*
+   [[iCloud sharedCloud] setDocument:document];
     [[iCloud sharedCloud] saveAndCloseDocumentWithName:document.fileURL.lastPathComponent withContent:document completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
         if (!error) {
             NSLog(@"iCloud Document saved with text:");
@@ -555,35 +577,9 @@
             NSLog(@"iCloud Document save error: %@", error);
         }
 
-    }];
+    }];*/
+
     
-//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:exportingFileName withContent:data completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
-//        if (!error) {
-//
-//            [self addDefaultValueForFavoriteCell:exportingFileName];
-//
-//            [[NSNotificationCenter defaultCenter]
-//                postNotificationName:@"populate"
-//                object:self];
-//
-//               [[NSNotificationCenter defaultCenter]
-//                postNotificationName:@"reloadCollection"
-//                object:self];
-//
-//               [self dismissViewControllerAnimated:YES completion:nil];
-//
-//           //    [[NSNotificationCenter defaultCenter]
-//             //   postNotificationName:@"openEntry"
-//               /// object:self];
-//
-//            NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-//        } else {
-//            NSLog(@"iCloud Document save error: %@", error);
-//        }
-//
-//
-//
-//    }];
 }
 //-(void)addCustomMetadata:(NSURL*)url{
 //   // NSString *filePath = @"/path/to/file";

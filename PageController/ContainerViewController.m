@@ -40,8 +40,8 @@
         self.arrayOfImages = @[
                        @"screen1",
                        @"screen2",
-                       @"screen1",
-                       @"screen1"
+                       @"screen3",
+                       @"screen4"
                        ];
         self.arrayOfTexts = @[
                        @"When creating a new diagram, choose either the female or male head template, then click 'Continue' and provide a name for the new diagram in the next window.",

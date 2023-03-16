@@ -55,6 +55,7 @@
     return self;
 }
 
+
 - (void)dealloc {
     [self.notificationCenter removeObserver:self];
 }
@@ -916,6 +917,8 @@
     return document;
 }
 
+
+
 - (void)retrieveCloudDocumentWithName:(NSString *)documentName completion:(void (^)(iCloudDocument *cloudDocument, NSData *documentData, NSError *error))handler {
     // Log Retrieval
     if (self.verboseLogging == YES) NSLog(@"[iCloud] Retrieving iCloud document, %@", documentName);
@@ -944,26 +947,23 @@
             if (self.verboseLogging == YES) NSLog(@"[iCloud] The document, %@, already exists and will be opened", documentName);
             
             // Create the UIDocument object from the URL
-            //iCloudDocument *document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+            iCloudDocument *documentNew = [[iCloudDocument alloc] initWithFileURL:fileURL];
            
-            document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+           documentNew = [[iCloudDocument alloc] initWithFileURL:fileURL];
 
-            if (document.documentState & UIDocumentStateClosed) {
+            if (documentNew.documentState & UIDocumentStateClosed) {
                 if (self.verboseLogging == YES) NSLog(@"[iCloud] Document is closed and will be opened");
                 
-                [document openWithCompletionHandler:^(BOOL success){
+                [documentNew openWithCompletionHandler:^(BOOL success){
                     if (success) {
                         // Log open
                         if (self.verboseLogging == YES) NSLog(@"[iCloud] Opened document");
                        
-                        
-                        
-                        
-                      //[document closeWithCompletionHandler:nil];
+                     // [document closeWithCompletionHandler:nil];
 
                         // Pass data on to the completion handler on the main thread
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            handler(document, document.contents, nil);
+                            handler(documentNew, documentNew.contents, nil);
                             
                            
                         });
@@ -971,28 +971,28 @@
                         return;
                     } else {
                         NSLog(@"[iCloud] Error while retrieving document: %s", __PRETTY_FUNCTION__);
-                        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while retrieving document, %@, from iCloud", __PRETTY_FUNCTION__, document.fileURL] code:200 userInfo:@{@"FileURL": fileURL}];
+                        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%s error while retrieving document, %@, from iCloud", __PRETTY_FUNCTION__, documentNew.fileURL] code:200 userInfo:@{@"FileURL": fileURL}];
                         
                         // Pass data on to the completion handler on the main thread
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            handler(document, document.contents, error);
+                            handler(documentNew, documentNew.contents, error);
                            
                         });
                         
                         return;
                     }
                 }];
-            } else if (document.documentState & UIDocumentStateNormal) {
+            } else if (documentNew.documentState & UIDocumentStateNormal) {
                 // Log open
                 if (self.verboseLogging == YES) NSLog(@"[iCloud] Document already opened, retrieving content");
                 
                 // Pass data on to the completion handler on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(document, document.contents, nil);
+                    handler(documentNew, documentNew.contents, nil);
                 });
                 
                 return;
-            } else if (document.documentState & UIDocumentStateInConflict) {
+            } else if (documentNew.documentState & UIDocumentStateInConflict) {
                 // Log open
                 if (self.verboseLogging == YES) NSLog(@"[iCloud] Document in conflict. The document may not contain correct data. An error will be returned along with the other parameters in the completion handler.");
                 
@@ -1002,17 +1002,17 @@
                 
                 // Pass data on to the completion handler on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(document, document.contents, error);
+                    handler(documentNew, documentNew.contents, error);
                 });
                 
                 return;
-            } else if (document.documentState & UIDocumentStateEditingDisabled) {
+            } else if (documentNew.documentState & UIDocumentStateEditingDisabled) {
                 // Log open
                 if (self.verboseLogging == YES) NSLog(@"[iCloud] Document editing disabled. The document is not currently editable, use the documentStateForFile: method to determine when the document is available again. The document and its contents will still be passed as parameters in the completion handler.");
                 
                 // Pass data on to the completion handler on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(document, document.contents, nil);
+                    handler(documentNew, documentNew.contents, nil);
                     
                 });
                 
@@ -1024,16 +1024,16 @@
             if (self.verboseLogging == YES) NSLog(@"[iCloud] The document, %@, does not exist and will be created as an empty document", documentName);
             
             // Create the UIDocument
-            iCloudDocument *document = [[iCloudDocument alloc] initWithFileURL:fileURL];
-            document.contents = [[NSData alloc] init];
+            iCloudDocument *documentNew = [[iCloudDocument alloc] initWithFileURL:fileURL];
+            documentNew.contents = [[NSData alloc] init];
             
             // Save the new document to disk
-            [document saveToURL:fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            [documentNew saveToURL:fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 // Log save
                 if (self.verboseLogging == YES) NSLog(@"[iCloud] Saved and opened the document");
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(document, document.contents, nil);
+                    handler(documentNew, documentNew.contents, nil);
                     
                  
                     
@@ -1511,55 +1511,55 @@
 - (void)deleteDocumentWithName:(NSString *)documentName completion:(void (^)(NSError *error))handler {
     // Log delete
     if (self.verboseLogging == YES) NSLog(@"[iCloud] Attempting to delete document");
-    
+
     // Check for iCloud
     if ([self quickCloudCheck] == NO) return;
-    
+
     // Check for nil / null document name
     if (documentName == nil || [documentName isEqualToString:@""]) {
         // Log error
         if (self.verboseLogging == YES) NSLog(@"[iCloud] Specified document name must not be empty");
         return;
     }
-    
+
     @try {
         // Create the URL for the file that is being removed
         NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
-        
+
         // Check that the file exists
         if ([self.fileManager fileExistsAtPath:[fileURL path]]) {
             // Log share
             if (self.verboseLogging == YES) NSLog(@"[iCloud] File exists, attempting to delete it");
-            
+
             // Move to the background thread for safety
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-                
+
                 // Use a file coordinator to safely delete the file
                 NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
                 [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingForDeleting error:nil byAccessor:^(NSURL *writingURL) {
                     // Create the error handler
                     NSError *error;
-                    
+
                     [self.fileManager removeItemAtURL:writingURL error:&error];
                     if (error) {
                         // Log failure
                         NSLog(@"[iCloud] An error occurred while deleting the document: %@", error);
-                        
+
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (handler) handler(error);
                         });
-                        
+
                         return;
                     } else {
                         // Log success
                         if (self.verboseLogging == YES) NSLog(@"[iCloud] The document has been deleted");
-                        
+
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self updateFiles];
                             if (handler) handler(nil);
-                        
+
                         });
-                        
+
                         return;
                     }
                 }];
@@ -1577,6 +1577,106 @@
         NSLog(@"[iCloud] Caught exception while deleting file: %@\n\n%s", exception, __PRETTY_FUNCTION__);
     }
 }
+
+
+/*
+
+- (void)deleteDocumentWithName:(NSString *)documentName completion:(void (^)(NSError *error))completion {
+    // Log delete
+    if (self.verboseLogging) {
+        NSLog(@"[iCloud] Attempting to delete document: %@", documentName);
+    }
+
+    if (!self.quickCloudCheck) {
+        return;
+    }
+
+    NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:documentName];
+
+    if (!fileURL) {
+        return;
+    }
+
+    if (documentName.length == 0) {
+        NSLog(@"[iCloud] Specified document name must not be empty");
+        NSError *error = [NSError errorWithDomain:@"The specified document name was empty / blank and could not be saved. Specify a document name next time." code:001 userInfo:nil];
+        if (completion) {
+            completion(error);
+        }
+        return;
+    }
+
+    if (![self.fileManager fileExistsAtPath:fileURL.path]) {
+        NSLog(@"[iCloud] File not found: %@", documentName);
+        NSDictionary *userInfo = @{@"fileURL": fileURL};
+        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"The document, %@, does not exist at path %@", documentName, fileURL.path] code:404 userInfo:userInfo];
+        if (completion) {
+            completion(error);
+        }
+        return;
+    }
+
+    void (^finish)(void) = ^{
+        if (completion) {
+            completion(nil);
+        }
+    };
+
+    if (self.verboseLogging) {
+        NSLog(@"[iCloud] File exists, attempting to delete it");
+    }
+    
+    // Use a file coordinator to safely delete the file
+    //                NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    //                [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingForDeleting error:nil byAccessor:^(NSURL *writingURL) {
+    
+    
+
+    BOOL successfulSecurityScopedResourceAccess = [fileURL startAccessingSecurityScopedResource];
+
+    NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    //NSFileAccessIntent *writingIntent = [[NSFileAccessIntent alloc] initWithWritingIntentWithURL:fileURL options:NSFileCoordinatorWritingForDeleting];
+    
+    NSFileAccessIntent * writingIntent = [NSFileAccessIntent writingIntentWithURL:fileURL options:NSFileCoordinatorWritingForDeleting];
+    NSOperationQueue *backgroundQueue = [[NSOperationQueue alloc] init];
+
+    [fileCoordinator coordinateAccessWithIntents:@[writingIntent] queue:backgroundQueue byAccessor:^(NSError * _Nullable accessError) {
+        if (accessError) {
+            NSLog(@"[iCloud] Access error occurred while deleting document: %@", accessError.localizedDescription);
+            if (completion) {
+                completion(accessError);
+            }
+        } else {
+            NSError *error = nil;
+
+            if ([self.fileManager removeItemAtURL:writingIntent.URL error:&error]) {
+                if (successfulSecurityScopedResourceAccess) {
+                    [fileURL stopAccessingSecurityScopedResource];
+                }
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self updateFiles];
+                    finish();
+                });
+            } else {
+                NSLog(@"[iCloud] An error occurred while deleting document: %@", error.localizedDescription);
+                if (successfulSecurityScopedResourceAccess) {
+                    [fileURL stopAccessingSecurityScopedResource];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (completion) {
+                        completion(error);
+                    }
+                });
+            }
+        }
+    }];
+}
+
+
+
+*/
+
 
 - (void)evictCloudDocumentWithName:(NSString *)documentName completion:(void (^)(NSError *error))handler {
     // Log download

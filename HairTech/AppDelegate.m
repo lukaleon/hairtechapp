@@ -12,7 +12,7 @@
 #import "MAThemeKit.h"
 #import "Flurry.h"
 #import "iCloud.h"
-
+#import "DocumentManager.h"
 /*
  *  System Versioning Preprocessor Macros
  */
@@ -52,21 +52,18 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"version08"]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"versionTest2"]) {
         [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        self.firstTimeAfeterUpdate = YES;
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"version08"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"versionTest2"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
        
         [self saveMagnetStateToDefaults:YES];
 
-    } else {
-        self.firstTimeAfeterUpdate = NO;
-    }
+    } 
 
     [self getCurrentMode];
     
@@ -142,14 +139,15 @@
 */
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    __block UIBackgroundTaskIdentifier backgroundTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-
-        NSLog(@"Background Time:%f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
-
-        [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskIdentifier];
-
-        backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-    }];
+    
+//    __block UIBackgroundTaskIdentifier backgroundTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+//
+//        NSLog(@"Background Time:%f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
+//
+//        [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskIdentifier];
+//
+//        backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+//    }];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -271,8 +269,8 @@
     name = [name stringByAppendingString:@".png"];
     
     // Append the desired file name to the URL
-    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
-
+//    NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL]URLByAppendingPathComponent:name];
+    NSURL * fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:name];
     // Get the PNG data from the UIImage
     NSData *imageData = UIImagePNGRepresentation(image);
     
@@ -294,24 +292,32 @@
 
             NSString *uniqueFileName = [self createUniqueFileName:fileName];
 
-            NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+           // NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+            NSURL * fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:uniqueFileName];
 
             NSData *fileData = [NSData dataWithContentsOfURL:url];
             NSError *error = nil;
             BOOL success = [fileData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
             if (success) {
-                
+                _fileImported = YES;
                 [[NSUserDefaults standardUserDefaults] setObject:uniqueFileName forKey:@"newCreatedFileName"];
+                
                 [self addDefaultValueForFavoriteCell:uniqueFileName];
 
                
 //                [[NSNotificationCenter defaultCenter]
 //                    postNotificationName:@"reloadCollection"
 //                    object:self];
-               
-                [[NSNotificationCenter defaultCenter]
-                    postNotificationName:@"openEntry"
-                    object:self];
+//
+                
+                    
+                    // Create a delay of 2 seconds
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    // Remove the activity indicator after the delay
+                    [[NSNotificationCenter defaultCenter]
+                     postNotificationName:@"openEntry"
+                     object:self];
+                });
                 
             } else {
                 // There was an error saving the file
@@ -347,13 +353,14 @@
     NSString *fileNameWithoutExtension = [fileName stringByDeletingPathExtension];
     NSString *uniqueFileName = fileName;
     
-    NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
-    
+   // NSURL *fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+    NSURL *fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:uniqueFileName];
     int i = 1;
     while ([fileManager fileExistsAtPath:fileURL.path]) {
         
         uniqueFileName = [NSString stringWithFormat:@"%@%@_%d.%@", basePath, fileNameWithoutExtension, i, fileExtension];
-        fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+      //  fileURL = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
+        fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:uniqueFileName];
         i++;
     }
     
@@ -361,17 +368,17 @@
 }
 #pragma mark - Cloud Init Methods
 
--(NSURL *)applicationCloudFolder:(NSString *)fileName
-{    
-    // append our file name
-    //NSLog(@"file name app delegate %@", fileName);
-   // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
-    NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-    NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
-    cloudDocuments = [cloudDocuments URLByAppendingPathComponent:fileName];
-
-    return cloudDocuments;
-}
+//-(NSURL *)applicationCloudFolder:(NSString *)fileName
+//{    
+//    // append our file name
+//    //NSLog(@"file name app delegate %@", fileName);
+//   // NSURL * cloudDocuments = [[self ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:fileName];
+//    NSURL * cloudRootUrl = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+//    NSURL * cloudDocuments = [cloudRootUrl URLByAppendingPathComponent:@"Documents"];
+//    cloudDocuments = [cloudDocuments URLByAppendingPathComponent:fileName];
+//
+//    return cloudDocuments;
+//}
 
 -(NSURL*)ubiquitousDocumentsDirectoryURL {
     return [[self ubiquitousContainerURL] URLByAppendingPathComponent:@"Documents"];

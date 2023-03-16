@@ -39,17 +39,20 @@
                                                        self.view.frame.origin.y,
                                                        self.view.frame.size.width,
                                                        self.view.frame.size.width * 1.3)];
-//    self.imageview.center =  self.view.center;
+
 
     [self.imageview setImage:[UIImage imageNamed:self.imageName]];
     [self.imageview setContentMode:UIViewContentModeScaleAspectFit];
     [self.view addSubview:self.imageview];
+   
     self.imageview.translatesAutoresizingMaskIntoConstraints = NO;
     [[self.imageview.centerXAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.centerXAnchor] setActive:YES];
     [[self.imageview.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:30] setActive:YES];
     [[self.imageview.widthAnchor constraintEqualToConstant:imageWidthConstant] setActive:YES];
     [[self.imageview.heightAnchor constraintEqualToAnchor:self.imageview.widthAnchor multiplier:1.3] setActive:YES];
+    
 
+  
 }
 
 -(void)addBottomView{

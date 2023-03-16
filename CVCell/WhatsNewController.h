@@ -6,7 +6,7 @@
 //  Copyright © 2022 Admin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
