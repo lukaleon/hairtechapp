@@ -29,19 +29,19 @@
 {
     self = [super init];
     if (self) {
-        self.frame = CGRectMake(0, 0, 120, 120);
+        self.frame = CGRectMake(0, 0, 60, 60);
         self.backgroundColor = [UIColor clearColor];
         self.layer.borderWidth = 1;
         self.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-        self.layer.cornerRadius = 60;
+        self.layer.cornerRadius = 30;
         self.layer.masksToBounds = YES;
-        self.windowLevel = UIWindowLevelAlert;
+     //   self.windowLevel = UIWindowLevelAlert;
         
-        self.contentLayer = [CALayer layer];
-        self.contentLayer.frame = self.bounds;
-        self.contentLayer.delegate = self;
-        self.contentLayer.contentsScale = [[UIScreen mainScreen] scale];
-        [self.layer addSublayer:self.contentLayer];
+//        self.contentLayer = [CALayer layer];
+//        self.contentLayer.frame = self.bounds;
+//        self.contentLayer.delegate = self;
+//        self.contentLayer.contentsScale = [[UIScreen mainScreen] scale];
+//        [self.layer addSublayer:self.contentLayer];
     }
     
     return self;
@@ -57,7 +57,7 @@
     }
     
     self.center = center;
-    [self.contentLayer setNeedsDisplay];
+//    [self.contentLayer setNeedsDisplay];
 }
 
 /*
@@ -70,12 +70,32 @@
 }
 */
 
-- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
-{
-    CGContextTranslateCTM(ctx, self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-	CGContextScaleCTM(ctx, 1.2, 1.2);
-	CGContextTranslateCTM(ctx, -1 * self.pointToMagnify.x, -1 * self.pointToMagnify.y);
-	[self.viewToMagnify.layer renderInContext:ctx];
+- (void)drawRect:(CGRect)rect {
+        NSLog(@"Draw layer");
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextTranslateCTM(context, self.frame.size.width/2, self.frame.size.height/2 );
+    CGContextScaleCTM(context, 1.2, 1.2);
+    CGContextConcatCTM(context, [self transform]);
+
+    CGContextTranslateCTM(context, -self.pointToMagnify.x, -self.pointToMagnify.y  );
+
+    [self.viewToMagnify.layer renderInContext:context];
 }
+//
+//- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
+//{
+//    NSLog(@"Draw layer");
+////    if (!CGRectContainsPoint(self.viewToMagnify.bounds, self.pointToMagnify)) {
+////        NSLog(@"Invalid pointToMagnify!");
+////        return;
+////    }
+//
+//    CGContextTranslateCTM(ctx, self.frame.size.width * 0.5, self.frame.size.height * 0.5);
+//	CGContextScaleCTM(ctx, 1.2, 1.2);
+//	CGContextTranslateCTM(ctx, -1 * self.pointToMagnify.x, -1 * self.pointToMagnify.y);
+//	[self.viewToMagnify.layer renderInContext:ctx];
+//}
 
 @end

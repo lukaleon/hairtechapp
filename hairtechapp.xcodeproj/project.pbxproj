@@ -108,6 +108,10 @@
 		40D86A1A296D82F0009991A8 /* OldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D86A19296D82F0009991A8 /* OldCell.m */; };
 		40D86A1D296DE6FC009991A8 /* ReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D86A1C296DE6FC009991A8 /* ReusableView.m */; };
 		40DC4707284A143900509D4D /* Ruler.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC4706284A143900509D4D /* Ruler.m */; };
+		40EC9E4B29C6E01200765675 /* ACLoupe.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EC9E4829C6E01200765675 /* ACLoupe.m */; };
+		40EC9E4C29C6E01200765675 /* ACMagnifyingGlass.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EC9E4929C6E01200765675 /* ACMagnifyingGlass.m */; };
+		40EC9E4F29C711CE00765675 /* CHMagnifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EC9E4D29C711CE00765675 /* CHMagnifierView.m */; };
+		40EC9E5129C7474A00765675 /* MagnifyingGlassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EC9E5029C7474A00765675 /* MagnifyingGlassView.swift */; };
 		40ED75A3293BCFA100059FE2 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40ED75A1293BCFA100059FE2 /* ContainerViewController.m */; };
 		40F689C129797AFF008921E6 /* FrameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F689C029797AFF008921E6 /* FrameLayer.m */; };
 		40FCA47329268A050082D645 /* tableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FCA47229268A050082D645 /* tableCell.m */; };
@@ -421,7 +425,6 @@
 		B4EB2BCA2374150A00F149C6 /* men-iphone7-front-tr.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EB2BBA2374150900F149C6 /* men-iphone7-front-tr.png */; };
 		B4EB2BCB2374150A00F149C6 /* men-iphone7-top-tr.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EB2BBB2374150900F149C6 /* men-iphone7-top-tr.png */; };
 		B4EB2BCC2374150A00F149C6 /* men-iphone7-full.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EB2BBC2374150A00F149C6 /* men-iphone7-full.png */; };
-		B4F25E752142F929003091C2 /* CHMagnifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F25E732142F928003091C2 /* CHMagnifierView.m */; };
 		B4F48D3016D81DCE0053D2D5 /* FrontHeadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A1617C16D8071B008B7FB2 /* FrontHeadViewController.m */; };
 		B4F48D3E16D82A530053D2D5 /* BackHeadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F48D3A16D8272C0053D2D5 /* BackHeadViewController.m */; };
 		B4FA42961721E2BA00FFA136 /* btn_lefthead@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B4FA42911721E2BA00FFA136 /* btn_lefthead@2x.png */; };
@@ -599,6 +602,13 @@
 		40D86A1C296DE6FC009991A8 /* ReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReusableView.m; sourceTree = "<group>"; };
 		40DC4706284A143900509D4D /* Ruler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ruler.m; sourceTree = "<group>"; };
 		40DC4708284A144A00509D4D /* Ruler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; };
+		40EC9E4729C6E01200765675 /* ACMagnifyingGlass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACMagnifyingGlass.h; sourceTree = "<group>"; };
+		40EC9E4829C6E01200765675 /* ACLoupe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACLoupe.m; sourceTree = "<group>"; };
+		40EC9E4929C6E01200765675 /* ACMagnifyingGlass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACMagnifyingGlass.m; sourceTree = "<group>"; };
+		40EC9E4A29C6E01200765675 /* ACLoupe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACLoupe.h; sourceTree = "<group>"; };
+		40EC9E4D29C711CE00765675 /* CHMagnifierView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMagnifierView.m; sourceTree = "<group>"; };
+		40EC9E4E29C711CE00765675 /* CHMagnifierView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMagnifierView.h; sourceTree = "<group>"; };
+		40EC9E5029C7474A00765675 /* MagnifyingGlassView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagnifyingGlassView.swift; sourceTree = "<group>"; };
 		40ED75A1293BCFA100059FE2 /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
 		40ED75A2293BCFA100059FE2 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
 		40F689BF29797AFF008921E6 /* FrameLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FrameLayer.h; sourceTree = "<group>"; };
@@ -986,8 +996,6 @@
 		B4EB2BBA2374150900F149C6 /* men-iphone7-front-tr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "men-iphone7-front-tr.png"; sourceTree = "<group>"; };
 		B4EB2BBB2374150900F149C6 /* men-iphone7-top-tr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "men-iphone7-top-tr.png"; sourceTree = "<group>"; };
 		B4EB2BBC2374150A00F149C6 /* men-iphone7-full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "men-iphone7-full.png"; sourceTree = "<group>"; };
-		B4F25E732142F928003091C2 /* CHMagnifierView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMagnifierView.m; sourceTree = "<group>"; };
-		B4F25E742142F928003091C2 /* CHMagnifierView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMagnifierView.h; sourceTree = "<group>"; };
 		B4F48D3916D827180053D2D5 /* BackHeadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackHeadViewController.h; sourceTree = "<group>"; };
 		B4F48D3A16D8272C0053D2D5 /* BackHeadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackHeadViewController.m; sourceTree = "<group>"; };
 		B4FA42911721E2BA00FFA136 /* btn_lefthead@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_lefthead@2x.png"; sourceTree = "<group>"; };
@@ -1274,6 +1282,7 @@
 			children = (
 				4079874329643C32004C86ED /* Hairtech-Bridging-Header.h */,
 				4077D50B29A67EEF00A88399 /* WhatsNewObjcWrapper.swift */,
+				40EC9E5029C7474A00765675 /* MagnifyingGlassView.swift */,
 				4079875229643D69004C86ED /* Extension */,
 				4079874D29643D53004C86ED /* Data */,
 			);
@@ -2007,10 +2016,14 @@
 		B4F25E722142F916003091C2 /* Magnify */ = {
 			isa = PBXGroup;
 			children = (
-				B4F25E742142F928003091C2 /* CHMagnifierView.h */,
-				B4F25E732142F928003091C2 /* CHMagnifierView.m */,
+				40EC9E4E29C711CE00765675 /* CHMagnifierView.h */,
+				40EC9E4D29C711CE00765675 /* CHMagnifierView.m */,
 				40DC4708284A144A00509D4D /* Ruler.h */,
 				40DC4706284A143900509D4D /* Ruler.m */,
+				40EC9E4A29C6E01200765675 /* ACLoupe.h */,
+				40EC9E4829C6E01200765675 /* ACLoupe.m */,
+				40EC9E4729C6E01200765675 /* ACMagnifyingGlass.h */,
+				40EC9E4929C6E01200765675 /* ACMagnifyingGlass.m */,
 			);
 			path = Magnify;
 			sourceTree = "<group>";
@@ -2631,6 +2644,7 @@
 				407FB92128FE99C300371E24 /* NewEntryController.m in Sources */,
 				B45D56BD1806130900A25626 /* SpringboardLayoutAttributes.m in Sources */,
 				B401CA041B04796E00596292 /* FMDatabaseAdditions.m in Sources */,
+				40EC9E4C29C6E01200765675 /* ACMagnifyingGlass.m in Sources */,
 				4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */,
 				B419661717F9CCC8003E9159 /* UIView+REFrostedViewController.m in Sources */,
 				B4BBBBAC1AF36E0D00A9FA45 /* UIBarButtonItem+WEPopover.m in Sources */,
@@ -2667,7 +2681,6 @@
 				B401CA0B1B04798D00596292 /* FMDBDataAccess.m in Sources */,
 				B419661617F9CCC8003E9159 /* UIImage+REFrostedViewController.m in Sources */,
 				4014B18229993E4C007B3B2E /* MHPrettyDate.m in Sources */,
-				B4F25E752142F929003091C2 /* CHMagnifierView.m in Sources */,
 				B4F48D3016D81DCE0053D2D5 /* FrontHeadViewController.m in Sources */,
 				4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */,
 				40B79AE92922BBA6003A8680 /* TODetailTableViewController.m in Sources */,
@@ -2690,10 +2703,13 @@
 				B4682CAB1AFF4F9300FA2A5D /* MAThemeKit.m in Sources */,
 				40FCA47629268A390082D645 /* collectionCell.m in Sources */,
 				B401CA081B04798000596292 /* Utility.m in Sources */,
+				40EC9E5129C7474A00765675 /* MagnifyingGlassView.swift in Sources */,
 				B434126E16E61E25003FAFA7 /* ColorButton.m in Sources */,
 				400C4D3629A9CDDB0019DDA0 /* WSCoachMarksView.m in Sources */,
 				B434126F16E61E25003FAFA7 /* GzColors.m in Sources */,
+				40EC9E4B29C6E01200765675 /* ACLoupe.m in Sources */,
 				B4A3D38323799F3400D5D369 /* MySubView.m in Sources */,
+				40EC9E4F29C711CE00765675 /* CHMagnifierView.m in Sources */,
 				B434127016E61E25003FAFA7 /* ColorViewController.m in Sources */,
 				4014B18C29A375CD007B3B2E /* CustomActivityIndicator.m in Sources */,
 				B4188FBA171C7DBE0035785B /* ACEDrawingTools.m in Sources */,

@@ -488,12 +488,15 @@
             [self performSegueWithIdentifier:@"showWeb" sender:self];
         }
     }
-    else {
+    else {if(indexPath.row == 0){
+        [self.navigationController pushViewController:oldCollection animated:YES];
+         }
         if(indexPath.row == 1){
-            [self.navigationController presentViewController:pageVc animated:YES completion:nil];
+        [self.navigationController presentViewController:pageVc animated:YES completion:nil];
         }
-        if(indexPath.row == 0){
-            [self.navigationController pushViewController:oldCollection animated:YES];
+
+        if(indexPath.row == 2){
+            [self performSegueWithIdentifier:@"showWeb" sender:self];            
         }
     }
 }

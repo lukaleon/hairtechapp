@@ -17,13 +17,14 @@
 #import "NameViewController.h"
 #import "TODetailTableViewController.h"
 #import "Hairtech-Bridging-Header.h"
+#import "Hairtech-Swift.h"
 #import "TemporaryDictionary.h"
 #import "ReusableView.h"
 #import "DiagramFile.h"
 #import "iCloud.h"
 #import "iCloudDocument.h"
 #import "CustomActivityIndicator.h"
-#import "Hairtech-Swift.h"
+
 #import "WSCoachMarksView.h"
 #import "iCloudDocument.h"
 #import <QuickLook/QuickLook.h>

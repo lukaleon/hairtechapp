@@ -9,8 +9,10 @@
 #import "SPUserResizableView.h"
 #import "LayersData.h"
 #import "FrameLayer.h"
-
-
+#import "CHMagnifierView.h"
+#import "ACMagnifyingGlass.h"
+#import "Hairtech-Bridging-Header.h"
+#import "Hairtech-Swift.h"
 #define ACEDrawingViewVersion   1.0.0
 
 typedef enum {
@@ -114,7 +116,20 @@ typedef enum {
     NSString * _jsonKey;
     
     BOOL touchCanceled;
+    UIWindow *window;
+
+
 }
+//@property ACMagnifyingGlass * magnifyingGlass;
+@property (nonatomic, assign) CGFloat magnifyingGlassShowDelay;
+@property  CHMagnifierView * magnifierView;
+@property MagnifyingGlassView * magnifingGlass;
+@property (nonatomic, retain) NSTimer *touchTimer;
+- (void)addMagnifyingGlassAtPoint:(CGPoint)point;
+- (void)removeMagnifyingGlass;
+- (void)updateMagnifyingGlassAtPoint:(CGPoint)point;
+
+
 - (void)applyScale:(CGFloat)scale toView:(UIView *)view;
 
 -(void)setJsonData:(NSData*)jsonData;

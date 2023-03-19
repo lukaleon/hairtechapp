@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CHMagnifierView : UIWindow
+@interface CHMagnifierView : UIView
 
 @property (nonatomic) UIView *viewToMagnify;
 @property (nonatomic) CGPoint pointToMagnify;

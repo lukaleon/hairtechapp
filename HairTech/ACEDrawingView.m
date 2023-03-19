@@ -1,3 +1,4 @@
+#define DTDefaultLoupeMagnification    1.20f       // Match Apple's Magnification
 
 
 #import "ACEDrawingView.h"
@@ -13,8 +14,7 @@
 #import "DrawViewController.h"
 #import "DotLayer.h"
 #import "DiagramFile.h"
-
-//#define kDefaultLineColor       [UIColor redColor]
+#import "ACLoupe.h"
 #define kDefaultLineWidth       10.0f;
 #define kDefaultLineAlpha       1.0f
 
@@ -30,6 +30,7 @@
 #define IDIOM    UI_USER_INTERFACE_IDIOM()
 #define IPAD     UIUserInterfaceIdiomPad
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+static CGFloat const kACMagnifyingViewDefaultShowDelay = 0.5;
 
 @interface ACEDrawingView ()
 
@@ -57,8 +58,7 @@
 
 //@property (nonatomic,strong,readwrite) UIImage *image;
 
-@property (strong, nonatomic) NSTimer *touchTimer;
-@property (strong, nonatomic) CHMagnifierView *magnifierView;
+//@property (strong, nonatomic) NSTimer *touchTimer;
 @property (strong, nonatomic) Ruler *Ruler;
 
 
@@ -74,7 +74,6 @@
 @implementation ACEDrawingView
 
 
-
 @synthesize dataSource = _dataSource;
 
 @synthesize a,b,c,d,pa,pb,pc,pd, touchesCount,touchesForEditMode;
@@ -86,11 +85,9 @@
 @synthesize pan;
 @synthesize touchesForUpdate;
 @synthesize viewForDot;
-
-
 //@synthesize tapRecognizer;
 //@synthesize panRecognizer;
-
+//@synthesize magnifyingGlass;
 CGFloat red;
 CGFloat green;
 CGFloat blue;
@@ -113,7 +110,9 @@ UIColor* tempColor;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
+        self.magnifyingGlassShowDelay = kACMagnifyingViewDefaultShowDelay;
+
+
         
     }
     return self;
@@ -504,6 +503,7 @@ UIColor* tempColor;
         // [self loadDataFromJsonOnStart]; //LOAADING DATA FROM JSON
         //        [self updateAllPoints]; //UPDATE START AND END POINT TO MAGNIFY
         
+        
     }
     return self;
 }
@@ -602,12 +602,19 @@ UIColor* tempColor;
     CGPoint currentPoint = [touch locationInView:self];
     pointBegin = currentPoint;
     startOfLine = currentPoint;
+  
     if (self.selectedLayer.type != JVDrawingTypeCurvedLine || self.selectedLayer.type != JVDrawingTypeCurvedDashLine ){
-        self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                           target:self
-                                                         selector:@selector(showLoupe2:)
-                                                         userInfo:nil
-                                                          repeats:NO];
+        
+    pointForLoupe = [touch locationInView:self]; //point where loupe will be shown
+
+   
+        
+                self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                                   target:self
+                                                                 selector:@selector(showLoupe2:)
+                                                                 userInfo:nil
+                                                                  repeats:NO];
+
     }
     if (UIMenuController.sharedMenuController.isMenuVisible) {
         [UIMenuController.sharedMenuController setMenuVisible:NO animated:YES];
@@ -652,7 +659,8 @@ UIColor* tempColor;
 
 
     
-    pointForLoupe = [touch locationInView:self.window]; //point where loupe will be shown
+    pointForLoupe = [touch locationInView:self]; //point where loupe will be shown
+    
     self.type = self.bufferType;
 
     if (self.isFirstTouch) {
@@ -722,7 +730,7 @@ UIColor* tempColor;
             }
             if (self.selectedLayer.type == JVDrawingTypeGraffiti) {
                 [self.selectedLayer moveGrafiitiPathPreviousPoint:previousPoint currentPoint:currentPoint];
-                self.magnifierView.hidden = YES;
+//                self.magnifierView.hidden = YES;
                   
                 // Curved line creating and moving
             }
@@ -734,9 +742,8 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-                        if (self.magnifierView.hidden == NO){
-                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-                        }
+                        [_magnifingGlass magnifyAt:[touch locationInView:self]];
+
                         break;
                     case JVDrawingTouchMid:
                         NSLog(@"CURVED MID TOUCHED");
@@ -749,9 +756,8 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer2 atIndex:0];
-                        if (self.magnifierView.hidden == NO ){
-                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-                        }
+                        [_magnifingGlass magnifyAt:[touch locationInView:self]];
+
                         break;
                         
                     case JVDrawingTouchNone:
@@ -802,10 +808,9 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
-                        
-                        if (self.magnifierView.hidden == NO){
-                            self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-                        }
+                        [_magnifingGlass magnifyAt:[touch locationInView:self]];
+
+//                        }
                         break;
                     case JVDrawingTouchMid:
                         NSLog(@"MOVING MIDDLE POINT");
@@ -822,9 +827,8 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
-                            if (self.magnifierView.hidden == NO ){
-                                self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];
-                        }
+                        [_magnifingGlass magnifyAt:[touch locationInView:self]];
+
                         break;
                     default:
                         break;
@@ -843,9 +847,13 @@ UIColor* tempColor;
             }
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             self.lastTouch = currentPoint;
-            if (self.magnifierView.hidden == NO){
-                self.magnifierView.pointToMagnify = [[touches anyObject] locationInView:self.window];//show Loupe
-            }
+       
+            
+            [_magnifingGlass magnifyAt:[touch locationInView:self]];
+
+//            [self updateMagnifyingGlassAtPoint:[touch locationInView:self]];
+
+           
         }
     }
     
@@ -859,8 +867,12 @@ UIColor* tempColor;
     NSLog(@"Touches ended");
     NSLog(@"Layer count = %lu", (unsigned long)self.layer.sublayers.count);
     unsigned long count = [[event allTouches] count];
+   
     
-    
+    [self.touchTimer invalidate];
+    self.touchTimer = nil;
+    _magnifingGlass.magnifiedView = nil;
+
 //    if(distanceBetweentTouches <= 2 ){
 //        NSLog(@"touches >");
 //
@@ -960,7 +972,8 @@ UIColor* tempColor;
   //  [self.delegate enableZoomWhenTouchesMoved];
 }
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    
+    _magnifingGlass.magnifiedView = nil;
+
     [self touchesEnded:touches withEvent:event];
 
 }
@@ -1204,7 +1217,7 @@ UIColor* tempColor;
 -(void)updateZoomFactor:(CGFloat)zoomFactor{
     
     [self.touchTimer invalidate];
-    [self.magnifierView setHidden:YES];
+   // [self.magnifierView setHidden:YES];
     
     self.zoomFactor = zoomFactor;
     self.drawingLayer.zoomFactor = zoomFactor;
@@ -1773,6 +1786,7 @@ UIColor* tempColor;
 
 - (void)configure
 {
+    
     self.arrayOfCircles = [NSMutableArray array];
     touchesMoved = NO;
     self.pointsLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 80, 500, 40)];
@@ -1785,23 +1799,27 @@ UIColor* tempColor;
     self.pointsCoord = [NSMutableArray array];
     self.arrayOfTextViews = [NSMutableArray array];
     
+
+
+    
 }
 
-#pragma mark - Show Loupe methods
+#pragma mark - magnifier functions
+
 - (void)showLoupe:(NSTimer *)timer
 {
     
-    if ((self.magnifierView == nil)&&(countGlobal == 1)) {
-        self.magnifierView = [[CHMagnifierView alloc] init];
-        self.magnifierView.viewToMagnify = self.window;
-        
-        
-    }
+//    if ((self.magnifierView == nil)&&(countGlobal == 1)) {
+//        self.magnifierView = [[CHMagnifierView alloc] init];
+//
+//        self.magnifierView.viewToMagnify = self.window;
+//
+//
+//    }
+//
+//    self.magnifierView.pointToMagnify = pointForLoupe;
+
     
-    self.magnifierView.pointToMagnify = pointForLoupe;
-    
-    
-    [self.magnifierView makeKeyAndVisible];
 }
 
 
@@ -1809,18 +1827,61 @@ UIColor* tempColor;
 {
     if(self.selectedLayer.type != JVDrawingTypeGraffiti){
         if (self.magnifierView == nil) {
-            self.magnifierView = [[CHMagnifierView alloc] init];
-            self.magnifierView.viewToMagnify = self.window;
+            CGPoint offset = CGPointMake(0, -60);
+            _magnifingGlass = [[MagnifyingGlassView alloc] initWithOffset:offset radius:60 scale:1.2 borderColor:[UIColor lightGrayColor] borderWidth:1 showsCrosshair:false crosshairColor:[UIColor lightGrayColor] crosshairWidth:0.5];
+            
+            _magnifingGlass.magnifiedView = self;
+            [_magnifingGlass magnifyAt:pointForLoupe]; // location: CGPoint
+            
         }
-        self.magnifierView.pointToMagnify = pointForLoupe;
-        //self.Ruler.pointToShowRuler = pointForLoupe;
-        //[self.Ruler makeKeyAndVisible];
-        [self.magnifierView makeKeyAndVisible];
+
     }
 }
+
+
+#pragma mark - private functions
+
+//- (void)addMagnifyingGlassTimer:(NSTimer*)timer {
+//    NSValue *v = timer.userInfo;
+//    CGPoint point = [v CGPointValue];
+//    [self addMagnifyingGlassAtPoint:point];
+//}
+
+#pragma mark - magnifier functions
+/*
+- (void)addMagnifyingGlassAtPoint:(CGPoint)point {
+    
+    if (!magnifyingGlass) {
+       // magnifyingGlass = [[ACMagnifyingGlass alloc] init];
+        ACMagnifyingGlass *mag = [[ACMagnifyingGlass alloc] initWithFrame:CGRectMake(0, 0, 120, 120)];
+        mag.scale = 1.2;
+        magnifyingGlass = mag;
+    }
+    
+    if (!magnifyingGlass.viewToMagnify) {
+        magnifyingGlass.viewToMagnify = self;
+        
+    }
+    
+    magnifyingGlass.touchPoint = point;
+    [self addSubview:magnifyingGlass];
+    [magnifyingGlass setNeedsDisplay];
+}
+
+- (void)removeMagnifyingGlass {
+    [magnifyingGlass removeFromSuperview];
+}
+
+- (void)updateMagnifyingGlassAtPoint:(CGPoint)point {
+    magnifyingGlass.touchPoint = point;
+    [magnifyingGlass setNeedsDisplay];
+}
+
+*/
 -(void)hideLoupe {
     [self.touchTimer invalidate];
     [self.magnifierView setHidden:YES];
+    [self.magnifierView removeFromSuperview];
 }
 
 #pragma mark - Clear Screen
