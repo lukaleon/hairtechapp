@@ -742,7 +742,11 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
+                      
+                        // Show magnifier glass and apply scale to it
                         [_magnifingGlass magnifyAt:[touch locationInView:self]];
+                        [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
+
 
                         break;
                     case JVDrawingTouchMid:
@@ -756,7 +760,11 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:self.selectedLayer.endPoint forLayer:self.circleLayer2 atIndex:0];
+                      
+                        // Show magnifier glass and apply scale to it
                         [_magnifingGlass magnifyAt:[touch locationInView:self]];
+                        [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
+
 
                         break;
                         
@@ -808,7 +816,11 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithStartPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer1 atIndex:0];
+                       
+                        // Show magnifier glass and apply scale to it
                         [_magnifingGlass magnifyAt:[touch locationInView:self]];
+                        [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
+
 
 //                        }
                         break;
@@ -827,7 +839,11 @@ UIColor* tempColor;
                         [self detectNearestPoint:&currentPoint]; // Detect nearest point to connnect to
                         [self.selectedLayer movePathWithEndPoint:currentPoint];
                         [self circlePosition:currentPoint forLayer:self.circleLayer2 atIndex:0];
+                     
+                        // Show magnifier glass and apply scale to it
                         [_magnifingGlass magnifyAt:[touch locationInView:self]];
+                        [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
+
 
                         break;
                     default:
@@ -848,11 +864,9 @@ UIColor* tempColor;
             [self.drawingLayer movePathWithEndPoint:currentPoint];
             self.lastTouch = currentPoint;
        
-            
+            // Show magnifier glass and apply scale to it
             [_magnifingGlass magnifyAt:[touch locationInView:self]];
-
-//            [self updateMagnifyingGlassAtPoint:[touch locationInView:self]];
-
+            [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
            
         }
     }
@@ -1827,14 +1841,17 @@ UIColor* tempColor;
 {
     if(self.selectedLayer.type != JVDrawingTypeGraffiti){
         if (self.magnifierView == nil) {
-            CGPoint offset = CGPointMake(0, -60);
-            _magnifingGlass = [[MagnifyingGlassView alloc] initWithOffset:offset radius:60 scale:1.2 borderColor:[UIColor lightGrayColor] borderWidth:1 showsCrosshair:false crosshairColor:[UIColor lightGrayColor] crosshairWidth:0.5];
+            
+            CGFloat radius = 60 / self.zoomFactor;
+            
+            CGPoint offset = CGPointMake(0, -radius );
+            _magnifingGlass = [[MagnifyingGlassView alloc] initWithOffset:offset radius:radius scale:1.2 borderColor:[UIColor lightGrayColor] borderWidth:1 showsCrosshair:false crosshairColor:[UIColor lightGrayColor] crosshairWidth:0.5];
             
             _magnifingGlass.magnifiedView = self;
             [_magnifingGlass magnifyAt:pointForLoupe]; // location: CGPoint
-            
-        }
+            [self applyScale:((self.zoomFactor * [UIScreen mainScreen].scale) * [UIScreen mainScreen].scale) toView:_magnifingGlass];
 
+        }
     }
 }
 

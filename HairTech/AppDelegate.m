@@ -49,14 +49,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    NSLog(@"App Version is %@",version);
+//    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+//    NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"versionTest2"]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.2"] && [self appIsRunningForFirstTime]) {
+      
         [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"versionTest2"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.2"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
@@ -110,6 +111,17 @@
 }
 
 
+- (BOOL)appIsRunningForFirstTime {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"]) {
+        // App already launched
+        return NO;
+    } else {
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+        // This is the first launch ever
+        return YES;
+    }
+}
 
 
 
@@ -295,7 +307,15 @@
            // NSURL *fileURL = [[[iCloud sharedCloud] ubiquitousDocumentsDirectoryURL] URLByAppendingPathComponent:uniqueFileName];
             NSURL * fileURL = [[DocumentManager documentDirectory] URLByAppendingPathComponent:uniqueFileName];
 
+            BOOL isAcccessing = [url startAccessingSecurityScopedResource];
+
             NSData *fileData = [NSData dataWithContentsOfURL:url];
+
+             if (isAcccessing) {
+                            [url stopAccessingSecurityScopedResource];
+              }
+            
+            
             NSError *error = nil;
             BOOL success = [fileData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
             if (success) {
@@ -470,17 +490,17 @@
     [[NSUserDefaults standardUserDefaults] setObject:Black forKey:@"textToolColor"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
-    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
-
-    [cloudStore setObject:DarkSlateGray forKey:@"penToolColor"];
-    [cloudStore setObject:RoyalBlue forKey:@"curveToolColor"];
-    [cloudStore setObject:Green forKey:@"dashToolColor"];
-    [cloudStore setObject:Red forKey:@"arrowToolColor"];
-    [cloudStore setObject:RoyalBlue forKey:@"lineToolColor"];
-    [cloudStore setObject:Black forKey:@"textToolColor"];
-    [cloudStore setString:@"testValue" forKey:@"testKey"];
-
-    [cloudStore synchronize];
+//    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+//
+//    [cloudStore setObject:DarkSlateGray forKey:@"penToolColor"];
+//    [cloudStore setObject:RoyalBlue forKey:@"curveToolColor"];
+//    [cloudStore setObject:Green forKey:@"dashToolColor"];
+//    [cloudStore setObject:Red forKey:@"arrowToolColor"];
+//    [cloudStore setObject:RoyalBlue forKey:@"lineToolColor"];
+//    [cloudStore setObject:Black forKey:@"textToolColor"];
+//    [cloudStore setString:@"testValue" forKey:@"testKey"];
+//
+//    [cloudStore synchronize];
 
 }
 

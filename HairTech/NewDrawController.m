@@ -894,29 +894,29 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     [defaults setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
     [defaults synchronize];
     
-    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
-
-    [cloudStore setObject:[self hexFromUIColor:penColor] forKey:@"penToolColor"];
-    [cloudStore setObject:[self hexFromUIColor:curveColor] forKey:@"curveToolColor"];
-    [cloudStore setObject:[self hexFromUIColor:dashColor] forKey:@"dashToolColor"];
-    [cloudStore setObject:[self hexFromUIColor:arrowColor] forKey:@"arrowToolColor"];
-    [cloudStore setObject:[self hexFromUIColor:lineColor]forKey:@"lineToolColor"];
-    [cloudStore setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
-    [cloudStore synchronize];
+//    NSUbiquitousKeyValueStore *cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+//
+//    [cloudStore setObject:[self hexFromUIColor:penColor] forKey:@"penToolColor"];
+//    [cloudStore setObject:[self hexFromUIColor:curveColor] forKey:@"curveToolColor"];
+//    [cloudStore setObject:[self hexFromUIColor:dashColor] forKey:@"dashToolColor"];
+//    [cloudStore setObject:[self hexFromUIColor:arrowColor] forKey:@"arrowToolColor"];
+//    [cloudStore setObject:[self hexFromUIColor:lineColor]forKey:@"lineToolColor"];
+//    [cloudStore setObject:[self hexFromUIColor:textColor] forKey:@"textToolColor"];
+//    [cloudStore synchronize];
 }
 
 
 -(void)loadColorsFromCloud{
     NSLog(@"Load colors from cloud");
     
-    NSUbiquitousKeyValueStore * cloudStore = [NSUbiquitousKeyValueStore defaultStore];
-       
-    penColor = [self colorFromHex:[cloudStore objectForKey:@"penToolColor"]];
-    curveColor = [self colorFromHex:[cloudStore objectForKey:@"curveToolColor"]];
-    dashColor = [self colorFromHex:[cloudStore objectForKey:@"dashToolColor"]];
-    arrowColor = [self colorFromHex:[cloudStore objectForKey:@"arrowToolColor"]];
-    lineColor = [self colorFromHex:[cloudStore objectForKey:@"lineToolColor"]];
-    textColor = [self colorFromHex:[cloudStore objectForKey:@"textToolColor"]];    
+//    NSUbiquitousKeyValueStore * cloudStore = [NSUbiquitousKeyValueStore defaultStore];
+//
+//    penColor = [self colorFromHex:[cloudStore objectForKey:@"penToolColor"]];
+//    curveColor = [self colorFromHex:[cloudStore objectForKey:@"curveToolColor"]];
+//    dashColor = [self colorFromHex:[cloudStore objectForKey:@"dashToolColor"]];
+//    arrowColor = [self colorFromHex:[cloudStore objectForKey:@"arrowToolColor"]];
+//    lineColor = [self colorFromHex:[cloudStore objectForKey:@"lineToolColor"]];
+//    textColor = [self colorFromHex:[cloudStore objectForKey:@"textToolColor"]];
 }
 -(void)LoadColorsAtStart
 {

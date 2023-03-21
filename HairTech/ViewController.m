@@ -9,7 +9,6 @@
 #import "REFrostedViewController.h"
 #import "ViewController.h"
 #import "LoadingViewController.h"
-//#import "Cell.h"
 #import "MySubView.h"
 #import "AppDelegate.h"
 #import "MyCustomLayout.h"
@@ -171,7 +170,6 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     
     [self setupLongPressGestures];
     self.view.backgroundColor = [UIColor colorNamed:@"grey"];
-    //self.view.backgroundColor = [UIColor colorWithRed:250/250 green:250/250 blue:250/250 alpha:1];
     if (@available(iOS 15.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
         [appearance configureWithOpaqueBackground];
