@@ -611,8 +611,9 @@
 
 - (void)promptUserForReview {
     
-    
     [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
+    [self amplitudeEvent:@"Review Controller Shown"];
+    
 }
 #pragma mark - Amplitude Analytics
 
@@ -621,7 +622,6 @@
     AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
     //configuration.serverZone = AMPServerZoneEU;
     Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
-
     [amplitude track:eventName eventProperties:nil];
 
 }

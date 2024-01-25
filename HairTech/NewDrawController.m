@@ -13,6 +13,8 @@
 #import "OverlayTransitioningDelegate.h"
 #import "DiagramFile.h"
 #import "iCloud.h"
+#import <StoreKit/StoreKit.h>
+
 @import AmplitudeSwift;
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
@@ -1674,6 +1676,20 @@ return YES;
             else {
                 [self amplitudeEvent:@"Draw View Image Shared"];
                 [self setupNotificationToolbar];
+                // Retrieve number of image shares
+                self.imageShareCount =  [[[NSUserDefaults standardUserDefaults] valueForKey:@"shareCount"]integerValue];
+                
+
+                self.imageShareCount++; // Iterate each time when image shared
+                NSLog(@"image share count = %ld", (long)self.imageShareCount);
+                
+                // Store number of image shares
+                [[NSUserDefaults standardUserDefaults] setInteger:self.imageShareCount forKey:@"shareCount"];
+                
+                if (self.imageShareCount == 3){
+                    [self promptUserForReview];
+                    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
+                }
             }
     }];
 }
@@ -1785,7 +1801,16 @@ return YES;
 
 }
 
+#pragma mark - Rate App
 
+
+
+- (void)promptUserForReview {
+    
+    [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
+    [self amplitudeEvent:@"Review Controller Shown"];
+    
+}
 
 #pragma mark - Amplitude Analytics
 

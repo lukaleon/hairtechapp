@@ -68,6 +68,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSData * newdata;
 
 }
+@property (nonatomic, assign) NSInteger imageShareCount;
+
 @property (nonatomic, strong) MyDoc *document;
 
 @property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;
