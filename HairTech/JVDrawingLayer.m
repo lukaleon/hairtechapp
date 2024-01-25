@@ -32,7 +32,14 @@
 
 @end
 
-@implementation JVDrawingLayer 
+@implementation JVDrawingLayer
+{
+    int uid;
+    int uniqueId;
+    int shapeType;
+
+}
+static int identifier = 0;
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -48,6 +55,9 @@
         _zoomIndex = 1.0;
         performed50 = NO;
         performed10 = NO;
+        
+        uid = identifier;
+        identifier++;
 
 
         // self.backgroundColor = [[UIColor colorWithRed:170/255 green:40/255 blue:120/255 alpha:0.5]CGColor];
@@ -57,10 +67,20 @@
     return self;
 }
 
-//- (void)setIsSelected:(BOOL)isSelected
-//{
-//    _isSelected = isSelected;
-//}
+
+-(int)getUid{
+    return uid;
+}
+
+-(int)getUniqueId{
+    return uniqueId;
+}
+
+
+-(int)getType{
+    return shapeType;
+}
+
 - (void)setIsSelected:(BOOL)isSelected
 {
     _isSelected = isSelected;

@@ -13,7 +13,7 @@
 #import "OverlayTransitioningDelegate.h"
 #import "DiagramFile.h"
 #import "iCloud.h"
-
+@import AmplitudeSwift;
 
 #define btnColor  [UIColor colorNamed:@"cellText"]
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -536,9 +536,9 @@
     [redo setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
 
     more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [more addTarget:self
-             action:@selector(presentAlertView)
-   forControlEvents:UIControlEventTouchUpInside];
+//    [more addTarget:self
+//             action:@selector(presentAlertView)
+//   forControlEvents:UIControlEventTouchUpInside];
     [more.widthAnchor constraintEqualToConstant:30].active = YES;
     [more.heightAnchor constraintEqualToConstant:30].active = YES;
     [more setImage:[UIImage imageNamed:@"dots.png"] forState:UIControlStateNormal];
@@ -730,6 +730,7 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 -(void)clearPage{
     [self.drawingView removeAllDrawings];
     [self updateButtonStatus];
+    [self amplitudeEvent:@"Clear Page Pressed"];
 
 }
 -(void)clearPageForClosing{
@@ -1615,18 +1616,21 @@ return YES;
 
 -(void)undoPressed{
     NSLog(@"UNDO");
-    [self.drawingView undoLatestStep];
+    [self.drawingView.undoManager undo];
     [self updateButtonStatus];
 }
 -(void)redoPressed{
-    NSLog(@"REDO");
-    [self.drawingView redoLatestStep];
+    [self.drawingView.undoManager redo];
     [self updateButtonStatus];
 }
 - (void)updateButtonStatus
 {
-   // [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
-   // [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
+//    [[ self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView.undoManager canUndo] ];
+//    [[ self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView.undoManager canRedo] ];
+
+    
+//    [[self.navigationItem.rightBarButtonItems objectAtIndex:2] setEnabled:[self.drawingView canUndo]];
+//    [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:[self.drawingView canRedo]];
 }
 
 #pragma mark - Sharing image
@@ -1668,6 +1672,7 @@ return YES;
                 return;
                 }
             else {
+                [self amplitudeEvent:@"Draw View Image Shared"];
                 [self setupNotificationToolbar];
             }
     }];
@@ -1782,5 +1787,15 @@ return YES;
 
 
 
+#pragma mark - Amplitude Analytics
 
+-(void)amplitudeEvent:(NSString*)eventName{
+    
+    AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    //configuration.serverZone = AMPServerZoneEU;
+    Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
+
+    [amplitude track:eventName eventProperties:nil];
+
+}
 @end

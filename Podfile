@@ -10,5 +10,6 @@ target 'hairtech' do
 pod 'WhatsNewKit'
 pod 'WSCoachMarksView', '~> 0.2'
 pod 'DTLoupe'
+pod 'AmplitudeSwift', '~> 1.0'
 
 end

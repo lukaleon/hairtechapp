@@ -117,10 +117,12 @@ typedef enum {
     
     BOOL touchCanceled;
     UIWindow *window;
+    NSUndoManager* undoManager;
 
 
 }
-//@property ACMagnifyingGlass * magnifyingGlass;
+
+
 @property (nonatomic, assign) CGFloat magnifyingGlassShowDelay;
 @property  CHMagnifierView * magnifierView;
 @property MagnifyingGlassView * magnifingGlass;
@@ -140,6 +142,7 @@ typedef enum {
 @property CAShapeLayer * dot;
 @property UIView * viewForDot;
 
+@property     NSMutableArray * undoRedoArray;
 @property NSMutableArray * bufferOfLayers;
 @property NSMutableString * fileNameInside;
 @property BOOL newAppVersion;

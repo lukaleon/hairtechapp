@@ -14,6 +14,8 @@
 #import "CustomActivityIndicator.h"
 #import "iCloudDocument.h"
 #import "DocumentManager.h"
+#import <StoreKit/StoreKit.h>
+@import AmplitudeSwift;
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -93,11 +95,7 @@
         }];
     }
         
-        
-        
-        
-        
-        
+
         
 //    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
 //
@@ -220,7 +218,26 @@
             return;
             }
         else {
+            
+            [self amplitudeEvent:@"Entry Image Shared"];
+            
             [self setupBottomToolBar];
+            
+            // Retrieve number of image shares
+            self.imageShareCount =  [[[NSUserDefaults standardUserDefaults] valueForKey:@"shareCount"]integerValue];
+            
+
+            self.imageShareCount++; // Iterate each time when image shared
+            NSLog(@"image share count = %ld", (long)self.imageShareCount);
+            
+            // Store number of image shares
+            [[NSUserDefaults standardUserDefaults] setInteger:self.imageShareCount forKey:@"shareCount"];
+            
+            if (self.imageShareCount == 3){
+                [self promptUserForReview];
+                [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
+            }
+            
         }
 
        // [self showAlertAfterImageSaved];
@@ -588,6 +605,24 @@
 }
 
 
-#pragma mark - Activity Indicator Animation
+#pragma mark - Rate App
 
+
+
+- (void)promptUserForReview {
+    
+    
+    [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
+}
+#pragma mark - Amplitude Analytics
+
+-(void)amplitudeEvent:(NSString*)eventName{
+    
+    AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    //configuration.serverZone = AMPServerZoneEU;
+    Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
+
+    [amplitude track:eventName eventProperties:nil];
+
+}
 @end

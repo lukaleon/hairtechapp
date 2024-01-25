@@ -30,6 +30,8 @@
 #import <QuickLookThumbnailing/QuickLookThumbnailing.h>
 #import "DocumentManager.h"
 #import "MyDoc.h"
+@import AmplitudeSwift;
+
 
 //NSString *kEntryViewControllerID = @"EntryViewController";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
@@ -1365,7 +1367,8 @@ typedef void(^ImageCompletion)(UIImage *image);
     popoverPresentationController.sourceView = self.view;
     popoverPresentationController.sourceRect = CGRectMake(cell.center.x, cell.center.y, 10, 1);
     
-
+    [self amplitudeEvent:@"Diagram Shared"];
+    
 //    if(activityViewController.popoverPresentationController){
 //        activityViewController.popoverPresentationController.sourceView = self.view;
 //    }
@@ -2062,4 +2065,15 @@ if([[defaults objectForKey:currentName] isEqualToString:@"favorite"]){
 //
 //}
 
+#pragma mark - Amplitude Analytics
+
+-(void)amplitudeEvent:(NSString*)eventName{
+    
+    AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    //configuration.serverZone = AMPServerZoneEU;
+    Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
+
+    [amplitude track:eventName eventProperties:nil];
+
+}
 @end

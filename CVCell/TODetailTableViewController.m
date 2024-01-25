@@ -21,10 +21,28 @@
 #define SECTIONID_General 1
 #define SECTIONID_GetStarted 2
 #define SECTIONID_Follow 3
+#define SECTIONID_More 4
+
+@import AmplitudeSwift;
+
 
 
 
 @implementation TODetailTableViewController
+
+#pragma mark - Amplidude Analytics
+
+
+-(void)amplitudeEvent:(NSString*)eventName{
+    
+    AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    //configuration.serverZone = AMPServerZoneEU;
+    Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
+
+    [amplitude track:eventName eventProperties:nil];
+    NSLog(@"event eventovych" );
+
+}
 
 #pragma mark - Rounded Table Configuration Example -
 
@@ -39,7 +57,7 @@
    [self.tableView setSeparatorColor:[UIColor colorNamed:@"grey"]];
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.layer.cornerRadius = 20;
-    sectionName = @[@"Get started",@"General",@"Contact", @"Follow"];
+    sectionName = @[@"Get started",@"General",@"Contact", @"Follow", @"More from Hairtechapp"];
    // self.tableView.tableHeaderView = [self addLogoToHeader];
     self.tableView.tableFooterView = [self addFooterTitle];
     
@@ -51,6 +69,7 @@
 
    // [self.tableView registerNib:[UINib nibWithNibName:@"tableCell" bundle:nil]
      //  forCellReuseIdentifier:@"tableCell"];
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     NSLog(@"view will appear");
@@ -93,7 +112,7 @@
 }
 -(UIView*)addFooterTitle{
     UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 60)];
-    title.text = @"Version 8.0.1";
+    title.text = @"Version 8.0.4";
     title.font = [UIFont fontWithName:@"AvenirNext-Bold" size:10];
     title.textColor = [UIColor colorNamed:@"smallText"];
     title.textAlignment = NSTextAlignmentCenter;
@@ -221,6 +240,35 @@
         cell2.backgroundColor = [UIColor clearColor];
         return cell2;
     }
+    if (indexPath.section == SECTIONID_More) {
+        UITableViewCell * cell = [self addRoundedCells:indexPath tableView:tableView style:UITableViewCellStyleDefault];
+        
+        
+       
+        NSString *imageName = @"holycalc_icon.png";
+        // Create an UIImageView and set its image
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(22, 10, 34, 34)]; // Adjust the frame as needed
+        imageView.image = [UIImage imageNamed:imageName]; // If the image is bundled with your app
+        imageView.layer.cornerRadius = 5;
+        imageView.layer.masksToBounds = YES;
+        // You can also load images from URLs using methods like NSData's dataWithContentsOfURL: or use SDWebImage library
+            
+        // Add the UIImageView to the cell's contentView
+        [cell.contentView addSubview:imageView];
+    
+        
+        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageView.frame) + 10, 12, 300, 30)]; //
+        textLabel.font = [self fontSizeiPad:19 iPhone:17];
+        textLabel.text = @"holycalc - material calculator";
+           
+           
+        // Add the UILabel to the cell's contentView
+        [cell.contentView addSubview:textLabel];
+        
+        //cell.textLabel.text = @"holycalc";
+        rowsInSection = 1;
+        return cell;
+    }
     else {
         return nil;
     }
@@ -303,6 +351,23 @@
         }];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
+    
+    if ( indexPath.section == SECTIONID_More && indexPath.row == 0 ) {
+
+        [self amplitudeEvent:@"Holycalc Pressed"];
+        
+        UIApplication *application = [UIApplication sharedApplication];
+              NSURL *URL = [NSURL URLWithString:@"https://apps.apple.com/ua/app/holycalc/id6468902018"];
+              [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+                  if (success) {
+                       NSLog(@"Opened url");
+                  }
+              }];
+
+              [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }
+    
 }
 #pragma mark SEND MAIL
 
@@ -328,7 +393,7 @@
 #pragma mark - General Table View Configuration -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return 5;
 }
 
 
@@ -348,6 +413,9 @@
             break;
         case SECTIONID_Follow:
             return 2;
+            break;
+        case SECTIONID_More:
+            return 1;
             break;
         default:
             return 0;

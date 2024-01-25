@@ -147,8 +147,15 @@
     
     [self addColorButtons:screenPartitionWidth * 7.2 height:(screenPartitionIdx * 6.6 ) + axeYLift buttonWidth:colorButtonSize distance:distance];
     
-    ColorButton * btn = [self.buttonCollection objectAtIndex:[self startingColor:self.startColor]];
-    [self buttonPushed:btn];
+   // CRASH REPORT FROM USERS 
+  //  ColorButton * btn = [self.buttonCollection objectAtIndex:[self startingColor:self.startColor]];
+   // [self buttonPushed:btn];
+  
+    
+    // Added in version 8.0.4 - to be tested on users
+      ColorButton * btn = [self.buttonCollection objectAtIndex:0];
+      [self buttonPushed:btn];
+    //
     
     [self addApplyButtonX:(screenPartitionWidth * 7) + correctionIdx  startY:(screenPartitionIdx * 8.3) + axeYLift + axeYforSE fontSize:fontSize];
     

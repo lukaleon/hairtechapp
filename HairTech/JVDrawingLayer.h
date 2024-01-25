@@ -37,6 +37,9 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
     BOOL performed10;
 
 }
+-(int)getUid;
+-(int)getUniqueId;
+-(int)getType;
 
 @property (nonatomic, assign) CALayer *imageLayer;
 

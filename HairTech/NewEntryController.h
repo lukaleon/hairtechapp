@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL openingDrawingView;
 }
 
+
+@property (nonatomic, assign) NSInteger imageShareCount;
+
 @property (nonatomic, strong) MyDoc *document;
 
 

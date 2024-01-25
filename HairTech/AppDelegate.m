@@ -52,16 +52,17 @@
 //    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 //    NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.2"] && [self appIsRunningForFirstTime]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.4"] && [self appIsRunningForFirstTime]) {
       
         [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.2"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.4"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
-       
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
+
         [self saveMagnetStateToDefaults:YES];
 
     } 
