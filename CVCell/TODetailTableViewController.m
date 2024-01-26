@@ -259,6 +259,7 @@
         
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageView.frame) + 10, 12, 300, 30)]; //
         textLabel.font = [self fontSizeiPad:19 iPhone:17];
+        textLabel.textColor = [UIColor colorNamed:@"textColor"];
         textLabel.text = @"holycalc - material calculator";
            
            
