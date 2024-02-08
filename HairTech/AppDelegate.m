@@ -13,6 +13,8 @@
 #import "Flurry.h"
 #import "iCloud.h"
 #import "DocumentManager.h"
+@import AmplitudeSwift;
+#import "AmplitudeSwift/AmplitudeSwift-Swift.h"
 /*
  *  System Versioning Preprocessor Macros
  */
@@ -52,12 +54,12 @@
 //    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 //    NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.4"] && [self appIsRunningForFirstTime]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.5"] && [self appIsRunningForFirstTime]) {
       
         [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.4"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.5"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];
@@ -65,7 +67,9 @@
 
         [self saveMagnetStateToDefaults:YES];
 
-    } 
+        
+        
+    }
 
     [self getCurrentMode];
     
@@ -107,7 +111,9 @@
     
     // arrayOfCloudFiles = [self getArrayOfFilesInCloud:[self ubiquitousDocumentsDirectoryURL]];
    
-
+    
+    AMPConfiguration *configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    Amplitude *amplitude = [Amplitude initWithConfiguration:configuration];
     return YES;
 }
 

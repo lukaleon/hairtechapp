@@ -1594,24 +1594,17 @@ return YES;
 }
 
 - (void)saveDataToCloudWhenTerminating{
-
+/*
     NSLog(@"draw controller when terminate");
     [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         // ...
         if (success) {
-            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+            NSLog(@"NDC saveDataToCloudWhenTerminating , %@ saved!", self.document.fileURL);
         } else {
             [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
         }
     }];
-//    [[iCloud sharedCloud] saveAndCloseDocumentWithName:self.document.fileURL.lastPathComponent withContent:[[iCloud sharedCloud] getDocument]  completion:^(iCloudDocument *cloudDocument, NSData *documentData, NSError *error) {
-//     if (!error) {
-//         NSLog(@"iCloud Document, %@, saved with text: %@", cloudDocument.fileURL.lastPathComponent, [[NSString alloc] initWithData:documentData encoding:NSUTF8StringEncoding]);
-//     } else {
-//         NSLog(@"iCloud Document save error: %@", error);
-//     }
-// }];
-//    [[iCloud sharedCloud] setDocument:nil];
+*/
 }
 
 
@@ -1674,7 +1667,7 @@ return YES;
                 return;
                 }
             else {
-                [self amplitudeEvent:@"Draw View Image Shared"];
+                //[self amplitudeEvent:@"Draw View Image Shared"];
                 [self setupNotificationToolbar];
                 // Retrieve number of image shares
                 self.imageShareCount =  [[[NSUserDefaults standardUserDefaults] valueForKey:@"shareCount"]integerValue];
@@ -1686,7 +1679,9 @@ return YES;
                 // Store number of image shares
                 [[NSUserDefaults standardUserDefaults] setInteger:self.imageShareCount forKey:@"shareCount"];
                 
-                if (self.imageShareCount == 3){
+                if (self.imageShareCount == 5){
+                    [self amplitudeEvent:@"Review Controller Shown"];
+
                     [self promptUserForReview];
                     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
                 }
@@ -1808,8 +1803,6 @@ return YES;
 - (void)promptUserForReview {
     
     [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
-    [self amplitudeEvent:@"Review Controller Shown"];
-    
 }
 
 #pragma mark - Amplitude Analytics
@@ -1821,6 +1814,7 @@ return YES;
     Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
 
     [amplitude track:eventName eventProperties:nil];
+
 
 }
 @end

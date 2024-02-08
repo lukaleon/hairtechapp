@@ -550,7 +550,7 @@
             [[NSNotificationCenter defaultCenter]
             postNotificationName:@"openEntry"
             object:self];
-            NSLog(@"Fuck yeah, %@ saved!",document.fileURL);
+            NSLog(@"From MySubView, %@ saved!",document.fileURL);
         } else {
             [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
         }

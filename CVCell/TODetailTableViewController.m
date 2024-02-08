@@ -112,7 +112,7 @@
 }
 -(UIView*)addFooterTitle{
     UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 60)];
-    title.text = @"Version 8.0.4";
+    title.text = @"Version 8.0.5";
     title.font = [UIFont fontWithName:@"AvenirNext-Bold" size:10];
     title.textColor = [UIColor colorNamed:@"smallText"];
     title.textAlignment = NSTextAlignmentCenter;

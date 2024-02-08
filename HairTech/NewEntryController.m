@@ -88,7 +88,7 @@
             if (success) {
                 [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
                 
-                NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+                NSLog(@"From viewWillDisappear!, %@ saved ", self.document.fileURL);
             } else {
                 [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
             }
@@ -223,20 +223,20 @@
             
             [self setupBottomToolBar];
             
-            // Retrieve number of image shares
-            self.imageShareCount =  [[[NSUserDefaults standardUserDefaults] valueForKey:@"shareCount"]integerValue];
-            
-
-            self.imageShareCount++; // Iterate each time when image shared
-            NSLog(@"image share count = %ld", (long)self.imageShareCount);
-            
-            // Store number of image shares
-            [[NSUserDefaults standardUserDefaults] setInteger:self.imageShareCount forKey:@"shareCount"];
-            
-            if (self.imageShareCount == 3){
-                [self promptUserForReview];
-                [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
-            }
+//            // Retrieve number of image shares
+//            self.imageShareCount =  [[[NSUserDefaults standardUserDefaults] valueForKey:@"shareCount"]integerValue];
+//            
+//
+//            self.imageShareCount++; // Iterate each time when image shared
+//            NSLog(@"image share count = %ld", (long)self.imageShareCount);
+//            
+//            // Store number of image shares
+//            [[NSUserDefaults standardUserDefaults] setInteger:self.imageShareCount forKey:@"shareCount"];
+//            
+//            if (self.imageShareCount == 3){
+//                [self promptUserForReview];
+//                [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"shareCount"];
+//            }
             
         }
 
@@ -418,7 +418,7 @@
         // ...
         if (success) {
             [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-            NSLog(@"Fuck yeah, %@ saved!", self.document.fileURL);
+            NSLog(@"Fuck terminator, %@ saved!", self.document.fileURL);
         } else {
             [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
         }
@@ -558,24 +558,32 @@
     self.openedFromDrawingView = openedFromDrawing;
     self.imageLeft.image = item;
     self.document.imageLeft = item;
+    [self saveDataWhenReturnFromDrawing];
 //    [[iCloud sharedCloud] getDocument].imageLeft = item;
+    
 }
 -(void)passItemBackRight:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageRight.image = item;
     self.document.imageRight = item;
+    [self saveDataWhenReturnFromDrawing];
+
 //    [[iCloud sharedCloud] getDocument].imageRight = item;
 }
 -(void)passItemBackTop:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageTop.image = item;
     self.document.imageTop = item;
+    [self saveDataWhenReturnFromDrawing];
+
 //    [[iCloud sharedCloud] getDocument].imageTop = item;
 }
 -(void)passItemBackFront:(NewDrawController *)controller imageForButton:(UIImage*)item openedFromDrawingView:(BOOL)openedFromDrawing{
     self.openedFromDrawingView = openedFromDrawing;
     self.imageFront.image = item;
     self.document.imageFront = item;
+    [self saveDataWhenReturnFromDrawing];
+
 //    [[iCloud sharedCloud] getDocument].imageFront = item;
 
 }
@@ -584,6 +592,8 @@
     self.openedFromDrawingView = openedFromDrawing;
     self.imageBack.image = item;
     self.document.imageBack = item;
+    [self saveDataWhenReturnFromDrawing];
+
 //    [[iCloud sharedCloud] getDocument].imageBack = item;
 }
 
@@ -594,6 +604,24 @@
     [df setTimeStyle:NSDateFormatterNoStyle];  // nothing
     NSString *dateString = [df stringFromDate:date];
     return dateString;
+    
+}
+
+-(void)saveDataWhenReturnFromDrawing{
+        
+  //  if (self.isMovingFromParentViewController){
+        
+        [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            // ...
+            if (success) {
+                [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+                
+                NSLog(@"WhenReturnFromDVC!, %@ saved ", self.document.fileURL);
+            } else {
+                [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+            }
+        }];
+    //}
 }
 
 #pragma mark - Image Detection Area Setup
@@ -611,8 +639,8 @@
 
 - (void)promptUserForReview {
     
-    [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
-    [self amplitudeEvent:@"Review Controller Shown"];
+  //  [SKStoreReviewController requestReviewInScene:self.view.window.windowScene];
+    //[self amplitudeEvent:@"Review Controller Shown"];
     
 }
 #pragma mark - Amplitude Analytics
@@ -621,7 +649,7 @@
     
     AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
     //configuration.serverZone = AMPServerZoneEU;
-    Amplitude* amplitude = [Amplitude initWithConfiguration:configuration];
+    Amplitude * amplitude = [Amplitude initWithConfiguration:configuration];
     [amplitude track:eventName eventProperties:nil];
 
 }

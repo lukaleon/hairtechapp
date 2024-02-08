@@ -152,7 +152,7 @@
    // [self buttonPushed:btn];
   
     
-    // Added in version 8.0.4 - to be tested on users
+    // Added in version 8.0.5 - to be tested on users
       ColorButton * btn = [self.buttonCollection objectAtIndex:0];
       [self buttonPushed:btn];
     //
@@ -246,7 +246,7 @@
     
 //    CGPoint titleCenter = CGPointMake(self.view.center.x, self.view.frame.origin.y + startY);
 //    title.center = titleCenter;
-    title.text = @"Colours";
+    title.text = @"Colors";
     title.textColor = [UIColor colorNamed:@"textWhiteDeepBlue"];
     title.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:18];
     title.textAlignment = NSTextAlignmentCenter;
