@@ -24,6 +24,8 @@
 		40163806291104A000C9D9C4 /* DrawViewControllerRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 40163805291104A000C9D9C4 /* DrawViewControllerRight.m */; };
 		40179E0328C6734C0090CB0C /* SPUserResizableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40179E0228C6734C0090CB0C /* SPUserResizableView.m */; };
 		4017DE2729278D3600F6D2E9 /* WhatsNewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4017DE2629278D3600F6D2E9 /* WhatsNewController.m */; };
+		401F65952B76B28100890BBB /* PhotoPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 401F65942B76B28100890BBB /* PhotoPicker.m */; };
+		401F65992B76B4EB00890BBB /* ImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 401F65982B76B4EB00890BBB /* ImageCollectionViewCell.m */; };
 		403D12C32970317D00156A05 /* NotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12C12970317D00156A05 /* NotesViewController.m */; };
 		403D12C6297031C400156A05 /* CommentTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12C5297031C300156A05 /* CommentTextView.m */; };
 		403D12CB29708A0400156A05 /* ISColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = 403D12CA29708A0400156A05 /* ISColorWheel.m */; };
@@ -482,6 +484,10 @@
 		40179E0228C6734C0090CB0C /* SPUserResizableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUserResizableView.m; sourceTree = "<group>"; };
 		4017DE2529278D3600F6D2E9 /* WhatsNewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhatsNewController.h; sourceTree = "<group>"; };
 		4017DE2629278D3600F6D2E9 /* WhatsNewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhatsNewController.m; sourceTree = "<group>"; };
+		401F65942B76B28100890BBB /* PhotoPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoPicker.m; sourceTree = "<group>"; };
+		401F65962B76B29600890BBB /* PhotoPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoPicker.h; sourceTree = "<group>"; };
+		401F65972B76B4EB00890BBB /* ImageCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewCell.h; sourceTree = "<group>"; };
+		401F65982B76B4EB00890BBB /* ImageCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionViewCell.m; sourceTree = "<group>"; };
 		403D12C12970317D00156A05 /* NotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesViewController.m; sourceTree = "<group>"; };
 		403D12C22970317D00156A05 /* NotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesViewController.h; sourceTree = "<group>"; };
 		403D12C4297031C300156A05 /* CommentTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTextView.h; sourceTree = "<group>"; };
@@ -1118,6 +1124,17 @@
 			name = Frame;
 			sourceTree = "<group>";
 		};
+		401F65932B76B21100890BBB /* Photo Picker */ = {
+			isa = PBXGroup;
+			children = (
+				401F65962B76B29600890BBB /* PhotoPicker.h */,
+				401F65942B76B28100890BBB /* PhotoPicker.m */,
+				401F65972B76B4EB00890BBB /* ImageCollectionViewCell.h */,
+				401F65982B76B4EB00890BBB /* ImageCollectionViewCell.m */,
+			);
+			path = "Photo Picker";
+			sourceTree = "<group>";
+		};
 		403D12C7297031C900156A05 /* Notes View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1328,6 +1345,7 @@
 		407FB91E28FE998900371E24 /* New Version */ = {
 			isa = PBXGroup;
 			children = (
+				401F65932B76B21100890BBB /* Photo Picker */,
 				40546DF02996739D009DB636 /* FileManager */,
 				407FB91F28FE99C300371E24 /* NewEntryController.h */,
 				407FB92028FE99C300371E24 /* NewEntryController.m */,
@@ -2651,6 +2669,7 @@
 				40ED75A3293BCFA100059FE2 /* ContainerViewController.m in Sources */,
 				407FB92128FE99C300371E24 /* NewEntryController.m in Sources */,
 				B45D56BD1806130900A25626 /* SpringboardLayoutAttributes.m in Sources */,
+				401F65992B76B4EB00890BBB /* ImageCollectionViewCell.m in Sources */,
 				B401CA041B04796E00596292 /* FMDatabaseAdditions.m in Sources */,
 				40EC9E4C29C6E01200765675 /* ACMagnifyingGlass.m in Sources */,
 				4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */,
@@ -2661,6 +2680,7 @@
 				400C4D3E29AA53CA0019DDA0 /* iCloud.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */,
+				401F65952B76B28100890BBB /* PhotoPicker.m in Sources */,
 				4077D50C29A67EEF00A88399 /* WhatsNewObjcWrapper.swift in Sources */,
 				403D12C6297031C400156A05 /* CommentTextView.m in Sources */,
 				4083669F293222CE00472CC8 /* AppDelegate.m in Sources */,

@@ -11,17 +11,23 @@
 #import "NotesViewController.h"
 #import "iCloudDocument.h"
 #import "MyDoc.h"
+#import "Photo Picker/PhotoPicker.h"
+#import "OverlayTransitioningDelegate.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface NewEntryController : UIViewController <NotesViewDelegate>
+@interface NewEntryController : UIViewController <NotesViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UINavigationControllerDelegate,PhotoPickerDelegate>
 {
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;
     NSMutableDictionary * dictionary;
     NSString * _techniqueNameID;
     BOOL openingDrawingView;
+    UIButton *more;
 }
+
+@property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;
 
 
 @property (nonatomic, assign) NSInteger imageShareCount;

@@ -130,23 +130,77 @@
     [addNote setImage:[UIImage systemImageNamed:@"text.bubble"] forState:UIControlStateNormal];
     [addNote setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
     
-    UIButton *shareBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    [shareBtn addTarget:self
-                action:@selector(share)
+    more = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+   // [moreBtn addTarget:self
+     //           action:@selector(share)
+      //forControlEvents:UIControlEventTouchUpInside];
+    [more.widthAnchor constraintEqualToConstant:30].active = YES;
+    [more.heightAnchor constraintEqualToConstant:30].active = YES;
+   // [shareBtn setImage:[UIImage systemImageNamed:@"square.and.arrow.up"] forState:UIControlStateNormal];
+     [more setImage:[UIImage systemImageNamed:@"ellipsis"] forState:UIControlStateNormal];
+
+    [more setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    
+    UIButton *plusBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    [plusBtn addTarget:self
+                action:@selector(changeColorPalette)
       forControlEvents:UIControlEventTouchUpInside];
-    [shareBtn.widthAnchor constraintEqualToConstant:30].active = YES;
-    [shareBtn.heightAnchor constraintEqualToConstant:30].active = YES;
-    [shareBtn setImage:[UIImage systemImageNamed:@"square.and.arrow.up"] forState:UIControlStateNormal];
-    [shareBtn setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
+    [plusBtn.widthAnchor constraintEqualToConstant:30].active = YES;
+    [plusBtn.heightAnchor constraintEqualToConstant:30].active = YES;
+    [plusBtn setImage:[UIImage systemImageNamed:@"photo.stack"] forState:UIControlStateNormal];
+    [plusBtn setTintColor:[UIColor colorNamed:@"textWhiteDeepBlue"]];
     
     UIBarButtonItem * note = [[UIBarButtonItem alloc] initWithCustomView:addNote];
-    UIBarButtonItem * share = [[UIBarButtonItem alloc] initWithCustomView:shareBtn];
+    UIBarButtonItem * moreBtn = [[UIBarButtonItem alloc] initWithCustomView:more];
+    UIBarButtonItem * plus = [[UIBarButtonItem alloc] initWithCustomView:plusBtn];
 
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:share, note, nil];
+
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, plus, nil];
+    
+    [self registerActionView];
+
 }
 
-
-
+-(void)registerActionView{
+    
+    NSMutableArray* actions = [[NSMutableArray alloc] init];
+    NSMutableArray* actions2 = [[NSMutableArray alloc] init];
+    
+    // if (@available(iOS 14.0, *)) {
+    
+    more.showsMenuAsPrimaryAction = true;
+    
+    
+    
+    [actions addObject:[UIAction actionWithTitle:@"Add Note"
+                                           image:[UIImage systemImageNamed:@"text.bubble"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+       // [self changeColorPalette];
+        [self addNotes];
+        
+    }]];
+    
+    [actions addObject:[UIAction actionWithTitle:@"Share"
+                                           image:[UIImage systemImageNamed:@"square.and.arrow.up"]
+                                      identifier:nil
+                                         handler:^(__kindof UIAction* _Nonnull action) {
+        [self share];
+        
+    }]];
+    
+    UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
+    
+    // more.offset = CGPointMake(0, 40);
+    if (@available(iOS 16.0, *)) {
+        //   menu.preferredElementSize = UIMenuElementSizeMedium;
+    } else {
+        // Fallback on earlier versions
+    }
+    
+    more.menu = menu;
+    
+}
 - (void)loadImages {
     
     self.imageLeft.image = self.document.imageLeft;
@@ -184,6 +238,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDataToCloudWhenTerminating) name:@"appDidTerminate" object:nil];
  
 }
+
+
 
 
 - (void)share{
@@ -312,6 +368,50 @@
         newDrawVC.document = self.document;
         [self.navigationController pushViewController: newDrawVC animated:YES];
     }
+}
+
+#pragma mark - Photo Attaching Methods
+
+-(void)changeColorPalette{
+    
+//    NSLog(@"Show color wheel");
+//   ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+//    colorWheel.delegate = self;
+//
+////    colorWheel.startColor = currentColor;
+//    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
+//    [self presentViewController:colorWheel animated:YES completion:nil];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        PhotoPicker *photoPicker = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+        photoPicker.delegate = self;
+        photoPicker.isIpad  = YES;
+       // colorWheel.startColor = currentColor;
+        photoPicker.modalPresentationStyle = UIModalPresentationPageSheet;
+        photoPicker.preferredContentSize = CGSizeMake(300, 400);
+        [self presentViewController:photoPicker animated:YES completion:nil];
+    }
+    else{
+   
+        PhotoPicker *controller = [[PhotoPicker alloc]init];
+        [self prepareOverlay:controller];
+        controller.isIpad  = NO;
+       // controller.startColor = currentColor;
+
+        [self presentViewController:controller animated:true completion:nil];
+    }
+    
+}
+
+- (void)prepareOverlay:(PhotoPicker*)viewController {
+    self.overlayDelegate = [[OverlayTransitioningDelegate alloc]init];
+viewController.transitioningDelegate = self.overlayDelegate;
+viewController.modalPresentationStyle = UIModalPresentationCustom;
+}
+
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
 }
 
 #pragma mark - Notes Methods

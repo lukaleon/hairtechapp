@@ -221,8 +221,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "310"
-            endingLineNumber = "310"
+            startingLineNumber = "366"
+            endingLineNumber = "366"
             landmarkName = "-openDrawingView:"
             landmarkType = "7">
          </BreakpointContent>
@@ -699,8 +699,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "-share"
             landmarkType = "7">
          </BreakpointContent>
@@ -735,6 +735,22 @@
             endingLineNumber = "36"
             landmarkName = "-amplitudeEvent:"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "12849FC1-C24A-45BC-A2E3-E0A014383E20"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HairTech/Photo Picker/ImageCollectionViewCell.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "ImageCollectionViewCell"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

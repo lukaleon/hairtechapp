@@ -1,17 +1,19 @@
-//
-//  ImageCollectionViewCell.h
-//  hairtech
-//
-//  Created by Alexander Prent on 09.02.2024.
-//  Copyright © 2024 Admin. All rights reserved.
-//
+// ImageCollectionViewCell.h
 
 #import <UIKit/UIKit.h>
+@protocol ImageCollectionViewCellDelegate <NSObject>
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ImageCollectionViewCell : UICollectionViewCell
+- (void)deleteCellAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
-NS_ASSUME_NONNULL_END
+
+@interface ImageCollectionViewCell : UICollectionViewCell
+
+
+
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, weak) id<ImageCollectionViewCellDelegate> delegate;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
+@end
