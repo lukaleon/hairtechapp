@@ -980,6 +980,15 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
         
         [MyDoc documentNamed:name withCompletion:^(MyDoc * _Nonnull doc) {
             
+            if (doc.photoArray != nil) {             //Check if old version file has photoArray instance
+                NSLog(@"Variable has an instance");
+            } else {
+                NSLog(@"no instance");
+                NSArray * photos = [[NSArray alloc]init];
+                doc.photoArray = photos;
+
+            }
+            
 
             NewEntryController *newEntryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"NewEntryController"];
             NSString * techniqueName = [name stringByDeletingPathExtension];

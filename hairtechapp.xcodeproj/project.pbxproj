@@ -40,6 +40,7 @@
 		4043E2DA28DCA4B500BF9FF8 /* addTextSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2D928DCA4B500BF9FF8 /* addTextSelected.png */; };
 		4043E2DD28E57D9F00BF9FF8 /* LayersData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4043E2DC28E57D9F00BF9FF8 /* LayersData.m */; };
 		4043E2DF28E587F100BF9FF8 /* layersdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 4043E2DE28E587F100BF9FF8 /* layersdata.json */; };
+		404626812B780C0A00146CAB /* ImagePreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 404626802B780C0A00146CAB /* ImagePreviewController.m */; };
 		40546DF3299673F5009DB636 /* DiagramFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 40546DF2299673F5009DB636 /* DiagramFile.m */; };
 		405C516D29B87EE900860144 /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4002E63529B15DA6002531CC /* QuickLookThumbnailing.framework */; };
 		405C518C29B8C83900860144 /* tophead_ms.png in Resources */ = {isa = PBXBuildFile; fileRef = 405C518229B8C83900860144 /* tophead_ms.png */; };
@@ -90,6 +91,8 @@
 		4083669F293222CE00472CC8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4083669E293222CE00472CC8 /* AppDelegate.m */; };
 		408366A5293BBF0F00472CC8 /* PageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 408366A1293BBF0F00472CC8 /* PageView.m */; };
 		408366A6293BBF0F00472CC8 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408366A2293BBF0F00472CC8 /* PageViewController.m */; };
+		408B442B2B78BFCC0011F79D /* VCPresentationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408B442A2B78BFCC0011F79D /* VCPresentationDelegate.m */; };
+		408B442E2B78C02F0011F79D /* OverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408B442D2B78C02F0011F79D /* OverlayController.m */; };
 		40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB525328B8FF62001B97B6 /* CircleLayer.m */; };
 		40B79AE52922BB6D003A8680 /* TORoundedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AE32922BB6C003A8680 /* TORoundedTableViewCell.m */; };
 		40B79AE62922BB6D003A8680 /* TORoundedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B79AE42922BB6C003A8680 /* TORoundedTableView.m */; };
@@ -512,6 +515,8 @@
 		4043E2E128E5887B00BF9FF8 /* dragger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dragger.png; sourceTree = "<group>"; };
 		4043E2E228E5887B00BF9FF8 /* arrow_solid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_solid.png; sourceTree = "<group>"; };
 		4043E2E328E5887B00BF9FF8 /* lastPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lastPoint.png; sourceTree = "<group>"; };
+		4046267F2B780C0A00146CAB /* ImagePreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagePreviewController.h; sourceTree = "<group>"; };
+		404626802B780C0A00146CAB /* ImagePreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImagePreviewController.m; sourceTree = "<group>"; };
 		40546DF1299673F5009DB636 /* DiagramFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiagramFile.h; sourceTree = "<group>"; };
 		40546DF2299673F5009DB636 /* DiagramFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DiagramFile.m; sourceTree = "<group>"; };
 		405C518229B8C83900860144 /* tophead_ms.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tophead_ms.png; sourceTree = "<group>"; };
@@ -577,6 +582,10 @@
 		408366A2293BBF0F00472CC8 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 		408366A3293BBF0F00472CC8 /* PageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageView.h; sourceTree = "<group>"; };
 		408366A4293BBF0F00472CC8 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
+		408B44292B78BFCC0011F79D /* VCPresentationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCPresentationDelegate.h; sourceTree = "<group>"; };
+		408B442A2B78BFCC0011F79D /* VCPresentationDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VCPresentationDelegate.m; sourceTree = "<group>"; };
+		408B442C2B78C02F0011F79D /* OverlayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OverlayController.h; sourceTree = "<group>"; };
+		408B442D2B78C02F0011F79D /* OverlayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OverlayController.m; sourceTree = "<group>"; };
 		40AB525228B8FF62001B97B6 /* CircleLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleLayer.h; sourceTree = "<group>"; };
 		40AB525328B8FF62001B97B6 /* CircleLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleLayer.m; sourceTree = "<group>"; };
 		40B79AE12922BB6C003A8680 /* TORoundedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TORoundedTableViewCell.h; sourceTree = "<group>"; };
@@ -1131,6 +1140,9 @@
 				401F65942B76B28100890BBB /* PhotoPicker.m */,
 				401F65972B76B4EB00890BBB /* ImageCollectionViewCell.h */,
 				401F65982B76B4EB00890BBB /* ImageCollectionViewCell.m */,
+				4046267F2B780C0A00146CAB /* ImagePreviewController.h */,
+				404626802B780C0A00146CAB /* ImagePreviewController.m */,
+				408B442F2B78C29C0011F79D /* Transition Overlay  */,
 			);
 			path = "Photo Picker";
 			sourceTree = "<group>";
@@ -1370,6 +1382,17 @@
 				408366A1293BBF0F00472CC8 /* PageView.m */,
 			);
 			path = PageController;
+			sourceTree = "<group>";
+		};
+		408B442F2B78C29C0011F79D /* Transition Overlay  */ = {
+			isa = PBXGroup;
+			children = (
+				408B44292B78BFCC0011F79D /* VCPresentationDelegate.h */,
+				408B442A2B78BFCC0011F79D /* VCPresentationDelegate.m */,
+				408B442C2B78C02F0011F79D /* OverlayController.h */,
+				408B442D2B78C02F0011F79D /* OverlayController.m */,
+			);
+			path = "Transition Overlay ";
 			sourceTree = "<group>";
 		};
 		40B79AE02922BB4B003A8680 /* Rounded Cells */ = {
@@ -2670,6 +2693,7 @@
 				407FB92128FE99C300371E24 /* NewEntryController.m in Sources */,
 				B45D56BD1806130900A25626 /* SpringboardLayoutAttributes.m in Sources */,
 				401F65992B76B4EB00890BBB /* ImageCollectionViewCell.m in Sources */,
+				408B442E2B78C02F0011F79D /* OverlayController.m in Sources */,
 				B401CA041B04796E00596292 /* FMDatabaseAdditions.m in Sources */,
 				40EC9E4C29C6E01200765675 /* ACMagnifyingGlass.m in Sources */,
 				4000FEFB29792D8F00D917A5 /* sliderCustom.m in Sources */,
@@ -2678,6 +2702,7 @@
 				403D12D329734AF300156A05 /* ColorViewNew.m in Sources */,
 				CE0BD4011654EF300078EE94 /* EntryViewController.m in Sources */,
 				400C4D3E29AA53CA0019DDA0 /* iCloud.m in Sources */,
+				408B442B2B78BFCC0011F79D /* VCPresentationDelegate.m in Sources */,
 				40AB525428B8FF62001B97B6 /* CircleLayer.m in Sources */,
 				4064748C2976B46100FC80B7 /* OverlayPresentationController.m in Sources */,
 				401F65952B76B28100890BBB /* PhotoPicker.m in Sources */,
@@ -2693,6 +2718,7 @@
 				B4BBBBAE1AF36E0D00A9FA45 /* WEPopoverContainerView.m in Sources */,
 				B445F671166DF15F00E38343 /* Technique.m in Sources */,
 				B419661D17F9D4DB003E9159 /* DEMOMenuViewController.m in Sources */,
+				404626812B780C0A00146CAB /* ImagePreviewController.m in Sources */,
 				400C4D3929A9D7C80019DDA0 /* UIBezierPath+Arrowhead.m in Sources */,
 				40FCA47329268A050082D645 /* tableCell.m in Sources */,
 				403D12CB29708A0400156A05 /* ISColorWheel.m in Sources */,
@@ -2896,7 +2922,7 @@
 				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechDebug.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8.0.5;
+				CURRENT_PROJECT_VERSION = 9.0.1;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2909,7 +2935,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 8.0.5;
+				MARKETING_VERSION = 9.0.1;
 				ONLY_ACTIVE_ARCH = NO;
 				"OTHER_LDFLAGS[arch=*]" = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
@@ -2938,7 +2964,7 @@
 				CODE_SIGN_ENTITLEMENTS = hairtech/hairtechRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8.0.5;
+				CURRENT_PROJECT_VERSION = 9.0.1;
 				DEVELOPMENT_TEAM = U53VZGYE8K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2951,7 +2977,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 8.0.5;
+				MARKETING_VERSION = 9.0.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hair.hairtech;
 				PRODUCT_NAME = hairtech;

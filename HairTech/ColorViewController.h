@@ -9,9 +9,6 @@
 
 @class ColorViewController;
 
-
-
-
 @protocol ColorViewControllerDelegate<NSObject>
 - (void)textSettingsDidSelectFontSize:(CGFloat)fontSize;
 - (void)colorPopoverControllerDidSelectColor:(NSString *)hexColor;

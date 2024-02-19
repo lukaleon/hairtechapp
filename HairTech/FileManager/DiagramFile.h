@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSDictionary * dictTop;
 @property NSDictionary * dictFront;
 @property NSDictionary * dictBack;
+@property NSMutableArray * photoArray;
 
 
 

@@ -10,7 +10,8 @@
 #import "GzColors.h"
 #import "ColorButton.h"
 #import "HapticHelper.h"
-
+#import "ImagePreviewController.h"
+@import AmplitudeSwift;
 
 
 @implementation PhotoPicker
@@ -19,21 +20,33 @@
 
 }
 @synthesize _brightnessSlider;
+
+
+-(void)setMyArray:(NSArray *)arr{
+    self.tempImages = [NSMutableArray array];
+    self.tempImages = [arr mutableCopy]; 
+  }
+
 -(void)viewWillDisappear:(BOOL)animated{
-    [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [super viewWillDisappear:YES];
+    //[self.delegate savePhotos:self.imagesArray];
+    NSLog(@"array %lu", (unsigned long)self.imagesArray.count);
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self registerActionView];
-
+    self.imagesArray = [[NSMutableArray alloc]init];
+    self.imagesArray = self.tempImages;
+    
     
     // Initialize the images array with your image names or URLs
       //  self.imagesArray = @[@"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg"];
-    self.imagesArray = [[NSMutableArray alloc]init];
     
 //    UIImage * img = [UIImage imageNamed:@"IMG_8905.jpg"];
 //    [self.imagesArray addObject:img];
@@ -66,7 +79,6 @@
 
     [self addPhotoButton];
 
-    if (self.imagesArray.count == 0){
         noPhotoLabel = [[UILabel alloc] initWithFrame:CGRectMake(-15, 0, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height)];
         // Center the button within the view
         noPhotoLabel.textAlignment = NSTextAlignmentCenter;
@@ -74,23 +86,13 @@
         noPhotoLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:14];
         noPhotoLabel.text = @"Press plus button to add photos";
         [self.collectionView addSubview:noPhotoLabel];
+    if (self.imagesArray.count == 0){
+        noPhotoLabel.alpha = 1;
    }
+    else {
+        noPhotoLabel.alpha = 0;
+    }
 
-    
-    
-//    if (self.imagesArray.count == 0){
-//        // Add image when no images added
-//        addImage = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-//        addImage.center = CGPointMake(CGRectGetMidX(self.view.bounds)-10, CGRectGetMidY(self.collectionView.bounds)); // Center the button within the view
-//        [addImage setImage:[UIImage imageNamed:@"addimage.png"] forState:UIControlStateNormal];
-//        [self.collectionView addSubview:addImage];
-//    }
-//    if (self.imagesArray.count == 1){
-//        addImage = [[UIButton alloc] initWithFrame:CGRectMake(320, 0, 70, 70)];
-//        addImage.center = CGPointMake(CGRectGetMidX(self.view.bounds)-10, CGRectGetMidY(self.collectionView.bounds)); // Center the button within the view
-//        [addImage setImage:[UIImage imageNamed:@"addimage.png"] forState:UIControlStateNormal];
-//        [self.collectionView addSubview:addImage];
-//    }
     
     [self registerActionView];
 
@@ -161,73 +163,6 @@
         }
     }
     
-  /*  [self addTitle];
-    [self addRestoreButton];
-    
-    [self addHorizontalLine:size.height * .06];
-    _colorWheel = [[ISColorWheel alloc] initWithFrame:CGRectMake(screenPartitionWidth * 4,
-                                                                 screenPartitionIdx * 1.7 + axeYLift,
-                                                                 screenPartitionIdx * 4,
-                                                                 screenPartitionIdx * 4)];
-    
-    //_colorWheel.center = self.view.center;
-    _colorWheel.delegate = self;
-    _colorWheel.continuous = true;
-    [self.view addSubview:_colorWheel];
-  
-   
-   
-  
-    
-    _brightnessSlider = [[sliderCustom alloc] initWithFrame:CGRectMake(screenPartitionWidth * 11,
-                                                                   screenPartitionIdx * 3.3 + axeYLift,
-                                                                   screenPartitionIdx * 3.8,
-                                                                   40 )];
-    
-    _brightnessSlider.tintColor = [UIColor colorNamed:@"cellBg"];
-    _brightnessSlider.minimumValue = 0.0;
-    _brightnessSlider.maximumValue = 1.0;
-    _brightnessSlider.value = 1.0;
-    _brightnessSlider.continuous = true;
-    _brightnessSlider.thumbTintColor = [UIColor colorNamed:@"labelScreenShot"];
-//    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
-//    [_brightnessSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateHighlighted];
-
-    [_brightnessSlider addTarget:self action:@selector(changeBrightness:) forControlEvents:UIControlEventValueChanged];
-    
-    [_brightnessSlider trackRectForBounds:_brightnessSlider.bounds];
-    [self.view addSubview:_brightnessSlider];
-    CGAffineTransform trans = CGAffineTransformMakeRotation(M_PI * 1.5);
-    _brightnessSlider.transform = trans;
-   
-    [self addHorizontalLine:(screenPartitionIdx * 6.2) + axeYLift];
-    
-    _wellView = [[UIView alloc] initWithFrame:CGRectMake(screenPartitionWidth * 2,
-                                                         screenPartitionIdx * 6.6 + axeYLift,
-                                                         (screenPartitionWidth * 3.4) - correctionIdx,
-                                                         (screenPartitionWidth) * 3.4 - correctionIdx)];
-    _wellView.layer.backgroundColor = [GzColors colorFromHex:[self.colorCollection objectAtIndex:0]].CGColor;
-    _wellView.layer.borderColor = [UIColor blackColor].CGColor;
-    _wellView.layer.borderWidth = 0.0;
-    _wellView.layer.cornerRadius = 10.0;
-    [self.view addSubview:_wellView];
-    
-    [self addColorButtons:screenPartitionWidth * 7.2 height:(screenPartitionIdx * 6.6 ) + axeYLift buttonWidth:colorButtonSize distance:distance];
-    
-   // CRASH REPORT FROM USERS
-  //  ColorButton * btn = [self.buttonCollection objectAtIndex:[self startingColor:self.startColor]];
-   // [self buttonPushed:btn];
-  
-    
-    // Added in version 8.0.5 - to be tested on users
-      ColorButton * btn = [self.buttonCollection objectAtIndex:0];
-      [self buttonPushed:btn];
-    //
-    
-    [self addApplyButtonX:(screenPartitionWidth * 7) + correctionIdx  startY:(screenPartitionIdx * 8.3) + axeYLift + axeYforSE fontSize:fontSize];
-    */
-    
-    
     
 }
 
@@ -282,8 +217,8 @@
     CGFloat startOfButton;
     CGFloat startY;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        startOfButton = 120;
-        startY = 18;
+        startOfButton = 54;
+        startY = 10;
     }else {
         startOfButton = 42;
         startY = 10;
@@ -309,9 +244,9 @@
     CGFloat startOfButton;
     CGFloat startY;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        startY = 18;
-    }else {
         startY = 10;
+    }else {
+        startY = 18;
     }
     
     UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + startY, self.view.frame.size.width, 30)];
@@ -329,7 +264,7 @@
     CGFloat startY;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         startOfButton = 24;
-        startY = 18;
+        startY = 10;
 
     }else {
         startOfButton = 12;
@@ -354,35 +289,11 @@
    // [self showMenu];
     
 }
--(void)showMenu{
-    
-    NSMutableArray* actions = [[NSMutableArray alloc] init];
-       // if (@available(iOS 14.0, *)) {
-    restoreBtn.showsMenuAsPrimaryAction = true;
 
-            [actions addObject:[UIAction actionWithTitle:@"Reset Color Set"
-                                                   image:nil
-                                              identifier:nil
-                                                 handler:^(__kindof UIAction* _Nonnull action) {
-                [self restoreDefaultColors];
-            }]];
-            
-            
-            UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        restoreBtn.offset = CGPointMake(0, 0);
-
-    }else{
-        restoreBtn.offset = CGPointMake(0, 40);
-    }
-    restoreBtn.menu = menu;
-            
-       // }
-}
 
 
 -(IBAction)closeView:(id)senxer{
+   
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
@@ -410,60 +321,8 @@
     [self.view addSubview:self.applyBtn];
 
 }
--(IBAction)applyColorChange:(id)sender{
-    
-    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-
-    NSString * color =  [self hexStringFromColor:_wellView.backgroundColor];
-    currentButton.backgroundColor = _wellView.backgroundColor;
-    
-    [self.colorCollection replaceObjectAtIndex:currentButton.tag withObject:color];
-    NSLog(@"color %@" , color);
-    self.applyBtn.enabled = NO;
-}
 
 
-- (NSString *)hexStringFromColor:(UIColor *)color {
-    const CGFloat *components = CGColorGetComponents(color.CGColor);
-
-    CGFloat r = components[0];
-    CGFloat g = components[1];
-    CGFloat b = components[2];
-
-    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
-            lroundf(r * 255),
-            lroundf(g * 255),
-            lroundf(b * 255)];
-}
-
-- (void)changeBrightness:(UISlider*)sender
-{
-    if(_colorWheel.brightness < 0.2){
-        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor lightGrayColor] ];
-
-    }
-    if(_colorWheel.brightness > 0.2){
-        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor blackColor] ];
-
-    }
-    [_colorWheel setBrightness:_brightnessSlider.value];
-    [_wellView setBackgroundColor:_colorWheel.currentColor];
-    self.applyBtn.enabled = YES;
-}
-
-- (void)colorWheelDidChangeColor:(ISColorWheel *)colorWheel
-{
-    self.applyBtn.enabled = YES;
-    [_wellView setBackgroundColor:_colorWheel.currentColor];
-}
-- (void)colorWheelDidChangeColorOnMove:(ISColorWheel *)colorWheel
-{
-    [self.presentationController.presentedView.gestureRecognizers.firstObject setEnabled:NO];
-   
-    [_wellView setBackgroundColor:_colorWheel.currentColor];
-    self.applyBtn.enabled = YES;
-}
-    // Do any additional setup after loading the view, typically from a nib.
 
 -(void)enableGestures{
     [self.presentationController.presentedView.gestureRecognizers.firstObject setEnabled:YES];
@@ -474,103 +333,9 @@
     // Dispose of any resources that can be recreated.
 }
 
--(IBAction)buttonPushed:(id)sender{
-  
-    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
-    for(int i=0; i< self.buttonCollection.count; i++) {
-        [[self.buttonCollection objectAtIndex:i] setSelected:NO];
-        [line removeFromSuperlayer];
-    }
-    [self indicateSelctedButton:sender];
-    currentButton = sender;
-    self.applyBtn.enabled = NO;
 
-}
 
-- (void)indicateSelctedButton:(ColorButton *)btn {
-    btn.layer.borderWidth = 0.0f;
-    btn.layer.borderColor = [UIColor darkGrayColor].CGColor ;
-    [self currentColorIndicator:btn];
-    [_colorWheel setCurrentColor:btn.backgroundColor];
-    [_colorWheel.knobView  performSelector:@selector(setFillColor:) withObject:btn.backgroundColor ];
-    if(_colorWheel.brightness < 0.2){
-        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor lightGrayColor] ];
 
-    }
-    if(_colorWheel.brightness > 0.2){
-        [_colorWheel.knobView  performSelector:@selector(setLineColor:) withObject:[UIColor blackColor] ];
-
-    }
-    _brightnessSlider.value = _colorWheel.brightness;
-    [_wellView setBackgroundColor: btn.backgroundColor];
-    
-}
-
--(void)currentColorIndicator:(ColorButton*)colorBtn
-{
-    NSLog(@"button width %f, height %f", colorBtn.frame.size.width, colorBtn.frame.size.height);
-    line = [CAShapeLayer layer];
-    UIBezierPath * linePath=[UIBezierPath bezierPath];
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        [linePath moveToPoint: CGPointMake(14,18)];
-        [linePath addLineToPoint:CGPointMake(17,21)];
-        [linePath moveToPoint: CGPointMake(17,21)];
-        [linePath addLineToPoint:CGPointMake(22,16)];
-
-    }
-    else
-    {
-        [linePath moveToPoint: CGPointMake(9,13)];
-        [linePath addLineToPoint:CGPointMake(12,16)];
-        [linePath moveToPoint: CGPointMake(12,16)];
-        [linePath addLineToPoint:CGPointMake(17,11)];
-    }
-        line.path = linePath.CGPath;
-        line.fillColor = nil;
-        line.lineCap = kCALineCapRound;
-        line.lineJoin = kCALineJoinRound;
-        line.opacity = 1;
-        line.lineWidth = 2.2;
-        line.strokeColor = [UIColor whiteColor].CGColor;
-        [colorBtn.layer addSublayer:line];
-}
-
--(void)restoreDefaultColors{
-    
-    NSLog(@"resetcolors");
-        self.applyBtn.enabled = NO;
-       NSArray * defaultColors = [NSArray arrayWithObjects:
-                                
-                                Black,
-                                RoyalBlue,
-                                Red,
-                                Green,
-                                DarkRed,
-                                DarkSlateGray,
-                               
-                                DeepPink,
-                                Purple,
-                                OrangeRed,
-                                Orange,
-                                DarkBlue,
-                                Yellow,
-                                nil];
-    
-    
-    [self.colorCollection removeAllObjects];
-
-    for(NSString * color in defaultColors){
-        [self.colorCollection addObject:color];
-    }
-    int colorNumber = 0;
-    for (ColorButton * btn in self.buttonCollection){
-        
-        
-        [btn setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-        colorNumber++;
-    }
-   // [menuReset hideMenuFromView:self.view];
-}
 
 - (void)panGestureAction:(UIPanGestureRecognizer*)gesture {
     
@@ -717,8 +482,8 @@
     newsize = CGSizeMake(CGRectGetWidth(self.view.frame), (CGRectGetHeight(self.view.frame)));
     if ( UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
     {
-       newsize.width = 240;
-       newsize.height = 345;
+       newsize.width = 300;
+       newsize.height = 300;
         return newsize;
    }
    else
@@ -739,11 +504,13 @@
     // Handle cell selection here
     
     // You can get the selected cell using the indexPath
-    ImageCollectionViewCell *selectedCell = [collectionView cellForItemAtIndexPath:indexPath];
+    ImageCollectionViewCell *selectedCell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
     // Perform any actions you want with the selected cell
     // For example, you can change its background color
     selectedCell.contentView.backgroundColor = [UIColor blueColor];
+    [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+    [self showImageFullScreen: selectedCell.imageView.image];
         
     // You can also access the data associated with the selected cell
     // Assuming you have an array of data representing each cell
@@ -755,17 +522,6 @@
 }
 
 
-- (void)deleteCellAtIndexPath:(NSIndexPath *)indexPath {
-   
-    
-    if (indexPath.item < self.imagesArray.count) {
-        
-        // Handle cell deletion here
-        [self.imagesArray removeObjectAtIndex:indexPath.item];
-        [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
-        
-    }
-}
 
 
 
@@ -773,6 +529,9 @@
     return [UIContextMenuConfiguration configurationWithIdentifier:nil
                                                    previewProvider:nil
                                                     actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        
+        [HapticHelper generateFeedback:FeedbackType_Impact_Light];
+        
         // Create and return your custom UIMenu here
         UIAction *action = [UIAction actionWithTitle:@"Delete" image:nil identifier:nil handler:^(UIAction * _Nonnull action) {
             // Handle the action
@@ -784,14 +543,21 @@
             
             [self.imagesArray removeObjectAtIndex:indexPath.item];
             
-            if (self.imagesArray.count > 0){
-                noPhotoLabel.alpha = 0;
-            }
-            else {
+            if (self.imagesArray.count == 0){
                 noPhotoLabel.alpha = 1;
             }
+            else {
+                [noPhotoLabel setAlpha:0];
+            }
+            NSLog(@"imagesCount %lu", self.imagesArray.count);
             [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+            [self.delegate savePhotos:self.imagesArray];
+
             
+            if (self.imagesArray.count < 6){
+                
+                restoreBtn.enabled = YES;
+            }
             
 //                        if (self.delegate && [self.delegate respondsToSelector:@selector(deleteCellAtIndexPath:)]) {
 //                                       [self.delegate deleteCellAtIndexPath:indexPath];
@@ -810,13 +576,22 @@
     // Do something with the selected image
     
     [self.imagesArray addObject:selectedImage];
+    [self amplitudeEvent:@"Photo Picked Up"];
 
-    if (self.imagesArray.count > 0){
-        noPhotoLabel.alpha = 0;
-    }
-    else {
+    
+    [self.delegate savePhotos:self.imagesArray];
+
+    if (self.imagesArray.count == 0){
         noPhotoLabel.alpha = 1;
     }
+    else {
+        noPhotoLabel.alpha = 0;
+    }
+    if (self.imagesArray.count ==6){
+        
+        restoreBtn.enabled = NO;
+    }
+    
 
     [self.collectionView reloadData];
 
@@ -835,4 +610,45 @@
 
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - Notes Methods
+
+-(void)showImageFullScreen:(UIImage*)img{
+    
+    NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
+
+    // Assuming you're in a view controller and want to present another view controller modally
+
+//    ImagePreviewController *  imagePreview = [self.storyboard instantiateViewControllerWithIdentifier:@"imagePreview"];
+    ImagePreviewController * imagePreview = [[ImagePreviewController alloc]init];
+    [self prepareOverlay:imagePreview];
+   // imagePreview.isIpad  = NO;
+   // controller.startColor = currentColor;
+    imagePreview.imgFromPhoto = img;
+    [self presentViewController:imagePreview animated:true completion:nil];
+
+}
+- (void)prepareOverlay:(ImagePreviewController*)viewController {
+    
+    self.overlayDelegate = [[VCPresentationDelegate alloc]init];
+    viewController.transitioningDelegate = self.overlayDelegate;
+    viewController.modalPresentationStyle = UIModalPresentationCustom;
+}
+
+-(UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller
+{
+    return UIModalPresentationNone;
+}
+
+#pragma mark - Amplitude Analytics
+
+-(void)amplitudeEvent:(NSString*)eventName{
+    
+    AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
+    //configuration.serverZone = AMPServerZoneEU;
+    Amplitude * amplitude = [Amplitude initWithConfiguration:configuration];
+    [amplitude track:eventName eventProperties:nil];
+
+}
+
 @end

@@ -55,6 +55,7 @@
 @property NSData * dictTop;
 @property NSData * dictFront;
 @property NSData * dictBack;
+@property NSArray * photoArray;
 
 @property (nonatomic) NSData * documentData;
 -(void)copyDocumentDataFromImportedFile:(id)contents;

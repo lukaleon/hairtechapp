@@ -85,7 +85,7 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 //    return YES;
 //}
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
-    NSLog(@"save to contents");
+    NSLog(@"save to contents ICLOUD");
 
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:NO];
@@ -111,7 +111,8 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     [archiver encodeObject:[self encodeImage:_imageTop] forKey:@"imageTop"];
     [archiver encodeObject:[self encodeImage:_imageFront] forKey:@"imageFront"];
     [archiver encodeObject:[self encodeImage:_imageBack] forKey:@"imageBack"];
-    
+    [archiver encodeObject:[self encodeImagesArray:_photoArray] forKey:@"photoArray"];
+
     [archiver finishEncoding];
     data = [[archiver encodedData] mutableCopy];
 
@@ -119,7 +120,7 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
 }
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
-    NSLog(@"load from contents");
+    NSLog(@"load from contents ICLOUD");
     
 
     NSData *data = (NSData *)contents;
@@ -142,6 +143,9 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     _dictTop = (NSData*)[unarchiver decodeObjectForKey:@"jsonTop"];
     _dictFront = (NSData*)[unarchiver decodeObjectForKey:@"jsonFront"];
     _dictBack = (NSData*)[unarchiver decodeObjectForKey:@"jsonBack"];
+    
+    _photoArray = [self decodeImagesArray:[unarchiver decodeObjectOfClass:[NSData class] forKey:@"photoArray"]];
+    NSLog(@"PHOTO ARRAY COUNT ICLOUD %lu", _photoArray.count);
 
     [unarchiver finishDecoding];
     
@@ -252,6 +256,9 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     self.dictTop = [diagramFileDictionary objectForKey:@"jsonTop"];
     self.dictFront = [diagramFileDictionary objectForKey:@"jsonFront"];
     self.dictBack = [diagramFileDictionary objectForKey:@"jsonBack"];
+    self.photoArray = [diagramFileDictionary objectForKey:@"photoArray"];
+    
+
 }
 
 -(NSData*)saveDataToDict:(NSMutableDictionary*)dict error:(NSError **)outError {
@@ -281,7 +288,8 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     [dictToSave setObject:self.modificationDate forKey:@"modificationDate"];
     [dictToSave setObject:self.favorite forKey:@"favorite"];
     [dictToSave setObject:self.note forKey:@"note"];
-    
+    [dictToSave setObject:self.photoArray forKey:@"photoArray"];
+
     return [NSKeyedArchiver archivedDataWithRootObject:dictToSave requiringSecureCoding:NO error:&error];
     
     
@@ -322,8 +330,51 @@ NSFileVersion *laterVersion (NSFileVersion *first, NSFileVersion *second) {
     }
 }
 
-
-
+//- (NSArray<UIImage *> *)decodeImagesArray:(NSData *)encodedImagesData {
+//    NSArray *encodedImages = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSArray class] fromData:encodedImagesData error:nil];
+//    NSMutableArray<UIImage *> *imagesArray = [NSMutableArray array];
+//    for (NSData *encodedImage in encodedImages) {
+//        UIImage *image = [UIImage imageWithData:encodedImage];
+//        if (image) {
+//            [imagesArray addObject:image];
+//        }
+//    }
+//    return [imagesArray copy];
+//}
+//- (NSData *)encodeImagesArray:(NSArray<UIImage *> *)imagesArray {
+//    NSMutableArray *encodedImages = [NSMutableArray array];
+//    for (UIImage *image in imagesArray) {
+//        NSData *encodedImage = UIImagePNGRepresentation(image); // Encode as PNG for simplicity
+//        [encodedImages addObject:encodedImage];
+//    }
+//    return [NSKeyedArchiver archivedDataWithRootObject:encodedImages requiringSecureCoding:NO error:nil];
+//}
+- (NSArray<UIImage *> *)decodeImagesArray:(NSData *)encodedImagesData {
+    NSArray *encodedImages = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSArray class] fromData:encodedImagesData error:nil];
+    NSMutableArray<UIImage *> *imagesArray = [NSMutableArray array];
+    for (NSData *encodedImage in encodedImages) {
+        UIImage *image = [UIImage imageWithData:encodedImage];
+        if (image) {
+            [imagesArray addObject:image];
+        }
+    }
+    return [imagesArray copy];
+}
+- (NSData *)encodeImagesArray:(NSArray<UIImage *> *)imagesArray {
+    NSMutableArray *encodedImages = [NSMutableArray array];
+    for (UIImage *image in imagesArray) {
+        NSData *encodedImage = UIImagePNGRepresentation(image); // Encode as PNG for simplicity
+        [encodedImages addObject:encodedImage];
+    }
+    
+    NSError *error = nil;
+    NSData *encodedData = [NSKeyedArchiver archivedDataWithRootObject:encodedImages requiringSecureCoding:NO error:&error];
+    if (error) {
+        NSLog(@"Error encoding images: %@", error);
+    }
+    
+    return encodedData;
+}
 
 @end
 

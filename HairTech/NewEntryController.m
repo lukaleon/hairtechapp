@@ -53,6 +53,9 @@
     [self registerNotifications];
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
     
+    NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
+
+    
 }
 -(void)saveEntryImageToCloud:(NSString*)name image:(UIImage*)img{
     name = [name stringByDeletingPathExtension];
@@ -251,6 +254,9 @@
     self.logo.alpha = 1.0;
     
     UIImage * imageToShare = [self captureScreenRetina];
+    
+   // UIImage * imageCombined = [self combineImages:imageToShare withImage:[self.document.photoArray objectAtIndex:0]];
+   
     NSArray *itemsToShare = [NSArray arrayWithObjects:textToShare, imageToShare, nil];
     
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems: itemsToShare applicationActivities:nil];
@@ -301,7 +307,23 @@
     }];
 }
 
+- (UIImage *)combineImages:(UIImage *)image1 withImage:(UIImage *)image2 {
+    UIImage *finalImage;
 
+  
+    CGSize outerImageSize = CGSizeMake(image1.size.width + 400 ,image1.size.height); // Provide custom size or size of your actual image
+    UIGraphicsBeginImageContext(outerImageSize);
+
+    //calculate areaSize for re-centered inner image
+    CGRect areSize = CGRectMake(image1.size.width + 50, 50, image2.size.width / 10 , image2.size.height / 10);
+    [image1 drawInRect:CGRectMake(0, 0, image1.size.width, image1.size.height)];
+    [image2 drawInRect:areSize blendMode:kCGBlendModeNormal alpha:1.0];
+
+    finalImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return finalImage;
+}
 
 -(void)openDrawingView:(UITapGestureRecognizer*)sender{
     NSInteger myViewTag = sender.view.tag;
@@ -374,32 +396,29 @@
 
 -(void)changeColorPalette{
     
-//    NSLog(@"Show color wheel");
-//   ColorWheelController *colorWheel = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
-//    colorWheel.delegate = self;
-//
-////    colorWheel.startColor = currentColor;
-//    colorWheel.modalPresentationStyle = UIModalPresentationPageSheet;
-//    [self presentViewController:colorWheel animated:YES completion:nil];
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        PhotoPicker *photoPicker = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
-        photoPicker.delegate = self;
-        photoPicker.isIpad  = YES;
-       // colorWheel.startColor = currentColor;
-        photoPicker.modalPresentationStyle = UIModalPresentationPageSheet;
-        photoPicker.preferredContentSize = CGSizeMake(300, 400);
-        [self presentViewController:photoPicker animated:YES completion:nil];
-    }
-    else{
-   
-        PhotoPicker *controller = [[PhotoPicker alloc]init];
-        [self prepareOverlay:controller];
-        controller.isIpad  = NO;
-       // controller.startColor = currentColor;
 
-        [self presentViewController:controller animated:true completion:nil];
-    }
+    
+//    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
+//        PhotoPicker *photoPicker = [self.storyboard instantiateViewControllerWithIdentifier:@"colorWheel"];
+//        photoPicker.delegate = self;
+//        photoPicker.isIpad  = YES;
+//       // colorWheel.startColor = currentColor;
+//        photoPicker.modalPresentationStyle = UIModalPresentationPageSheet;
+//        photoPicker.preferredContentSize = CGSizeMake(300, 400);
+//        [self presentViewController:photoPicker animated:YES completion:nil];
+//    }
+//    else{
+   
+        PhotoPicker *photoPicker = [[PhotoPicker alloc]init];
+        [self prepareOverlay:photoPicker];
+        photoPicker.isIpad  = NO;
+        photoPicker.delegate = self;
+        NSLog(@"Class of object: %@", NSStringFromClass([self.document.photoArray class]));
+        
+        [photoPicker setMyArray:self.document.photoArray];
+        NSLog(@" array count %@", self.document.photoArray);
+        [self presentViewController:photoPicker animated:true completion:nil];
+   // }
     
 }
 
@@ -435,6 +454,14 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     
 //    [[iCloud sharedCloud] getDocument].note = note;
     self.document.note = note;
+    [self saveDataWhenReturnFromDrawing];
+
+}
+-(void)savePhotos:(NSMutableArray*)photos{
+    NSLog(@"Store photos in self.document");
+    self.document.photoArray = photos;
+   [self saveDataWhenReturnFromDrawing];
+
 }
 
 #pragma mark - Saving Methods
@@ -525,8 +552,6 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     }];
     
     
-    
-    
 //    self.document = [[iCloud sharedCloud] getDocument];
 //
 //    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
@@ -542,9 +567,6 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 // }];
 //    [[iCloud sharedCloud] setDocument:nil];
 }
- 
-
-
  
 #pragma mark - Setup Share Confirmation Alert View
 - (void)setupBottomToolBar {

@@ -6,12 +6,30 @@
 //  Copyright © 2024 Admin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
 
-@interface ImagePreviewController : ViewController
+
+@protocol ImagePreviewControllerDelegate <NSObject>
 
 @end
 
-NS_ASSUME_NONNULL_END
+@interface ImagePreviewController : UIViewController<UIGestureRecognizerDelegate>
+{
+    CGPoint initialTouchPoint;
+
+}
+
+- (IBAction)closeNotes:(id)sender;
+- (void)initWithView:(UIView *)p;
+
+@property(nonatomic, retain) UIView *parent;
+
+@property (nonatomic,weak) id<ImagePreviewControllerDelegate> delegate;
+
+@property (nonatomic,weak) NSString *textOfTextView;
+@property (nonatomic,weak) UIImage *imgFromPhoto;
+
+
+@end
+

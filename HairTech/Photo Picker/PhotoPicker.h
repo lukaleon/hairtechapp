@@ -11,6 +11,8 @@
 #import "sliderCustom.h"
 #import "ColorResetButton.h"
 #import "ImageCollectionViewCell.h"
+#import "ImagePreviewController.h"
+#import "VCPresentationDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,10 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PhotoPickerDelegate
 -(void)disableDismissalRecognizers;
+-(void)savePhotos:(NSMutableArray*)photos;
+
 @end
-@interface PhotoPicker : UIViewController <ISColorWheelDelegate,UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIContextMenuInteractionDelegate, ImageCollectionViewCellDelegate>
+@interface PhotoPicker : UIViewController <UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIContextMenuInteractionDelegate, ImageCollectionViewCellDelegate, ImagePreviewControllerDelegate>
 {
-    ISColorWheel * _colorWheel;
+    id <PhotoPickerDelegate> __weak delegate;
+
     UIView* _wellView;
     UIButton * colorButton;
     CAShapeLayer *line;
@@ -34,10 +39,15 @@ NS_ASSUME_NONNULL_BEGIN
    // UILabel * noDataLabel;
     UILabel *noPhotoLabel;
 
-}
 
+}
+-(void)setMyArray:(NSArray *)arr;
+
+@property (nonatomic, strong) VCPresentationDelegate* overlayDelegate;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *imagesArray;
+@property (nonatomic, strong) NSMutableArray *tempImages;
+
 
 
 @property (strong, nonatomic) IBOutlet sliderCustom * _brightnessSlider;

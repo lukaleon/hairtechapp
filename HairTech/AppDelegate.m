@@ -54,12 +54,12 @@
 //    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 //    NSLog(@"App Version is %@",version);
     
-    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"8.0.5"] && [self appIsRunningForFirstTime]) {
+    if (![[NSUserDefaults standardUserDefaults] valueForKey:@"9.0.1"] && [self appIsRunningForFirstTime]) {
       
         [self setupDefaultColors];
         [self setLightModeAsDefault];
         [self saveWidthOfLinesToDefaults:1.2 forKey:@"lineWidth"];
-        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"8.0.5"];
+        [[NSUserDefaults standardUserDefaults] setValue:@YES forKey:@"9.0.1"];
         [[NSUserDefaults standardUserDefaults] setObject:@"creationDate" forKey:@"order"];
         [[NSUserDefaults standardUserDefaults] setObject:self.colorCollection forKey:@"colorCollection"];
         [[NSUserDefaults standardUserDefaults] setBool:YES  forKey:@"grid"];

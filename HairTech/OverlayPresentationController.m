@@ -21,7 +21,7 @@
     // Create Dim View
     self.dimmingView = [[UIView alloc]init];;
     self.dimmingView.frame = self.containerView.bounds;
-    self.dimmingView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+    self.dimmingView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
     
     // Set initial opacity to 0.
     self.dimmingView.alpha = 0.0;

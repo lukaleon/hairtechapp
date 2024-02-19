@@ -69,7 +69,7 @@
 
 
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError *__autoreleasing  _Nullable *)outError {
-    NSLog(@"load from contents");
+   NSLog(@"load from contents MYDOC");
 
 
     NSData *data = (NSData *)contents;
@@ -92,6 +92,9 @@
     _dictTop = (NSData*)[unarchiver decodeObjectForKey:@"jsonTop"];
     _dictFront = (NSData*)[unarchiver decodeObjectForKey:@"jsonFront"];
     _dictBack = (NSData*)[unarchiver decodeObjectForKey:@"jsonBack"];
+   
+    _photoArray = [self decodeImagesArray:[unarchiver decodeObjectOfClass:[NSData class] forKey:@"photoArray"]];
+    NSLog(@"MYDOC - PHOTO ARRAY COUNT %lu", _photoArray.count);
 
     [unarchiver finishDecoding];
     
@@ -100,7 +103,7 @@
 
 - (id)contentsForType:(NSString *)typeName error:(NSError *__autoreleasing  _Nullable *)outError {
 
-    NSLog(@"save to contents");
+    NSLog(@"save to contents MYDOC");
     
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:NO];
@@ -126,12 +129,36 @@
     [archiver encodeObject:[self encodeImage:_imageTop] forKey:@"imageTop"];
     [archiver encodeObject:[self encodeImage:_imageFront] forKey:@"imageFront"];
     [archiver encodeObject:[self encodeImage:_imageBack] forKey:@"imageBack"];
+    [archiver encodeObject:[self encodeImagesArray:_photoArray] forKey:@"photoArray"];
+    
     
     [archiver finishEncoding];
     data = [[archiver encodedData] mutableCopy];
 
     return data;
     
+}
+
+
+
+- (NSArray<UIImage *> *)decodeImagesArray:(NSData *)encodedImagesData {
+    
+    NSSet *set = [NSSet setWithArray:@[
+                          [NSArray class],
+                          [UIImage class]
+                          ]];
+
+    NSArray *encodedImages = [NSKeyedUnarchiver unarchivedObjectOfClasses:set fromData:encodedImagesData error:nil];
+    return [encodedImages copy];
+}
+- (NSData *)encodeImagesArray:(NSArray<UIImage *> *)imagesArray {
+  
+    NSError *error = nil;
+    NSData *encodedData = [NSKeyedArchiver archivedDataWithRootObject:imagesArray requiringSecureCoding:NO error:&error];
+       if (error) {
+           NSLog(@"Error encoding images: %@", error);
+       }
+    return encodedData;
 }
 
 - (NSData*)encodeImage:(UIImage *)image

@@ -7,7 +7,7 @@
 //
 
 #import "VCPresentationDelegate.h"
-#import "OverlayPresentationController.h"
+#import "OverlayController.h"
 #import "ControllerAnimator.h"
 
 @interface VCPresentationDelegate()
@@ -17,7 +17,7 @@
 @implementation VCPresentationDelegate
 
 - (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source {
-    return [[OverlayPresentationController alloc]initWithPresentedViewController:presented presentingViewController:presenting];
+    return [[OverlayController alloc]initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {

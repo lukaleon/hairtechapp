@@ -21,7 +21,7 @@
     // Create Dim View
     self.dimmingView = [[UIView alloc]init];;
     self.dimmingView.frame = self.containerView.bounds;
-    self.dimmingView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+    self.dimmingView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1];
     
     // Set initial opacity to 0.
     self.dimmingView.alpha = 0.0;
@@ -50,8 +50,8 @@
     // Calculate presented frame
     
     CGSize size = self.containerView.bounds.size;
-    size.height = size.height - 80;
-    return CGRectMake(0, self.presentedViewController.view.frame.size.height - 80, size.width, self.presentedViewController.view.frame.size.height - 80);
+    size.height = size.height ;
+    return CGRectMake(0, 0, size.width, self.presentedViewController.view.frame.size.height );
 }
 
 - (void)containerViewWillLayoutSubviews {

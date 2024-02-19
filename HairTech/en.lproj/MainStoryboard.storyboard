@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8q3-9P-FT4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8q3-9P-FT4">
     <device id="retina6_72" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -21,7 +21,7 @@
             <objects>
                 <viewController storyboardIdentifier="HelpView" modalPresentationStyle="formSheet" id="Hjw-TJ-cig" customClass="HelpViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p9x-eH-Hqo">
-                        <rect key="frame" x="0.0" y="0.0" width="430" height="863"/>
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="922"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dV8-3G-lh2">
@@ -2955,6 +2955,21 @@
             </objects>
             <point key="canvasLocation" x="2400" y="138"/>
         </scene>
+        <!--Image Preview Controller-->
+        <scene sceneID="wD9-2k-nAW">
+            <objects>
+                <viewController storyboardIdentifier="imagePreview" id="NDv-fh-BG9" customClass="ImagePreviewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yb3-F5-lMd">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="saW-N9-284"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c7T-fz-LsN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3175" y="134"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="zSo-gw-KiX">
             <objects>
@@ -3166,7 +3181,7 @@
             <objects>
                 <viewController storyboardIdentifier="conflictVC" id="eOL-jT-eCD" customClass="ConflictViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Yg-YF-2ak">
-                        <rect key="frame" x="0.0" y="0.0" width="430" height="863"/>
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="922"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="d2X-5f-Qn8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -3181,7 +3196,7 @@
             <objects>
                 <viewController storyboardIdentifier="colorViewNew" modalPresentationStyle="pageSheet" id="8Vi-H2-VWR" customClass="ColorViewNew" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yzX-MN-51N" customClass="ColorViewController">
-                        <rect key="frame" x="0.0" y="0.0" width="430" height="863"/>
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="922"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="qhh-ZP-zue"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -3257,7 +3272,7 @@
             <color red="0.67450980392156867" green="0.74901960784313726" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="cellBar">
-            <color red="0.9179999828338623" green="0.91399997472763062" blue="0.9179999828338623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.91764705882352937" green="0.9137254901960784" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="cellText">
             <color red="0.21600000560283661" green="0.23100000619888306" blue="0.32899999618530273" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

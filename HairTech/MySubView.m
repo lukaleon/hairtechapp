@@ -16,6 +16,7 @@
 #import "iCloudDocument.h"
 #import <sys/xattr.h>
 #import "DocumentManager.h"
+#import "MyDoc.h"
 
 
 @interface MySubView()
@@ -495,6 +496,8 @@
 
 -(void)saveDiagramToFile:(NSString*)uuid  techniqueName:(NSString*)techName maleOrFemale:(NSString*)maleOrFemale  {
     
+
+    NSArray * photos = [[NSArray alloc]init];
     
     NSMutableString * exportingFileName = [techName mutableCopy];
     [exportingFileName appendString:@".htapp"];
@@ -506,7 +509,9 @@
     [[NSUserDefaults standardUserDefaults] setObject:exportingFileName forKey:@"newCreatedFileName"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    iCloudDocument * document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+//    iCloudDocument * document = [[iCloudDocument alloc] initWithFileURL:fileURL];
+    MyDoc * document = [[MyDoc alloc] initWithFileURL:fileURL];
+    
     document.note = @"";
     document.techniqueName = techName;
     document.maleFemale = maleOrFemale;
@@ -515,6 +520,8 @@
     document.creationDate = [self currentDate];
     document.modificationDate = [self currentDate];
     document.favorite = @"default";
+    document.photoArray = photos;
+    
     
     if ([maleOrFemale isEqualToString:@"female"]){
         document.imageLeft = [self storeImagesInDictionary:@"lefthead_s"];
@@ -538,6 +545,7 @@
     document.dictTop = [self storeJsonDataInDictionary];
     document.dictFront = [self storeJsonDataInDictionary];
     document.dictBack = [self storeJsonDataInDictionary];
+
    
     [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         // ...
@@ -650,6 +658,9 @@
     NSString * modificationDate = [self currentDate];
     NSString * favorite = @"default";
     NSString * note = @"";
+    NSMutableArray * photos;
+    
+    
 
 
     
@@ -701,7 +712,6 @@
         [archiver encodeObject:fileName3 forKey:@"imageTop"];
         [archiver encodeObject:fileName4 forKey:@"imageFront"];
         [archiver encodeObject:fileName5 forKey:@"imageBack"];
-
 
 
 

@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setTechniqueID:(NSString*)techId;
 @property BOOL openedFromDrawingView;
 
+@property (strong, nonatomic) NSMutableArray * arr;
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
 @property (weak, nonatomic) IBOutlet UILabel *labelToSave;
 @property (weak, nonatomic) IBOutlet UIImageView *imageLeft;

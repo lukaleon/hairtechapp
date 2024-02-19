@@ -43,7 +43,7 @@
 }
 - (IBAction)closeNotes:(id)sender {
     NSLog(@"close notes");
-  //[self.delegate saveNote:self.textView1.text];
+    //[self.delegate saveNote:self.textView1.text];
     
     //[self.view endEditing:YES];
     [self dismissViewControllerAnimated:YES completion:nil];

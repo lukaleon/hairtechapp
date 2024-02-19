@@ -58,6 +58,7 @@ static DiagramFile *_sharedInstance = nil;
     self.dictTop = [diagramFileDictionary objectForKey:@"jsonTop"];
     self.dictFront = [diagramFileDictionary objectForKey:@"jsonFront"];
     self.dictBack = [diagramFileDictionary objectForKey:@"jsonBack"];
+    self.photoArray = [diagramFileDictionary objectForKey:@"photoArray"];
 }
 
 -(NSData*)dataFromDictionary{
