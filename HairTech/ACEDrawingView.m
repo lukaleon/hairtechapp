@@ -554,7 +554,7 @@ UIColor* tempColor;
     [self.arrayOfCircles makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [self.arrayOfCircles removeAllObjects];
     
-    [self remvoeFromArray:self.selectedLayer];
+    [self addLayerToUndoStack:self.selectedLayer];
 
     self.selectedLayer.isSelected = NO;
     self.selectedLayer = nil;
@@ -906,10 +906,7 @@ UIColor* tempColor;
         [self.layerArray addObject:self.drawingLayer];
       //  [self.undoRedoArray addObject:self.drawingLayer];
         
-        [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
-        if (![self.undoManager isUndoing]) {
-            [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
-        }
+     
         
         [self storeDataInJson];
         [self fetchData:[self.delegate getDataFromVC]];
@@ -921,20 +918,34 @@ UIColor* tempColor;
             [self selectLayer:[self.layerArray lastObject]];
         }
         [self.drawingLayer addToTrack];
+        [self addToTrackInDrawingView:self.drawingLayer];
         
-        
-        
+//        [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
+//        if (![self.undoManager isUndoing]) {
+//            [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
+//        }
         
     } else {
         if (self.isMoveLayer) {
             
-            [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.selectedLayer];
+            
+            JVDrawingLayer *copiedLayer = [NSKeyedUnarchiver unarchivedObjectOfClass:[JVDrawingLayer class]
+                                                                 fromData:[NSKeyedArchiver archivedDataWithRootObject:self.selectedLayer requiringSecureCoding:NO error:nil] error:nil];
+            [self.tempLayersForUndo addObject:copiedLayer]; // store new position in temp Layer
+
+
+            [[self.undoManager prepareWithInvocationTarget:self]moveDrawing:copiedLayer];
             if (![self.undoManager isUndoing]) {
-                [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
+                [self.undoManager setActionName:NSLocalizedString(@"actions.move", @"Move Shape")];
+                
             }
+        
             [self updateAllPoints];
             [self storeDataInJson];
             [self.selectedLayer addToTrack];
+            [self addToTrackInDrawingView:self.selectedLayer];
+
+          //  NSLog(@"temp layer count = %lu", self.tempLayersForUndo.count);
         }
         if (self.isFirstTouch) {
             if(self.eraserSelected == NO){
@@ -1476,7 +1487,7 @@ UIColor* tempColor;
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
     
-    [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
+    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
     if (![self.undoManager isUndoing]) {
         [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
         [self.delegate updateButtonStatus];
@@ -1508,7 +1519,7 @@ UIColor* tempColor;
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
     
-    [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
+    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
     if (![self.undoManager isUndoing]) {
         [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
         [self.delegate updateButtonStatus];
@@ -1535,7 +1546,7 @@ UIColor* tempColor;
     [self.layer addSublayer:self.drawingLayer];
     [self.layerArray addObject:self.drawingLayer];
     
-    [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
+    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
     if (![self.undoManager isUndoing]) {
         [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
         [self.delegate updateButtonStatus];
@@ -1742,7 +1753,7 @@ UIColor* tempColor;
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         
-        [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
+        [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
         if (![self.undoManager isUndoing]) {
             [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
         }
@@ -1798,7 +1809,7 @@ UIColor* tempColor;
         [self.layer addSublayer:self.drawingLayer];
         [self.layerArray addObject:self.drawingLayer];
         
-        [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:self.drawingLayer];
+        [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:self.drawingLayer];
         if (![self.undoManager isUndoing]) {
             [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
         }
@@ -1869,7 +1880,7 @@ UIColor* tempColor;
     self.lineColor = tempColor;
     self.pointsCoord = [NSMutableArray array];
     self.arrayOfTextViews = [NSMutableArray array];
-    
+    self.tempLayersForUndo = [NSMutableArray array];
 
 
     
@@ -2021,9 +2032,36 @@ UIColor* tempColor;
 }
 
 #pragma mark - Undo / Redo
+- (BOOL)deleteLayerAction {
+    BOOL status = [self.selectedLayer revokeUntilHidden];
+    if (status) {
+        [self.selectedLayer removeFromSuperlayer];
+        [self.layerArray removeObject:self.selectedLayer];
+        self.selectedLayer = nil;
+        self.drawingLayer = nil;
+        NSLog(@" Drawing views count %lu", [self.layer.sublayers count]);
+    }
+    return status;
+}
+
+- (void)addToTrackInDrawingView:(JVDrawingLayer*)layer {
+    NSMutableDictionary *trackDic = [[NSMutableDictionary alloc] init];
+    [trackDic setObject:NSStringFromCGPoint(layer.startPoint) forKey:@"startPoint"];
+    if (layer.type == JVDrawingTypeGraffiti) {
+        [trackDic setObject:NSStringFromCGPoint([layer.pointArray[0] CGPointValue]) forKey:@"startPoint"];
+    }
+    [trackDic setObject:NSStringFromCGPoint(layer.endPoint) forKey:@"endPoint"];
+    [trackDic setObject:@(layer.isSelected) forKey:@"isSelected"];
+    [trackDic setObject:@(layer.type) forKey:@"type"];
+    [self.tempLayersForUndo addObject:trackDic];
+    
+    NSLog(@"NUMBER OF OBJECTS in LAYERS DICT %lu", (unsigned long)self.tempLayersForUndo.count );
+
+}
+
 
 - (void)addLayerToUndoManager:(JVDrawingLayer*)layer {
-    [[self.undoManager prepareWithInvocationTarget:self]remvoeFromArray:layer];
+    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoStack:layer];
     if (![self.undoManager isUndoing]) {
         [self.undoManager setActionName:NSLocalizedString(@"actions.add", @"Add Shape")];
     }
@@ -2035,22 +2073,42 @@ UIColor* tempColor;
 }
 
 
-
-
--(void)remvoeFromArray:(JVDrawingLayer*)shape{
+-(void)addLayerToUndoStack:(JVDrawingLayer*)shape{
     
-    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoManager:shape];
-    if (![self.undoManager isUndoing]) {
-       [self.undoManager setActionName:NSLocalizedString(@"actions.remove", @"Remove Shape")];
-    }
+//    [[self.undoManager prepareWithInvocationTarget:self]addLayerToUndoManager:shape];
+//    if (![self.undoManager isUndoing]) {
+//       [self.undoManager setActionName:NSLocalizedString(@"actions.remove", @"Remove Shape")];
+//    }
     
     [self.layerArray removeObject:shape];
-        [shape removeFromSuperlayer];
-        [shape setNeedsDisplay];
-    
+    [shape removeFromSuperlayer];
+    [shape setNeedsDisplay];
     NSLog(@"remove figure");
 
 }
+
+- (void)moveDrawing:(JVDrawingLayer *)layer  {
+    NSLog(@"Move figure");
+    
+    if (self.tempLayersForUndo.count > 0){
+        JVDrawingLayer *lastDrawing = [self.layerArray lastObject];
+        [lastDrawing removeFromSuperlayer]; // Remove from canvas
+        [self.layerArray removeLastObject];
+        [lastDrawing setNeedsDisplay];
+        
+        NSUInteger previousLayer = self.tempLayersForUndo.count-1;
+       self.drawingLayer = [self.tempLayersForUndo objectAtIndex:previousLayer];
+        
+        [self.tempLayersForUndo removeLastObject];
+    
+        [self.layer addSublayer:self.drawingLayer];
+        [self.layerArray addObject:self.drawingLayer];
+        
+//        [self updateAllPoints];
+//        [self storeDataInJson];
+    }
+}
+
 
 -(void)removeShapeById:(int)uid{
     

@@ -501,6 +501,7 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 }
 -(UIImage*)captureScreenRetina
 {
+    
     CGFloat rescale = 2.0;
     CGSize resize = CGSizeMake(self.screenShotView.frame.size.width * rescale, self.screenShotView.frame.size.height * rescale);
 

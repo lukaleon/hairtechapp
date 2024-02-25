@@ -551,7 +551,7 @@
     UIBarButtonItem * moreBtn =[[UIBarButtonItem alloc] initWithCustomView:more];
     UIBarButtonItem * undoBtn = [[UIBarButtonItem alloc]initWithCustomView:undo];
     UIBarButtonItem * redoBtn = [[UIBarButtonItem alloc]initWithCustomView:redo];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, gridBtn, magnetBtn, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:moreBtn, gridBtn, magnetBtn,undoBtn, nil];
     [self updateButtonStatus];
     [self registerActionView];
 

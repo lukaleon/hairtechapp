@@ -122,6 +122,9 @@ typedef enum {
 
 }
 
+@property (nonatomic, strong) NSMutableArray<JVDrawingLayer *> *undoStack;
+@property (nonatomic, strong) NSMutableArray *tempLayersForUndo;
+
 
 @property (nonatomic, assign) CGFloat magnifyingGlassShowDelay;
 @property  CHMagnifierView * magnifierView;

@@ -410,6 +410,24 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.delegate = self;
     
+    NSLog(@"COUNT %lu", self.imagesArray.count);
+        // Configuration
+        configuration = [[PHPickerConfiguration alloc] init];
+//    if (self.imagesArray.count == 0){
+        configuration.selectionLimit = 6 - self.imagesArray.count;
+//    }
+//    else 
+//    {
+//        configuration.selectionLimit = 6 - self.imagesArray.count;
+//    }
+    // Set to 0 for unlimited selection
+        configuration.filter = [PHPickerFilter imagesFilter]; // Only images
+
+        // Initialize and present the picker
+        PHPickerViewController *pickerViewController = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+ 
+
+    
 
     NSMutableArray* actions = [[NSMutableArray alloc] init];
     NSMutableArray* actions2 = [[NSMutableArray alloc] init];
@@ -424,16 +442,20 @@
                                            image:[UIImage systemImageNamed:@"photo"]
                                       identifier:nil
                                          handler:^(__kindof UIAction* _Nonnull action) {
-    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:imagePickerController animated:YES completion:nil];
+        PHPickerViewController *pickerViewController = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+        pickerViewController.delegate = self;
+        [self presentViewController:pickerViewController animated:YES completion:nil];
+        
     }]];
     
     [actions addObject:[UIAction actionWithTitle:@"Camera"
                                            image:[UIImage systemImageNamed:@"camera"]
                                       identifier:nil
                                          handler:^(__kindof UIAction* _Nonnull action) {
-    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-    [self presentViewController:imagePickerController animated:YES completion:nil];
+         imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:imagePickerController animated:YES completion:nil];
+        
+       
     }]];
     
     UIMenu* menu = [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:actions];
@@ -559,6 +581,9 @@
                 restoreBtn.enabled = YES;
             }
             
+            configuration.selectionLimit = 6 - self.imagesArray.count;
+
+            
 //                        if (self.delegate && [self.delegate respondsToSelector:@selector(deleteCellAtIndexPath:)]) {
 //                                       [self.delegate deleteCellAtIndexPath:indexPath];
 //                                    }
@@ -610,6 +635,51 @@
 
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+ 
+
+
+- (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    for (PHPickerResult *result in results) {
+        // Check if the provider can load the object of type UIImage
+        if ([result.itemProvider canLoadObjectOfClass:UIImage.class]) {
+            [result.itemProvider loadObjectOfClass:UIImage.class completionHandler:^(UIImage * _Nullable image, NSError * _Nullable error) {
+                if (image) {
+                    // Use the image on the main thread
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // Do something with the image, like displaying it in an UIImageView
+                        
+                        [self.imagesArray addObject:image];
+                        [self amplitudeEvent:@"Photo Picked Up"];
+
+                        
+                        [self.delegate savePhotos:self.imagesArray];
+
+                        if (self.imagesArray.count == 0){
+                            noPhotoLabel.alpha = 1;
+                        }
+                        else {
+                            noPhotoLabel.alpha = 0;
+                        }
+                        if (self.imagesArray.count ==6){
+                            
+                            restoreBtn.enabled = NO;
+                        }
+                        
+
+                        [self.collectionView reloadData];
+
+                        configuration.selectionLimit = 6 - self.imagesArray.count;
+                        
+                        
+                    });
+                }
+            }];
+        }
+    }
+}
+
 
 #pragma mark - Notes Methods
 

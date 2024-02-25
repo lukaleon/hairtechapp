@@ -13,8 +13,8 @@
 #import "ImageCollectionViewCell.h"
 #import "ImagePreviewController.h"
 #import "VCPresentationDelegate.h"
-
 NS_ASSUME_NONNULL_BEGIN
+@import PhotosUI;
 
 
 
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)savePhotos:(NSMutableArray*)photos;
 
 @end
-@interface PhotoPicker : UIViewController <UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIContextMenuInteractionDelegate, ImageCollectionViewCellDelegate, ImagePreviewControllerDelegate>
+@interface PhotoPicker : UIViewController <UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIContextMenuInteractionDelegate, ImageCollectionViewCellDelegate, ImagePreviewControllerDelegate,PHPickerViewControllerDelegate>
 {
     id <PhotoPickerDelegate> __weak delegate;
 
@@ -38,9 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
     ColorResetButton *restoreBtn;
    // UILabel * noDataLabel;
     UILabel *noPhotoLabel;
-
+    PHPickerConfiguration *configuration;
 
 }
+
 -(void)setMyArray:(NSArray *)arr;
 
 @property (nonatomic, strong) VCPresentationDelegate* overlayDelegate;
