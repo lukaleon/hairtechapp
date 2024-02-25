@@ -39,7 +39,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self registerActionView];
     self.imagesArray = [[NSMutableArray alloc]init];
     self.imagesArray = self.tempImages;
@@ -52,7 +51,6 @@
     layout.minimumLineSpacing = 10.0; // Adjust as needed
     layout.minimumInteritemSpacing = 10.0; // Adjust as needed
     layout.itemSize = CGSizeMake(200, 200); // Adjust width and height as needed
-
    layout.sectionInset = UIEdgeInsetsMake(0,0,0,20); // Adjust top, left, bottom, and right insets as needed
 
 
