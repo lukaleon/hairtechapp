@@ -1283,8 +1283,8 @@
             filePath = "HairTech/Photo Picker/PhotoPicker.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
+            startingLineNumber = "503"
+            endingLineNumber = "503"
             landmarkName = "-contextMenuInteraction:configurationForMenuAtLocation:"
             landmarkType = "7">
          </BreakpointContent>

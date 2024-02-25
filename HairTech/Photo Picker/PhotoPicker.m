@@ -44,13 +44,6 @@
     self.imagesArray = [[NSMutableArray alloc]init];
     self.imagesArray = self.tempImages;
     
-    
-    // Initialize the images array with your image names or URLs
-      //  self.imagesArray = @[@"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg", @"IMG_8905.jpg"];
-    
-//    UIImage * img = [UIImage imageNamed:@"IMG_8905.jpg"];
-//    [self.imagesArray addObject:img];
-
     CGFloat leftInset = ((self.view.bounds.size.width - 300 - 20 )/2.0); //Calculate cell offset if no images in array
     
     // Set up collection view layout
@@ -59,8 +52,6 @@
     layout.minimumLineSpacing = 10.0; // Adjust as needed
     layout.minimumInteritemSpacing = 10.0; // Adjust as needed
     layout.itemSize = CGSizeMake(200, 200); // Adjust width and height as needed
-   
-    //layout.sectionInset = UIEdgeInsetsMake(0, leftInset, 0, leftInset); // Adjust top, left, bottom, and right insets as needed
 
    layout.sectionInset = UIEdgeInsetsMake(0,0,0,20); // Adjust top, left, bottom, and right insets as needed
 
@@ -78,20 +69,17 @@
   
 
     [self addPhotoButton];
+    restoreBtn.enabled = [self setRestoreEnabled];
+    noPhotoLabel = [[UILabel alloc] initWithFrame:CGRectMake(-15, 0, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height)];
+    // Center the button within the view
+    noPhotoLabel.textAlignment = NSTextAlignmentCenter;
+    noPhotoLabel.textColor = [UIColor systemGray3Color];
+    noPhotoLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:14];
+    noPhotoLabel.text = @"Press plus button to add photos";
+    [self.collectionView addSubview:noPhotoLabel];
+    
+    noPhotoLabel.hidden = [self noPhotoLabelEnabled]; // set Label hidden - YES / NO
 
-        noPhotoLabel = [[UILabel alloc] initWithFrame:CGRectMake(-15, 0, self.collectionView.bounds.size.width, self.collectionView.bounds.size.height)];
-        // Center the button within the view
-        noPhotoLabel.textAlignment = NSTextAlignmentCenter;
-        noPhotoLabel.textColor = [UIColor systemGray3Color];
-        noPhotoLabel.font = [UIFont fontWithName:@"AvenirNext-Medium" size:14];
-        noPhotoLabel.text = @"Press plus button to add photos";
-        [self.collectionView addSubview:noPhotoLabel];
-    if (self.imagesArray.count == 0){
-        noPhotoLabel.alpha = 1;
-   }
-    else {
-        noPhotoLabel.alpha = 0;
-    }
 
     
     [self registerActionView];
@@ -166,53 +154,8 @@
     
 }
 
+#pragma mark - UI Elements
 
-
-
-
--(void)addColorButtons:(CGFloat)x height:(CGFloat)height buttonWidth:(CGFloat)width distance:(CGFloat)distance{
-    int colorNumber = 0;
-    for (int i=0; i<=1; i++) {
-        for (int j=0; j<=5; j++) {
-            
-            ColorButton * colorButton = [ColorButton buttonWithType:UIButtonTypeCustom];
-            colorButton.frame = CGRectMake(x +(j*distance), height +(i*distance), width, width);
-            [colorButton addTarget:self action:@selector(buttonPushed:) forControlEvents:UIControlEventTouchUpInside];
-            colorButton.tag = colorNumber;
-            [colorButton setSelected:NO];
-            [colorButton setNeedsDisplay];
-            [colorButton setBackgroundColor:[GzColors colorFromHex:[self.colorCollection objectAtIndex:colorNumber]]];
-            colorButton.layer.cornerRadius = width / 2;
-            colorButton.layer.masksToBounds = YES;
-            
-            colorButton.layer.borderColor = [UIColor colorWithRed:140.0f/255.0f green:140.0f/255.0f blue:140.0f/255.0f alpha:0.7f].CGColor;
-            colorButton.layer.borderWidth = 0.0f;
-            colorNumber ++;
-            
-            
-           //dispatch_sync(dispatch_get_main_queue(), ^{
-               [self.buttonCollection addObject:colorButton];
-                [self.view addSubview:colorButton];
-          // });//end block
-            
-
-        }
-    }
-}
-
-
--(int)startingColor:(UIColor*)color{
-    
-    int idx;
-    for (int i=0; i < self.colorCollection.count; i++) {
-        
-        if (CGColorEqualToColor(self.startColor.CGColor, [GzColors colorFromHex:[self.colorCollection objectAtIndex:i]].CGColor))
-        {
-            idx = i;
-        }
-    }
-    return idx;
-}
 -(void)addCloseButton{
     CGFloat startOfButton;
     CGFloat startY;
@@ -241,7 +184,6 @@
     [self.view addSubview:more];
 }
 -(void)addTitle{
-    CGFloat startOfButton;
     CGFloat startY;
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad){
         startY = 10;
@@ -259,6 +201,7 @@
     title.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:title];
 }
+
 -(void)addPhotoButton{
     CGFloat startOfButton;
     CGFloat startY;
@@ -290,40 +233,35 @@
     
 }
 
+-(BOOL)setRestoreEnabled{
+    if (self.imagesArray.count == 6){
+        return  NO;
+    }
+    else {
+        return YES;
+    }
+}
 
+-(BOOL)noPhotoLabelEnabled{
+    if (self.imagesArray.count == 0){
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
 
 -(IBAction)closeView:(id)senxer{
    
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
-- (void)addHorizontalLine:(CGFloat)y {
-    CAShapeLayer *line = [CAShapeLayer layer];
-    UIBezierPath *linePath=[UIBezierPath bezierPath];
-    [linePath moveToPoint: CGPointMake(0,y)];
-    [linePath addLineToPoint:CGPointMake(self.view.frame.size.width,y)];
-    line.path = linePath.CGPath;
-    line.fillColor = nil;
-    line.opacity = 0.1;
-    line.strokeColor = [UIColor grayColor].CGColor;
-    [self.view.layer addSublayer:line];
-}
-
--(void)addApplyButtonX:(CGFloat)x startY:(CGFloat)y fontSize:(CGFloat)fonttSize{
-    self.applyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.applyBtn.frame = CGRectMake(x, y, 120, 40);
-    [self.applyBtn addTarget:self action:@selector(applyColorChange:) forControlEvents:UIControlEventTouchUpInside];
-    [self.applyBtn setTitle:@"Set color" forState:UIControlStateNormal];
-    [self.applyBtn setTitleColor:[UIColor colorNamed:@"textWhiteDeepBlue"] forState:UIControlStateNormal];
-    [self.applyBtn setTitleColor:[UIColor colorNamed:@"setColor"] forState:UIControlStateDisabled];
-    self.applyBtn.titleLabel.font = [UIFont fontWithName:@"AvenirNext-DemiBold" size:fonttSize];
-    self.applyBtn.enabled = NO;
-    [self.view addSubview:self.applyBtn];
-
-}
 
 
 
+
+
+#pragma mark - Gestures Methods
 -(void)enableGestures{
     [self.presentationController.presentedView.gestureRecognizers.firstObject setEnabled:YES];
 
@@ -565,21 +503,15 @@
             
             [self.imagesArray removeObjectAtIndex:indexPath.item];
             
-            if (self.imagesArray.count == 0){
-                noPhotoLabel.alpha = 1;
-            }
-            else {
-                [noPhotoLabel setAlpha:0];
-            }
+            noPhotoLabel.hidden = [self noPhotoLabelEnabled];
+            
             NSLog(@"imagesCount %lu", self.imagesArray.count);
             [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
             [self.delegate savePhotos:self.imagesArray];
 
             
-            if (self.imagesArray.count < 6){
-                
-                restoreBtn.enabled = YES;
-            }
+            restoreBtn.enabled = [self setRestoreEnabled];
+
             
             configuration.selectionLimit = 6 - self.imagesArray.count;
 
@@ -603,19 +535,11 @@
     [self.imagesArray addObject:selectedImage];
     [self amplitudeEvent:@"Photo Picked Up"];
 
-    
     [self.delegate savePhotos:self.imagesArray];
 
-    if (self.imagesArray.count == 0){
-        noPhotoLabel.alpha = 1;
-    }
-    else {
-        noPhotoLabel.alpha = 0;
-    }
-    if (self.imagesArray.count ==6){
-        
-        restoreBtn.enabled = NO;
-    }
+    noPhotoLabel.hidden = [self noPhotoLabelEnabled];
+    restoreBtn.enabled = [self setRestoreEnabled];
+
     
 
     [self.collectionView reloadData];
@@ -625,12 +549,7 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
    
-    if (self.imagesArray.count > 0){
-        noPhotoLabel.alpha = 0;
-    }
-    else {
-        noPhotoLabel.alpha = 1;
-    }
+    noPhotoLabel.hidden = [self noPhotoLabelEnabled];
     [self.collectionView reloadData];
 
     [picker dismissViewControllerAnimated:YES completion:nil];
@@ -656,16 +575,9 @@
                         
                         [self.delegate savePhotos:self.imagesArray];
 
-                        if (self.imagesArray.count == 0){
-                            noPhotoLabel.alpha = 1;
-                        }
-                        else {
-                            noPhotoLabel.alpha = 0;
-                        }
-                        if (self.imagesArray.count ==6){
-                            
-                            restoreBtn.enabled = NO;
-                        }
+                        noPhotoLabel.hidden = [self noPhotoLabelEnabled];
+                        restoreBtn.enabled = [self setRestoreEnabled];
+
                         
 
                         [self.collectionView reloadData];
