@@ -24,9 +24,7 @@
 - (void)initWithView:(UIView *)p;
 
 @property(nonatomic, retain) UIView *parent;
-
 @property (nonatomic,weak) id<ImagePreviewControllerDelegate> delegate;
-
 @property (nonatomic,weak) NSString *textOfTextView;
 @property (nonatomic,weak) UIImage *imgFromPhoto;
 
