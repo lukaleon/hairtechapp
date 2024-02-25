@@ -627,10 +627,8 @@
 -(void)amplitudeEvent:(NSString*)eventName{
     
     AMPConfiguration* configuration = [AMPConfiguration initWithApiKey:@"b377e11e11508029515d06b38d06a0ce"];
-    //configuration.serverZone = AMPServerZoneEU;
     Amplitude * amplitude = [Amplitude initWithConfiguration:configuration];
     [amplitude track:eventName eventProperties:nil];
-
 }
 
 @end
