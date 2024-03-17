@@ -15,6 +15,8 @@
 #import "iCloudDocument.h"
 #import "DocumentManager.h"
 #import <StoreKit/StoreKit.h>
+#import "HapticHelper.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 @import AmplitudeSwift;
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -44,6 +46,14 @@
     _techniqueNameID = techId;
 }
 
+static void setupContextMenuForImages(NewEntryController *object) {
+    [object addContextMenuInteractionToImageView:object.imageLeft];
+    [object addContextMenuInteractionToImageView:object.imageRight];
+    [object addContextMenuInteractionToImageView:object.imageTop];
+    [object addContextMenuInteractionToImageView:object.imageBack];
+    [object addContextMenuInteractionToImageView:object.imageFront];
+}
+
 -(void)viewDidLoad{
    // NSLog(@"document note = %@, name - %@, maleOrFe -  %@ ",    [MyDoc sharedDocument].note, [MyDoc sharedDocument].techniqueName , [MyDoc sharedDocument].maleFemale);
     
@@ -52,6 +62,8 @@
     [self setupgestureRecognizers];
     [self registerNotifications];
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+    setupContextMenuForImages(self);
+    
     
     NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
 
@@ -205,18 +217,18 @@
     
 }
 - (void)loadImages {
+    self.imageLeft.layer.cornerRadius = 20;
+    self.imageRight.layer.cornerRadius = 20;
+    self.imageTop.layer.cornerRadius = 20;
+    self.imageBack.layer.cornerRadius = 20;
+    self.imageFront.layer.cornerRadius = 20;
     
     self.imageLeft.image = self.document.imageLeft;
     self.imageRight.image = self.document.imageRight;
     self.imageTop.image = self.document.imageTop;
     self.imageFront.image = self.document.imageFront;
     self.imageBack.image = self.document.imageBack;
-
-//    self.imageLeft.image = [MyDoc sharedInstance].imageLeft;
-//    self.imageRight.image = [MyDoc sharedInstance].imageRight;
-//    self.imageTop.image = [MyDoc sharedInstance].imageTop;
-//    self.imageFront.image = [MyDoc sharedInstance].imageFront;
-//    self.imageBack.image = [MyDoc sharedInstance].imageBack;
+    
 }
 
 
@@ -754,7 +766,161 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     CGRect newArea = CGRectMake(imgView.bounds.origin.x + 40, imgView.bounds.origin.y + 80, imgView.bounds.size.width-  80, imgView.bounds.size.height - 100);
     return CGRectContainsPoint(newArea, point);
 }
+#pragma mark - UIContextMenuInteractionDelegate
 
+- (void)addContextMenuInteractionToImageView:(UIImageView *)imageView {
+    UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+    [imageView addInteraction:interaction];
+}
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location {
+    // Find out which UIImageView was tapped
+    UIImageView *tappedImageView = (UIImageView *)interaction.view;
+    
+    // Create a UIContextMenuConfiguration for the tapped UIImageView
+    UIContextMenuConfiguration *configuration = [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        // You can customize the menu actions based on the tapped UIImageView
+        UIAction *action = [UIAction actionWithTitle:@"Copy" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            NSLog(@"Action tapped for image view with tag: %ld", (long)tappedImageView.tag);
+            
+            
+            NSData *imageData = UIImagePNGRepresentation(tappedImageView.image);
+            
+            // Create a dictionary with the image data
+            NSDictionary *imageItem = @{[@(tappedImageView.tag) stringValue]: imageData};
+            NSDictionary *otherItem;
+            
+            switch (tappedImageView.tag) {
+                case 1:
+                    otherItem = @{
+                        [@(tappedImageView.tag) stringValue]: _document.dictLeft,@"gender": _document.maleFemale
+                    };
+                    break;
+                case 2:
+                    otherItem = @{
+                        [@(tappedImageView.tag) stringValue]: _document.dictRight,@"gender": _document.maleFemale
+                    };
+                    break;
+                case 3:
+                    otherItem = @{
+                        [@(tappedImageView.tag) stringValue]: _document.dictTop,@"gender": _document.maleFemale
+                    };
+                    break;
+                case 4:
+                    otherItem = @{
+                        [@(tappedImageView.tag) stringValue]: _document.dictFront,@"gender": _document.maleFemale
+                    };
+                    
+                    break;
+                case 5:
+                    otherItem = @{
+                        [@(tappedImageView.tag) stringValue]: _document.dictBack,@"gender": _document.maleFemale
+                    };
+                    break;
+                default:
+                    break;
+            }
+           
+           
+
+            
+            // Combine the pasteboard items into an array
+            NSArray *items = @[imageItem, otherItem];
+
+            // Place the items on the clipboard
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            [pasteboard setItems:items];
+        }];
+        
+        UIAction *paste = [UIAction actionWithTitle:@"Paste" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            NSLog(@"Action tapped for image view with tag: %ld", (long)tappedImageView.tag);
+            
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+
+            // Retrieve the data from the pasteboard
+            NSArray *items = [pasteboard items];
+            
+            NSDictionary * dict = [items objectAtIndex:0];
+            NSDictionary * dictLeft = [items objectAtIndex:1];
+
+            NSData *imageData = dict[[@(tappedImageView.tag) stringValue]];
+//                if (imageData) {
+//                    // Process the image data
+//                    // Do something with the image...
+//                }
+            NSData *dictData = dictLeft[[@(tappedImageView.tag) stringValue]];
+
+            if (dictData && imageData) {
+                tappedImageView.image =  [UIImage imageWithData:imageData];
+
+                switch (tappedImageView.tag) {
+                    case 1:
+
+                        _document.dictLeft = dictData;
+                        _document.imageLeft = tappedImageView.image;
+                        break;
+                    case 2:
+                        _document.dictRight = dictData;
+                        _document.imageRight = tappedImageView.image;
+                        break;
+                    case 3:
+                        _document.dictTop = dictData;
+                        _document.imageTop = tappedImageView.image;
+                        break;
+                    case 4:
+                        _document.dictFront = dictData;
+                        _document.imageFront = tappedImageView.image;
+                        break;
+                    case 5:
+                        _document.dictBack = dictData;
+                        _document.imageBack = tappedImageView.image;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            [self saveDataWhenReturnFromDrawing];
+
+            
+        }];
+        
+        
+        UIMenu *menu;
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        // Retrieve the data from the pasteboard
+        NSArray *items = [pasteboard items];
+    
+        NSDictionary * dict = [items objectAtIndex:0];
+        NSData *imageData = dict[[@(tappedImageView.tag) stringValue]];
+        
+       
+  
+        // Determine if the clipboard is "empty" for your app's purposes
+        if (imageData){
+            
+            NSDictionary * genDict = [items objectAtIndex:1];
+            NSData *genderData = genDict[@"gender"];
+            NSString * gender = [NSString stringWithUTF8String:[genderData bytes]];
+            
+            NSLog(@"Gender: %@", gender);
+            if( [gender isEqualToString:_document.maleFemale] ) {
+                menu = [UIMenu menuWithTitle:@"" children:@[action,paste]];
+                
+            }
+            else {
+                menu = [UIMenu menuWithTitle:@"" children:@[action]];
+            }
+        }
+        else {
+                
+                menu = [UIMenu menuWithTitle:@"" children:@[action]];
+                
+            }
+        
+        return menu;
+    }];
+    
+    return configuration;
+}
 
 #pragma mark - Rate App
 

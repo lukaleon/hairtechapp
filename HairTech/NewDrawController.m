@@ -1610,8 +1610,9 @@ return YES;
 
 
 -(void)undoPressed{
-    NSLog(@"UNDO");
-    [self.drawingView.undoManager undo];
+     [self.drawingView undo];
+
+   // [self.drawingView.undoManager undo];
     [self updateButtonStatus];
 }
 -(void)redoPressed{

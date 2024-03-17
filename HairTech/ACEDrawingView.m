@@ -41,6 +41,8 @@ static CGFloat const kACMagnifyingViewDefaultShowDelay = 0.5;
 @property (nonatomic, strong) JVDrawingLayer *temporaryLayer;
 @property (nonatomic, strong) JVDrawingLayer *temporaryLayerForFliping;
 @property (nonatomic, strong) NSMutableArray *layerArray;
+@property (nonatomic, strong) JVDrawingLayer *lastLayerInStack;
+
 
 
 
@@ -149,8 +151,6 @@ UIColor* tempColor;
                 }
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
                 [self.drawingLayer moveCurvedLinePathWithStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint isSelected:selected];
-                //   [self.drawingLayer redrawCurvedLineStartPoint:layerData.startPoint endPoint:layerData.endPoint midPoint:layerData.controlPoint];
-                
             }
             else {
                 [self.drawingLayer movePathWithEndPoint:layerData.endPoint];
@@ -260,12 +260,14 @@ UIColor* tempColor;
         }
     }
     
-        if (JVDrawingTypeText != selectedL.type && JVDrawingTypeDot != selectedL.type && JVDrawingTypeRazor != selectedL.type && JVDrawingTypeClipper != selectedL.type){
-            self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:startPointOffset endPoint:endPointOffset type:selectedL.type  lineWidth:selectedL.lineWidth lineColor:selectedL.lineColor_ controlPoint:selectedL.controlPoint grafittiPoints:selectedL.pointArray];
-            if(JVDrawingTypeGraffiti == selectedL.type ){
-                for(int i = 0; i < selectedL.pointArray.count;i++){
-                    [self.drawingLayer movePathWithEndPoint:CGPointFromString([selectedL.pointArray objectAtIndex:i])];
-                }
+    if (JVDrawingTypeText != selectedL.type && JVDrawingTypeDot != selectedL.type && JVDrawingTypeRazor != selectedL.type && JVDrawingTypeClipper != selectedL.type)
+    {
+        self.drawingLayer = [JVDrawingLayer createAllLayersAtStart:startPointOffset endPoint:endPointOffset type:selectedL.type  lineWidth:selectedL.lineWidth lineColor:selectedL.lineColor_ controlPoint:selectedL.controlPoint grafittiPoints:selectedL.pointArray];
+        
+        if(JVDrawingTypeGraffiti == selectedL.type ){
+            for(int i = 0; i < selectedL.pointArray.count;i++){
+                [self.drawingLayer movePathWithEndPoint:CGPointFromString([selectedL.pointArray objectAtIndex:i])];
+            }
                 
                
                 
@@ -295,18 +297,19 @@ UIColor* tempColor;
             else {
                 [self.drawingLayer movePathWithEndPoint:endPointOffset];
             }
-        } if (JVDrawingTypeText == selectedL.type ) {
-            
-            CGRect rect = CGRectMake(startPointOffset.x, startPointOffset.y, selectedL.width, selectedL.height);
-            self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:startPointOffset
-                                                                        frame:rect
-                                                                         text:selectedL.text
-                                                                         type:selectedL.type
-                                                                    lineWidth:selectedL.lineWidth
-                                                                    lineColor:selectedL.lineColor_
-                                                                     fontSize:selectedL.fontSize
-                                                                   isSelected:NO];
         }
+    if (JVDrawingTypeText == selectedL.type ) {
+        
+        CGRect rect = CGRectMake(startPointOffset.x, startPointOffset.y, selectedL.width, selectedL.height);
+        self.drawingLayer = [JVDrawingLayer createTextLayerWithStartPoint:startPointOffset
+                                                                    frame:rect
+                                                                     text:selectedL.text
+                                                                     type:selectedL.type
+                                                                lineWidth:selectedL.lineWidth
+                                                                lineColor:selectedL.lineColor_
+                                                                 fontSize:selectedL.fontSize
+                                                               isSelected:NO];
+    }
     
     switch (selectedL.type) {
         case JVDrawingTypeDot:
@@ -323,11 +326,11 @@ UIColor* tempColor;
     }
     
     
-        if(endPointOffset.x != 0 && endPointOffset.y !=0){
-            [self.layer addSublayer:self.drawingLayer];
-            [self.layerArray addObject:self.drawingLayer];
-            [self addLayerToUndoManager:self.drawingLayer];
-        }
+    if(endPointOffset.x != 0 && endPointOffset.y !=0){
+        [self.layer addSublayer:self.drawingLayer];
+        [self.layerArray addObject:self.drawingLayer];
+        [self addLayerToUndoManager:self.drawingLayer];
+    }
 }
 
 -(void)flipImage{
@@ -342,73 +345,12 @@ UIColor* tempColor;
     CGPoint alphaPoint;
     CGFloat  dist;
     
-    
-   // CGFloat f = [self findAngleOfLine:selectedL.startPoint end:selectedL.endPoint];
-//
-//    if (((f<=60)&&(f>=30) )|| ((f<=240)&&(f>=210)) ){
-//        startPointOffset = CGPointMake(selectedL.startPoint.x + 20, selectedL.startPoint.y);
-//        endPointOffset = CGPointMake(selectedL.endPoint.x + 20, selectedL.endPoint.y);
-//        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 20, selectedL.controlPointOfCurve.y );
-//    }
-//    else {
-//        startPointOffset = CGPointMake(selectedL.startPoint.x + 12, selectedL.startPoint.y + 12);
-//        endPointOffset = CGPointMake(selectedL.endPoint.x + 12, selectedL.endPoint.y + 12);
-//        controlPointOffset = CGPointMake(selectedL.controlPointOfCurve.x + 12, selectedL.controlPointOfCurve.y + 12);
-//    }
-//    if (selectedL.type == JVDrawingTypeText){
-//        startPointOffset = CGPointMake(selectedL.startPoint.x + 25, selectedL.startPoint.y + 25);
-//        endPointOffset = CGPointMake(selectedL.endPoint.x + 25, selectedL.endPoint.y + 25);
-//    }
-//    if(JVDrawingTypeArrow == selectedL.type){
-//        if(selectedL.startPoint.x == selectedL.endPoint.x &&  selectedL.startPoint.y > selectedL.endPoint.y){
-//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
-//            startPointOffset = CGPointMake(selectedL.startPoint.x,selectedL.endPoint.y + dist + 3  );
-//            endPointOffset = CGPointMake(selectedL.startPoint.x, startPointOffset.y + dist);
-//        }
-//    }
-//    else {
-//        if(selectedL.startPoint.x > selectedL.endPoint.x){
-//            alphaPoint = CGPointMake(selectedL.endPoint.x, selectedL.startPoint.y);
-//            dist = hypot((selectedL.startPoint.x - alphaPoint.x), (selectedL.startPoint.y - alphaPoint.y));
-//            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
-//            endPointOffset = CGPointMake(alphaPoint.x - dist, alphaPoint.y);
-//        }
-//        if(selectedL.startPoint.x < selectedL.endPoint.x){
-//            alphaPoint = CGPointMake(selectedL.endPoint.x, selectedL.startPoint.y);
-//            dist = hypot((selectedL.startPoint.x - alphaPoint.x), (selectedL.startPoint.y - alphaPoint.y));
-//            startPointOffset = CGPointMake(selectedL.endPoint.x, selectedL.endPoint.y);
-//            endPointOffset = CGPointMake(alphaPoint.x + dist, alphaPoint.y);
-//        }
-//        if(selectedL.startPoint.x == selectedL.endPoint.x){
-//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
-//            startPointOffset = selectedL.endPoint;
-//            endPointOffset = CGPointMake(selectedL.endPoint.x + dist, selectedL.endPoint.y);
-//        }
-//        if(selectedL.startPoint.y == selectedL.endPoint.y){
-//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
-//            startPointOffset = selectedL.endPoint;
-//            endPointOffset = CGPointMake(selectedL.endPoint.x , selectedL.endPoint.y + dist);
-//        }
-//}
-    
-    
-//    if(selectedL.startPoint.x != selectedL.endPoint.x || selectedL.startPoint.y != selectedL.endPoint.y ){
-//
-//    }
+ 
     
     if(JVDrawingTypeArrow == selectedL.type){
             
             startPointOffset = selectedL.endPoint;
             endPointOffset = selectedL.startPoint;
-            
-//            CGPoint middle = midsPoint(selectedL.startPoint, selectedL.endPoint);
-//            dist = hypot((selectedL.startPoint.x - selectedL.endPoint.x), (selectedL.startPoint.y - selectedL.endPoint.y));
-//
-//            startPointOffset = CGPointMake(middle.x + (dist/2), middle.y);
-//            endPointOffset = CGPointMake(middle.x - (dist/2), middle.y);
-//            NSLog(@"flip 1");
-//        }
-//
     }
     
     else {
@@ -929,17 +871,17 @@ UIColor* tempColor;
         if (self.isMoveLayer) {
             
             
-            JVDrawingLayer *copiedLayer = [NSKeyedUnarchiver unarchivedObjectOfClass:[JVDrawingLayer class]
-                                                                 fromData:[NSKeyedArchiver archivedDataWithRootObject:self.selectedLayer requiringSecureCoding:NO error:nil] error:nil];
-            [self.tempLayersForUndo addObject:copiedLayer]; // store new position in temp Layer
-
-
-            [[self.undoManager prepareWithInvocationTarget:self]moveDrawing:copiedLayer];
-            if (![self.undoManager isUndoing]) {
-                [self.undoManager setActionName:NSLocalizedString(@"actions.move", @"Move Shape")];
-                
-            }
-        
+//            JVDrawingLayer *copiedLayer = [NSKeyedUnarchiver unarchivedObjectOfClass:[JVDrawingLayer class]
+//                                                                 fromData:[NSKeyedArchiver archivedDataWithRootObject:self.selectedLayer requiringSecureCoding:NO error:nil] error:nil];
+//            [self.tempLayersForUndo addObject:copiedLayer]; // store new position in temp Layer
+//
+//
+//            [[self.undoManager prepareWithInvocationTarget:self]moveDrawing:copiedLayer];
+//            if (![self.undoManager isUndoing]) {
+//                [self.undoManager setActionName:NSLocalizedString(@"actions.move", @"Move Shape")];
+//                
+//            }
+//        
             [self updateAllPoints];
             [self storeDataInJson];
             [self.selectedLayer addToTrack];
@@ -2053,11 +1995,76 @@ UIColor* tempColor;
     [trackDic setObject:NSStringFromCGPoint(layer.endPoint) forKey:@"endPoint"];
     [trackDic setObject:@(layer.isSelected) forKey:@"isSelected"];
     [trackDic setObject:@(layer.type) forKey:@"type"];
+    [trackDic setObject:@(layer.lineWidth) forKey:@"width"];
+    [trackDic setObject:layer.lineColor_ forKey:@"color"];
+
+
+    
+    [trackDic setObject:layer forKey:@"layer"];
+
     [self.tempLayersForUndo addObject:trackDic];
     
-    NSLog(@"NUMBER OF OBJECTS in LAYERS DICT %lu", (unsigned long)self.tempLayersForUndo.count );
+    NSLog(@"NUMBER OF OBJECTS in LAYERS DICT %lu", (unsigned long)self.tempLayersForUndo.count);
 
 }
+
+-(void)undo{
+    
+    NSMutableDictionary *trackDic = [self.tempLayersForUndo objectAtIndex:self.tempLayersForUndo.count-1];
+    
+    for (NSString *key in trackDic) {
+        NSLog(@"Key: %@, Value: %@", key, [trackDic objectForKey:key]);
+    }
+    JVDrawingLayer * layer = trackDic[@"layer"];
+   // [layer undoLayerActions:trackDic];
+    NSLog(@"LAYER IS %@", layer.name);
+    NSLog(@"layer array %@",self.layerArray);
+
+    CAShapeLayer *foundLayer = nil;
+
+    for (CAShapeLayer *layerToFind in self.layerArray) {
+        // Check if the layer's identifier matches the one you're looking for
+        if ([layerToFind isEqual:layer]) {
+            // Found the layer
+            foundLayer = layerToFind;
+            break; // Exit the loop since we found the layer
+        }
+    }
+
+    if (foundLayer) {
+        // Layer with the specified identifier was found
+        NSLog(@"Found layer: %@", foundLayer);
+        
+        if(JVDrawingTypeLine == layer.type){
+                
+            NSLog(@"Layer type is %ld", (long)layer.type);
+           
+            self.lastLayerInStack = [JVDrawingLayer createAllLayersAtStart:layer.startPoint endPoint:layer.endPoint type:layer.type  lineWidth:layer.lineWidth lineColor:layer.lineColor_ controlPoint:layer.controlPoint grafittiPoints:layer.pointArray];
+            
+            //[foundLayer removeFromSuperlayer];
+           // [self.layerArray removeObject:foundLayer];
+            [self.layer addSublayer:self.lastLayerInStack];
+        }
+        else {
+            
+            NSLog(@"Layer type is not LINE");
+        }
+        
+        [self.tempLayersForUndo removeLastObject];
+        
+    } else {
+        // Layer with the specified identifier was not found
+        NSLog(@"Layer with identifier %@ not found", layer.name);
+    }
+    
+    
+   
+}
+
+
+
+
+
 
 
 - (void)addLayerToUndoManager:(JVDrawingLayer*)layer {

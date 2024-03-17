@@ -37,6 +37,8 @@ typedef NS_ENUM(NSInteger, JVDrawingTouch) {
     BOOL performed10;
 
 }
+
+-(void)undoLayerActions:(NSMutableDictionary*)trackDic;
 -(int)getUid;
 -(int)getUniqueId;
 -(int)getType;

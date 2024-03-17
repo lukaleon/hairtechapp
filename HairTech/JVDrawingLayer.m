@@ -565,7 +565,8 @@ else {
     [trackDic setObject:NSStringFromCGPoint(self.endPoint) forKey:@"endPoint"];
     [trackDic setObject:@(self.isSelected) forKey:@"isSelected"];
     [trackDic setObject:@(self.type) forKey:@"type"];
-    [self.trackArray addObject:trackDic];    
+
+    [self.trackArray addObject:trackDic];
 }
 
 - (BOOL)revokeUntilHidden {
@@ -609,6 +610,51 @@ else {
     }
     return YES;
 }
+
+
+-(void)undoLayerActions:(NSMutableDictionary*)trackDic{
+    
+   // NSMutableDictionary *trackDic = [self.tempLayersForUndo objectAtIndex:self.tempLayersForUndo.count-2];
+    CGPoint startPoint = CGPointFromString(trackDic[@"startPoint"]);
+    CGPoint endPoint = CGPointFromString(trackDic[@"endPoint"]);
+    BOOL isSelected = [trackDic[@"isSelected"] boolValue];
+    JVDrawingType type = [trackDic[@"type"] integerValue];
+    
+    switch (type) {
+        case JVDrawingTypeArrow:
+            [self moveArrowPathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
+            
+        case JVDrawingTypeLine:
+            [self moveLinePathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
+            
+        case JVDrawingTypeDashedLine:
+            [self moveDashedLinePathWithStartPoint:startPoint endPoint:endPoint isSelected:isSelected];
+            break;
+            
+        case JVDrawingTypeCurvedLine:
+            [self moveCurvedLinePathWithStartPoint:startPoint endPoint:endPoint midPoint:self.midPmoving isSelected:isSelected];
+            break;
+            
+        case JVDrawingTypeGraffiti:
+            [self moveGrafiitiPathPreviousPoint:self.startPoint currentPoint:startPoint];
+            break;
+            
+        default:
+            break;
+    }
+    
+    self.startPoint = startPoint;
+    self.endPoint = endPoint;
+    self.isSelected = isSelected;
+    self.type = type;
+    [self.trackArray removeLastObject];
+    NSLog(@"UNDO in DrawingView");
+
+}
+
+
 
 - (void)moveArrowPathWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint isSelected:(BOOL)isSelected {
     UIBezierPath *path = [UIBezierPath bezierPath];

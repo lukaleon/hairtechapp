@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface NewEntryController : UIViewController <NotesViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UINavigationControllerDelegate,PhotoPickerDelegate>
+@interface NewEntryController : UIViewController <NotesViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UINavigationControllerDelegate,PhotoPickerDelegate,UIContextMenuInteractionDelegate>
 {
     NSMutableString *entryviewImage;
     NSMutableString *entryviewImageSmall;

@@ -336,6 +336,7 @@ typedef enum {
 -(void)loadJSONData:(NSData*)jsonData;
 -(void)setNewColorForTools:(UIColor*)color;
 
+-(void)undo;
 
 @end
 
