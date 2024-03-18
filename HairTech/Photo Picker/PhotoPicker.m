@@ -11,6 +11,7 @@
 #import "ColorButton.h"
 #import "HapticHelper.h"
 #import "ImagePreviewController.h"
+
 @import AmplitudeSwift;
 
 
@@ -39,6 +40,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Register to observe the notification
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(stopActivityIndicator)
+                                                 name:@"StopActivityIndicatorNotification"
+                                               object:nil];
+    
+    
     [self registerActionView];
     self.imagesArray = [[NSMutableArray alloc]init];
     self.imagesArray = self.tempImages;
@@ -63,7 +71,9 @@
    
 
     [self.view addSubview:self.collectionView];
-    
+   
+    [self addActivityIndicator];
+
   
 
     [self addPhotoButton];
@@ -153,6 +163,35 @@
 }
 
 #pragma mark - UI Elements
+
+
+-(void)addActivityIndicator{
+    // Create background view
+   backgroundView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)]; // Adjust size as needed
+    backgroundView.center = self.view.center;
+    backgroundView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4]; // Semi-transparent black background
+    backgroundView.alpha = 0;
+    backgroundView.layer.cornerRadius = 10;
+    // Create activity indicator
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+    activityIndicator.center = CGPointMake(backgroundView.bounds.size.width / 2, 200);
+    activityIndicator.color = [UIColor whiteColor];
+   // CGPoint newCenter = CGPointMake(self.collectionView.center.x - 15, self.collectionView.center.y-50);
+  //  activityIndicator.center = newCenter;
+    
+    [backgroundView addSubview:activityIndicator];
+    
+    [self.view addSubview:backgroundView];
+    
+  
+}
+
+- (void)stopActivityIndicator {
+    NSLog(@"stop activity indicator posted");
+    backgroundView.alpha = 0;
+    [self.activityIndicator stopAnimating];
+}
+
 
 -(void)addCloseButton{
     CGFloat startOfButton;
@@ -534,73 +573,77 @@
     [self amplitudeEvent:@"Photo Picked Up"];
     
 
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // Save drawing data (replace with your actual saving logic)
-        [self.delegate savePhotos:self.imagesArray];
-
-        // Perform UI-related actions on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-           
-            noPhotoLabel.hidden = [self noPhotoLabelEnabled];
-            restoreBtn.enabled = [self setRestoreEnabled];
-
-            
-
-            [self.collectionView reloadData];
-
-            [picker dismissViewControllerAnimated:YES completion:nil];
-        });
-    });
+    [self.delegate savePhotos:self.imagesArray];
 
     
-     
-
+    noPhotoLabel.hidden = [self noPhotoLabelEnabled];
+    restoreBtn.enabled = [self setRestoreEnabled];
+    [self.collectionView reloadData];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-   
+    
+    NSLog(@"image picker did cancel");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"StopActivityIndicatorNotification" object:nil];
+    
     noPhotoLabel.hidden = [self noPhotoLabelEnabled];
     [self.collectionView reloadData];
 
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
- 
+
+
 
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+   
     
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+   
+    backgroundView.alpha = 1;
+    [activityIndicator startAnimating];
+    NSLog(@"results = %lu", (unsigned long)results.count);
+    if (results.count == 0){
+        [self stopActivityIndicator];
+    }
     for (PHPickerResult *result in results) {
         // Check if the provider can load the object of type UIImage
         if ([result.itemProvider canLoadObjectOfClass:UIImage.class]) {
             [result.itemProvider loadObjectOfClass:UIImage.class completionHandler:^(UIImage * _Nullable image, NSError * _Nullable error) {
+              
                 if (image) {
                     // Use the image on the main thread
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        // Do something with the image, like displaying it in an UIImageView
+                       
+                       
                         
                         [self.imagesArray addObject:image];
                         [self amplitudeEvent:@"Photo Picked Up"];
-
+                        
                         
                         [self.delegate savePhotos:self.imagesArray];
-
+                        
                         noPhotoLabel.hidden = [self noPhotoLabelEnabled];
                         restoreBtn.enabled = [self setRestoreEnabled];
-
                         
-
                         [self.collectionView reloadData];
-
+                        
                         configuration.selectionLimit = 6 - self.imagesArray.count;
+                        
+                        
                         
                         
                     });
                 }
             }];
+            
         }
+       
     }
+  
 }
 
 

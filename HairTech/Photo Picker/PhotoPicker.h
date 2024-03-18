@@ -13,6 +13,7 @@
 #import "ImageCollectionViewCell.h"
 #import "ImagePreviewController.h"
 #import "VCPresentationDelegate.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @import PhotosUI;
 
@@ -21,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol PhotoPickerDelegate
 -(void)disableDismissalRecognizers;
 -(void)savePhotos:(NSMutableArray*)photos;
+-(void)startAnime;
+-(void)stopAnime;
 
 @end
 @interface PhotoPicker : UIViewController <UIGestureRecognizerDelegate, UIAdaptivePresentationControllerDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIContextMenuInteractionDelegate, ImageCollectionViewCellDelegate, ImagePreviewControllerDelegate,PHPickerViewControllerDelegate>
@@ -39,10 +42,14 @@ NS_ASSUME_NONNULL_BEGIN
    // UILabel * noDataLabel;
     UILabel *noPhotoLabel;
     PHPickerConfiguration *configuration;
+    UIActivityIndicatorView * activityIndicator;
+    UIView *backgroundView;
 
 }
 
 -(void)setMyArray:(NSArray *)arr;
+
+@property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
 
 @property (nonatomic, strong) VCPresentationDelegate* overlayDelegate;
 @property (nonatomic, strong) UICollectionView *collectionView;

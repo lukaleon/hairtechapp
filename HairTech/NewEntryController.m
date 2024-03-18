@@ -64,9 +64,11 @@ static void setupContextMenuForImages(NewEntryController *object) {
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
     setupContextMenuForImages(self);
     
-    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-    activityIndicator.center = self.view.center;
-    [self.view addSubview:activityIndicator];
+//    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+//    
+//    CGPoint newCenter = CGPointMake(self.view.center.x, self.view.frame.size.height - 80);
+//    activityIndicator.center = newCenter;
+//    [self.view addSubview:activityIndicator];
     NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
 
     
@@ -99,12 +101,10 @@ static void setupContextMenuForImages(NewEntryController *object) {
     NSLog(@"exit entry" );
    
     if (self.isMovingFromParentViewController){
-        [activityIndicator startAnimating];
         
         [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [activityIndicator stopAnimating];
                 // ...
                 if (success) {
                     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
@@ -751,22 +751,21 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 
 -(void)saveDataWhenReturnFromDrawing{
     
-   
     
         [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            
-        
-                
+            dispatch_async(dispatch_get_main_queue(), ^{
                 if (success) {
                     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-                    
+                   
+                   
+
                     NSLog(@"WhenReturnFromDVC!, %@ saved ", self.document.fileURL);
                 } else {
                     [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+                    
                 }
-            
-           
-
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"StopActivityIndicatorNotification" object:nil];
+            });
         }];
     //}
 }
@@ -947,6 +946,9 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
     
     return configuration;
 }
+
+#pragma mark - Indicator Animation
+
 
 #pragma mark - Rate App
 
