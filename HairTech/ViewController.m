@@ -206,7 +206,7 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
     i = 0;
     //tap = NO;
 
-    
+    [self addActivityIndicator];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -241,9 +241,55 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
   
     [[iCloud sharedCloud] updateFiles];
      */
-     
+    
+   
 }
 
+-(void)addActivityIndicator{
+    // Create background view
+   backgroundView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)]; // Adjust size as needed
+    backgroundView.center = self.view.center;
+    backgroundView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2]; // Semi-transparent black background
+    backgroundView.alpha = 0;
+    backgroundView.layer.cornerRadius = 10;
+    // Create activity indicator
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+    activityIndicator.center = CGPointMake(backgroundView.bounds.size.width / 2, backgroundView.bounds.size.height / 2);
+    activityIndicator.color = [UIColor whiteColor];
+    [backgroundView addSubview:activityIndicator];
+    [self.view addSubview:backgroundView];
+    
+  
+}
+
+-(void)delayWhenPopFromEntry:(NSNotification *)notification{
+    
+    backgroundView.alpha = 1;
+    [activityIndicator startAnimating];
+    
+    NSDictionary *userInfo = notification.userInfo;
+    NSNumber *myIntegerNumber = userInfo[@"myIntegerKey"];
+    
+    if (myIntegerNumber != nil) {
+        
+        // Set the delay time in seconds
+        double delayInSeconds = [myIntegerNumber doubleValue] / 2;
+        
+        // Create a dispatch time
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        
+        // Schedule the block on the main queue
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            // Code to be executed on the main thread after delay
+            NSLog(@"VIEW WILL APPEAR IN COLLECTION VIEW");
+            
+            [self.collectionView reloadData];
+            backgroundView.alpha = 0;
+            [activityIndicator stopAnimating];
+        });
+    }
+    NSLog(@"childViewControllerWillDismiss");
+}
 
 
 -(void)registerNotificationObservers{
@@ -292,6 +338,11 @@ BOOL isDeletionModeActive; // TO UNCOMMENT LATER
                                              selector:@selector(populateAndReload)
                                                  name:@"populate"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(delayWhenPopFromEntry:)
+                                                     name:@"delayWhenPopFromEntry"
+                                                   object:nil];
     
     
     // Register for the NSUbiquitousKeyValueStoreDidChangeExternallyNotification notification

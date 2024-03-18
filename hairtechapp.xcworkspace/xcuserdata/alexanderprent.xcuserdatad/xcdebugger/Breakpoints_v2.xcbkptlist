@@ -14,8 +14,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "865"
-            endingLineNumber = "865"
+            startingLineNumber = "916"
+            endingLineNumber = "916"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "423"
+            endingLineNumber = "423"
             landmarkName = "-viewDidAppear:"
             landmarkType = "7">
          </BreakpointContent>
@@ -125,8 +125,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -173,8 +173,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1045"
-            endingLineNumber = "1045"
+            startingLineNumber = "1096"
+            endingLineNumber = "1096"
             landmarkName = "-collectionView:didSelectItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -189,8 +189,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1085"
-            endingLineNumber = "1085"
+            startingLineNumber = "1136"
+            endingLineNumber = "1136"
             landmarkName = "-loadImageWithURL:completion:"
             landmarkType = "7">
          </BreakpointContent>
@@ -205,8 +205,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "262"
+            endingLineNumber = "262"
             landmarkName = "-setupDrawingView"
             landmarkType = "7">
          </BreakpointContent>
@@ -221,8 +221,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "407"
-            endingLineNumber = "407"
+            startingLineNumber = "437"
+            endingLineNumber = "437"
             landmarkName = "-openDrawingView:"
             landmarkType = "7">
          </BreakpointContent>
@@ -333,8 +333,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "-saveEntryImageToCloud:image:"
             landmarkType = "7">
          </BreakpointContent>
@@ -349,8 +349,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1731"
-            endingLineNumber = "1731"
+            startingLineNumber = "1782"
+            endingLineNumber = "1782"
             landmarkName = "-removeEntryImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -374,22 +374,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E18886BD-4851-41B0-BD53-60D01D7BFBC7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HairTech/NewEntryController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "-viewWillDisappear:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "0980DC65-E176-49B4-83DE-72AF2C215E99"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -397,8 +381,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "-viewWillDisappear:"
             landmarkType = "7">
          </BreakpointContent>
@@ -422,22 +406,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "95824B1A-FD00-439D-BFAF-9A5549BBD191"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HairTech/NewEntryController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "-viewWillDisappear:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "E4534436-94F6-4C28-A880-0468B20357AB"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -445,8 +413,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1771"
-            endingLineNumber = "1771"
+            startingLineNumber = "1822"
+            endingLineNumber = "1822"
             landmarkName = "-actionSheet:didDismissWithButtonIndex:"
             landmarkType = "7">
             <Locations>
@@ -585,8 +553,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "-viewDidAppear:"
             landmarkType = "7">
          </BreakpointContent>
@@ -601,8 +569,8 @@
             filePath = "HairTech/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "508"
-            endingLineNumber = "508"
+            startingLineNumber = "559"
+            endingLineNumber = "559"
             landmarkName = "-updateFiles"
             landmarkType = "7">
          </BreakpointContent>
@@ -713,8 +681,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "316"
-            endingLineNumber = "316"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "-share"
             landmarkType = "7">
          </BreakpointContent>
@@ -1189,8 +1157,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "753"
-            endingLineNumber = "753"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "-saveDataWhenReturnFromDrawing"
             landmarkType = "7">
          </BreakpointContent>
@@ -1205,8 +1173,8 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "755"
-            endingLineNumber = "755"
+            startingLineNumber = "785"
+            endingLineNumber = "785"
             landmarkName = "-saveDataWhenReturnFromDrawing"
             landmarkType = "7">
             <Locations>
@@ -1299,8 +1267,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1621"
-            endingLineNumber = "1621"
+            startingLineNumber = "1614"
+            endingLineNumber = "1614"
             landmarkName = "-undoPressed"
             landmarkType = "7">
          </BreakpointContent>
@@ -1379,57 +1347,26 @@
             filePath = "HairTech/NewEntryController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "855"
-            endingLineNumber = "855"
+            startingLineNumber = "886"
+            endingLineNumber = "886"
             landmarkName = "-contextMenuInteraction:configurationForMenuAtLocation:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A3274C51-759A-468E-BA5C-A4DF1A65DC8C - ee24465e24d679eb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__76-[NewEntryController contextMenuInteraction:configurationForMenuAtLocation:]_block_invoke.156"
-                  moduleName = "hairtech"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderprent/Documents/HT%20-%20Zoreslav%20Local/hairtech/HairTech/NewEntryController.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "810"
-                  endingLineNumber = "810"
-                  offsetFromSymbolStart = "108">
-               </Location>
-               <Location
-                  uuid = "A3274C51-759A-468E-BA5C-A4DF1A65DC8C - ee24465e24d67de7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__76-[NewEntryController contextMenuInteraction:configurationForMenuAtLocation:]_block_invoke.155"
-                  moduleName = "hairtech"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderprent/Documents/HT%20-%20Zoreslav%20Local/hairtech/HairTech/NewEntryController.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "841"
-                  endingLineNumber = "841"
-                  offsetFromSymbolStart = "112">
-               </Location>
-               <Location
-                  uuid = "A3274C51-759A-468E-BA5C-A4DF1A65DC8C - ee24465e24d67dc6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__76-[NewEntryController contextMenuInteraction:configurationForMenuAtLocation:]_block_invoke.155"
-                  moduleName = "hairtech"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderprent/Documents/HT%20-%20Zoreslav%20Local/hairtech/HairTech/NewEntryController.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "840"
-                  endingLineNumber = "840"
-                  offsetFromSymbolStart = "112">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "484488B6-4FD6-49B8-B252-D25D61BD7348"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HairTech/Photo Picker/PhotoPicker.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "-addActivityIndicator"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

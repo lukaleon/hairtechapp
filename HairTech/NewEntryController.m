@@ -64,15 +64,30 @@ static void setupContextMenuForImages(NewEntryController *object) {
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
     setupContextMenuForImages(self);
     
-//    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-//    
-//    CGPoint newCenter = CGPointMake(self.view.center.x, self.view.frame.size.height - 80);
-//    activityIndicator.center = newCenter;
-//    [self.view addSubview:activityIndicator];
     NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
 
-    
+    [self addActivityIndicator];
+ 
 }
+
+
+
+-(void)addActivityIndicator{
+    // Create background view
+   backgroundView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)]; // Adjust size as needed
+    backgroundView.center = self.view.center;
+    backgroundView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4]; // Semi-transparent black background
+    backgroundView.alpha = 0;
+    backgroundView.layer.cornerRadius = 10;
+    // Create activity indicator
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+    activityIndicator.center = CGPointMake(backgroundView.bounds.size.width / 2, 200);
+    activityIndicator.color = [UIColor whiteColor];    
+    [backgroundView addSubview:activityIndicator];
+    [self.view addSubview:backgroundView];
+
+}
+
 -(void)saveEntryImageToCloud:(NSString*)name image:(UIImage*)img{
     name = [name stringByDeletingPathExtension];
     name = [name stringByAppendingString:@".png"];
@@ -98,23 +113,37 @@ static void setupContextMenuForImages(NewEntryController *object) {
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [self.toolbar removeFromSuperview];
-    NSLog(@"exit entry" );
    
     if (self.isMovingFromParentViewController){
         
-        [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"exit entry" );
+        
+        NSDictionary *photosCount = @{@"myIntegerKey": @(_document.photoArray.count)};
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"delayWhenPopFromEntry" object:nil userInfo:photosCount];
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            
+            [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // ...
+                    if (success) {
+                        [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+                        
+                        NSLog(@"From viewWillDisappear!, %@ saved ", self.document.fileURL);
+                    } else {
+                        [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+                    }
+                });
+            }];
+           
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                // ...
-                if (success) {
-                    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-                    
-                    NSLog(@"From viewWillDisappear!, %@ saved ", self.document.fileURL);
-                } else {
-                    [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
-                }
-            });
-        }];
+                            [self.navigationController popViewControllerAnimated:YES];
+                        });
+        });
     }
         
 
@@ -133,10 +162,11 @@ static void setupContextMenuForImages(NewEntryController *object) {
 //        [[iCloud sharedCloud] setDocument:nil];
 
         
- 
- 
-
+  
 }
+
+
+
 
 #pragma mark - Configure Methods
 
@@ -751,14 +781,14 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 
 -(void)saveDataWhenReturnFromDrawing{
     
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (success) {
                     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-                   
-                   
-
+                    
+                    
+                    
                     NSLog(@"WhenReturnFromDVC!, %@ saved ", self.document.fileURL);
                 } else {
                     [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
@@ -767,6 +797,7 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"StopActivityIndicatorNotification" object:nil];
             });
         }];
+    });
     //}
 }
 

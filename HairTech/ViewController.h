@@ -65,6 +65,8 @@ typedef enum {
     
     NSInteger refreshCount;
     NSArray * images;
+    UIActivityIndicatorView * activityIndicator;
+    UIView *backgroundView;
 
 }
 @property iCloudDocument * importedDoc;

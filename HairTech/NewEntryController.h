@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol NewEntryControllerDelegate <NSObject>
 - (void)stopActivityIndicator;
+
+- (void)childViewControllerWillDismiss;
+
 @end
 @interface NewEntryController : UIViewController <NotesViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UINavigationControllerDelegate,PhotoPickerDelegate,UIContextMenuInteractionDelegate>
 {
@@ -27,7 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSString * _techniqueNameID;
     BOOL openingDrawingView;
     UIButton *more;
-    UIActivityIndicatorView *activityIndicator1;
+    UIActivityIndicatorView * activityIndicator;
+    UIView *backgroundView;
 }
 @property (nonatomic, weak) id<NewEntryControllerDelegate> delegate;
 

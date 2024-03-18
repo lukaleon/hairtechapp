@@ -605,10 +605,12 @@
    
     backgroundView.alpha = 1;
     [activityIndicator startAnimating];
-    NSLog(@"results = %lu", (unsigned long)results.count);
+   
+    
     if (results.count == 0){
         [self stopActivityIndicator];
     }
+    
     for (PHPickerResult *result in results) {
         // Check if the provider can load the object of type UIImage
         if ([result.itemProvider canLoadObjectOfClass:UIImage.class]) {
@@ -632,10 +634,6 @@
                         [self.collectionView reloadData];
                         
                         configuration.selectionLimit = 6 - self.imagesArray.count;
-                        
-                        
-                        
-                        
                     });
                 }
             }];
