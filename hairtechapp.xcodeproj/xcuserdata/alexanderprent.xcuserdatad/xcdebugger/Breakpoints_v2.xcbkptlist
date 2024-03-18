@@ -142,8 +142,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "499"
-            endingLineNumber = "499"
+            startingLineNumber = "507"
+            endingLineNumber = "507"
             landmarkName = "-setupNavigationBarItems"
             landmarkType = "7">
          </BreakpointContent>
@@ -172,8 +172,8 @@
             filePath = "HairTech/NewDrawController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "553"
-            endingLineNumber = "553"
+            startingLineNumber = "561"
+            endingLineNumber = "561"
             landmarkName = "-setupNavigationBarItems"
             landmarkType = "7">
          </BreakpointContent>

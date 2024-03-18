@@ -64,7 +64,9 @@ static void setupContextMenuForImages(NewEntryController *object) {
     [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
     setupContextMenuForImages(self);
     
-    
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    activityIndicator.center = self.view.center;
+    [self.view addSubview:activityIndicator];
     NSLog(@"View Controllers in Storyboard: %@", [self.storyboard instantiateInitialViewController]);
 
     
@@ -97,16 +99,21 @@ static void setupContextMenuForImages(NewEntryController *object) {
     NSLog(@"exit entry" );
    
     if (self.isMovingFromParentViewController){
+        [activityIndicator startAnimating];
         
         [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            // ...
-            if (success) {
-                [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
-                
-                NSLog(@"From viewWillDisappear!, %@ saved ", self.document.fileURL);
-            } else {
-                [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
-            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [activityIndicator stopAnimating];
+                // ...
+                if (success) {
+                    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+                    
+                    NSLog(@"From viewWillDisappear!, %@ saved ", self.document.fileURL);
+                } else {
+                    [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+                }
+            });
         }];
     }
         
@@ -743,18 +750,23 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
 }
 
 -(void)saveDataWhenReturnFromDrawing{
-        
-  //  if (self.isMovingFromParentViewController){
-        
+    
+   
+    
         [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            // ...
-            if (success) {
-                [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+            
+        
                 
-                NSLog(@"WhenReturnFromDVC!, %@ saved ", self.document.fileURL);
-            } else {
-                [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
-            }
+                if (success) {
+                    [self saveEntryImageToCloud:self.document.fileURL.lastPathComponent image:self.document.imageEntry];
+                    
+                    NSLog(@"WhenReturnFromDVC!, %@ saved ", self.document.fileURL);
+                } else {
+                    [NSException raise:@"YOU SUCK" format:@"Like, what the fuck man"];
+                }
+            
+           
+
         }];
     //}
 }
@@ -827,14 +839,19 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
             NSArray *items = @[imageItem, otherItem];
 
             // Place the items on the clipboard
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            UIPasteboard *pasteboard =  [UIPasteboard pasteboardWithName:@"com.hair.hairtechapp" create:YES];
+            // Optional: Make the pasteboard app specific and not accessible to other apps
             [pasteboard setItems:items];
+            // Create or retrieve an app-specific pasteboard
+        
+
+            
         }];
         
         UIAction *paste = [UIAction actionWithTitle:@"Paste" image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
             NSLog(@"Action tapped for image view with tag: %ld", (long)tappedImageView.tag);
             
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            UIPasteboard *pasteboard =  [UIPasteboard pasteboardWithName:@"com.hair.hairtechapp" create:YES];
 
             // Retrieve the data from the pasteboard
             NSArray *items = [pasteboard items];
@@ -885,24 +902,33 @@ viewController.modalPresentationStyle = UIModalPresentationCustom;
         
         
         UIMenu *menu;
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        // Retrieve the data from the pasteboard
+        UIPasteboard *pasteboard =  [UIPasteboard pasteboardWithName:@"com.hair.hairtechapp" create:YES];
         NSArray *items = [pasteboard items];
-    
-        NSDictionary * dict = [items objectAtIndex:0];
-        NSData *imageData = dict[[@(tappedImageView.tag) stringValue]];
-        
-       
-  
+
         // Determine if the clipboard is "empty" for your app's purposes
-        if (imageData){
+        if (items.count > 0){
+           
+            NSArray *items = [pasteboard items];
+            NSDictionary * dict = [items objectAtIndex:0];
+            NSData *imageData = dict[[@(tappedImageView.tag) stringValue]];
+            
+            NSEnumerator *enumerator = [dict keyEnumerator];
+            NSString *key = [enumerator nextObject];
+
+            if (key) {
+                NSLog(@"Key: %@", key);
+            } else {
+                NSLog(@"Dictionary is empty");
+            }
             
             NSDictionary * genDict = [items objectAtIndex:1];
             NSData *genderData = genDict[@"gender"];
             NSString * gender = [NSString stringWithUTF8String:[genderData bytes]];
             
             NSLog(@"Gender: %@", gender);
-            if( [gender isEqualToString:_document.maleFemale] ) {
+           
+            if( [gender isEqualToString:_document.maleFemale] &&  [[@(tappedImageView.tag) stringValue] isEqualToString:key]) {
+               
                 menu = [UIMenu menuWithTitle:@"" children:@[action,paste]];
                 
             }

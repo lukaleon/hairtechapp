@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString * _techniqueNameID;
     BOOL openingDrawingView;
     UIButton *more;
+    UIActivityIndicatorView *activityIndicator;
 }
 
 @property (nonatomic, strong) OverlayTransitioningDelegate* overlayDelegate;

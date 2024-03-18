@@ -532,17 +532,30 @@
     
     [self.imagesArray addObject:selectedImage];
     [self amplitudeEvent:@"Photo Picked Up"];
-
-    [self.delegate savePhotos:self.imagesArray];
-
-    noPhotoLabel.hidden = [self noPhotoLabelEnabled];
-    restoreBtn.enabled = [self setRestoreEnabled];
-
     
 
-    [self.collectionView reloadData];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Save drawing data (replace with your actual saving logic)
+        [self.delegate savePhotos:self.imagesArray];
 
-    [picker dismissViewControllerAnimated:YES completion:nil];
+        // Perform UI-related actions on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+           
+            noPhotoLabel.hidden = [self noPhotoLabelEnabled];
+            restoreBtn.enabled = [self setRestoreEnabled];
+
+            
+
+            [self.collectionView reloadData];
+
+            [picker dismissViewControllerAnimated:YES completion:nil];
+        });
+    });
+
+    
+     
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

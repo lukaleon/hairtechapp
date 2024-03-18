@@ -153,16 +153,24 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:NO];
-    [self saveColorsToDefaults];
-    [self removeGrid];
-    [self.drawingView removeCircles]; //remove control circles when selected
-    [self.drawingView removeTextViewFrame]; //create text layer when closing window
-    [self screentShot:self.headtype];
-    [self clearPageForClosing];
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+           // Save drawing data (replace with your actual saving logic)
+        [self saveColorsToDefaults];
+        [self removeGrid];
+        [self.drawingView removeCircles]; //remove control circles when selected
+        [self.drawingView removeTextViewFrame]; //create text layer when closing window
+        [self screentShot:self.headtype];
+        [self clearPageForClosing];
+
+           // Perform UI-related actions on the main thread
+           dispatch_async(dispatch_get_main_queue(), ^{
+               // Close the drawing view controller (e.g., dismiss)
+              // [self dismissViewControllerAnimated:YES completion:nil];
+           });
+       });
     
-    
- 
+   
 }
 
 -(void)deselectTools{
